@@ -35,7 +35,7 @@ public class JoyconDemo : MonoBehaviour {
 	float newPointX = 0.0f;
 	private float[] speeds = new float[5] { 0, 0, 0, 0, 0 };
 	private Stopwatch jogTimer = new Stopwatch();
-	float rollingSumSpeed = 0;
+	public float rollingSumSpeed = 0;
 	private bool aboveThresh = false;
 	private bool belowThresh = false;
 	public GameObject goal;
