@@ -84,7 +84,7 @@ public class JoyconDemo : MonoBehaviour {
 		// make sure the Joycon only gets checked if attached
 		if (joycons.Count > 0)
 		{				
-			Joycon j = joycons[jc_ind];
+			Joycon j = gameObject.name.Contains("1") ? joycons[0] : joycons[1];
 			// GetButtonDown checks if a button has been pressed (not held)
 			if (j.GetButtonDown(Joycon.Button.SHOULDER_2))
 			{
@@ -139,7 +139,6 @@ public class JoyconDemo : MonoBehaviour {
 			float currentTime = Time.time;
 		if(GRAPH_DEBUG)
             {
-				Debug.Log(GRAPH_DEBUG);
 				if(System.DateTime.UtcNow.Millisecond % 10 != 0)
 				{
 					writerX.WriteLine($"{accel.x}");
@@ -212,17 +211,8 @@ public class JoyconDemo : MonoBehaviour {
 			agent.speed = rollingSumSpeed;
         }
 
-			if (gameObject.transform.position.y > 2.2f && currentTime - lastJump > 1.0f) //Jump logic and tolerance
-			{
-				UnityEngine.Debug.Log("current y " + gameObject.transform.position.y);
-				gameObject.GetComponent<Renderer>().material.color = Color.red;
-				UnityEngine.Debug.Log("JUMPED");
-				lastJump = currentTime;
-			}
-			else if (currentTime - lastJump > 1.0f)
-			{
+
 				gameObject.GetComponent<Renderer>().material.color = Color.blue;
-			}
 			
 			//UnityEngine.Debug.Log(data);
 			//File.WriteAllText("Fullpower.csv", data);

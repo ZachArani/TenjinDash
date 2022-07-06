@@ -62,7 +62,6 @@ public class QuizHandler : MonoBehaviour
             //Now we need to remove the chosen value from the list of candidates
             //Some Lambda work here. Make a new array of values that *aren't* equal to the value we just chose
             answers = answers.Where(val => val != answers[currentAnswer]).ToArray();
-            Debug.Log(answers.Length);
         }       
 
 

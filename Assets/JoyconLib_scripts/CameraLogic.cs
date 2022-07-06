@@ -8,7 +8,7 @@ public class CameraLogic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.Find("Player 1");
+        player = gameObject.name.Contains("1") ? GameObject.Find("Player 1") : GameObject.Find("Player 2");
     }
 
     // Update is called once per frame
