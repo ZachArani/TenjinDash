@@ -41,7 +41,7 @@ public class JoyconDemo : MonoBehaviour {
 	public GameObject goal;
 	public NavMeshAgent agent;
 	public float speed;
-	public static bool DEBUG = false;
+	public static bool GRAPH_DEBUG = false;
 
 	public string data = "time, acceleration"; //CSV format?
 
@@ -60,7 +60,7 @@ public class JoyconDemo : MonoBehaviour {
         }
         goal = GameObject.Find("Goal");
 
-		if(DEBUG)
+		if(GRAPH_DEBUG)
 		{
 			clientX.Connect();
 			clientY.Connect();
@@ -137,9 +137,9 @@ public class JoyconDemo : MonoBehaviour {
 			Vector3 position = new Vector3(accel.x - 0.166f, accel.y - 0.07f, accel.z + 1.02f);
 
 			float currentTime = Time.time;
-		if(DEBUG)
+		if(GRAPH_DEBUG)
             {
-				Debug.Log(DEBUG);
+				Debug.Log(GRAPH_DEBUG);
 				if(System.DateTime.UtcNow.Millisecond % 10 != 0)
 				{
 					writerX.WriteLine($"{accel.x}");

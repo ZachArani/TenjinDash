@@ -13,7 +13,7 @@ public class SpeedHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = GameObject.Find("Player");
+        player = GameObject.Find("Player 1");
         text = gameObject.GetComponent<TextMeshProUGUI>();
         text.text = "TEST";
         tracker = player.GetComponent<JoyconDemo>();
