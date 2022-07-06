@@ -208,7 +208,7 @@ public class JoyconDemo : MonoBehaviour {
 					jogTimer.Restart(); //Stop timer so that we can restart it and try again.
 				}
 			}
-			agent.speed = rollingSumSpeed;
+			agent.speed = rollingSumSpeed * 5;
         }
 
 
