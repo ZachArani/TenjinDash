@@ -26,17 +26,52 @@ public class QuizHandler : MonoBehaviour
     GameObject qPanel;
     int correctAnswer;
     const int MAX_ADD_TERM = 40;
+    int time;
+    bool isActive = false;
+    const int MIN_WAIT_TIME = 2000; //Min time to wait between questions (in ms)
+    const int MAX_WAIT_TIME = 8000; //Max time to wait between questions (in ms)
+    const int Q_TIME = 8000;  //How long the question is on screen regularly
+    const int EXIT_TIME = 8000; //How long the question will flash before disappearing
+    public bool inQuiz = false; //Tells the outside world if we're currently in a quiz.
 
     void Start()
     {
-        question = GenerateQuestion();
-        UpdateQuestion(question);
         ShowPanels(false); //TODO: Actually figure out how to handle timings for quizes + answer recognizition 
+        timer.Start();
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Logic for showing/flashing/hiding the question
+        if(timer.ElapsedMilliseconds > MIN_WAIT_TIME) //if greater than X seconds
+        {
+            if (timer.ElapsedMilliseconds < MIN_WAIT_TIME + Q_TIME && !isActive) //Show it off
+            {
+                isActive = true;
+                UpdateQuestion(GenerateQuestion());
+                ShowPanels(true);
+            }
+            else if (timer.ElapsedMilliseconds > MIN_WAIT_TIME + Q_TIME && timer.ElapsedMilliseconds < MIN_WAIT_TIME + Q_TIME + EXIT_TIME) //Now if approaching a cutoff time
+            {             
+                if(UnityEngine.Time.frameCount % 2 == 0) //Start flashing the question
+                {
+                    isActive = !isActive;
+                    ShowPanels(isActive);
+                }                       
+            }
+            else if(timer.ElapsedMilliseconds > MIN_WAIT_TIME + Q_TIME + EXIT_TIME) //Hide the question panel
+            {
+                isActive = false;
+                ShowPanels(false);
+                timer.Restart();
+            }
+
+            //Logic for checking player inputs and seeing if someone guested the question
+
+
+        }
     }
 
     //Given all the relevant info, update panels to show the new question/answers
