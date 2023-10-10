@@ -198,11 +198,11 @@ public class Joycon
     }
     public void DebugPrint(String s, DebugType d)
     {
-        if (debug_type == DebugType.NONE) return;
-        if (d == DebugType.ALL || d == debug_type || debug_type == DebugType.ALL)
-        {
-            Debug.Log(s);
-        }
+       // if (debug_type == DebugType.NONE) return;
+        //if (d == DebugType.ALL || d == debug_type || debug_type == DebugType.ALL)
+        //{
+            //Debug.Log(s);
+        //}
     }
     public bool GetButtonDown(Button b)
     {
@@ -581,9 +581,9 @@ public class Joycon
     }
     private void dump_calibration_data()
     {
-        byte[] buf_ = ReadSPI(0x80, (isLeft ? (byte)0x12 : (byte)0x1d), 9); // get user calibration data if possible
+        byte[] buf_ = null;//ReadSPI(0x80, (isLeft ? (byte)0x12 : (byte)0x1d), 9); // get user calibration data if possible
         bool found = false;
-        for (int i = 0; i < 9; ++i)
+       /* for (int i = 0; i < 9; ++i)
         {
             if (buf_[i] != 0xff)
             {
@@ -591,7 +591,7 @@ public class Joycon
                 found = true;
                 break;
             }
-        }
+        }*/
         if (!found)
         {
             Debug.Log("Using factory stick calibration data.");
