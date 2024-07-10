@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Playables;
+using UnityEngine.Timeline;
 
 namespace Assets.Scripts
 {
@@ -11,9 +14,12 @@ namespace Assets.Scripts
         [field: ReadOnly] public bool raceFinished { get; private set; }
         [field: SerializeField, ReadOnly] public GameObject[] standings {get; private set;}
         public GameObject[] players;
+        [field: SerializeField] public List<Camera> playerCams;
         public CountdownHandler countdown;
 
+        [field: SerializeField] public PlayableDirector preRoll;
 
+        private bool isAuto;
 
         void Start()
         {
@@ -61,6 +67,54 @@ namespace Assets.Scripts
         {
             //TODO: Start game
         }
+
+        public void EnableRaceCameras()
+        {
+            playerCams.ForEach(c => c.enabled = true);
+        }
+
+        public void DisableRaceCameras()
+        {
+            Debug.Log("WE TRIED!!!");
+            playerCams.ForEach(c => c.enabled = false);
+        }
+
+        public void StartRace()
+        {
+            preRoll.Play();
+        }
+
+        public void ResetRace()
+        {
+
+        }
+
+        public void EndRace()
+        {
+            isAuto = false;
+        }
+
+        private void OnEnable()
+        {
+            UIManager.OnEndMenuExit += StartRace;
+            UIManager.OnStartMenuEnter += DisableRaceCameras;
+
+        }
+
+        private void OnDisable()
+        {
+            UIManager.OnEndMenuExit -= StartRace;
+            UIManager.OnStartMenuEnter -= DisableRaceCameras;
+
+        }
+
+        private void SetAuto()
+        {
+            isAuto = true;
+        }
+
+
+
 
     }
 }

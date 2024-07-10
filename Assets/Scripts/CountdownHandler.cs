@@ -23,7 +23,7 @@ public class CountdownHandler : MonoBehaviour
     
     void Start()
     {
-        musicHandler = GameObject.Find("Music").transform.Find("Race").GetComponent<MusicHandler>();
+        /*musicHandler = GameObject.Find("Music").transform.Find("Race").GetComponent<MusicHandler>();
         text = gameObject.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
         shadow = gameObject.transform.GetChild(0).GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
         countdownSFX = GameObject.Find("Music").transform.Find("Countdown").GetComponents<AudioSource>()[0];
@@ -34,12 +34,12 @@ public class CountdownHandler : MonoBehaviour
         updateCount = 150;
         postCountdown = false;
         if(!isCounting)
-            frameStart = int.MaxValue;
+            frameStart = int.MaxValue;*/
     }
 
     private void FixedUpdate()
     {
-        if (isCounting)
+        /*if (isCounting)
         {
             if (updateCount == 0)
             {
@@ -64,18 +64,18 @@ public class CountdownHandler : MonoBehaviour
                 text.text = shadow.text = "";
                 postCountdown = false;
             }
-        }
+        }*/
     }
 
     public void StartCounting()
     {
-        isCounting = true;
-        frameStart = UnityEngine.Time.frameCount;
+        //isCounting = true;
+        //frameStart = UnityEngine.Time.frameCount;
     }
 
     public void ResetCount()
     {
-        updateCount = 150;
+        //updateCount = 150;
     }
 
     /// <summary>
@@ -83,12 +83,12 @@ public class CountdownHandler : MonoBehaviour
     /// </summary>
     public void UpdateCountdown()
     {
-        count--;
+        /*count--;
         if (count==0)
         {
             text.text = shadow.text = "GO!";   
         }
-        text.text = shadow.text = count.ToString();
+        text.text = shadow.text = count.ToString();*/
     }
 
 }
