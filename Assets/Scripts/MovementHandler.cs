@@ -67,6 +67,9 @@ public class MovementHandler : MonoBehaviour
 	[Range(0f, 8f)]
 	public float goodScore = 3f;
 
+	public float FINISH_LINE = -1005.5f;
+	public float END_LINE = -1007f;
+
 	public float percentFilled;
 
 	GameObject otherPlayer;
@@ -166,22 +169,19 @@ public class MovementHandler : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		//Speed fixes if needed
 		if (SPEED_MIN > SPEED_MAX)
 		{
 			SPEED_MAX = SPEED_MIN;
 		}
 
+		//Assign joycons 
 		if (GAME_MODE == ONE_PLAYER)
 			jL = joycons[0];
 		else if (GAME_MODE == TWO_PLAYER)
 			jL = gameObject.name.Contains("1") ? joycons[0] : joycons[1];
 		else
 			jL = null;
-
-		if (GAME_MODE >= ONE_PLAYER)
-		{
-			accel = jL.GetAccel();
-		}
 
 		float data = GetAcceleration(); //Grab our current raw acceleration value 
 		if (isLogging) //If logging, send to file
@@ -214,13 +214,13 @@ public class MovementHandler : MonoBehaviour
 				//transform.position = pathCreator.path.GetPointAtDistance(distanceTraveled);
 			}
 
-			if (transform.position.x >= -1007f && !finished.isInSplitFinish)
+			if (transform.position.x >= END_LINE && !finished.isInSplitFinish)
 			{
 				finalSpeed = currentSpeed;
 				otherPlayer.GetComponent<MovementHandler>().finalSpeed = otherPlayer.GetComponent<MovementHandler>().currentSpeed;
 				finished.nearFinishedRace();
 			}
-			else if (transform.position.x >= -1005.5f && !finished.isAtFinishLine)
+			else if (transform.position.x >= FINISH_LINE && !finished.isAtFinishLine)
 			{
 				finished.atFinishLine();
 			}
@@ -283,7 +283,7 @@ public class MovementHandler : MonoBehaviour
 					//currentSpeed = currentSpeed * 1.1f; //Give a small boost to 2nd place
 				}
 
-				if (GAME_MODE == MOCK_DATA)
+				if (GAME_MODE == MOCK_DATA) //If demoing, then slightly vary speed within range
 					speedMultiplier = Random.value * (1.1f - 0.98f) + 0.98f;
 			}
 			if (animator.IsInTransition(0) &&

@@ -15,6 +15,7 @@ public class CountdownHandler : MonoBehaviour
     [System.NonSerialized] public bool isCounting;
     int frameStart;
     public int updateCount = 150;
+    public int count;
     bool postCountdown;
     MusicHandler musicHandler;
     AudioSource countdownSFX;
@@ -75,6 +76,19 @@ public class CountdownHandler : MonoBehaviour
     public void ResetCount()
     {
         updateCount = 150;
+    }
+
+    /// <summary>
+    /// Decrements Countdown timer by one
+    /// </summary>
+    public void UpdateCountdown()
+    {
+        count--;
+        if (count==0)
+        {
+            text.text = shadow.text = "GO!";   
+        }
+        text.text = shadow.text = count.ToString();
     }
 
 }
