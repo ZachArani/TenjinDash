@@ -10,12 +10,18 @@ namespace Assets.Scripts
 {
     public class RaceManager : MonoBehaviour
     {
+
+        public static event Action OnCountdownStart;
+        public static event Action OnCountdownUpdate;
+        public static event Action OnCountdownEnd;
+        public static event Action OnCountdownHidden;
+
         [field: SerializeField, ReadOnly] public bool raceStarted {get; private set;}
         [field: ReadOnly] public bool raceFinished { get; private set; }
         [field: SerializeField, ReadOnly] public GameObject[] standings {get; private set;}
         public GameObject[] players;
         [field: SerializeField] public List<Camera> playerCams;
-        public CountdownHandler countdown;
+        public int countdown;
 
         [field: SerializeField] public PlayableDirector preRoll;
 
@@ -60,12 +66,30 @@ namespace Assets.Scripts
         public void StartCountdown()
         {
             //TODO: Countdown related stuff
-            countdown.count = 3;
+            Debug.Log("Start countdown called");
+            countdown = 3;
+            OnCountdownStart.Invoke();
+        }
+
+        public void UpdateCountdown()
+        {
+            Debug.Log("Updating countdown");
+            countdown--;
+            OnCountdownUpdate.Invoke();
+            if(countdown == 0)
+            {
+                OnCountdownEnd.Invoke();
+            }
         }
 
         public void FinishCountdown()
         {
             //TODO: Start game
+        }
+
+        public void HideCountdown()
+        {
+            OnCountdownHidden.Invoke();
         }
 
         public void EnableRaceCameras()
@@ -75,7 +99,7 @@ namespace Assets.Scripts
 
         public void DisableRaceCameras()
         {
-            Debug.Log("WE TRIED!!!");
+            Debug.Log("Disabling Race Cameras.");
             playerCams.ForEach(c => c.enabled = false);
         }
 

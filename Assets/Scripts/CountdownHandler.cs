@@ -10,8 +10,6 @@ public class CountdownHandler : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    TextMeshProUGUI shadow;
-    TextMeshProUGUI text;
     [System.NonSerialized] public bool isCounting;
     int frameStart;
     public int updateCount = 150;
@@ -83,12 +81,11 @@ public class CountdownHandler : MonoBehaviour
     /// </summary>
     public void UpdateCountdown()
     {
-        /*count--;
+        count--;
+        GetComponent<TextMeshProUGUI>().text = count.ToString();
         if (count==0)
         {
-            text.text = shadow.text = "GO!";   
         }
-        text.text = shadow.text = count.ToString();*/
     }
 
 }

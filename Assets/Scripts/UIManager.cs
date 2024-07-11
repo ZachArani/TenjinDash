@@ -19,7 +19,6 @@ namespace Assets.Scripts
         public static event Action OnEndMenuExit;
         public static event Action OnEndMenuEnter;
 
-
         [SerializeField] public TextMeshProUGUI countdown;
         [SerializeField] public TextMeshProUGUI finish;
         [SerializeField] public TextMeshProUGUI menu;
@@ -79,11 +78,23 @@ namespace Assets.Scripts
             raceManager.StartRace();
         }
 
+        public void ShowCountdown() { countdown.enabled = true; countdown.text = raceManager.countdown.ToString(); }
+
+        public void HideCountdown() { countdown.enabled = false; }
+
+        public void UpdateCountdown() { countdown.text = raceManager.countdown.ToString(); }
+
+        public void FinishCountdown() { countdown.text = "GO!"; }
+
         private void OnEnable()
         {
 
             OnStartMenuExit += HideMainMenu;
             OnStartMenuEnter += ShowMainMenu;
+            RaceManager.OnCountdownStart += ShowCountdown;
+            RaceManager.OnCountdownUpdate += UpdateCountdown;
+            RaceManager.OnCountdownEnd += FinishCountdown;
+            RaceManager.OnCountdownHidden += HideCountdown;
         }
 
         private void OnDisable()
@@ -91,6 +102,10 @@ namespace Assets.Scripts
 
             OnStartMenuExit -= HideMainMenu;
             OnStartMenuEnter -= ShowMainMenu;
+            RaceManager.OnCountdownStart -= ShowCountdown;
+            RaceManager.OnCountdownUpdate -= UpdateCountdown;
+            RaceManager.OnCountdownEnd -= FinishCountdown;
+            RaceManager.OnCountdownHidden -= HideCountdown;
         }
 
     }
