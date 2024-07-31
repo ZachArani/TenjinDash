@@ -8,13 +8,22 @@ using UnityEngine.Timeline;
 
 namespace Assets.Scripts
 {
+
+    public enum CountdownStates
+    {
+        START,
+        UPDATE,
+        END,
+        HIDDEN
+    }
+
     public class RaceManager : MonoBehaviour
     {
 
-        public static event Action OnCountdownStart;
-        public static event Action OnCountdownUpdate;
-        public static event Action OnCountdownEnd;
-        public static event Action OnCountdownHidden;
+
+        public static event Action<CountdownStates> OnCountdownEvent;
+
+
 
         [field: SerializeField, ReadOnly] public bool raceStarted {get; private set;}
         [field: ReadOnly] public bool raceFinished { get; private set; }
@@ -27,9 +36,23 @@ namespace Assets.Scripts
 
         private bool isAuto;
 
+        Action<GAME_STATE, GAME_STATE> menuHandler;
+
         void Start()
         {
             standings = players;
+
+            menuHandler = (from, to) =>
+            {
+                if (from.Equals(GAME_STATE.FINISH_MENU) && to.Equals(GAME_STATE.NONE)) //We're restarting the race (not going to a menu)
+                {
+                    StartRace();
+                }
+                else if (to.Equals(GAME_STATE.START_MENU))
+                {
+                    DisableRaceCameras();
+                }
+            };
         }
 
         // Update is called once per frame
@@ -68,17 +91,17 @@ namespace Assets.Scripts
             //TODO: Countdown related stuff
             Debug.Log("Start countdown called");
             countdown = 3;
-            OnCountdownStart.Invoke();
+            OnCountdownEvent.Invoke(CountdownStates.START);
         }
 
         public void UpdateCountdown()
         {
             Debug.Log("Updating countdown");
             countdown--;
-            OnCountdownUpdate.Invoke();
+            OnCountdownEvent.Invoke(CountdownStates.UPDATE); 
             if(countdown == 0)
             {
-                OnCountdownEnd.Invoke();
+                OnCountdownEvent.Invoke(CountdownStates.END);
             }
         }
 
@@ -89,7 +112,7 @@ namespace Assets.Scripts
 
         public void HideCountdown()
         {
-            OnCountdownHidden.Invoke();
+            OnCountdownEvent.Invoke(CountdownStates.HIDDEN);
         }
 
         public void EnableRaceCameras()
@@ -120,6 +143,9 @@ namespace Assets.Scripts
 
         private void OnEnable()
         {
+
+            UIManager.OnMenuChange += menuHandler;
+
             UIManager.OnEndMenuExit += StartRace;
             UIManager.OnStartMenuEnter += DisableRaceCameras;
 
@@ -127,6 +153,9 @@ namespace Assets.Scripts
 
         private void OnDisable()
         {
+
+            UIManager.OnMenuChange -= menuHandler;
+
             UIManager.OnEndMenuExit -= StartRace;
             UIManager.OnStartMenuEnter -= DisableRaceCameras;
 

@@ -17,21 +17,21 @@ public class ButtonHandler : MonoBehaviour
     GameObject loading;
     GameObject preRoll;
     public static bool inMenu = true;
-    OptionHandler options;
+    Options options;
 
     void Start()
     {
         button = gameObject.GetComponent<Button>();
         loading = GameObject.Find("Loading");
         preRoll = GameObject.Find("PreRollCameras").transform.GetChild(0).gameObject;
-        options = GameObject.Find("Options").GetComponent<OptionHandler>();
+        options = GameObject.Find("Options").GetComponent<Options>();
         if (loading != null)
             loading.GetComponent<CanvasRenderer>().SetAlpha(0f);
         inMenu = true;
         if (options.SkipMenu)
         {
             GameObject.Find("Timelines").transform.Find("MenuTimeline").GetComponent<PlayableDirector>().Stop();
-            if (options.SkipAnimation)
+            if (options.skipPreroll)
             {
                 GoToGame();
             }
@@ -40,7 +40,7 @@ public class ButtonHandler : MonoBehaviour
                 GoToAnimations();
             }
         }
-        else if(options.SkipAnimation)
+        else if(options.skipPreroll)
         {
             GoToGame();
         }

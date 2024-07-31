@@ -4,30 +4,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MenuManager : MonoBehaviour
+
+
+namespace Assets.Scripts
 {
-    [field: SerializeField] public RaceManager raceManager;
-    [field: SerializeField] public UIManager UIManager;
-    [field: SerializeField] public 
 
-    void Start()
+    public class MenuManager : MonoBehaviour
     {
+        [field: SerializeField] public RaceManager raceManager;
+        [field: SerializeField] public UIManager UIManager;
+        //[field: SerializeField] public 
+
+        void Start()
+        {
         
-    }
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
+        // Update is called once per frame
+        void Update()
+        {
         
+        }
+
+        private void OnEnable()
+        {
+            //UIManager.OnStartMenuEnter +=
+        }
+
+        private void OnDisable()
+        {
+
+        }
     }
 
-    private void OnEnable()
-    {
-        //UIManager.OnStartMenuEnter +=
-    }
-
-    private void OnDisable()
-    {
-
-    }
 }
+
