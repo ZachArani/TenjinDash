@@ -12,7 +12,7 @@ namespace Assets.Scripts
     public class MenuManager : MonoBehaviour
     {
         [field: SerializeField] public RaceManager raceManager;
-        [field: SerializeField] public UIManager UIManager;
+        [field: SerializeField] public StartMenuState UIManager;
         //[field: SerializeField] public 
 
         void Start()

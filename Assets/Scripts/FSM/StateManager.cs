@@ -4,20 +4,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
+[Serializable]
 public class StateManager : MonoBehaviour
 {
+    public bool SkipMenu;
+    public bool skipPreroll;
+
+    [field: SerializeField] public List<Camera> playerCams; //Util for race used by multiple states
 
     public static StateManager instance {  get; private set; }
 
-    public PlayableDirector menuTimeline;
-    public PlayableDirector cutscenesTimeline;
-    public PlayableDirector countdownTimeline;
+    public static event Action<GAME_STATE, GAME_STATE> onGameStateChanged;
 
-    public static event Action<GAME_STATE, GAME_STATE, HashSet<GAME_CONTEXTS>> gameStateChanged;
-
-    public Options options;
+    public Options options; //TODO: Fold into this class
 
     public GAME_STATE currentState { get; private set; } //Current game state
+
 
     public HashSet<GAME_CONTEXTS> contexts; //Set of current game contexts. HashSet is easy to search and only allows unique entries, which is perfect for our use case.
 
@@ -36,31 +38,44 @@ public class StateManager : MonoBehaviour
 
     void Start()
     {
+        contexts = new HashSet<GAME_CONTEXTS>();
         currentState = GAME_STATE.START_MENU;
-        if (options.SkipMenu)
+        if (SkipMenu)
         {
             contexts.Add(GAME_CONTEXTS.SKIP_START_MENU);
             currentState = GAME_STATE.PREROLL;
         }
-        if(options.skipPreroll)
+        if(skipPreroll)
         {
             contexts.Add(GAME_CONTEXTS.SKIP_PREROLL);
             currentState = GAME_STATE.COUNTDOWN;
         }
-        if (options.skipCountdown)
-        {
-            contexts.Add(GAME_CONTEXTS.SKIP_COUNTDOWN);
-            currentState = GAME_STATE.RACE;
-        }
-
-        gameStateChanged.Invoke(GAME_STATE.NONE, currentState, contexts);
+        Initialize(currentState);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Initialize(GAME_STATE startingState)
     {
-        
+        currentState = startingState;
+        onGameStateChanged.Invoke(GAME_STATE.NONE, currentState);
     }
+
+    public void TransitionTo(GAME_STATE nextState)
+    {
+        onGameStateChanged.Invoke(currentState, nextState);
+        currentState = nextState;
+    }
+
+    public void EnableRaceCameras()
+    {
+        playerCams.ForEach(c => c.enabled = true);
+    }
+
+    public void DisableRaceCameras()
+    {
+        Debug.Log("Disabling Race Cameras.");
+        playerCams.ForEach(c => c.enabled = false);
+    }
+
 }
 
 
@@ -72,7 +87,6 @@ public enum GAME_STATE
 {
     NONE, //Used at start of game
     START_MENU,
-    FINISH_MENU,
     PREROLL, //Cutscenes after start but before countdown
     COUNTDOWN, //Countdown before race
     RACE, //Actual race which starts when the countdown concludes
@@ -86,8 +100,7 @@ public enum GAME_STATE
 public enum GAME_CONTEXTS
 {
     AUTO,
-    ONE_PLAYER,
-    TWO_PLAYER,
+    SOLO,
 
     RESTART,
 

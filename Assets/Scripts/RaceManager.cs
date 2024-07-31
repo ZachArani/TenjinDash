@@ -21,7 +21,6 @@ namespace Assets.Scripts
     {
 
 
-        public static event Action<CountdownStates> OnCountdownEvent;
 
 
 
@@ -44,14 +43,14 @@ namespace Assets.Scripts
 
             menuHandler = (from, to) =>
             {
-                if (from.Equals(GAME_STATE.FINISH_MENU) && to.Equals(GAME_STATE.NONE)) //We're restarting the race (not going to a menu)
+               /* if (from.Equals(GAME_STATE.FINISH_MENU) && to.Equals(GAME_STATE.NONE)) //We're restarting the race (not going to a menu)
                 {
                     StartRace();
                 }
                 else if (to.Equals(GAME_STATE.START_MENU))
                 {
                     DisableRaceCameras();
-                }
+                }*/
             };
         }
 
@@ -86,45 +85,6 @@ namespace Assets.Scripts
             }
         }
 
-        public void StartCountdown()
-        {
-            //TODO: Countdown related stuff
-            Debug.Log("Start countdown called");
-            countdown = 3;
-            OnCountdownEvent.Invoke(CountdownStates.START);
-        }
-
-        public void UpdateCountdown()
-        {
-            Debug.Log("Updating countdown");
-            countdown--;
-            OnCountdownEvent.Invoke(CountdownStates.UPDATE); 
-            if(countdown == 0)
-            {
-                OnCountdownEvent.Invoke(CountdownStates.END);
-            }
-        }
-
-        public void FinishCountdown()
-        {
-            //TODO: Start game
-        }
-
-        public void HideCountdown()
-        {
-            OnCountdownEvent.Invoke(CountdownStates.HIDDEN);
-        }
-
-        public void EnableRaceCameras()
-        {
-            playerCams.ForEach(c => c.enabled = true);
-        }
-
-        public void DisableRaceCameras()
-        {
-            Debug.Log("Disabling Race Cameras.");
-            playerCams.ForEach(c => c.enabled = false);
-        }
 
         public void StartRace()
         {
@@ -144,20 +104,20 @@ namespace Assets.Scripts
         private void OnEnable()
         {
 
-            UIManager.OnMenuChange += menuHandler;
+           // Scripts.StartMenuState.OnMenuChange += menuHandler;
 
-            UIManager.OnEndMenuExit += StartRace;
-            UIManager.OnStartMenuEnter += DisableRaceCameras;
+           // Scripts.StartMenuState.OnEndMenuExit += StartRace;
+           // Scripts.StartMenuState.OnStartMenuEnter += DisableRaceCameras;
 
         }
 
         private void OnDisable()
         {
 
-            UIManager.OnMenuChange -= menuHandler;
+            //Scripts.StartMenuState.OnMenuChange -= menuHandler;
 
-            UIManager.OnEndMenuExit -= StartRace;
-            UIManager.OnStartMenuEnter -= DisableRaceCameras;
+            //Scripts.StartMenuState.OnEndMenuExit -= StartRace;
+            //Scripts.StartMenuState.OnStartMenuEnter -= DisableRaceCameras;
 
         }
 
