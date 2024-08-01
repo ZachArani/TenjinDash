@@ -508,8 +508,8 @@ Camera:
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 35
+  m_LensShift: {x: 0, y: -0.03}
+  m_FocalLength: 14
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -14285,7 +14285,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 523012702}
-  m_LocalRotation: {x: 0.0552263, y: 0.6674467, z: -0.04974852, w: 0.7409387}
+  m_LocalRotation: {x: 0.0552263, y: 0.6674467, z: -0.049748525, w: 0.7409387}
   m_LocalPosition: {x: -299.27197, y: -26.700958, z: -516.62823}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -15469,7 +15469,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &677470223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16495,13 +16495,19 @@ PlayableDirector:
     value: {fileID: 1845276988}
   - key: {fileID: 5878393409076250945, guid: a129b49aa28a2f34a8146827babc5db1, type: 2}
     value: {fileID: 545385586}
+  - key: {fileID: 2008533175026322491, guid: a129b49aa28a2f34a8146827babc5db1, type: 2}
+    value: {fileID: 677470223}
+  - key: {fileID: -2587068021837610440, guid: a129b49aa28a2f34a8146827babc5db1, type: 2}
+    value: {fileID: 2091541680}
   m_ExposedReferences:
     m_References:
     - 686ce278a40480543855b8a58d615d98: {fileID: 2031276710}
     - eeec494683e9c0549993d307c4ce1f74: {fileID: 684907015}
     - 07296d1ab8132ad4fbe862822bc256d3: {fileID: 296904472}
+    - 3d6e3169a7cd62a4d969ef254f9e3a33: {fileID: 523012704}
     - 64582e1feb91bba49aeb18c422264ada: {fileID: 628780826}
     - 64afe45aeed156747883b8b974aa22b9: {fileID: 517776740}
+    - 3ca0e0ce6bc0ee24b8353c6bb47bb9b5: {fileID: 628780826}
     - 68a02fc3c4714e04a81e1e9170a3bf9c: {fileID: 0}
 --- !u!1 &872759479
 GameObject:
@@ -25192,7 +25198,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2091541680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25242,7 +25248,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091541679}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
