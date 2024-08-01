@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +23,13 @@ public class StateManager : MonoBehaviour
 
 
     public HashSet<GAME_CONTEXTS> contexts; //Set of current game contexts. HashSet is easy to search and only allows unique entries, which is perfect for our use case.
+
+    ///for camera enable/disabling. Needed by multiple states so it goes here. 
+    //TODO: Move to utils class
+    public CinemachineBrain player1Brain;
+    public CinemachineBrain player2Brain;
+    public CinemachineVirtualCamera player1Cam;
+    public CinemachineVirtualCamera player2Cam;
 
     private void Awake()
     {
@@ -61,6 +69,7 @@ public class StateManager : MonoBehaviour
 
     public void TransitionTo(GAME_STATE nextState)
     {
+        Debug.Log($"TRANSITION TO {nextState}");
         onGameStateChanged.Invoke(currentState, nextState);
         currentState = nextState;
     }

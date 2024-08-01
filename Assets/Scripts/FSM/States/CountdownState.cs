@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cinemachine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -14,6 +15,7 @@ namespace Assets.Scripts.FSM.States
 
         public TextMeshProUGUI countdownGUI;
         public PlayableDirector countdownTimeline;
+
         int countdown;
 
         void Start()
@@ -42,7 +44,6 @@ namespace Assets.Scripts.FSM.States
 
         public void UpdateCountdown()
         {
-            Debug.Log(countdown);
             countdownGUI.enabled = true;
             countdownGUI.text = countdown.ToString();
             countdown--;

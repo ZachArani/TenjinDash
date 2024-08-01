@@ -508,8 +508,8 @@ Camera:
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: -0.03}
-  m_FocalLength: 14
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 35
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -543,8 +543,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 138246238}
-  m_LocalRotation: {x: 0, y: 0.9776, z: 0, w: 0.21047172}
-  m_LocalPosition: {x: -1051.7656, y: 286.0265, z: -134.98083}
+  m_LocalRotation: {x: 0.0552263, y: 0.6674467, z: -0.049748525, w: 0.7409387}
+  m_LocalPosition: {x: -1431.941, y: 261.1865, z: -454.41647}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1430,8 +1430,14 @@ PlayableDirector:
     value: {fileID: 1097255247}
   - key: {fileID: 1613410567146361849, guid: 9c435f71ab5a7a1499ec0facb0969beb, type: 2}
     value: {fileID: 1092214445}
+  - key: {fileID: -8678005027942962876, guid: 9c435f71ab5a7a1499ec0facb0969beb, type: 2}
+    value: {fileID: 677470223}
+  - key: {fileID: 5078054094146561723, guid: 9c435f71ab5a7a1499ec0facb0969beb, type: 2}
+    value: {fileID: 2091541680}
   m_ExposedReferences:
-    m_References: []
+    m_References:
+    - 9f4a7b053f9800d4eb02b0a58af7becc: {fileID: 628780826}
+    - 9187436e5f8c6414a9347aaaf11e76ee: {fileID: 523012704}
 --- !u!1 &298979809
 GameObject:
   m_ObjectHideFlags: 0
@@ -14272,7 +14278,7 @@ GameObject:
   - component: {fileID: 523012703}
   - component: {fileID: 523012704}
   m_Layer: 7
-  m_Name: RaceCamera2
+  m_Name: Player2Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14310,7 +14316,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 15
+  m_Priority: 100
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 1972611483}
   m_Follow: {fileID: 1972611483}
@@ -14951,8 +14957,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2091541683}
   - {fileID: 677470226}
+  - {fileID: 2091541683}
   - {fileID: 1881232878}
   - {fileID: 1968592579}
   - {fileID: 286278037}
@@ -14971,7 +14977,7 @@ GameObject:
   - component: {fileID: 628780825}
   - component: {fileID: 628780826}
   m_Layer: 6
-  m_Name: RaceCamera1
+  m_Name: Player1Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15009,7 +15015,7 @@ MonoBehaviour:
   - m_Script
   m_LockStageInInspector: 
   m_StreamingVersion: 20170927
-  m_Priority: 15
+  m_Priority: 100
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 1025176337}
   m_Follow: {fileID: 1025176337}
@@ -15464,12 +15470,12 @@ GameObject:
   - component: {fileID: 677470224}
   - component: {fileID: 677470223}
   m_Layer: 0
-  m_Name: Player1Cam
+  m_Name: Player1Brain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &677470223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15536,7 +15542,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 2000
   field of view: 37.84929
   orthographic: 0
   orthographic size: 15.3
@@ -15562,13 +15568,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 677470222}
-  m_LocalRotation: {x: -0, y: 0.9776, z: -0, w: 0.21047172}
-  m_LocalPosition: {x: 80.90344, y: -1.8609619, z: -197.19258}
+  m_LocalRotation: {x: 0.05667245, y: 0.63580436, z: -0.046896845, w: 0.7683371}
+  m_LocalPosition: {x: -299.62622, y: -26.673462, z: -513.72186}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 627693263}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &679263049
 GameObject:
@@ -23666,6 +23672,10 @@ MonoBehaviour:
   - {fileID: 677470225}
   - {fileID: 2091541682}
   options: {fileID: 49698063}
+  player1Brain: {fileID: 677470223}
+  player2Brain: {fileID: 2091541680}
+  player1Cam: {fileID: 628780826}
+  player2Cam: {fileID: 523012704}
 --- !u!4 &1845276987
 Transform:
   m_ObjectHideFlags: 0
@@ -25193,12 +25203,12 @@ GameObject:
   - component: {fileID: 2091541681}
   - component: {fileID: 2091541680}
   m_Layer: 0
-  m_Name: Player2Cam
+  m_Name: Player2Brain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2091541680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25248,7 +25258,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091541679}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -25291,13 +25301,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091541679}
-  m_LocalRotation: {x: -0, y: 0.9776, z: -0, w: 0.21047172}
-  m_LocalPosition: {x: 80.90344, y: -1.8609619, z: -197.19258}
+  m_LocalRotation: {x: 0.0552263, y: 0.6674467, z: -0.049748525, w: 0.7409387}
+  m_LocalPosition: {x: -299.27197, y: -26.700958, z: -516.62823}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 627693263}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2100307673
 GameObject:
