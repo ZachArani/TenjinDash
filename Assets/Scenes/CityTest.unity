@@ -517,7 +517,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 2000
   field of view: 37.84929
   orthographic: 0
   orthographic size: 15.3
@@ -543,8 +543,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 138246238}
-  m_LocalRotation: {x: 0.0552263, y: 0.6674467, z: -0.049748525, w: 0.7409387}
-  m_LocalPosition: {x: -1431.941, y: 261.1865, z: -454.41647}
+  m_LocalRotation: {x: 0.05667245, y: 0.63580436, z: -0.046896845, w: 0.7683371}
+  m_LocalPosition: {x: -1432.2953, y: 261.214, z: -451.51013}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1430,10 +1430,6 @@ PlayableDirector:
     value: {fileID: 1097255247}
   - key: {fileID: 1613410567146361849, guid: 9c435f71ab5a7a1499ec0facb0969beb, type: 2}
     value: {fileID: 1092214445}
-  - key: {fileID: -8678005027942962876, guid: 9c435f71ab5a7a1499ec0facb0969beb, type: 2}
-    value: {fileID: 677470223}
-  - key: {fileID: 5078054094146561723, guid: 9c435f71ab5a7a1499ec0facb0969beb, type: 2}
-    value: {fileID: 2091541680}
   m_ExposedReferences:
     m_References:
     - 9f4a7b053f9800d4eb02b0a58af7becc: {fileID: 628780826}
@@ -19112,6 +19108,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17f5cc2d050d5704d9e2028bdefc4b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player1: {fileID: 1025176334}
+  player2: {fileID: 1972611482}
 --- !u!1 &1036825937
 GameObject:
   m_ObjectHideFlags: 0
