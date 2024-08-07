@@ -21,6 +21,8 @@ public class Joycon
     };
 	public DebugType debug_type = DebugType.NONE;
     public bool isLeft;
+
+    public static event Action OnNewGyroData;
     public enum state_ : uint
     {
         NOT_ATTACHED,
@@ -509,6 +511,7 @@ public class Joycon
             dt = 1;
         }
         timestamp = report_buf[1] + 2;
+        OnNewGyroData.Invoke();
         return 0;
     }
     public void Begin()
