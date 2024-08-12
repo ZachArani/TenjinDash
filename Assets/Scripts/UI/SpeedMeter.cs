@@ -12,7 +12,7 @@ public class SpeedMeter : MonoBehaviour
     [Range(0f, 1f)]
     public float smoothFactor = 0.1f;
 
-    public GyroTest speedInfo;
+    public NewMovement speedInfo;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +20,7 @@ public class SpeedMeter : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float newMeterValue = Mathf.Lerp(meterUI.offsetMax.y, -300 + 300 * (speedInfo.currentSpeed / 100f), smoothFactor);
+        float newMeterValue = Mathf.Lerp(meterUI.offsetMax.y, -300 + 300 * (speedInfo.speedPercentage), smoothFactor);
         meterUI.offsetMax = new Vector2(-4, newMeterValue);
     }
 

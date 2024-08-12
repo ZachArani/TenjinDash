@@ -23,17 +23,15 @@ namespace Assets.Scripts.FSM.States
         // Update is called once per frame
         void Update()
         {
-            if(inRace)
-            {
-                Debug.Log(JoyconManager.Instance.j[0].GetVector());
-            }
         }
 
         void startRace(GAME_STATE from, GAME_STATE to)
         {
             if(to == GAME_STATE.RACE)
             {
-                inRace = true;    
+                inRace = true;
+                player1.GetComponent<NewMovement>().enabled = true;
+                //player2.GetComponent<NewMovement>().enabled = true;
             }
         }
 

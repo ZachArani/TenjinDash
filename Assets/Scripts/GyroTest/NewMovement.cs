@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI.Extensions;
 
 
-public class GyroTest : MonoBehaviour
+public class NewMovement : MonoBehaviour
 {
     Joycon j;
     public TextMeshProUGUI speedUI;
@@ -24,25 +24,40 @@ public class GyroTest : MonoBehaviour
     public float correctionFactor = 3;
 
     [Range(50f, 150f)]
-    public float maxInputSpeed = 80f;
+    public float maxGyroSpeed = 80f;
 
-    [Range(5f, 100f)]
-    public float maxRunnerVelocity = 10f;
+    [Range(5f, 2000f)]
+    public float maxRunnerSpeed;
+
+    public Transform goalKeeper = null;
+    Queue<Vector3> goals = new Queue<Vector3>();
+    Vector3 nextGoal;
 
     float highestRecordedSpeed;
 
     float maxSpeedChange;
-    public float currentSpeed { get; private set; }
+    public float speedPercentage { get; private set; }
+
+    public float speed { get; private set; }
+
     // Start is called before the first frame update
     void Start()
     {
         j = JoyconManager.Instance.j[0];
+        
         maxSpeedChange = Mathf.Exp(maxSpeedChangeLog);
+
+        collectGoals();
     }
 
     // Update is called once per frame
     void Update()
     {
+        transform.position = Vector3.MoveTowards(transform.position, nextGoal, speed * Time.deltaTime);
+        if(transform.position == nextGoal)
+        {
+            nextGoal = goals.Dequeue();
+        }
     }
 
     private void FixedUpdate()
@@ -53,16 +68,20 @@ public class GyroTest : MonoBehaviour
         }
         else
         {
-            if(avg > highestRecordedSpeed)
+            if (avg > highestRecordedSpeed)
             {
                 highestRecordedSpeed = avg;
                 Debug.Log($"New Highest Speed: {highestRecordedSpeed}");
             }
             currentTime = 0;
-            currentSpeed = Mathf.Clamp(Mathf.Lerp(currentSpeed, avg, Mathf.Exp(-maxSpeedChange * Time.deltaTime))-correctionFactor, 
-                                        0, 
-                                        maxInputSpeed) / maxInputSpeed * 100f;
-            speedUI.text = currentSpeed.ToString();
+            speedPercentage = Mathf.Clamp(Mathf.Lerp(speedPercentage, avg, Mathf.Exp(-maxSpeedChange * Time.deltaTime)) - correctionFactor,
+                                        0,
+                                        maxGyroSpeed) / maxGyroSpeed;
+            speed = speedPercentage * maxRunnerSpeed;
+            if (speedUI != null)
+            {
+                speedUI.text = speedPercentage.ToString();
+            }
             avg = 0;
         }
     }
@@ -73,9 +92,21 @@ public class GyroTest : MonoBehaviour
         avg += j.GetGyro().magnitude;
     }
 
+    void collectGoals()
+    {
+        goals.Clear();
+        foreach (Transform goal in goalKeeper)
+        {
+            goals.Enqueue(goal.position);
+        }
+        nextGoal = goals.Dequeue();
+    }
+
     private void OnEnable()
     {
         Joycon.OnNewGyroData += GetNewGyroData;
+        j = JoyconManager.Instance.j[0];
+        collectGoals();
     }
 
     private void OnDisable()
