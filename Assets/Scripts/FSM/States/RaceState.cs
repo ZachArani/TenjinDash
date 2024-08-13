@@ -7,8 +7,8 @@ namespace Assets.Scripts.FSM.States
     public class RaceState : MonoBehaviour
     {
 
-        public MovementHandler player1;
-        public MovementHandler player2;
+        public NewMovement player1;
+        public NewMovement player2;
 
         bool inRace;
 

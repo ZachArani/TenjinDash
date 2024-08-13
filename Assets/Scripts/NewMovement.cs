@@ -26,19 +26,26 @@ public class NewMovement : MonoBehaviour
     [Range(50f, 150f)]
     public float maxGyroSpeed = 80f;
 
-    [Range(5f, 2000f)]
+    [Range(5f, 100f)]
     public float maxRunnerSpeed;
 
     public Transform goalKeeper = null;
     Queue<Vector3> goals = new Queue<Vector3>();
     Vector3 nextGoal;
 
-    float highestRecordedSpeed;
-
     float maxSpeedChange;
     public float speedPercentage { get; private set; }
 
     public float speed { get; private set; }
+
+    [Range(0f, 1f)]
+    public float SpeedSmoother = 0.5f;
+
+    public float velocity;
+
+    [Range(0f,2f)]
+    public float smoothTime;
+
 
     // Start is called before the first frame update
     void Start()
@@ -68,19 +75,14 @@ public class NewMovement : MonoBehaviour
         }
         else
         {
-            if (avg > highestRecordedSpeed)
-            {
-                highestRecordedSpeed = avg;
-                Debug.Log($"New Highest Speed: {highestRecordedSpeed}");
-            }
             currentTime = 0;
             speedPercentage = Mathf.Clamp(Mathf.Lerp(speedPercentage, avg, Mathf.Exp(-maxSpeedChange * Time.deltaTime)) - correctionFactor,
                                         0,
                                         maxGyroSpeed) / maxGyroSpeed;
-            speed = speedPercentage * maxRunnerSpeed;
+            speed = Mathf.Lerp(speed, speedPercentage * maxRunnerSpeed, SpeedSmoother);
             if (speedUI != null)
             {
-                speedUI.text = speedPercentage.ToString();
+                speedUI.text = speed.ToString();
             }
             avg = 0;
         }
@@ -110,6 +112,11 @@ public class NewMovement : MonoBehaviour
     }
 
     private void OnDisable()
+    {
+        Joycon.OnNewGyroData -= GetNewGyroData;
+    }
+
+    private void OnDestroy()
     {
         Joycon.OnNewGyroData -= GetNewGyroData;
     }
