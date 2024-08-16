@@ -18,20 +18,16 @@ namespace Assets.Scripts
 
         public PlayableDirector startMenuTimeline;
 
-        public TextMeshProUGUI auto;
-        public TextMeshProUGUI logo;
-        public TextMeshProUGUI start;
+        [SerializeField] TextMeshProUGUI auto;
+        [SerializeField] TextMeshProUGUI logo; 
+        [SerializeField] TextMeshProUGUI start;
         public GameObject JoyCons;
         public GameObject credits;
-
-
-        List<TextMeshProUGUI> textObj = new List<TextMeshProUGUI>();
-
+        [SerializeField]
+        List<TextMeshProUGUI> textObj;
 
         void Start()
         {
-
-            textObj = new List<TextMeshProUGUI>{ auto, logo, start };
             credits.GetComponentsInChildren<TextMeshProUGUI>().ToList().ForEach(c => textObj.Add(c));
           
         }

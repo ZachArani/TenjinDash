@@ -56,7 +56,10 @@ public class StateManager : MonoBehaviour
         if(skipPreroll)
         {
             contexts.Add(GAME_CONTEXTS.SKIP_PREROLL);
-            currentState = GAME_STATE.COUNTDOWN;
+            if (SkipMenu)
+            {
+                currentState = GAME_STATE.COUNTDOWN;
+            }
         }
         Initialize(currentState);
     }
@@ -64,6 +67,7 @@ public class StateManager : MonoBehaviour
     public void Initialize(GAME_STATE startingState)
     {
         currentState = startingState;
+        Debug.Log($"STARTING GAME WITH {currentState} STATE.");
         onGameStateChanged.Invoke(GAME_STATE.NONE, currentState);
     }
 
