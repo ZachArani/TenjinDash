@@ -18,15 +18,10 @@ public class SpeedMeter : MonoBehaviour
     {
     }
 
-    private void FixedUpdate()
-    {
-        float newMeterValue = Mathf.Lerp(meterUI.offsetMax.y, -300 + 300 * (speedInfo.speedPercentage), smoothFactor);
-        meterUI.offsetMax = new Vector2(-4, newMeterValue);
-    }
-
     // Update is called once per frame
     void Update()
     {
-        
+        float newMeterValue = Mathf.Lerp(meterUI.offsetMax.y, -300 + 300 * (speedInfo.speed / speedInfo.maxRunnerSpeed), smoothFactor);
+        meterUI.offsetMax = new Vector2(meterUI.offsetMax.x, newMeterValue);
     }
 }

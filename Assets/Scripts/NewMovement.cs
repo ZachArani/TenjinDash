@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,62 +10,97 @@ using UnityEngine.UI.Extensions;
 public class NewMovement : MonoBehaviour
 {
     Joycon j;
+
     public TextMeshProUGUI speedUI;
+   
+    //Time variables for gyro measurements
     float avg = 0f;
     List<float> avgRuns;
-
     [Range(0.05f, 1f)]
     public float timeWindow = 0.1f;
-    
     float currentTime;
+    //Gyro measurements
     [Range(0f, 5f)]
-    public float maxSpeedChangeLog = 3f;
-
+    public float maxGyroChangeLog = 3f;
+    float maxGyroChange;
     [Range(0f, 10f)]
     public float correctionFactor = 3;
-
-    [Range(50f, 150f)]
+    [Range(50f, 100f)]
     public float maxGyroSpeed = 80f;
+    public float gyroPercentage { get; private set; }
 
-    [Range(5f, 100f)]
+    //Player's speed info
+    [Range(5f, 30f)]
     public float maxRunnerSpeed;
-
-    public Transform goalKeeper = null;
-    Queue<Vector3> goals = new Queue<Vector3>();
-    Vector3 nextGoal;
-
-    float maxSpeedChange;
-    public float speedPercentage { get; private set; }
-
     public float speed { get; private set; }
+    [SerializeField]
+    [Range(0f, 25f)]
+    float startingSpeed;
+    public AnimationCurve speedCurve;
+    [Range(0f, 25f)]
+    public float desiredSpeed;
+    [Range(0f, 0.4f)]
+    public float maxTChange;
+    float t;
+    bool isAccelerating;
 
-    [Range(0f, 1f)]
-    public float SpeedSmoother = 0.5f;
+    [SerializeField]
+    [Range(0f, 10f)]
+    float randomFakeRange = 3f;
 
-    public float velocity;
+    [SerializeField]
+    [Range(1f, 50f)]
+    float randomFakeDistance = 5f;
 
-    [Range(0f,2f)]
-    public float smoothTime;
+    [ReadOnly]
+    public float losingSpeedBoost = 0f;
+
+    //Running track
+    public CinemachineSmoothPath runningTrack;
+    CinemachineDollyCart track;
+
+    Animator animator;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        j = JoyconManager.Instance.j[0];
+        track = GetComponent<CinemachineDollyCart>();
+        animator = GetComponent<Animator>();
         
-        maxSpeedChange = Mathf.Exp(maxSpeedChangeLog);
-
-        collectGoals();
+        maxGyroChange = Mathf.Exp(maxGyroChangeLog);
+        speed = startingSpeed;
+        t = 0.05f;
+        j = JoyconManager.Instance.j[0];
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, nextGoal, speed * Time.deltaTime);
-        if(transform.position == nextGoal)
+        if (desiredSpeed + losingSpeedBoost > speed)
         {
-            nextGoal = goals.Dequeue();
+            t += maxTChange * Time.deltaTime;
+            isAccelerating = true;
         }
+        else if (desiredSpeed + losingSpeedBoost < speed)
+        {
+            t -= maxTChange * Time.deltaTime;
+            isAccelerating = false;
+        }
+        Mathf.Clamp(t, 0f, 1f);
+        speed = speedCurve.Evaluate(t);
+        speed = Mathf.Round(speed * 100f) / 100f; 
+        if (speedUI != null && speedUI.isActiveAndEnabled)
+        {
+            speedUI.text = speed.ToString();
+        }
+
+        FakeItTillYaMakeIt(randomFakeDistance);
+
+        track.m_Speed = speed;
+
+        animator.SetFloat("runningSpeed", speed);
+        animator.SetBool("isAccelerating", isAccelerating);
     }
 
     private void FixedUpdate()
@@ -76,14 +112,11 @@ public class NewMovement : MonoBehaviour
         else
         {
             currentTime = 0;
-            speedPercentage = Mathf.Clamp(Mathf.Lerp(speedPercentage, avg, Mathf.Exp(-maxSpeedChange * Time.deltaTime)) - correctionFactor,
+            gyroPercentage = Mathf.Clamp(Mathf.Lerp(gyroPercentage, avg, Mathf.Exp(-maxGyroChange * Time.deltaTime)) - correctionFactor,
                                         0,
                                         maxGyroSpeed) / maxGyroSpeed;
-            speed = Mathf.Lerp(speed, speedPercentage * maxRunnerSpeed, SpeedSmoother);
-            if (speedUI != null)
-            {
-                speedUI.text = speed.ToString();
-            }
+            //speed = Mathf.Lerp(speed, speedPercentage * maxRunnerSpeed, SpeedSmoother);
+            //desiredSpeed = speedPercentage * maxRunnerSpeed;
             avg = 0;
         }
     }
@@ -94,21 +127,26 @@ public class NewMovement : MonoBehaviour
         avg += j.GetGyro().magnitude;
     }
 
-    void collectGoals()
+    /// <summary>
+    /// Fake movement for videos, etc.
+    /// </summary>
+    /// <param name="distance">How often to change speeds</param>
+    void FakeItTillYaMakeIt(float distance)
     {
-        goals.Clear();
-        foreach (Transform goal in goalKeeper)
+        if (GetComponent<CinemachineDollyCart>().m_Position % distance < 0.1)
         {
-            goals.Enqueue(goal.position);
+            float speedPush = UnityEngine.Random.Range(-randomFakeRange, randomFakeRange);
+            desiredSpeed += speedPush;
+            Mathf.Clamp(desiredSpeed, 8, 15);
+            Debug.Log($"{gameObject.name}: {speedPush}, new Speed: {desiredSpeed}");
         }
-        nextGoal = goals.Dequeue();
     }
+
 
     private void OnEnable()
     {
         Joycon.OnNewGyroData += GetNewGyroData;
         j = JoyconManager.Instance.j[0];
-        collectGoals();
     }
 
     private void OnDisable()

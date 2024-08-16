@@ -28,6 +28,7 @@ namespace Assets.Scripts.FSM.States
         {
             if (to == GAME_STATE.PREROLL)
             {
+                Cursor.visible = false;
                 preRollTimeline.Play();  
             }
         }

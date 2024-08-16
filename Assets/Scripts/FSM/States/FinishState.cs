@@ -21,5 +21,19 @@ namespace Assets.Scripts.FSM.States
         {
 
         }
+
+        void StartFinish(GAME_STATE from, GAME_STATE to)
+        {
+            if(to == GAME_STATE.FINISH)
+            {
+                Cursor.visible = true;
+            }
+
+        }
+
+        private void OnEnable()
+        {
+            StateManager.onGameStateChanged += StartFinish;
+        }
     }
 }

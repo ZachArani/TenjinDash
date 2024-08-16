@@ -49,6 +49,7 @@ namespace Assets.Scripts
                 startMenuTimeline.Play();
                 textObj.ForEach(text => text.enabled = true);
                 JoyCons.GetComponentsInChildren<Image>().ToList().ForEach(joycon => joycon.enabled = true);
+                Cursor.visible = true;
             }
             else if(from == GAME_STATE.START_MENU) 
             {

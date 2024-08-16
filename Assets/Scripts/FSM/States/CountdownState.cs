@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using TMPro;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -37,6 +36,7 @@ namespace Assets.Scripts.FSM.States
                 if (StateManager.instance.skipPreroll)
                 {
                     StateManager.instance.EnableRaceCameras();
+                    Cursor.visible = false;
                 }
                 countdownTimeline.Play();
             }
