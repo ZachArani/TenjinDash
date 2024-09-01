@@ -8,12 +8,13 @@ namespace Assets.Scripts.FSM.States
 {
     public class RaceState : MonoBehaviour
     {
-
+        //Player movement objects
         [SerializeField]
         NewMovement player1;
         [SerializeField]
         NewMovement player2;
 
+        //Player UI elements 
         [SerializeField]
         TextMeshProUGUI player1PosUI;
         [SerializeField] 
@@ -25,8 +26,12 @@ namespace Assets.Scripts.FSM.States
         [TextArea(1,1)]
         public string secondPlaceText = "2nd";
 
+        //Player dolly carts
         CinemachineDollyCart player1Pos;
         CinemachineDollyCart player2Pos;
+        
+        //Margin of error when calcuating player positions.
+        //If there is no MOE, then the 1st/2nd place UI flashes a *ton* when its a close race.
         [SerializeField]
         [Range(0, 2f)]
         float player1Moe;
@@ -34,25 +39,44 @@ namespace Assets.Scripts.FSM.States
         [Range(0, 2f)]
         float player2Moe;
 
+        /// <summary>
+        /// Used during demo modes to "fake" running speed. Decides how often (in terms of distance) to randomly roll a new speed for the player.
+        /// </summary>
         [SerializeField]
         [Range(10f, 100f)]
         float fakeItDistance = 15f;
 
+
         bool inRace;
 
+        /// <summary>
+        /// Utility object to reference who is currently in first place.
+        /// </summary>
         GameObject inFirst;
+
 
         [SerializeField]
         [Range(0f, 3f)]
         float posDistanceMOE = 0.5f;
 
+        /// <summary>
+        /// Decides how much of a speed boost to give to the 2nd place runner. 
+        /// </summary>
         [SerializeField]
         [Range(0f, 2f)]
         float losingSpeedBoost = 0.3f;
 
+        /// <summary>
+        /// Basically enforces "rubberbanding" behavior. 
+        /// If a player falls too far behind, the game will give them a massive speed boost so they can catch up with the other runner.
+        /// </summary>
         [SerializeField]
         bool enforceCloseRace = false;
 
+        /// <summary>
+        /// Indicates the maximum difference between player speeds. If someone is too far behind or ahead, the game will force them into this speed range.
+        /// Used alongside enforceCloseRace to keep the race close. 
+        /// </summary>
         [SerializeField]
         float raceCloseness = 1f;
 
@@ -81,13 +105,13 @@ namespace Assets.Scripts.FSM.States
                 updateStandingUI();
             }
 
-            if(enforceCloseRace)
+            if(enforceCloseRace) //If we're enforcing a close race.
             {
-                if(Mathf.Abs(player1.desiredSpeed - player2.desiredSpeed) > raceCloseness)
+                if(Mathf.Abs(player1.desiredSpeed - player2.desiredSpeed) > raceCloseness) //If one player is too fast or slow
                 {
                     Debug.Log("Players too far apart! Enforcing close race!");
-                    float avgSpeed = (player1.desiredSpeed + player2.desiredSpeed) / 2;
-                    player1.desiredSpeed = (inFirst == player1.gameObject) ?
+                    float avgSpeed = (player1.desiredSpeed + player2.desiredSpeed) / 2; 
+                    player1.desiredSpeed = (inFirst == player1.gameObject) ? //Pushes both players in the same speed range based on their combined average speed.
                         Mathf.Clamp(player1.desiredSpeed, player1.desiredSpeed - raceCloseness, player1.desiredSpeed) :
                         Mathf.Clamp(player1.desiredSpeed, player2.desiredSpeed - raceCloseness, player2.desiredSpeed);
                     player2.desiredSpeed = (inFirst == player2.gameObject) ?

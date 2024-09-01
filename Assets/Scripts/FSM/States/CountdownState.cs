@@ -11,10 +11,18 @@ namespace Assets.Scripts.FSM.States
 {
     public class CountdownState : MonoBehaviour
     {
-
+        /// <summary>
+        /// UI element for countdown graphics
+        /// </summary>
         public TextMeshProUGUI countdownGUI;
+        /// <summary>
+        /// Timeline that controls the countdown
+        /// </summary>
         public PlayableDirector countdownTimeline;
 
+        /// <summary>
+        /// Current number in the countdown
+        /// </summary>
         int countdown;
 
         void Start()
@@ -33,7 +41,7 @@ namespace Assets.Scripts.FSM.States
             if(to == GAME_STATE.COUNTDOWN)
             {
                 countdown = 3;
-                if (StateManager.instance.skipPreroll)
+                if (StateManager.instance.skipPreroll) //We need to enable the player cameras manually if we skipped Preroll.
                 {
                     StateManager.instance.EnableRaceCameras();
                     Cursor.visible = false;
@@ -51,7 +59,7 @@ namespace Assets.Scripts.FSM.States
             {
                 countdownGUI.text = "GO!";
             }
-            else if(countdown == -2)
+            else if(countdown == -2) //We've past the countdown time, hide from screen and transition to next state.
             {
                 countdownGUI.enabled = false;
                 StateManager.instance.TransitionTo(GAME_STATE.RACE);

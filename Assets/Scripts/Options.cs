@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Controls game options.
+/// Basically just contains a bun of flags that can be referenced elsewhere.
+/// </summary>
 public class Options : MonoBehaviour
 {
 

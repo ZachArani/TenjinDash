@@ -11,13 +11,18 @@ using UnityEngine.Playables;
 namespace Assets.Scripts
 {
 
-
+    /// <summary>
+    /// FSM state for the game's start menu
+    /// </summary>
     public class StartMenuState : MonoBehaviour
     {
 
-
+        /// <summary>
+        /// Timeline that controls the start menu cutscene
+        /// </summary>
         public PlayableDirector startMenuTimeline;
 
+        //Collection of start menu UI elements 
         [SerializeField] TextMeshProUGUI auto;
         [SerializeField] TextMeshProUGUI logo; 
         [SerializeField] TextMeshProUGUI start;
@@ -28,7 +33,7 @@ namespace Assets.Scripts
 
         void Start()
         {
-            credits.GetComponentsInChildren<TextMeshProUGUI>().ToList().ForEach(c => textObj.Add(c));
+            credits.GetComponentsInChildren<TextMeshProUGUI>().ToList().ForEach(c => textObj.Add(c)); //Adds each TextMesh to credits list.
           
         }
 
@@ -38,6 +43,14 @@ namespace Assets.Scripts
 
         }
 
+        /// <summary>
+        /// Method called when FSM transitions to this state
+        /// Updates the start menu's visibility
+        /// If we are transitioning *to* StartMenu, then we show the UI elements
+        /// Else if we are transitioning *away* from StartMenu, then we hide the UI elements
+        /// </summary>
+        /// <param name="from">State we transition from</param>
+        /// <param name="to">State we transition to</param>
         public void UpdateMenuVisibility(GAME_STATE from, GAME_STATE to)
         {
             if (to == GAME_STATE.START_MENU)
@@ -51,22 +64,34 @@ namespace Assets.Scripts
             {
                 textObj.ForEach(text => text.enabled = false);
                 JoyCons.GetComponentsInChildren<Image>().ToList().ForEach(joycon => joycon.enabled = false);
+                Cursor.visible = false;
             }
             
         }
 
+        /// <summary>
+        /// Called when Auto mode is selected.
+        /// Adds 'auto' flag to context.
+        /// </summary>
         public void OnAutoSelect()
         {
             StateManager.instance.contexts.Add(GAME_CONTEXTS.AUTO);
             StateManager.instance.TransitionTo(GAME_STATE.PREROLL);
         }
 
+        /// <summary>
+        /// Called when Solo mode is selected. 
+        /// Adds 'solo' flag to context
+        /// </summary>
         public void OnSoloSelect()
         {
             StateManager.instance.contexts.Add(GAME_CONTEXTS.SOLO);
             StateManager.instance.TransitionTo(GAME_STATE.PREROLL);
         }
 
+        /// <summary>
+        /// Called when start button is selected
+        /// </summary>
         public void OnStartSelect()
         {
             if(!StateManager.instance.skipPreroll)

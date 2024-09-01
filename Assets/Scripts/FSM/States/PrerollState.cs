@@ -42,7 +42,6 @@ namespace Assets.Scripts.FSM.States
         private void OnEnable()
         {
             StateManager.onGameStateChanged += StartPreRoll;
-            //preRollTimeline.
         }
 
         private void OnDisable()
