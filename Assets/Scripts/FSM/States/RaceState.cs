@@ -136,6 +136,12 @@ namespace Assets.Scripts.FSM.States
         {
             if(to == GAME_STATE.RACE)
             {
+                if (StateManager.instance.options.skipCountdown) //We need to enable the player cameras manually if we skipped countdown.
+                {
+                    StateManager.instance.EnableRaceCameras();
+                    Cursor.visible = false;
+                }
+
                 _players.ForEach(p => p.enabled = true); //Enable players
                 if (StateManager.instance.options.isAuto) //If auto mode
                 {

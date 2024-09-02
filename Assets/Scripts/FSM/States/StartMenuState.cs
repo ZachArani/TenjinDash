@@ -90,7 +90,7 @@ namespace Assets.Scripts
         }
 
         /// <summary>
-        /// Called when start button is selected
+        /// Called when start button is selected. Chooses next state based on options.
         /// </summary>
         public void OnStartSelect()
         {
@@ -100,6 +100,10 @@ namespace Assets.Scripts
             }
             else
             {
+                if (StateManager.instance.options.skipCountdown)
+                {
+                    StateManager.instance.TransitionTo(GAME_STATE.RACE);
+                }
                 StateManager.instance.TransitionTo(GAME_STATE.COUNTDOWN);
             }   
         }

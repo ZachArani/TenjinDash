@@ -56,17 +56,9 @@ public class StateManager : MonoBehaviour
     {
         options = GetComponent<Options>();
         currentState = GAME_STATE.START_MENU;
-        if (options.skipMenu) //Checks against the game's options. If skip options are set, skip the game's starting state to selected mode.
-        {
-            currentState = GAME_STATE.PREROLL;
-        }
-        if(options.skipPreroll)
-        {
-            if (options.skipMenu)
-            {
-                currentState = GAME_STATE.COUNTDOWN;
-            }
-        }
+
+        chooseStartingState();
+
         Initialize(currentState);
     }
 
@@ -111,7 +103,27 @@ public class StateManager : MonoBehaviour
         playerCams.ForEach(c => c.enabled = false);
     }
 
-
+    private void chooseStartingState()
+    {
+        if (options.skipMenu) //Checks against the game's options. If skip options are set, skip the game's starting state to selected mode.
+        {
+            currentState = GAME_STATE.PREROLL;
+        }
+        if (options.skipPreroll)
+        {
+            if (options.skipMenu) //If we're skipping menu AND preroll
+            {
+                if(options.skipCountdown) //If we're skipping menu AND preroll AND countdown
+                {
+                    currentState = GAME_STATE.RACE; //head right to the race
+                }
+                else
+                {
+                    currentState = GAME_STATE.COUNTDOWN; //Or to the countdown
+                }
+            }
+        }
+    }
 }
 
 
