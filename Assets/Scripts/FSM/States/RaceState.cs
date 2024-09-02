@@ -90,6 +90,13 @@ namespace Assets.Scripts.FSM.States
         [SerializeField]
         float raceCloseness = 1f;
 
+        /// <summary>
+        /// The distance along the path where we enter photo finish mode.
+        /// </summary>
+        [SerializeField]
+        private float _photoFinishStartPos;
+        public float photoFinishStartPos { get { return _photoFinishStartPos; } }
+
         // Use this for initialization
         void Start()
         {
@@ -132,6 +139,12 @@ namespace Assets.Scripts.FSM.States
             {
 
             }
+
+            //A little dirty (uses GetComponent in Update) TODO: Improve system
+            if(playerPos.First().GetComponent<CinemachineDollyCart>().m_Position >= photoFinishStartPos)
+            {
+                StateManager.instance.TransitionTo(GAME_STATE.PHOTO_FINISH);
+            }
         }
 
         void startRace(GAME_STATE from, GAME_STATE to)
@@ -165,6 +178,14 @@ namespace Assets.Scripts.FSM.States
                     _players.ForEach(p => p.isAuto = false); //Everyone is playing
                 }
             }
+        }
+
+        /// <summary>
+        /// Ends the race and switches to the Photo Finish mode.
+        /// </summary>
+        void endRace()
+        {
+            StateManager.instance.TransitionTo(GAME_STATE.PHOTO_FINISH);
         }
 
         /// <summary>

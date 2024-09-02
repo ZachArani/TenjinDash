@@ -227,6 +227,10 @@ public class NewMovement : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Measures Gyro data from Joycon.
+    /// Uses this data to decide the speed the player should move at next step.
+    /// </summary>
     private void CalcGyroData()
     {
         //Check if our current gyro reading period is within the timeWindow

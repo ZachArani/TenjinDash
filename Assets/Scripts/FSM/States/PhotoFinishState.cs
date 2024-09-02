@@ -1,16 +1,18 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.UI;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Playables;
 
 namespace Assets.Scripts.FSM.States
 {
     public class PhotoFinishState : MonoBehaviour
     {
+
         /// <summary>
-        /// The distance along the path where we enter photo finish mode.
+        /// Timeline that controls the photo finish cutscene
         /// </summary>
-        [SerializeField]
-        private float _photoFinishStartPos;
-        public float photoFinishStartPos { get { return _photoFinishStartPos; } }
+        public PlayableDirector photoFinishTimeline;
+
 
         void Start()
         {
@@ -21,6 +23,11 @@ namespace Assets.Scripts.FSM.States
         {
             if(to == GAME_STATE.PHOTO_FINISH)
             {
+                StateManager.instance.DisableRaceCameras();
+                UIManager.instance.toggleRaceUI(false);
+                UIManager.instance.toggleScreenSplitter(false);
+                Time.timeScale = 0f;
+                photoFinishTimeline.Play();
             }
         }
 
@@ -28,6 +35,11 @@ namespace Assets.Scripts.FSM.States
         void Update()
         {
 
+        }
+
+        public void ResumeTime()
+        {
+            Time.timeScale = 1f;
         }
 
         private void OnEnable()

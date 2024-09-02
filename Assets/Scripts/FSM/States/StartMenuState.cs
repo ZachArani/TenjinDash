@@ -65,7 +65,7 @@ namespace Assets.Scripts
         public void OnAutoSelect()
         {
             StateManager.instance.options.isAuto = true;
-            StateManager.instance.TransitionTo(GAME_STATE.PREROLL);
+            moveToNextState();
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Assets.Scripts
         public void OnSoloSelect()
         {
             StateManager.instance.options.isSolo = true;
-            StateManager.instance.TransitionTo(GAME_STATE.PREROLL);
+            moveToNextState();
         }
 
         /// <summary>
@@ -83,7 +83,16 @@ namespace Assets.Scripts
         /// </summary>
         public void OnStartSelect()
         {
-            if(!StateManager.instance.options.skipPreroll)
+            moveToNextState();
+        }
+
+        /// <summary>
+        /// Decides which state to transition to based on flags.
+        /// </summary>
+        void moveToNextState()
+        {
+            startMenuTimeline.Stop();
+            if (!StateManager.instance.options.skipPreroll)
             {
                 StateManager.instance.TransitionTo(GAME_STATE.PREROLL);
             }
@@ -94,7 +103,7 @@ namespace Assets.Scripts
                     StateManager.instance.TransitionTo(GAME_STATE.RACE);
                 }
                 StateManager.instance.TransitionTo(GAME_STATE.COUNTDOWN);
-            }   
+            }
         }
 
         private void OnEnable()

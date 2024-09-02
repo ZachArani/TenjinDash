@@ -36,7 +36,7 @@ public class StateManager : MonoBehaviour
     /// <summary>
     /// Current game state (As an enum value).
     /// </summary>
-    [ReadOnly]
+    [ReadOnly, SerializeField]
     private GAME_STATE _currentState; //Current game state
     public GAME_STATE currentState { get { return _currentState; } set { _currentState = value; } }
 
