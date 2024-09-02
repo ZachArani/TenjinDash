@@ -9,8 +9,8 @@ namespace Assets.Scripts.FSM.States
         /// The distance along the path where we enter photo finish mode.
         /// </summary>
         [SerializeField]
-        private float _photoFinishStart;
-        public float photoFinishStart { get { return _photoFinishStart; } }
+        private float _photoFinishStartPos;
+        public float photoFinishStartPos { get { return _photoFinishStartPos; } }
 
         void Start()
         {

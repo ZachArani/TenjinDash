@@ -121,8 +121,9 @@ public class NewMovement : MonoBehaviour
     /// The player's desired speed.
     /// Based on the most current gyro data. Indicates if the player should speed up or slow down from their current in-game speed.
     /// </summary>
-    [Range(0f, 25f)]
-    public float desiredSpeed;
+    [SerializeField, ReadOnly]
+//    [Range(0f, 25f)]
+    float desiredSpeed;
     /// <summary>
     /// Defines the maximum change of the t value, which is used in lerping the player's speed up or down.
     /// Basically, this forces the player to smoothly accelerate. If there was no max cap to the t value, then the player could go from 0 to 100 in an instant.
@@ -267,8 +268,9 @@ public class NewMovement : MonoBehaviour
         {
             float speedPush = UnityEngine.Random.Range(-randomFakeRange, randomFakeRange);
             desiredSpeed += speedPush;
-            Mathf.Clamp(desiredSpeed, 12, 14);
-            Debug.Log($"{gameObject.name}: {speedPush}, new Speed: {desiredSpeed}");
+            Debug.Log(desiredSpeed);
+            desiredSpeed = Mathf.Clamp(desiredSpeed, 12, 14);
+            //Debug.Log($"{gameObject.name}: {speedPush}, new Speed: {desiredSpeed}");
         }
     }
 

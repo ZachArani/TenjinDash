@@ -44,8 +44,8 @@ namespace Assets.Scripts.FSM.States
         private List<TextMeshProUGUI> _playerPosUI;
         public List<TextMeshProUGUI> playerPosUI { get { return _playerPosUI; } private set { _playerPosUI = value; } }
 
-
-        private List<string> _playerPosText = new List<string> { "1st", "2nd", "3rd", "4th" };
+        [SerializeField]
+        private List<string> _playerPosText;
         public List<string> playerPosText { get { return _playerPosText; } private set { _playerPosText = value; } } 
 
         
@@ -174,8 +174,8 @@ namespace Assets.Scripts.FSM.States
         {
             _players.ForEach(p =>
             {
-                int pos = playerPos.FindIndex(p => p);
-                playerPosUI[pos].text = _playerPosText[pos];
+                var pos = playerPos.FindIndex(i => i == p);
+                playerPosUI[_players.FindIndex(i => i == p)].text = _playerPosText[pos];
             });
         }
 
