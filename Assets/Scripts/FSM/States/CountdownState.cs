@@ -1,4 +1,5 @@
-﻿using Cinemachine;
+﻿using Assets.Scripts.UI;
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -47,12 +48,14 @@ namespace Assets.Scripts.FSM.States
                     Cursor.visible = false;
                 }
                 countdownTimeline.Play();
+                UIManager.instance.toggleCountdownUI(true);
+                UIManager.instance.toggleScreenSplitter(true);
+                UIManager.instance.toggleRaceUI(true);
             }
         }
 
         public void UpdateCountdown()
         {
-            countdownGUI.enabled = true;
             countdownGUI.text = countdown.ToString();
             countdown--;
             if (countdown == -1)

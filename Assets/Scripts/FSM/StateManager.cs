@@ -5,18 +5,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
+
+/// <summary>
+/// Singleton that manages the FSM overseeing the game.
+/// </summary>
 [Serializable]
 public class StateManager : MonoBehaviour
 {
     /// <summary>
+    /// StateMachine singleton.
+    /// </summary>
+    public static StateManager instance { get; private set; }
+
+    /// <summary>
     /// List of player cameras. Placed in this class because it ends up getting used by several states anyways.
     /// </summary>
     [field: SerializeField] public List<Camera> playerCams;
-
-    /// <summary>
-    /// StateMachine singleton.
-    /// </summary>
-    public static StateManager instance {  get; private set; }
 
     /// <summary>
     /// Event that triggers whenever the FSM changes state

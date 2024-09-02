@@ -1,4 +1,5 @@
-﻿using Cinemachine;
+﻿using Assets.Scripts.UI;
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -140,6 +141,8 @@ namespace Assets.Scripts.FSM.States
                 if (StateManager.instance.options.skipCountdown) //We need to enable the player cameras manually if we skipped countdown.
                 {
                     StateManager.instance.EnableRaceCameras();
+                    UIManager.instance.toggleRaceUI(true);
+                    UIManager.instance.toggleScreenSplitter(false);
                     Cursor.visible = false;
                 }
 

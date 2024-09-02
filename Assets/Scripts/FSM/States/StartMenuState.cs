@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using UnityEngine.Playables;
+using Assets.Scripts.UI;
 
 namespace Assets.Scripts
 {
@@ -22,18 +23,8 @@ namespace Assets.Scripts
         /// </summary>
         public PlayableDirector startMenuTimeline;
 
-        //Collection of start menu UI elements 
-        [SerializeField] TextMeshProUGUI auto;
-        [SerializeField] TextMeshProUGUI logo; 
-        [SerializeField] TextMeshProUGUI start;
-        public GameObject JoyCons;
-        public GameObject credits;
-        [SerializeField]
-        List<TextMeshProUGUI> textObj;
-
         void Start()
         {
-            credits.GetComponentsInChildren<TextMeshProUGUI>().ToList().ForEach(c => textObj.Add(c)); //Adds each TextMesh to credits list.
           
         }
 
@@ -56,14 +47,12 @@ namespace Assets.Scripts
             if (to == GAME_STATE.START_MENU)
             {
                 startMenuTimeline.Play();
-                textObj.ForEach(text => text.enabled = true);
-                JoyCons.GetComponentsInChildren<Image>().ToList().ForEach(joycon => joycon.enabled = true);
+                UIManager.instance.toggleStartUI(true);
                 Cursor.visible = true;
             }
             else if(from == GAME_STATE.START_MENU) 
             {
-                textObj.ForEach(text => text.enabled = false);
-                JoyCons.GetComponentsInChildren<Image>().ToList().ForEach(joycon => joycon.enabled = false);
+                UIManager.instance.toggleStartUI(false);
                 Cursor.visible = false;
             }
             
