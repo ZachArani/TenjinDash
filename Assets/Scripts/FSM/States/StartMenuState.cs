@@ -75,7 +75,7 @@ namespace Assets.Scripts
         /// </summary>
         public void OnAutoSelect()
         {
-            StateManager.instance.contexts.Add(GAME_CONTEXTS.AUTO);
+            StateManager.instance.options.isAuto = true;
             StateManager.instance.TransitionTo(GAME_STATE.PREROLL);
         }
 
@@ -85,7 +85,7 @@ namespace Assets.Scripts
         /// </summary>
         public void OnSoloSelect()
         {
-            StateManager.instance.contexts.Add(GAME_CONTEXTS.SOLO);
+            StateManager.instance.options.isSolo = true;
             StateManager.instance.TransitionTo(GAME_STATE.PREROLL);
         }
 
@@ -94,7 +94,7 @@ namespace Assets.Scripts
         /// </summary>
         public void OnStartSelect()
         {
-            if(!StateManager.instance.skipPreroll)
+            if(!StateManager.instance.options.skipPreroll)
             {
                 StateManager.instance.TransitionTo(GAME_STATE.PREROLL);
             }

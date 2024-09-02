@@ -5,8 +5,13 @@ namespace Assets.Scripts.FSM.States
 {
     public class PhotoFinishState : MonoBehaviour
     {
+        /// <summary>
+        /// The distance along the path where we enter photo finish mode.
+        /// </summary>
+        [SerializeField]
+        private float _photoFinishStart;
+        public float photoFinishStart { get { return _photoFinishStart; } }
 
-        // Use this for initialization
         void Start()
         {
 

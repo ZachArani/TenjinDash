@@ -8,9 +8,6 @@ using UnityEngine.Playables;
 [Serializable]
 public class StateManager : MonoBehaviour
 {
-    public bool SkipMenu;
-    public bool skipPreroll;
-
     /// <summary>
     /// List of player cameras. Placed in this class because it ends up getting used by several states anyways.
     /// </summary>
@@ -29,29 +26,14 @@ public class StateManager : MonoBehaviour
     /// <summary>
     ///  Object containing game options
     /// </summary>
-    public Options options; //TODO: Fold into this class
+    [NonSerialized]
+    public Options options;
 
     /// <summary>
     /// Current game state.
     /// </summary>
     public GAME_STATE currentState { get; private set; } //Current game state
 
-
-    /// <summary>
-    /// Set of current game contexts. HashSet is easy to search and only allows unique entries, which is perfect for our use case.
-    /// Game contexts can be any arbitrary state information: "SFX muted", "AUTO MODE", "2 PLAYER", etc.
-    /// Basically a utility variable to keep track of any extra flags floating around. 
-    /// May be removed if everything can be refactored to other classes.
-    /// </summary>
-    public HashSet<GAME_CONTEXTS> contexts { get; private set; }
-
-    ///for camera enable/disabling. Needed by multiple states so it goes here. 
-    //TODO: Move to utils class
-    //TODO: Generify to support many players--using a collection of some sort.
-    public CinemachineBrain player1Brain;
-    public CinemachineBrain player2Brain;
-    public CinemachineVirtualCamera player1Cam;
-    public CinemachineVirtualCamera player2Cam;
 
 
     /// <summary>
@@ -72,17 +54,15 @@ public class StateManager : MonoBehaviour
 
     void Start()
     {
-        contexts = new HashSet<GAME_CONTEXTS>();
+        options = GetComponent<Options>();
         currentState = GAME_STATE.START_MENU;
-        if (SkipMenu) //Checks against the game's options. If skip options are set, skip the game's starting state to selected mode.
+        if (options.skipMenu) //Checks against the game's options. If skip options are set, skip the game's starting state to selected mode.
         {
-            contexts.Add(GAME_CONTEXTS.SKIP_START_MENU);
             currentState = GAME_STATE.PREROLL;
         }
-        if(skipPreroll)
+        if(options.skipPreroll)
         {
-            contexts.Add(GAME_CONTEXTS.SKIP_PREROLL);
-            if (SkipMenu)
+            if (options.skipMenu)
             {
                 currentState = GAME_STATE.COUNTDOWN;
             }
@@ -131,28 +111,6 @@ public class StateManager : MonoBehaviour
         playerCams.ForEach(c => c.enabled = false);
     }
 
-    /// <summary>
-    /// Adds a new context flag to the game contexts.
-    /// </summary>
-    /// <param name="context">context flag to add to current contexts</param>
-    public void addContext(GAME_CONTEXTS context)
-    {
-        contexts.Add(context);
-    }
-
-    /// <summary>
-    /// Removes context flag from game contexts. 
-    /// </summary>
-    /// <param name="context"></param>
-    public void removeContext(GAME_CONTEXTS context)
-    {
-        if(!contexts.Remove(context))
-        {
-            Debug.Log($"{context} not found in current flags!");
-        }
-    
-    }
-
 
 }
 
@@ -170,24 +128,4 @@ public enum GAME_STATE
     RACE, //Actual race which starts when the countdown concludes
     PHOTO_FINISH, //State that plays when the two runners are neck-and-neck at the finish line 
     FINISH, //Game results screen
-}
-
-/// <summary>
-/// List of game contexts that might change what happens in certain states.
-/// Basically all the different "flags" the game might have at any given time.
-/// </summary>
-public enum GAME_CONTEXTS
-{
-    AUTO, //Both players are running automatically. "Demo" mode
-    SOLO, //One player runs automatically. 1 Player mode.
-
-    RESTART, //Need to restart the game
-
-    MUSIC_MUTED,
-    SFX_MUTED,
-
-    SKIP_START_MENU,
-    SKIP_PREROLL,
-    SKIP_COUNTDOWN,
-
 }

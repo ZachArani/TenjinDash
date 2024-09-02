@@ -20,7 +20,7 @@ namespace Assets.Scripts.FSM.States
         /// Public facing list of players. 
         /// Ordered by current standing (or player order if not in race)
         /// </summary>
-        public List<NewMovement> players { get { return _players; } set { _players = value; } }
+        public List<NewMovement> players { get { return _players; } private set { _players = value; } }
 
         /// <summary>
         /// Number of players in race.
@@ -41,9 +41,12 @@ namespace Assets.Scripts.FSM.States
         /// </summary>
         [SerializeField]
         private List<TextMeshProUGUI> _playerPosUI;
-        public List<TextMeshProUGUI> playerPosUI { get { return _playerPosUI; } set { _playerPosUI = value; } }
+        public List<TextMeshProUGUI> playerPosUI { get { return _playerPosUI; } private set { _playerPosUI = value; } }
 
-        public List<string> playerPosText = new List<string> { "1st", "2nd", "3rd", "4th" };
+
+        private List<string> _playerPosText = new List<string> { "1st", "2nd", "3rd", "4th" };
+        public List<string> playerPosText { get { return _playerPosText; } private set { _playerPosText = value; } } 
+
         
         //Margin of error when calcuating player positions.
         //If there is no MOE, then the 1st/2nd place UI flashes a *ton* when its a close race.
@@ -123,7 +126,7 @@ namespace Assets.Scripts.FSM.States
                 }
             } */
             updateStandingUI();
-            if(StateManager.instance.contexts.Contains(GAME_CONTEXTS.AUTO))
+            if(StateManager.instance.options.isAuto)
             {
 
             }
@@ -133,26 +136,36 @@ namespace Assets.Scripts.FSM.States
         {
             if(to == GAME_STATE.RACE)
             {
-                _players.ForEach(p => { p.enabled = true; }); //Enable Players
-                if (StateManager.instance.contexts.Contains(GAME_CONTEXTS.AUTO)) //If auto mode
+                _players.ForEach(p => p.enabled = true); //Enable players
+                if (StateManager.instance.options.isAuto) //If auto mode
                 {
+                    _players.ForEach(p => p.isAuto = true);
                 }
-                else if(StateManager.instance.contexts.Contains(GAME_CONTEXTS.SOLO)) //If 1 player
+                else if(StateManager.instance.options.isAuto) //If 1 player
                 {
+                    var players = _players.OrderByDescending(p => p.playerNum);
+                    players.First().isAuto = false; //First player is playing
+                    foreach(NewMovement player in players.Skip(1))
+                    {
+                        player.isAuto = true; //The rest are auto
+                    }
                 }
-                else //If 2 player
+                else
                 {
-
+                    _players.ForEach(p => p.isAuto = false); //Everyone is playing
                 }
             }
         }
 
+        /// <summary>
+        /// Updates the UI elements for current standings
+        /// </summary>
         void updateStandingUI()
         {
             _players.ForEach(p =>
             {
                 int pos = playerPos.FindIndex(p => p);
-                playerPosUI[pos].text = playerPosText[pos];
+                playerPosUI[pos].text = _playerPosText[pos];
             });
         }
 

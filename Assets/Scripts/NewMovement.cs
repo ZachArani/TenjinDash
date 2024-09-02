@@ -38,13 +38,8 @@ public class NewMovement : MonoBehaviour
     /// <summary>
     /// Determines if this player is running on auto mode or not.
     /// </summary>
-    [SerializeField]
-    bool isAuto { set; get; }
+    public bool isAuto { set; get; }
 
-    /// <summary>
-    /// Visual indication of speed. Mainly for debugging purposes.
-    /// </summary>
-    public TextMeshProUGUI speedUI;
    
     //Time variables for gyro measurements
     /// <summary>
@@ -204,10 +199,7 @@ public class NewMovement : MonoBehaviour
         Mathf.Clamp(t, 0f, 1f); //Clamp t between 0% and 100%
         speed = speedCurve.Evaluate(t); //Get new speed by evaluating t value on curve.
         speed = Mathf.Round(speed * 100f) / 100f;  //Truncate speed to 2 decimal places (X.XXXXXXXXX -> X.XX)
-        if (speedUI != null && speedUI.isActiveAndEnabled) //If we've plugged in the speedUI variable, display speed 
-        {
-            speedUI.text = speed.ToString();
-        }
+
 
         AutoSpeed(distanceToNextRand); //Fake speed data for demo/auto mode.
 
@@ -223,7 +215,14 @@ public class NewMovement : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
-        CalcGyroData();
+        if (isAuto)
+        {
+            AutoSpeed(distanceToNextRand);
+        }
+        else
+        {
+            CalcGyroData();
+        }
     }
 
     private void CalcGyroData()

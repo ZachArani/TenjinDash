@@ -10,19 +10,16 @@ namespace Assets.Scripts.FSM.States
         public PlayableDirector preRollTimeline;
 
 
-        // Use this for initialization
         void Start()
         {
 
         }
 
-        // Update is called once per frame
         void Update()
         {
 
         }
 
-        
 
         private void StartPreRoll(GAME_STATE from, GAME_STATE to)
         {
