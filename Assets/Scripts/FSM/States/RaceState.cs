@@ -1,43 +1,55 @@
 ﻿using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Scripts.FSM.States
 {
     public class RaceState : MonoBehaviour
     {
-        //Player movement objects
+        /// <summary>
+        /// List containing all players (through their NewMovement Component) in the race.
+        /// </summary>
         [SerializeField]
-        NewMovement player1;
-        [SerializeField]
-        NewMovement player2;
+        private List<NewMovement> _players;
 
-        //Player UI elements 
-        [SerializeField]
-        TextMeshProUGUI player1PosUI;
-        [SerializeField] 
-        TextMeshProUGUI player2PosUI;
-        [SerializeField]
-        [TextArea(1,1)]
-        public string firstPlaceText = "1st";
-        [SerializeField]
-        [TextArea(1,1)]
-        public string secondPlaceText = "2nd";
+        /// <summary>
+        /// Public facing list of players. 
+        /// Ordered by current standing (or player order if not in race)
+        /// </summary>
+        public List<NewMovement> players { get { return _players; } set { _players = value; } }
 
-        //Player dolly carts
-        CinemachineDollyCart player1Pos;
-        CinemachineDollyCart player2Pos;
+        /// <summary>
+        /// Number of players in race.
+        /// </summary>
+        public int numPlayers => _players.Count;
+
+
+        /// <summary>
+        /// Current standings in the race. Returns an List of the players based on their current position on their track.
+        /// </summary>
+        public List<NewMovement> playerPos 
+        {
+            get => _players.OrderByDescending(p => p.GetComponent<CinemachineDollyCart>().m_Position).ToList();
+        }
+
+        /// <summary>
+        /// List of all UI elements for player positions. Index 0 == P1, Index 1 == P2, etc.
+        /// </summary>
+        [SerializeField]
+        private List<TextMeshProUGUI> _playerPosUI;
+        public List<TextMeshProUGUI> playerPosUI { get { return _playerPosUI; } set { _playerPosUI = value; } }
+
+        public List<string> playerPosText = new List<string> { "1st", "2nd", "3rd", "4th" };
         
         //Margin of error when calcuating player positions.
         //If there is no MOE, then the 1st/2nd place UI flashes a *ton* when its a close race.
         [SerializeField]
         [Range(0, 2f)]
-        float player1Moe;
-        [SerializeField]
-        [Range(0, 2f)]
-        float player2Moe;
+        float playerPositionMOE;
 
         /// <summary>
         /// Used during demo modes to "fake" running speed. Decides how often (in terms of distance) to randomly roll a new speed for the player.
@@ -46,13 +58,6 @@ namespace Assets.Scripts.FSM.States
         [Range(10f, 100f)]
         float fakeItDistance = 15f;
 
-
-        bool inRace;
-
-        /// <summary>
-        /// Utility object to reference who is currently in first place.
-        /// </summary>
-        GameObject inFirst;
 
 
         [SerializeField]
@@ -83,27 +88,25 @@ namespace Assets.Scripts.FSM.States
         // Use this for initialization
         void Start()
         {
-            player1Pos = player1.GetComponent<CinemachineDollyCart>();
-            player2Pos = player2.GetComponent<CinemachineDollyCart>();
         }
 
         // Update is called once per frame
         void Update()
         {
-            if(inFirst != player1 && (player1Pos.m_Position + player1Moe) - (player2Pos.m_Position + player2Moe) > posDistanceMOE) //IF P1 ahead of P2
-            {
-                inFirst = player1.gameObject;
-                player1.losingSpeedBoost = 0f;
-                player2.losingSpeedBoost = losingSpeedBoost;
-                updateStandingUI();
-            }
-            else if(inFirst != player2 && (player2Pos.m_Position + player2Moe) - (player1Pos.m_Position + player1Moe) > posDistanceMOE) //If P2 ahead of P1
-            {
-                inFirst = player2.gameObject;
-                player2.losingSpeedBoost = 0f;
-                player1.GetComponent<NewMovement>().losingSpeedBoost = losingSpeedBoost;
-                updateStandingUI();
-            }
+            /* if(inFirst != player1 && (player1Pos.m_Position + playerPositionMOE) - (player2Pos.m_Position + player2Moe) > posDistanceMOE) //IF P1 ahead of P2
+             {
+                 inFirst = player1.gameObject;
+                 player1.losingSpeedBoost = 0f;
+                 player2.losingSpeedBoost = losingSpeedBoost;
+                 updateStandingUI();
+             }
+             else if(inFirst != player2 && (player2Pos.m_Position + player2Moe) - (player1Pos.m_Position + playerPositionMOE) > posDistanceMOE) //If P2 ahead of P1
+             {
+                 inFirst = player2.gameObject;
+                 player2.losingSpeedBoost = 0f;
+                 player1.GetComponent<NewMovement>().losingSpeedBoost = losingSpeedBoost;
+                 updateStandingUI();
+             }
 
             if(enforceCloseRace) //If we're enforcing a close race.
             {
@@ -118,6 +121,11 @@ namespace Assets.Scripts.FSM.States
                         Mathf.Clamp(player2.desiredSpeed, player2.desiredSpeed - raceCloseness, player2.desiredSpeed) :
                         Mathf.Clamp(player2.desiredSpeed, player1.desiredSpeed - raceCloseness, player1.desiredSpeed);
                 }
+            } */
+            updateStandingUI();
+            if(StateManager.instance.contexts.Contains(GAME_CONTEXTS.AUTO))
+            {
+
             }
         }
 
@@ -125,9 +133,7 @@ namespace Assets.Scripts.FSM.States
         {
             if(to == GAME_STATE.RACE)
             {
-                inRace = true;
-                player1.GetComponent<NewMovement>().enabled = true;
-                player2.GetComponent<NewMovement>().enabled = true;
+                _players.ForEach(p => { p.enabled = true; }); //Enable Players
                 if (StateManager.instance.contexts.Contains(GAME_CONTEXTS.AUTO)) //If auto mode
                 {
                 }
@@ -143,17 +149,11 @@ namespace Assets.Scripts.FSM.States
 
         void updateStandingUI()
         {
-            if(inFirst == player1)
+            _players.ForEach(p =>
             {
-                player1PosUI.text = firstPlaceText;
-                player2PosUI.text = secondPlaceText;
-            }
-            else if(inFirst == player2)
-            {
-                player1PosUI.text = secondPlaceText;
-                player2PosUI.text = firstPlaceText;
-            }
-            //Debug.Log($"{inFirst}");
+                int pos = playerPos.FindIndex(p => p);
+                playerPosUI[pos].text = playerPosText[pos];
+            });
         }
 
         private void OnEnable()

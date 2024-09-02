@@ -16905,7 +16905,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32654e80b40cef946823bf7446aee7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNum: 1
+  _playerNum: 0
   speedUI: {fileID: 2068772934}
   timeWindow: 0.1
   maxGyroChangeLog: 3
@@ -16940,7 +16940,7 @@ MonoBehaviour:
   desiredSpeed: 12
   maxTChange: 0.02
   randomFakeRange: 1
-  randomFakeDistance: 5
+  distanceToNextRand: 5
   losingSpeedBoost: 0
   runningTrack: {fileID: 1866473068}
 --- !u!114 &1025176339
@@ -20313,7 +20313,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1537760888}
-  m_LocalRotation: {x: 0.19202508, y: 0.4885279, z: -0.111166544, w: 0.84386545}
+  m_LocalRotation: {x: 0.19202505, y: 0.48852783, z: -0.111166514, w: 0.8438654}
   m_LocalPosition: {x: -406.95166, y: -28.867462, z: -563.21594}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -22170,7 +22170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32654e80b40cef946823bf7446aee7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNum: 0
+  _playerNum: 1
   speedUI: {fileID: 0}
   timeWindow: 0.1
   maxGyroChangeLog: 3
@@ -22205,7 +22205,7 @@ MonoBehaviour:
   desiredSpeed: 12
   maxTChange: 0.02
   randomFakeRange: 1
-  randomFakeDistance: 5
+  distanceToNextRand: 5
   losingSpeedBoost: 0
   runningTrack: {fileID: 2075009509}
 --- !u!114 &1972611485
@@ -22832,7 +22832,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091541679}
-  m_LocalRotation: {x: 0.19202508, y: 0.4885279, z: -0.111166544, w: 0.84386545}
+  m_LocalRotation: {x: 0.19202505, y: 0.48852783, z: -0.111166514, w: 0.8438654}
   m_LocalPosition: {x: -406.95166, y: -28.867462, z: -563.21594}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

@@ -24,9 +24,22 @@ public class NewMovement : MonoBehaviour
     /// </summary>
     Joycon j;
 
+    /// <summary>
+    /// Public access to playerNum in other methods.
+    /// </summary>
+    public int playerNum { get { return _playerNum; } private set { _playerNum = value; } }
+
+    /// <summary>
+    /// Which player this is (i.e. P1, P2, etc.)
+    /// </summary>
     [SerializeField]
-    [Range(1, 2)]
-    int playerNum;
+    private int _playerNum = 1;
+
+    /// <summary>
+    /// Determines if this player is running on auto mode or not.
+    /// </summary>
+    [SerializeField]
+    bool isAuto { set; get; }
 
     /// <summary>
     /// Visual indication of speed. Mainly for debugging purposes.
@@ -142,7 +155,7 @@ public class NewMovement : MonoBehaviour
     /// </summary>
     [SerializeField]
     [Range(1f, 50f)]
-    float randomFakeDistance = 5f;
+    float distanceToNextRand = 5f;
 
     /// <summary>
     /// Used to boost player 2 if they are behind in the race.
@@ -172,7 +185,7 @@ public class NewMovement : MonoBehaviour
         maxGyroChange = Mathf.Exp(maxGyroChangeLog); //Calculate the maximum gyro change value based on the logarithmic value we defined earlier.
         speed = startingSpeed;
         t = 0.05f; //Set at 0.05 right now to fix a bug. TODO: Allow t-value to run at 0.00
-        j = JoyconManager.Instance.j[playerNum-1]; //Reads data from first joycon connected to pc.
+        j = JoyconManager.Instance.j[_playerNum-1]; //Reads data from first joycon connected to pc.
     }
 
     // Update is called once per frame
@@ -196,7 +209,7 @@ public class NewMovement : MonoBehaviour
             speedUI.text = speed.ToString();
         }
 
-        FakeItTillYaMakeIt(randomFakeDistance); //Fake speed data for demo/auto mode.
+        AutoSpeed(distanceToNextRand); //Fake speed data for demo/auto mode.
 
         track.m_Speed = speed; //Updates our actual movement along the running track. Tells the track the speed to advance at.
 
@@ -210,10 +223,15 @@ public class NewMovement : MonoBehaviour
     /// </summary>
     private void FixedUpdate()
     {
+        CalcGyroData();
+    }
+
+    private void CalcGyroData()
+    {
         //Check if our current gyro reading period is within the timeWindow
         if (currentTimeInWindow < timeWindow)
         {
-            currentTimeInWindow += Time.fixedDeltaTime; 
+            currentTimeInWindow += Time.fixedDeltaTime;
         }
         else //If we're past the current window
         {
@@ -226,6 +244,7 @@ public class NewMovement : MonoBehaviour
             gyroPercentage = Mathf.Clamp(Mathf.Lerp(gyroPercentage, currentGyroAverage, Mathf.Exp(-maxGyroChange * Time.deltaTime)) - correctionFactor,
                                         0,
                                         maxGyroSpeed) / maxGyroSpeed;
+            desiredSpeed = gyroPercentage * maxRunnerSpeed; //New desired speed is based on % gyro readings (player running IRL) relative to player character's max speed
             currentGyroAverage = 0;
         }
     }
@@ -235,17 +254,16 @@ public class NewMovement : MonoBehaviour
     /// </summary>
     void GetNewGyroData()
     {
-        //transform.position = j.GetGyro();
         currentGyroAverage += j.GetGyro().magnitude;
     }
 
     /// <summary>
     /// Fake movement for videos, etc.
     /// </summary>
-    /// <param name="distance">How often to change speeds</param>
-    void FakeItTillYaMakeIt(float distance)
+    /// <param name="distanceToSpeedChange">How often to change speeds</param>
+    void AutoSpeed(float distanceToSpeedChange)
     {
-        if (GetComponent<CinemachineDollyCart>().m_Position % distance < 0.1) //If we've approached the required distance
+        if (GetComponent<CinemachineDollyCart>().m_Position % distanceToSpeedChange < 0.1) //If we've approached the required distance
         {
             float speedPush = UnityEngine.Random.Range(-randomFakeRange, randomFakeRange);
             desiredSpeed += speedPush;
@@ -258,7 +276,7 @@ public class NewMovement : MonoBehaviour
     private void OnEnable()
     {
         Joycon.OnNewGyroData += GetNewGyroData; //Subscribe to the OnNewGyroData event in the Joycon Class.
-        j = JoyconManager.Instance.j[0]; //Grab the joycon object
+        j = JoyconManager.Instance.j[_playerNum-1]; //Grab the joycon object again.
     }
 
     private void OnDisable()
