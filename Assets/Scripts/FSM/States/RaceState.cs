@@ -128,6 +128,16 @@ namespace Assets.Scripts.FSM.States
                 inRace = true;
                 player1.GetComponent<NewMovement>().enabled = true;
                 player2.GetComponent<NewMovement>().enabled = true;
+                if (StateManager.instance.contexts.Contains(GAME_CONTEXTS.AUTO)) //If auto mode
+                {
+                }
+                else if(StateManager.instance.contexts.Contains(GAME_CONTEXTS.SOLO)) //If 1 player
+                {
+                }
+                else //If 2 player
+                {
+
+                }
             }
         }
 

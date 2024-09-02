@@ -24,6 +24,10 @@ public class NewMovement : MonoBehaviour
     /// </summary>
     Joycon j;
 
+    [SerializeField]
+    [Range(1, 2)]
+    int playerNum;
+
     /// <summary>
     /// Visual indication of speed. Mainly for debugging purposes.
     /// </summary>
@@ -168,7 +172,7 @@ public class NewMovement : MonoBehaviour
         maxGyroChange = Mathf.Exp(maxGyroChangeLog); //Calculate the maximum gyro change value based on the logarithmic value we defined earlier.
         speed = startingSpeed;
         t = 0.05f; //Set at 0.05 right now to fix a bug. TODO: Allow t-value to run at 0.00
-        j = JoyconManager.Instance.j[0]; //Reads data from first joycon connected to pc. TODO: Generify for P1/P2 support.
+        j = JoyconManager.Instance.j[playerNum-1]; //Reads data from first joycon connected to pc.
     }
 
     // Update is called once per frame
@@ -201,6 +205,9 @@ public class NewMovement : MonoBehaviour
         animator.SetBool("isAccelerating", isAccelerating);
     }
 
+    /// <summary>
+    /// time and gyro calculations done in FixedUpdate for reliable timings.
+    /// </summary>
     private void FixedUpdate()
     {
         //Check if our current gyro reading period is within the timeWindow
@@ -214,7 +221,7 @@ public class NewMovement : MonoBehaviour
             //Calculate the gyro percentage (current value vs max possible value) based on:
             //1) The current average of gyro samples taken during the window
             //2) The maximum gyro change as defined by the developer (meaning the new percentage can't change *too* much compared to the last one)
-            //3) The correction factor as defined by the develoepr (subtracks a constant from the max gyro change)
+            //3) The correction factor as defined by the developer (subtracts a constant from the max gyro change)
             //4) The max gyro speed, which is the max possible value for gyro readings.
             gyroPercentage = Mathf.Clamp(Mathf.Lerp(gyroPercentage, currentGyroAverage, Mathf.Exp(-maxGyroChange * Time.deltaTime)) - correctionFactor,
                                         0,

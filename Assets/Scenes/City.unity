@@ -16905,6 +16905,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32654e80b40cef946823bf7446aee7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerNum: 1
   speedUI: {fileID: 2068772934}
   timeWindow: 0.1
   maxGyroChangeLog: 3
@@ -22169,6 +22170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32654e80b40cef946823bf7446aee7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerNum: 0
   speedUI: {fileID: 0}
   timeWindow: 0.1
   maxGyroChangeLog: 3

@@ -43,7 +43,7 @@ public class StateManager : MonoBehaviour
     /// Basically a utility variable to keep track of any extra flags floating around. 
     /// May be removed if everything can be refactored to other classes.
     /// </summary>
-    public HashSet<GAME_CONTEXTS> contexts;
+    public HashSet<GAME_CONTEXTS> contexts { get; private set; }
 
     ///for camera enable/disabling. Needed by multiple states so it goes here. 
     //TODO: Move to utils class
@@ -118,7 +118,7 @@ public class StateManager : MonoBehaviour
     /// </summary>
     public void EnableRaceCameras()
     {
-        Debug.Log("Enabling race cameras.")
+        Debug.Log("Enabling race cameras.");
         playerCams.ForEach(c => c.enabled = true);
     }
 
@@ -130,6 +130,29 @@ public class StateManager : MonoBehaviour
         Debug.Log("Disabling race cameras.");
         playerCams.ForEach(c => c.enabled = false);
     }
+
+    /// <summary>
+    /// Adds a new context flag to the game contexts.
+    /// </summary>
+    /// <param name="context">context flag to add to current contexts</param>
+    public void addContext(GAME_CONTEXTS context)
+    {
+        contexts.Add(context);
+    }
+
+    /// <summary>
+    /// Removes context flag from game contexts. 
+    /// </summary>
+    /// <param name="context"></param>
+    public void removeContext(GAME_CONTEXTS context)
+    {
+        if(!contexts.Remove(context))
+        {
+            Debug.Log($"{context} not found in current flags!");
+        }
+    
+    }
+
 
 }
 
@@ -155,10 +178,10 @@ public enum GAME_STATE
 /// </summary>
 public enum GAME_CONTEXTS
 {
-    AUTO,
-    SOLO,
+    AUTO, //Both players are running automatically. "Demo" mode
+    SOLO, //One player runs automatically. 1 Player mode.
 
-    RESTART,
+    RESTART, //Need to restart the game
 
     MUSIC_MUTED,
     SFX_MUTED,
