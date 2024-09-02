@@ -68,11 +68,12 @@ namespace Assets.Scripts.FSM.States
         float posDistanceMOE = 0.5f;
 
         /// <summary>
-        /// Decides how much of a speed boost to give to the 2nd place runner. 
+        /// Decides how much of a speed boost to give to the losing runners
         /// </summary>
         [SerializeField]
         [Range(0f, 2f)]
-        float losingSpeedBoost = 0.3f;
+        float _losingSpeedBoost = 0.3f;
+        public float losingSpeedBoost { get { return _losingSpeedBoost; } set {  _losingSpeedBoost = value; } }
 
         /// <summary>
         /// Basically enforces "rubberbanding" behavior. 
@@ -142,7 +143,7 @@ namespace Assets.Scripts.FSM.States
                     Cursor.visible = false;
                 }
 
-                _players.ForEach(p => p.enabled = true); //Enable players
+                _players.ForEach(p => { p.enabled = true; p.losingSpeedBoost = losingSpeedBoost; }); //Enable players and set their speedBoost to the config'd value
                 if (StateManager.instance.options.isAuto) //If auto mode
                 {
                     _players.ForEach(p => p.isAuto = true);

@@ -26,6 +26,7 @@ namespace Assets.Scripts.FSM.States
         {
             if(to == GAME_STATE.FINISH)
             {
+
                 Cursor.visible = true;
             }
 

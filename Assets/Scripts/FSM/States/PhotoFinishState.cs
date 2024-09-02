@@ -17,10 +17,27 @@ namespace Assets.Scripts.FSM.States
 
         }
 
+        void StartPhotoFinish(GAME_STATE from, GAME_STATE to)
+        {
+            if(to == GAME_STATE.PHOTO_FINISH)
+            {
+            }
+        }
+
         // Update is called once per frame
         void Update()
         {
 
+        }
+
+        private void OnEnable()
+        {
+            StateManager.onGameStateChanged += StartPhotoFinish;   
+        }
+
+        private void OnDisable()
+        {
+            StateManager.onGameStateChanged -= StartPhotoFinish;
         }
     }
 }

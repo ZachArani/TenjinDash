@@ -30,10 +30,11 @@ public class StateManager : MonoBehaviour
     public Options options;
 
     /// <summary>
-    /// Current game state.
+    /// Current game state (As an enum value).
     /// </summary>
-    public GAME_STATE currentState { get; private set; } //Current game state
-
+    [ReadOnly]
+    private GAME_STATE _currentState; //Current game state
+    public GAME_STATE currentState { get { return _currentState; } set { _currentState = value; } }
 
 
     /// <summary>
@@ -75,7 +76,8 @@ public class StateManager : MonoBehaviour
 
     /// <summary>
     /// Transitions the state machine to a new state. 
-    /// Triggers onGameStateChanged event
+    /// Triggers onGameStateChanged event, which allows a subscribed state object the handle the transition.
+    /// Obviously this requires states to be on good behavior, but we assume the best of our programming here...
     /// </summary>
     /// <param name="nextState">Next state to transition to</param>
     public void TransitionTo(GAME_STATE nextState)

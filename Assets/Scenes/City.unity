@@ -16896,8 +16896,8 @@ MonoBehaviour:
   maxTChange: 0.02
   randomFakeRange: 1
   distanceToNextRand: 5
-  losingSpeedBoost: 0
   runningTrack: {fileID: 1866473068}
+  losingSpeedBoost: 0
 --- !u!114 &1025176339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16968,7 +16968,7 @@ MonoBehaviour:
   playerPositionMOE: 0
   fakeItDistance: 15
   posDistanceMOE: 0.01
-  losingSpeedBoost: 0.5
+  _losingSpeedBoost: 0.3
   enforceCloseRace: 1
   raceCloseness: 1
 --- !u!1 &1036825937
@@ -20918,7 +20918,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _skipMenu: 1
   _skipPreroll: 1
-  _skipCoutndown: 1
+  _skipCoutndown: 0
   _isAuto: 1
   _isSolo: 0
   _muteSFX: 0
@@ -22172,8 +22172,8 @@ MonoBehaviour:
   maxTChange: 0.02
   randomFakeRange: 1
   distanceToNextRand: 5
-  losingSpeedBoost: 0
   runningTrack: {fileID: 2075009509}
+  losingSpeedBoost: 0
 --- !u!114 &1972611485
 MonoBehaviour:
   m_ObjectHideFlags: 0

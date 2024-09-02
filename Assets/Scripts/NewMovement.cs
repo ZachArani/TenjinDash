@@ -152,11 +152,6 @@ public class NewMovement : MonoBehaviour
     [Range(1f, 50f)]
     float distanceToNextRand = 5f;
 
-    /// <summary>
-    /// Used to boost player 2 if they are behind in the race.
-    /// </summary>
-    [ReadOnly]
-    public float losingSpeedBoost = 0f;
 
     /// <summary>
     /// The running track this player races on.
@@ -169,6 +164,12 @@ public class NewMovement : MonoBehaviour
     /// Animator used for controlling player animations.
     /// </summary>
     Animator animator;
+
+    /// <summary>
+    /// How much of a speed Boost to apply to losing players. Taken from RaceState's config at runtime.
+    /// </summary>
+    [ReadOnly]
+    public float losingSpeedBoost = 0f;
 
 
     // Start is called before the first frame update
@@ -266,7 +267,7 @@ public class NewMovement : MonoBehaviour
         {
             float speedPush = UnityEngine.Random.Range(-randomFakeRange, randomFakeRange);
             desiredSpeed += speedPush;
-            Mathf.Clamp(desiredSpeed, 8, 15);
+            Mathf.Clamp(desiredSpeed, 12, 14);
             Debug.Log($"{gameObject.name}: {speedPush}, new Speed: {desiredSpeed}");
         }
     }
