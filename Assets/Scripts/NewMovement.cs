@@ -188,7 +188,7 @@ public class NewMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (desiredSpeed + losingSpeedBoost > speed) //If the new gyro readings are faster then the current in-game speed
+        if (desiredSpeed > 0.1f &&  desiredSpeed + losingSpeedBoost > speed) //If the new gyro readings are faster then the current in-game speed
         {
             t += maxTChange * Time.deltaTime; //Increase t (speed up)
             isAccelerating = true;
@@ -201,10 +201,6 @@ public class NewMovement : MonoBehaviour
         Mathf.Clamp(t, 0f, 1f); //Clamp t between 0% and 100%
         speed = speedCurve.Evaluate(t); //Get new speed by evaluating t value on curve.
         speed = Mathf.Round(speed * 100f) / 100f;  //Truncate speed to 2 decimal places (X.XXXXXXXXX -> X.XX)
-
-
-        AutoSpeed(distanceToNextRand); //Fake speed data for demo/auto mode.
-
         track.m_Speed = speed; //Updates our actual movement along the running track. Tells the track the speed to advance at.
 
         //Update animation info
@@ -281,8 +277,8 @@ public class NewMovement : MonoBehaviour
 
     private void OnEnable()
     {
+        j = JoyconManager.Instance.j[_playerNum - 1]; //Grab the joycon object again.
         Joycon.OnNewGyroData += GetNewGyroData; //Subscribe to the OnNewGyroData event in the Joycon Class.
-        j = JoyconManager.Instance.j[_playerNum-1]; //Grab the joycon object again.
     }
 
     private void OnDisable()

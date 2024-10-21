@@ -16880,7 +16880,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32654e80b40cef946823bf7446aee7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNum: 0
+  _playerNum: 1
   timeWindow: 0.1
   maxGyroChangeLog: 3
   correctionFactor: 3
@@ -16990,7 +16990,7 @@ MonoBehaviour:
   playerPositionMOE: 0
   fakeItDistance: 15
   posDistanceMOE: 0.01
-  _losingSpeedBoost: 0.3
+  _losingSpeedBoost: 0.03
   enforceCloseRace: 1
   raceCloseness: 1
   _photoFinishStartPos: 541.5
@@ -20811,9 +20811,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a71e98f98ed617643b25d94368d12790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skipMenu: 0
-  _skipPreroll: 0
-  _skipCoutndown: 0
+  _skipMenu: 1
+  _skipPreroll: 1
+  _skipCoutndown: 1
   _isAuto: 0
   _isSolo: 0
   _muteSFX: 0
@@ -22070,7 +22070,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32654e80b40cef946823bf7446aee7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNum: 1
+  _playerNum: 2
   timeWindow: 0.1
   maxGyroChangeLog: 3
   correctionFactor: 3

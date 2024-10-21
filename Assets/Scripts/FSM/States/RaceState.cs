@@ -141,7 +141,7 @@ namespace Assets.Scripts.FSM.States
             }
 
             //A little dirty (uses GetComponent in Update) TODO: Improve system
-            if(playerPos.First().GetComponent<CinemachineDollyCart>().m_Position >= photoFinishStartPos)
+            if(playerPos.First().GetComponent<CinemachineDollyCart>().m_Position >= photoFinishStartPos && StateManager.instance.currentState == GAME_STATE.RACE)
             {
                 StateManager.instance.TransitionTo(GAME_STATE.PHOTO_FINISH);
             }
