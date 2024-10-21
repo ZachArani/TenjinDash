@@ -117,17 +117,21 @@ public class NewMovement : MonoBehaviour
     /// Changing the curve will affect how fast/slow a player speeds up/slows down
     /// </summary>
     public AnimationCurve speedCurve;
+
     /// <summary>
     /// The player's desired speed.
     /// Based on the most current gyro data. Indicates if the player should speed up or slow down from their current in-game speed.
+    /// Can be manipulated by other classes. Namely the PhotoFinish state to handle a skipToPhotoFinish mode
     /// </summary>
     [SerializeField, ReadOnly]
-//    [Range(0f, 25f)]
-    float desiredSpeed;
+    float _desiredSpeed;
+    public float desiredSpeed { get { return _desiredSpeed; } set { _desiredSpeed = value; } }
+
     /// <summary>
     /// Defines the maximum change of the t value, which is used in lerping the player's speed up or down.
     /// Basically, this forces the player to smoothly accelerate. If there was no max cap to the t value, then the player could go from 0 to 100 in an instant.
     /// </summary>
+    /// 
     [Range(0f, 0.4f)]
     public float maxTChange;
     /// <summary>
@@ -188,12 +192,12 @@ public class NewMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (desiredSpeed > 0.1f &&  desiredSpeed + losingSpeedBoost > speed) //If the new gyro readings are faster then the current in-game speed
+        if (_desiredSpeed > 0.1f &&  _desiredSpeed + losingSpeedBoost > speed) //If the new gyro readings are faster then the current in-game speed
         {
             t += maxTChange * Time.deltaTime; //Increase t (speed up)
             isAccelerating = true;
         }
-        else if (desiredSpeed + losingSpeedBoost < speed) //If the new gyro readings are slower than current in-game speed
+        else if (_desiredSpeed + losingSpeedBoost < speed) //If the new gyro readings are slower than current in-game speed
         {
             t -= maxTChange * Time.deltaTime; //decrease t (slow down)
             isAccelerating = false;
@@ -245,7 +249,7 @@ public class NewMovement : MonoBehaviour
             gyroPercentage = Mathf.Clamp(Mathf.Lerp(gyroPercentage, currentGyroAverage, Mathf.Exp(-maxGyroChange * Time.deltaTime)) - correctionFactor,
                                         0,
                                         maxGyroSpeed) / maxGyroSpeed;
-            desiredSpeed = gyroPercentage * maxRunnerSpeed; //New desired speed is based on % gyro readings (player running IRL) relative to player character's max speed
+            _desiredSpeed = gyroPercentage * maxRunnerSpeed; //New desired speed is based on % gyro readings (player running IRL) relative to player character's max speed
             currentGyroAverage = 0;
         }
     }
@@ -267,10 +271,10 @@ public class NewMovement : MonoBehaviour
         if (GetComponent<CinemachineDollyCart>().m_Position % distanceToSpeedChange < 0.1) //If we've approached the required distance
         {
             float speedPush = UnityEngine.Random.Range(-randomFakeRange, randomFakeRange);
-            desiredSpeed += speedPush;
-            Debug.Log(desiredSpeed);
-            desiredSpeed = Mathf.Clamp(desiredSpeed, 12, 14);
-            //Debug.Log($"{gameObject.name}: {speedPush}, new Speed: {desiredSpeed}");
+            _desiredSpeed += speedPush;
+            Debug.Log(_desiredSpeed);
+            _desiredSpeed = Mathf.Clamp(_desiredSpeed, 12, 14);
+            //Debug.Log($"{gameObject.name}: {speedPush}, new Speed: {_desiredSpeed}");
         }
     }
 

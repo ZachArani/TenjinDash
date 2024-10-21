@@ -16911,7 +16911,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  desiredSpeed: 12
+  _desiredSpeed: 0
   maxTChange: 0.02
   randomFakeRange: 1
   distanceToNextRand: 5
@@ -16978,9 +16978,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17f5cc2d050d5704d9e2028bdefc4b92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _players:
-  - {fileID: 1025176338}
-  - {fileID: 1972611484}
   _playerPosUI:
   - {fileID: 1084269422}
   - {fileID: 1353996567}
@@ -16993,7 +16990,6 @@ MonoBehaviour:
   _losingSpeedBoost: 0.03
   enforceCloseRace: 1
   raceCloseness: 1
-  _photoFinishStartPos: 541.5
 --- !u!1 &1036825937
 GameObject:
   m_ObjectHideFlags: 0
@@ -20748,6 +20744,10 @@ MonoBehaviour:
   - {fileID: 677470225}
   - {fileID: 2091541682}
   _currentState: 0
+  _players:
+  - {fileID: 1025176338}
+  - {fileID: 1972611484}
+  _finishLinePos: 541.5
 --- !u!4 &1845276987
 Transform:
   m_ObjectHideFlags: 0
@@ -20814,6 +20814,7 @@ MonoBehaviour:
   _skipMenu: 1
   _skipPreroll: 1
   _skipCoutndown: 1
+  _skipRace: 1
   _isAuto: 0
   _isSolo: 0
   _muteSFX: 0
@@ -22101,7 +22102,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  desiredSpeed: 12
+  _desiredSpeed: 0
   maxTChange: 0.02
   randomFakeRange: 1
   distanceToNextRand: 5

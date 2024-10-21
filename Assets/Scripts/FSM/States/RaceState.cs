@@ -11,22 +11,7 @@ namespace Assets.Scripts.FSM.States
 {
     public class RaceState : MonoBehaviour
     {
-        /// <summary>
-        /// List containing all players (through their NewMovement Component) in the race.
-        /// </summary>
-        [SerializeField]
-        private List<NewMovement> _players;
 
-        /// <summary>
-        /// Public facing list of players. 
-        /// Ordered by current standing (or player order if not in race)
-        /// </summary>
-        public List<NewMovement> players { get { return _players; } private set { _players = value; } }
-
-        /// <summary>
-        /// Number of players in race.
-        /// </summary>
-        public int numPlayers => _players.Count;
 
 
         /// <summary>
@@ -34,7 +19,7 @@ namespace Assets.Scripts.FSM.States
         /// </summary>
         public List<NewMovement> playerPos 
         {
-            get => _players.OrderByDescending(p => p.GetComponent<CinemachineDollyCart>().m_Position).ToList();
+            get => StateManager.instance.players.OrderByDescending(p => p.GetComponent<CinemachineDollyCart>().m_Position).ToList();
         }
 
         /// <summary>
@@ -90,13 +75,6 @@ namespace Assets.Scripts.FSM.States
         [SerializeField]
         float raceCloseness = 1f;
 
-        /// <summary>
-        /// The distance along the path where we enter photo finish mode.
-        /// </summary>
-        [SerializeField]
-        private float _photoFinishStartPos;
-        public float photoFinishStartPos { get { return _photoFinishStartPos; } }
-
         // Use this for initialization
         void Start()
         {
@@ -122,16 +100,16 @@ namespace Assets.Scripts.FSM.States
 
             if(enforceCloseRace) //If we're enforcing a close race.
             {
-                if(Mathf.Abs(player1.desiredSpeed - player2.desiredSpeed) > raceCloseness) //If one player is too fast or slow
+                if(Mathf.Abs(player1._desiredSpeed - player2._desiredSpeed) > raceCloseness) //If one player is too fast or slow
                 {
                     Debug.Log("Players too far apart! Enforcing close race!");
-                    float avgSpeed = (player1.desiredSpeed + player2.desiredSpeed) / 2; 
-                    player1.desiredSpeed = (inFirst == player1.gameObject) ? //Pushes both players in the same speed range based on their combined average speed.
-                        Mathf.Clamp(player1.desiredSpeed, player1.desiredSpeed - raceCloseness, player1.desiredSpeed) :
-                        Mathf.Clamp(player1.desiredSpeed, player2.desiredSpeed - raceCloseness, player2.desiredSpeed);
-                    player2.desiredSpeed = (inFirst == player2.gameObject) ?
-                        Mathf.Clamp(player2.desiredSpeed, player2.desiredSpeed - raceCloseness, player2.desiredSpeed) :
-                        Mathf.Clamp(player2.desiredSpeed, player1.desiredSpeed - raceCloseness, player1.desiredSpeed);
+                    float avgSpeed = (player1._desiredSpeed + player2._desiredSpeed) / 2; 
+                    player1._desiredSpeed = (inFirst == player1.gameObject) ? //Pushes both players in the same speed range based on their combined average speed.
+                        Mathf.Clamp(player1._desiredSpeed, player1._desiredSpeed - raceCloseness, player1._desiredSpeed) :
+                        Mathf.Clamp(player1._desiredSpeed, player2._desiredSpeed - raceCloseness, player2._desiredSpeed);
+                    player2._desiredSpeed = (inFirst == player2.gameObject) ?
+                        Mathf.Clamp(player2._desiredSpeed, player2._desiredSpeed - raceCloseness, player2._desiredSpeed) :
+                        Mathf.Clamp(player2._desiredSpeed, player1._desiredSpeed - raceCloseness, player1._desiredSpeed);
                 }
             } */
             updateStandingUI();
@@ -141,7 +119,7 @@ namespace Assets.Scripts.FSM.States
             }
 
             //A little dirty (uses GetComponent in Update) TODO: Improve system
-            if(playerPos.First().GetComponent<CinemachineDollyCart>().m_Position >= photoFinishStartPos && StateManager.instance.currentState == GAME_STATE.RACE)
+            if(playerPos.First().GetComponent<CinemachineDollyCart>().m_Position >= StateManager.instance.finishLinePos && StateManager.instance.currentState == GAME_STATE.RACE)
             {
                 StateManager.instance.TransitionTo(GAME_STATE.PHOTO_FINISH);
             }
@@ -159,14 +137,14 @@ namespace Assets.Scripts.FSM.States
                     Cursor.visible = false;
                 }
 
-                _players.ForEach(p => { p.enabled = true; p.losingSpeedBoost = losingSpeedBoost; }); //Enable players and set their speedBoost to the config'd value
+                StateManager.instance.players.ForEach(p => { p.enabled = true; p.losingSpeedBoost = losingSpeedBoost; }); //Enable players and set their speedBoost to the config'd value
                 if (StateManager.instance.options.isAuto) //If auto mode
                 {
-                    _players.ForEach(p => p.isAuto = true);
+                    StateManager.instance.players.ForEach(p => p.isAuto = true);
                 }
                 else if(StateManager.instance.options.isAuto) //If 1 player
                 {
-                    var players = _players.OrderByDescending(p => p.playerNum);
+                    var players = StateManager.instance.players.OrderByDescending(p => p.playerNum);
                     players.First().isAuto = false; //First player is playing
                     foreach(NewMovement player in players.Skip(1))
                     {
@@ -175,7 +153,7 @@ namespace Assets.Scripts.FSM.States
                 }
                 else
                 {
-                    _players.ForEach(p => p.isAuto = false); //Everyone is playing
+                    StateManager.instance.players.ForEach(p => p.isAuto = false); //Everyone is playing
                 }
             }
         }
@@ -193,10 +171,10 @@ namespace Assets.Scripts.FSM.States
         /// </summary>
         void updateStandingUI()
         {
-            _players.ForEach(p =>
+            StateManager.instance.players.ForEach(p =>
             {
                 var pos = playerPos.FindIndex(i => i == p);
-                playerPosUI[_players.FindIndex(i => i == p)].text = _playerPosText[pos];
+                playerPosUI[StateManager.instance.players.FindIndex(i => i == p)].text = _playerPosText[pos];
             });
         }
 

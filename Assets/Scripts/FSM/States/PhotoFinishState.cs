@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.UI;
+using Cinemachine;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -23,6 +24,16 @@ namespace Assets.Scripts.FSM.States
         {
             if(to == GAME_STATE.PHOTO_FINISH)
             {
+                if(StateManager.instance.options.skipRace)
+                {
+                    StateManager.instance.players.ForEach(p => { 
+                        p.enabled = true;
+                        p.desiredSpeed = p.maxRunnerSpeed;
+                        p.isAuto = true;
+                        p.GetComponent<Animator>().Play("RunTree");
+                        p.GetComponent<CinemachineDollyCart>().m_Position = StateManager.instance.finishLinePos;
+                    }); //Enable players and set their speedBoost to the config'd value
+                }
                 StateManager.instance.DisableRaceCameras();
                 UIManager.instance.toggleRaceUI(false);
                 UIManager.instance.toggleScreenSplitter(false);

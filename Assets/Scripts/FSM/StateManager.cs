@@ -42,6 +42,32 @@ public class StateManager : MonoBehaviour
 
 
     /// <summary>
+    /// List containing all players (through their NewMovement Component) in the race.
+    /// </summary>
+    [SerializeField]
+    private List<NewMovement> _players;
+
+    /// <summary>
+    /// Public facing list of players. 
+    /// Ordered by current standing (or player order if not in race)
+    /// </summary>
+    public List<NewMovement> players { get { return _players; } private set { _players = value; } }
+
+    /// <summary>
+    /// Number of players in race.
+    /// </summary>
+    public int numPlayers => _players.Count;
+
+    /// <summary>
+    /// Determines where the finish point is that ends the race and starts the photoFinish/Finish modes
+    /// Stored as the distance from the starting point (e.g. 541.5 units)
+    /// </summary>
+    [SerializeField]
+    private float _finishLinePos;
+    public float finishLinePos { get { return _finishLinePos; } private set { _finishLinePos = value; } }
+
+
+    /// <summary>
     /// Used to ensure singleton is properly loaded. Either creates one instance or kills any other instance.
     /// </summary>
     private void Awake()
@@ -109,23 +135,33 @@ public class StateManager : MonoBehaviour
         playerCams.ForEach(c => c.enabled = false);
     }
 
+    /// <summary>
+    /// Checks the flags set by the Options object and decides the starting state.
+    /// </summary>
     private void chooseStartingState()
     {
-        if (options.skipMenu) //Checks against the game's options. If skip options are set, skip the game's starting state to selected mode.
+        if (options.skipMenu) 
         {
             currentState = GAME_STATE.PREROLL;
         }
         if (options.skipPreroll)
         {
-            if (options.skipMenu) //If we're skipping menu AND preroll
+            if (options.skipMenu) 
             {
-                if(options.skipCountdown) //If we're skipping menu AND preroll AND countdown
+                if(options.skipCountdown) 
                 {
-                    currentState = GAME_STATE.RACE; //head right to the race
+                    if(options.skipRace) 
+                    {
+                        currentState = GAME_STATE.PHOTO_FINISH;
+                    }
+                    else
+                    {
+                        currentState = GAME_STATE.RACE; 
+                    }
                 }
                 else
                 {
-                    currentState = GAME_STATE.COUNTDOWN; //Or to the countdown
+                    currentState = GAME_STATE.COUNTDOWN;
                 }
             }
         }

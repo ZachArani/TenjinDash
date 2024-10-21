@@ -30,6 +30,13 @@ public class Options : MonoBehaviour
     public bool skipCountdown { get { return _skipCoutndown; } set { _skipCoutndown = value; } }
 
     /// <summary>
+    /// Skips race
+    /// </summary>
+    [SerializeField] 
+    private bool _skipRace;
+    public bool skipRace { get { return _skipRace; } set { _skipRace = value; } }
+
+    /// <summary>
     /// Decides if all characters are running automatically.
     /// </summary>
     [SerializeField]
