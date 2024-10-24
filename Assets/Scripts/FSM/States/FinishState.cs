@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using Assets.Scripts.UI;
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Playables;
+using UnityEngine.Timeline;
 
 namespace Assets.Scripts.FSM.States
 {
@@ -10,6 +13,8 @@ namespace Assets.Scripts.FSM.States
         public TextMeshProUGUI finish;
         public TextMeshProUGUI restart;
         public TextMeshProUGUI menu;
+
+        public PlayableDirector finishedTimeline;
 
         void Start()
         {
@@ -28,8 +33,22 @@ namespace Assets.Scripts.FSM.States
             {
 
                 Cursor.visible = true;
+                UIManager.instance.toggleFinishUI(true);
+                finishedTimeline.Play();
             }
 
+        }
+
+        public void onRestartSelect()
+        {
+            StateManager.instance.TransitionTo(GAME_STATE.PREROLL);
+            finishedTimeline.Pause();
+        }
+
+        public void onMenuSelect()
+        {
+            StateManager.instance.TransitionTo(GAME_STATE.START_MENU);
+            finishedTimeline.Pause();
         }
 
         private void OnEnable()

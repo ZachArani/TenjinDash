@@ -42,6 +42,12 @@ namespace Assets.Scripts.FSM.States
             }
         }
 
+        void EndPhotoFinish()
+        {
+            StateManager.instance.TransitionTo(GAME_STATE.FINISH);
+            photoFinishTimeline.Stop();
+        }
+
         // Update is called once per frame
         void Update()
         {
