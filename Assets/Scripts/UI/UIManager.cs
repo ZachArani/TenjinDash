@@ -22,6 +22,7 @@ namespace Assets.Scripts.UI
         [SerializeField] GameObject raceUI;
         [SerializeField] GameObject countdown;
         [SerializeField] GameObject screenSplitter;
+        [SerializeField] GameObject finishText;
 
         /// <summary>
         /// Used to ensure singleton is properly loaded. Either creates one instance or kills any other instance.
@@ -47,7 +48,7 @@ namespace Assets.Scripts.UI
         // Update is called once per frame
         void Update()
         {
-
+            
         }
 
         public void toggleStartUI(bool toggle)
@@ -70,6 +71,11 @@ namespace Assets.Scripts.UI
             countdown.SetActive(toggle);
         }
 
+        public void toggleFinishText(bool toggle)
+        {
+            finishText.SetActive(toggle);
+        }
+
         public void toggleScreenSplitter(bool toggle)
         {
             screenSplitter.SetActive(toggle); 
@@ -83,6 +89,7 @@ namespace Assets.Scripts.UI
             toggleRaceUI(false);
             toggleCountdownUI(false);
             toggleScreenSplitter(false);
+            toggleFinishText(false);
         }
     }
 }

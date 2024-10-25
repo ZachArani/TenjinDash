@@ -28,12 +28,6 @@ public class StateManager : MonoBehaviour
     public static event Action<GAME_STATE, GAME_STATE> onGameStateChanged;
 
     /// <summary>
-    ///  Object containing game options
-    /// </summary>
-    [NonSerialized]
-    public Options options;
-
-    /// <summary>
     /// Current game state (As an enum value).
     /// </summary>
     [ReadOnly, SerializeField]
@@ -66,6 +60,9 @@ public class StateManager : MonoBehaviour
     private float _finishLinePos;
     public float finishLinePos { get { return _finishLinePos; } private set { _finishLinePos = value; } }
 
+    [SerializeField]
+    private float _trackFinishPos;
+    public float trackFinishPos { get { return _trackFinishPos; } private set { _trackFinishPos = value; } }
 
     /// <summary>
     /// Used to ensure singleton is properly loaded. Either creates one instance or kills any other instance.
@@ -85,10 +82,8 @@ public class StateManager : MonoBehaviour
 
     void Start()
     {
-        options = GetComponent<Options>();
-        currentState = GAME_STATE.START_MENU;
+        currentState = Options.instance.GetStartingState();
 
-        chooseStartingState();
 
         Initialize(currentState);
     }
@@ -135,37 +130,6 @@ public class StateManager : MonoBehaviour
         playerCams.ForEach(c => c.enabled = false);
     }
 
-    /// <summary>
-    /// Checks the flags set by the Options object and decides the starting state.
-    /// </summary>
-    private void chooseStartingState()
-    {
-        if (options.skipMenu) 
-        {
-            currentState = GAME_STATE.PREROLL;
-        }
-        if (options.skipPreroll)
-        {
-            if (options.skipMenu) 
-            {
-                if(options.skipCountdown) 
-                {
-                    if(options.skipRace) 
-                    {
-                        currentState = GAME_STATE.PHOTO_FINISH;
-                    }
-                    else
-                    {
-                        currentState = GAME_STATE.RACE; 
-                    }
-                }
-                else
-                {
-                    currentState = GAME_STATE.COUNTDOWN;
-                }
-            }
-        }
-    }
 }
 
 

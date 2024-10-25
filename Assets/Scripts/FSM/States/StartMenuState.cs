@@ -64,7 +64,7 @@ namespace Assets.Scripts
         /// </summary>
         public void OnAutoSelect()
         {
-            StateManager.instance.options.isAuto = true;
+            Options.instance.isAuto = true;
             moveToNextState();
         }
 
@@ -74,7 +74,7 @@ namespace Assets.Scripts
         /// </summary>
         public void OnSoloSelect()
         {
-            StateManager.instance.options.isSolo = true;
+            Options.instance.isSolo = true;
             moveToNextState();
         }
 
@@ -92,13 +92,13 @@ namespace Assets.Scripts
         void moveToNextState()
         {
             startMenuTimeline.Stop();
-            if (!StateManager.instance.options.skipPreroll)
+            if (!Options.instance.skipPreroll)
             {
                 StateManager.instance.TransitionTo(GAME_STATE.PREROLL);
             }
             else
             {
-                if (StateManager.instance.options.skipCountdown)
+                if (Options.instance.skipCountdown)
                 {
                     StateManager.instance.TransitionTo(GAME_STATE.RACE);
                 }

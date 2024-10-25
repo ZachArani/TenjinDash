@@ -14,6 +14,7 @@ namespace Assets.Scripts.FSM.States
         public TextMeshProUGUI restart;
         public TextMeshProUGUI menu;
 
+        [SerializeField]
         public PlayableDirector finishedTimeline;
 
         void Start()

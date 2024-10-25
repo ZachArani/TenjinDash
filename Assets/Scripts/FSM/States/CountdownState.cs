@@ -42,7 +42,7 @@ namespace Assets.Scripts.FSM.States
             if(to == GAME_STATE.COUNTDOWN)
             {
                 countdown = 3;
-                if (StateManager.instance.options.skipPreroll) //We need to enable the player cameras manually if we skipped Preroll.
+                if (Options.instance.skipPreroll) //We need to enable the player cameras manually if we skipped Preroll.
                 {
                     StateManager.instance.EnableRaceCameras();
                     Cursor.visible = false;

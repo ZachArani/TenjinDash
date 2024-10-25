@@ -33,7 +33,7 @@ namespace Assets.Scripts.FSM.States
         public void FinishedPreRoll()
         {
             Debug.Log("FINISHED PREROLL!");
-            if(!StateManager.instance.options.skipCountdown)
+            if(!Options.instance.skipCountdown)
             {
                 StateManager.instance.TransitionTo(GAME_STATE.COUNTDOWN);
             }

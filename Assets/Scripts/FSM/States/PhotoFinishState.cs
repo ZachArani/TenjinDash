@@ -24,14 +24,14 @@ namespace Assets.Scripts.FSM.States
         {
             if(to == GAME_STATE.PHOTO_FINISH)
             {
-                if(StateManager.instance.options.skipRace)
+                if(Options.instance.skipRace)
                 {
                     StateManager.instance.players.ForEach(p => { 
                         p.enabled = true;
                         p.desiredSpeed = p.maxRunnerSpeed;
                         p.isAuto = true;
                         p.GetComponent<Animator>().Play("RunTree");
-                        p.GetComponent<CinemachineDollyCart>().m_Position = StateManager.instance.finishLinePos;
+                        p.GetComponent<CinemachineDollyCart>().m_Position = StateManager.instance.trackFinishPos;
                     }); //Enable players and set their speedBoost to the config'd value
                 }
                 StateManager.instance.DisableRaceCameras();
@@ -44,8 +44,14 @@ namespace Assets.Scripts.FSM.States
 
         void EndPhotoFinish()
         {
+            UIManager.instance.toggleFinishText(false);
             StateManager.instance.TransitionTo(GAME_STATE.FINISH);
             photoFinishTimeline.Stop();
+        }
+
+        public void ShowFinishText()
+        {
+            UIManager.instance.toggleFinishText(true);
         }
 
         // Update is called once per frame

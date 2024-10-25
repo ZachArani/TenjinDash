@@ -113,13 +113,13 @@ namespace Assets.Scripts.FSM.States
                 }
             } */
             updateStandingUI();
-            if(StateManager.instance.options.isAuto)
+            if(Options.instance.isAuto)
             {
 
             }
 
             //A little dirty (uses GetComponent in Update) TODO: Improve system
-            if(playerPos.First().GetComponent<CinemachineDollyCart>().m_Position >= StateManager.instance.finishLinePos && StateManager.instance.currentState == GAME_STATE.RACE)
+            if(playerPos.First().transform.position.x >= StateManager.instance.finishLinePos && StateManager.instance.currentState == GAME_STATE.RACE)
             {
                 StateManager.instance.TransitionTo(GAME_STATE.PHOTO_FINISH);
             }
@@ -129,7 +129,7 @@ namespace Assets.Scripts.FSM.States
         {
             if(to == GAME_STATE.RACE)
             {
-                if (StateManager.instance.options.skipCountdown) //We need to enable the player cameras manually if we skipped countdown.
+                if (Options.instance.skipCountdown) //We need to enable the player cameras manually if we skipped countdown.
                 {
                     StateManager.instance.EnableRaceCameras();
                     UIManager.instance.toggleRaceUI(true);
@@ -138,11 +138,11 @@ namespace Assets.Scripts.FSM.States
                 }
 
                 StateManager.instance.players.ForEach(p => { p.enabled = true; p.losingSpeedBoost = losingSpeedBoost; }); //Enable players and set their speedBoost to the config'd value
-                if (StateManager.instance.options.isAuto) //If auto mode
+                if (Options.instance.isAuto) //If auto mode
                 {
                     StateManager.instance.players.ForEach(p => p.isAuto = true);
                 }
-                else if(StateManager.instance.options.isAuto) //If 1 player
+                else if(Options.instance.isAuto) //If 1 player
                 {
                     var players = StateManager.instance.players.OrderByDescending(p => p.playerNum);
                     players.First().isAuto = false; //First player is playing
