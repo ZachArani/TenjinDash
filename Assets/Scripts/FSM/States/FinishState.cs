@@ -42,12 +42,14 @@ namespace Assets.Scripts.FSM.States
 
         public void onRestartSelect()
         {
+            UIManager.instance.toggleFinishUI(false);
             StateManager.instance.TransitionTo(GAME_STATE.PREROLL);
             finishedTimeline.Pause();
         }
 
         public void onMenuSelect()
         {
+            UIManager.instance.toggleFinishUI(false);
             StateManager.instance.TransitionTo(GAME_STATE.START_MENU);
             finishedTimeline.Pause();
         }
