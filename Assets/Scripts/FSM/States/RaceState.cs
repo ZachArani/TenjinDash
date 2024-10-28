@@ -6,6 +6,7 @@ using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace Assets.Scripts.FSM.States
 {
@@ -53,13 +54,6 @@ namespace Assets.Scripts.FSM.States
         [Range(0f, 3f)]
         float posDistanceMOE = 0.5f;
 
-        /// <summary>
-        /// Decides how much of a speed boost to give to the losing runners
-        /// </summary>
-        [SerializeField]
-        [Range(0f, 2f)]
-        float _losingSpeedBoost = 0.3f;
-        public float losingSpeedBoost { get { return _losingSpeedBoost; } set {  _losingSpeedBoost = value; } }
 
         /// <summary>
         /// Basically enforces "rubberbanding" behavior. 
@@ -137,7 +131,8 @@ namespace Assets.Scripts.FSM.States
                     Cursor.visible = false;
                 }
 
-                StateManager.instance.players.ForEach(p => { p.enabled = true; p.losingSpeedBoost = losingSpeedBoost; }); //Enable players and set their speedBoost to the config'd value
+                StateManager.instance.EnableRaceComponents();
+                
                 if (Options.instance.isAuto) //If auto mode
                 {
                     StateManager.instance.players.ForEach(p => p.isAuto = true);
@@ -163,6 +158,7 @@ namespace Assets.Scripts.FSM.States
         /// </summary>
         void endRace()
         {
+            StateManager.instance.DisableRaceComponents();
             StateManager.instance.TransitionTo(GAME_STATE.PHOTO_FINISH);
         }
 

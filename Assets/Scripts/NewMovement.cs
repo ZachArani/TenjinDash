@@ -170,12 +170,6 @@ public class NewMovement : MonoBehaviour
     /// </summary>
     Animator animator;
 
-    /// <summary>
-    /// How much of a speed Boost to apply to losing players. Taken from RaceState's config at runtime.
-    /// </summary>
-    [ReadOnly]
-    public float losingSpeedBoost = 0f;
-
 
     // Start is called before the first frame update
     void Start()
@@ -192,12 +186,12 @@ public class NewMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_desiredSpeed > 0.1f &&  _desiredSpeed + losingSpeedBoost > speed) //If the new gyro readings are faster then the current in-game speed
+        if (_desiredSpeed > 0.1f && _desiredSpeed + StateManager.instance.losingSpeedBoost > speed) //If the new gyro readings are faster then the current in-game speed
         {
             t += maxTChange * Time.deltaTime; //Increase t (speed up)
             isAccelerating = true;
         }
-        else if (_desiredSpeed + losingSpeedBoost < speed) //If the new gyro readings are slower than current in-game speed
+        else if (_desiredSpeed + StateManager.instance.losingSpeedBoost < speed) //If the new gyro readings are slower than current in-game speed
         {
             t -= maxTChange * Time.deltaTime; //decrease t (slow down)
             isAccelerating = false;

@@ -65,6 +65,14 @@ public class StateManager : MonoBehaviour
     public float trackFinishPos { get { return _trackFinishPos; } private set { _trackFinishPos = value; } }
 
     /// <summary>
+    /// Decides how much of a speed boost to give to the losing runners
+    /// </summary>
+    [SerializeField]
+    [Range(0f, 2f)]
+    float _losingSpeedBoost = 0.3f;
+    public float losingSpeedBoost { get { return _losingSpeedBoost; } set { _losingSpeedBoost = value; } }
+
+    /// <summary>
     /// Used to ensure singleton is properly loaded. Either creates one instance or kills any other instance.
     /// </summary>
     private void Awake()
@@ -128,6 +136,22 @@ public class StateManager : MonoBehaviour
     {
         Debug.Log("Disabling race cameras.");
         playerCams.ForEach(c => c.enabled = false);
+    }
+
+    public void EnableRaceComponents()
+    {
+        players.ForEach(p => {
+            p.enabled = true;
+            p.GetComponent<CinemachineDollyCart>().enabled = true;
+        });
+    }
+
+    public void DisableRaceComponents()
+    {
+        players.ForEach(p => {
+            p.enabled = false;
+            p.GetComponent<CinemachineDollyCart>().enabled = false;
+        });
     }
 
 }

@@ -24,16 +24,13 @@ namespace Assets.Scripts.FSM.States
         {
             if(to == GAME_STATE.PHOTO_FINISH)
             {
-                if(Options.instance.skipRace)
-                {
-                    StateManager.instance.players.ForEach(p => { 
-                        p.enabled = true;
-                        p.desiredSpeed = p.maxRunnerSpeed;
-                        p.isAuto = true;
-                        p.GetComponent<Animator>().Play("RunTree");
-                        p.GetComponent<CinemachineDollyCart>().m_Position = StateManager.instance.trackFinishPos;
-                    }); //Enable players and set their speedBoost to the config'd value
-                }
+                StateManager.instance.EnableRaceComponents();
+                StateManager.instance.players.ForEach(p => {
+                    p.desiredSpeed = p.desiredSpeed > 0 ? p.desiredSpeed : p.maxRunnerSpeed; //In case they weren't running beforehand (i.e. we skipped here through menu options)
+                    p.isAuto = true;
+                    p.GetComponent<Animator>().Play("RunTree");
+                    p.GetComponent<CinemachineDollyCart>().m_Position = StateManager.instance.trackFinishPos;
+                });
                 StateManager.instance.DisableRaceCameras();
                 UIManager.instance.toggleRaceUI(false);
                 UIManager.instance.toggleScreenSplitter(false);
@@ -45,6 +42,7 @@ namespace Assets.Scripts.FSM.States
         void EndPhotoFinish()
         {
             UIManager.instance.toggleFinishText(false);
+            StateManager.instance.DisableRaceComponents();
             StateManager.instance.TransitionTo(GAME_STATE.FINISH);
             photoFinishTimeline.Stop();
         }
