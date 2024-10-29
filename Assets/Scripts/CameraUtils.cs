@@ -11,7 +11,7 @@ public class CameraUtils : MonoBehaviour, ITimeControl
 
     public float radius;
 
-    [Range(0f, 5f)]
+    [Range(0f, 100f)]
     public float speed;
 
     float circleTimer;
@@ -21,7 +21,6 @@ public class CameraUtils : MonoBehaviour, ITimeControl
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -29,11 +28,12 @@ public class CameraUtils : MonoBehaviour, ITimeControl
     {
         if(isActive)
         {
-            circleTimer = circleTimer > 6.283 ?
+            /*circleTimer = circleTimer > 6.283 ?
                 0 : circleTimer + Time.deltaTime * speed;
             transform.position = new Vector3(Mathf.Sin(circleTimer) * radius,
                                             transform.position.y,
-                                            Mathf.Cos(circleTimer) * radius);
+                                            Mathf.Cos(circleTimer) * radius);*/
+            transform.RotateAround(target.transform.position, Vector3.up, speed * Time.deltaTime);
             transform.LookAt(target.transform);
         }
     }
@@ -42,6 +42,7 @@ public class CameraUtils : MonoBehaviour, ITimeControl
 
     public void OnControlTimeStart()
     {
+        transform.position = target.transform.position + Vector3.one * radius;
         isActive = true;
     }
 
