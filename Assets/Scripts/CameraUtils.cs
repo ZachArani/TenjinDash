@@ -42,7 +42,9 @@ public class CameraUtils : MonoBehaviour, ITimeControl
 
     public void OnControlTimeStart()
     {
-        transform.position = target.transform.position + Vector3.one * radius;
+        transform.position = new Vector3(target.transform.position.x + radius,
+                                         transform.position.y,
+                                         target.transform.position.z + radius);
         isActive = true;
     }
 
