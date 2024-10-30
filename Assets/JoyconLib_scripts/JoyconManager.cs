@@ -95,12 +95,6 @@ public class JoyconManager: MonoBehaviour
     {
 		for (int i = 0; i < j.Count; ++i)
 		{
-			Debug.Log(i);
-
-			if (i + 1 <= players.Count)
-			{
-				players[i].GetComponent<JoyconReceiver>().j = j[i];
-			}
 			Joycon jc = j [i];
 			byte LEDs = 0x0;
 			LEDs |= (byte)(0x1 << i);
@@ -124,4 +118,9 @@ public class JoyconManager: MonoBehaviour
 			j[i].Detach ();
 		}
     }
+
+	public Joycon GetJoycon(GameObject player)
+	{
+		return j[players.IndexOf(player)];
+	}
 }

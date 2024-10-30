@@ -25,7 +25,9 @@ public class NewMovement : MonoBehaviour
     public int playerNum;
 
     public bool isAuto;
-    public bool isPlayback; 
+    public bool isPlayback;
+
+    Joycon joycon;
 
 
     //Time variables for gyro measurements
@@ -156,7 +158,9 @@ public class NewMovement : MonoBehaviour
     {
         track = GetComponent<CinemachineDollyCart>();
         animator = GetComponent<Animator>();
-        
+
+        joycon = JoyconManager.Instance.GetJoycon(gameObject);
+
         maxGyroChange = Mathf.Exp(maxGyroChangeLog); //Calculate the maximum gyro change value based on the logarithmic value we defined earlier.
         speed = startingSpeed;
         t = 0.05f; //Set at 0.05 right now to fix a bug. TODO: Allow t-value to run at 0.00
@@ -203,9 +207,11 @@ public class NewMovement : MonoBehaviour
         }
         else if(Options.instance.isPlayback)
         {
+            currentGyroAverage += float.Parse(playbackData.Dequeue());
         }
         else
         {
+            currentGyroAverage += joycon.GetGyro().magnitude;
             CalcGyroData();
         }
     }
@@ -259,18 +265,4 @@ public class NewMovement : MonoBehaviour
     }
 
 
-    private void OnEnable()
-    {
-        GetComponent<JoyconReceiver>().j.OnNewGyroData += GetNewGyroData;
-    }
-
-    private void OnDisable()
-    {
-        GetComponent<JoyconReceiver>().j.OnNewGyroData -= GetNewGyroData;
-    }
-
-    private void OnDestroy()
-    {
-        GetComponent<JoyconReceiver>().j.OnNewGyroData -= GetNewGyroData;
-    }
 }

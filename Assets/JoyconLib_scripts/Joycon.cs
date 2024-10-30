@@ -11,7 +11,6 @@ using UnityEngine;
 public class Joycon
 {
 
-    public event Action<Vector3> OnNewGyroData;
 
     public enum DebugType : int
     {
@@ -514,7 +513,6 @@ public class Joycon
             dt = 1;
         }
         timestamp = report_buf[1] + 2;
-        OnNewGyroData.Invoke(GetGyro());
         return 0;
     }
     public void Begin()

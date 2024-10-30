@@ -9,14 +9,15 @@ public class InputRecorder : MonoBehaviour
 {
 
     StreamWriter file;
-    Joycon j;
+    Joycon joycon;
     StringBuilder data;
     string filename;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         data = new StringBuilder();
+        joycon = JoyconManager.Instance.GetJoycon(gameObject);
     }
 
     // Update is called once per frame
@@ -24,19 +25,15 @@ public class InputRecorder : MonoBehaviour
     {
     }
 
-    void writeLine(Vector3 line)
+    private void FixedUpdate()
     {
-        data.AppendLine($"{StateManager.instance.stateStopwatch.ElapsedTicks},{line.magnitude},");
+        data.AppendLine($"{joycon.GetGyro().magnitude},");
     }
 
-    private void OnEnable()
-    {
-        GetComponent<JoyconReceiver>().j.OnNewGyroData += writeLine;
-    }
 
+  
     private void OnDisable()
     {
-        GetComponent<JoyconReceiver>().j.OnNewGyroData -= writeLine;
         WriteFile();
     }
 
