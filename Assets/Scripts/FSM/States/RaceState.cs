@@ -2,6 +2,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using TMPro;
 using UnityEditor;
@@ -66,7 +67,6 @@ namespace Assets.Scripts.FSM.States
         /// Indicates the maximum difference between player speeds. If someone is too far behind or ahead, the game will force them into this speed range.
         /// Used alongside enforceCloseRace to keep the race close. 
         /// </summary>
-        [SerializeField]
         float raceCloseness = 1f;
 
         // Use this for initialization
@@ -131,13 +131,13 @@ namespace Assets.Scripts.FSM.States
                     Cursor.visible = false;
                 }
 
-                StateManager.instance.EnableRaceComponents();
+                StateManager.instance.EnableRaceComponents(true);
                 
                 if (Options.instance.isAuto) //If auto mode
                 {
                     StateManager.instance.players.ForEach(p => p.isAuto = true);
                 }
-                else if(Options.instance.isAuto) //If 1 player
+                else if(Options.instance.isSolo) //If 1 player
                 {
                     var players = StateManager.instance.players.OrderByDescending(p => p.playerNum);
                     players.First().isAuto = false; //First player is playing
@@ -150,6 +150,11 @@ namespace Assets.Scripts.FSM.States
                 {
                     StateManager.instance.players.ForEach(p => p.isAuto = false); //Everyone is playing
                 }
+
+                if(Options.instance.recordPlayerData)
+                {
+                    StateManager.instance.players.ForEach(p => { p.GetComponent<InputRecorder>().enabled = true;});
+                }
             }
         }
 
@@ -158,7 +163,8 @@ namespace Assets.Scripts.FSM.States
         /// </summary>
         void endRace()
         {
-            StateManager.instance.DisableRaceComponents();
+            StateManager.instance.EnableRaceComponents(false);
+            StateManager.instance.EnableRecorders(false);
             StateManager.instance.TransitionTo(GAME_STATE.PHOTO_FINISH);
         }
 

@@ -10,6 +10,9 @@ using UnityEngine;
 
 public class Joycon
 {
+
+    public event Action<Vector3> OnNewGyroData;
+
     public enum DebugType : int
     {
         NONE,
@@ -22,7 +25,6 @@ public class Joycon
 	public DebugType debug_type = DebugType.NONE;
     public bool isLeft;
 
-    public static event Action OnNewGyroData;
     public enum state_ : uint
     {
         NOT_ATTACHED,
@@ -188,6 +190,7 @@ public class Joycon
 
     private byte global_count = 0;
     private string debug_str;
+    public GameObject player;
 
 	public Joycon(IntPtr handle_, bool imu, bool localize, float alpha, bool left)
     {
@@ -511,7 +514,7 @@ public class Joycon
             dt = 1;
         }
         timestamp = report_buf[1] + 2;
-        OnNewGyroData.Invoke();
+        OnNewGyroData.Invoke(GetGyro());
         return 0;
     }
     public void Begin()

@@ -823,8 +823,8 @@ Camera:
   m_GateFitMode: 2
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: -0.03}
-  m_FocalLength: 14
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 20.78461
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -833,7 +833,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 81.20259
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 15.3
   m_Depth: 0
@@ -858,8 +858,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 138246238}
-  m_LocalRotation: {x: -0.34960425, y: 0.34540743, z: 0.14049637, w: 0.85949486}
-  m_LocalPosition: {x: 154.05896, y: -28.867462, z: -501.16968}
+  m_LocalRotation: {x: 0.19239745, y: 0.48574638, z: -0.1105381, w: 0.8454674}
+  m_LocalPosition: {x: -408.92957, y: -28.867462, z: -560.4834}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1797,6 +1797,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnableIMU: 1
   EnableLocalize: 1
+  players:
+  - {fileID: 1025176333}
+  - {fileID: 1972611479}
 --- !u!4 &365312664
 Transform:
   m_ObjectHideFlags: 0
@@ -15123,8 +15126,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 677470222}
-  m_LocalRotation: {x: -0.34960425, y: 0.34540743, z: 0.14049637, w: 0.85949486}
-  m_LocalPosition: {x: 154.05896, y: -28.867462, z: -501.16968}
+  m_LocalRotation: {x: 0.19239745, y: 0.48574638, z: -0.1105381, w: 0.8454674}
+  m_LocalPosition: {x: -408.92957, y: -28.867462, z: -560.4834}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18819,7 +18822,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32654e80b40cef946823bf7446aee7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNum: 1
+  playerNum: 0
+  isAuto: 0
+  isPlayback: 0
   timeWindow: 0.1
   maxGyroChangeLog: 3
   correctionFactor: 3
@@ -18850,11 +18855,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _desiredSpeed: 0
+  desiredSpeed: 0
   maxTChange: 0.02
-  randomFakeRange: 1
+  randomFakeSpeedRange: 3
   distanceToNextRand: 5
   runningTrack: {fileID: 1866473068}
+  playbackFile: {fileID: 4900000, guid: 47c08edb6d0f15e46a23cb574c096ee0, type: 3}
 --- !u!114 &1025176339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18872,6 +18878,30 @@ MonoBehaviour:
   m_PositionUnits: 1
   m_Speed: 0
   m_Position: 0
+--- !u!114 &1025176340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025176333}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 624281c928cd75142a0ef46b755bc884, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1025176341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025176333}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09ff2e519d225004198e2d38af2cd9ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1028837020
 GameObject:
   m_ObjectHideFlags: 0
@@ -18926,7 +18956,6 @@ MonoBehaviour:
   fakeItDistance: 15
   posDistanceMOE: 0.01
   enforceCloseRace: 1
-  raceCloseness: 1
 --- !u!1 &1036201733
 GameObject:
   m_ObjectHideFlags: 0
@@ -22540,7 +22569,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1586808638}
-  m_LocalRotation: {x: 0.19239745, y: 0.48574638, z: -0.11053811, w: 0.8454673}
+  m_LocalRotation: {x: 0.19239745, y: 0.48574638, z: -0.1105381, w: 0.8454674}
   m_LocalPosition: {x: -408.92957, y: -28.867462, z: -560.4834}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -22655,15 +22684,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _skipMenu: 1
-  _skipPreroll: 0
-  _skipCountdown: 0
+  _skipPreroll: 1
+  _skipCountdown: 1
   _skipRace: 0
   _skipPhotoFinish: 0
   _skipFinishMenu: 0
-  _isAuto: 1
+  _isAuto: 0
+  _isPlayback: 0
   _isSolo: 0
   _muteSFX: 0
   _muteMusic: 0
+  _recordPlayerData: 1
 --- !u!4 &1636916669
 Transform:
   m_ObjectHideFlags: 0
@@ -25277,7 +25308,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32654e80b40cef946823bf7446aee7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerNum: 2
+  playerNum: 0
+  isAuto: 0
+  isPlayback: 0
   timeWindow: 0.1
   maxGyroChangeLog: 3
   correctionFactor: 3
@@ -25308,11 +25341,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _desiredSpeed: 0
+  desiredSpeed: 0
   maxTChange: 0.02
-  randomFakeRange: 1
+  randomFakeSpeedRange: 3
   distanceToNextRand: 5
   runningTrack: {fileID: 2075009509}
+  playbackFile: {fileID: 0}
 --- !u!114 &1972611485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25330,6 +25364,30 @@ MonoBehaviour:
   m_PositionUnits: 1
   m_Speed: 0
   m_Position: 0
+--- !u!114 &1972611486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972611479}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 624281c928cd75142a0ef46b755bc884, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1972611487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972611479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09ff2e519d225004198e2d38af2cd9ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1988111269
 GameObject:
   m_ObjectHideFlags: 0
@@ -25931,8 +25989,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091541679}
-  m_LocalRotation: {x: -0.36020842, y: 0.30547374, z: 0.12613277, w: 0.8723682}
-  m_LocalPosition: {x: 156.81915, y: -28.867462, z: -504.49115}
+  m_LocalRotation: {x: 0.19202507, y: 0.48852786, z: -0.11116653, w: 0.84386545}
+  m_LocalPosition: {x: -406.95166, y: -28.867462, z: -563.21594}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -2,8 +2,10 @@ using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Playables;
+using Debug = UnityEngine.Debug;
 
 
 /// <summary>
@@ -72,6 +74,8 @@ public class StateManager : MonoBehaviour
     float _losingSpeedBoost = 0.3f;
     public float losingSpeedBoost { get { return _losingSpeedBoost; } set { _losingSpeedBoost = value; } }
 
+    public Stopwatch stateStopwatch;
+
     /// <summary>
     /// Used to ensure singleton is properly loaded. Either creates one instance or kills any other instance.
     /// </summary>
@@ -91,7 +95,7 @@ public class StateManager : MonoBehaviour
     void Start()
     {
         currentState = Options.instance.GetStartingState();
-
+        stateStopwatch = new Stopwatch();
 
         Initialize(currentState);
     }
@@ -104,6 +108,7 @@ public class StateManager : MonoBehaviour
     {
         currentState = startingState;
         Debug.Log($"STARTING GAME WITH {currentState} STATE.");
+        stateStopwatch.Start();
         onGameStateChanged.Invoke(GAME_STATE.NONE, currentState);
     }
 
@@ -118,10 +123,11 @@ public class StateManager : MonoBehaviour
         Debug.Log($"TRANSITION TO {nextState}");
         onGameStateChanged.Invoke(currentState, nextState);
         currentState = nextState;
+        stateStopwatch.Restart();
     }
 
     /// <summary>
-    /// Utility function to enable each player's race camera.
+    /// Utility function to doEnable each player's race camera.
     /// </summary>
     public void EnableRaceCameras()
     {
@@ -138,19 +144,21 @@ public class StateManager : MonoBehaviour
         playerCams.ForEach(c => c.enabled = false);
     }
 
-    public void EnableRaceComponents()
+    public void EnableRaceComponents(bool doEnable)
     {
         players.ForEach(p => {
-            p.enabled = true;
-            p.GetComponent<CinemachineDollyCart>().enabled = true;
+            p.enabled = doEnable;
+            p.GetComponent<CinemachineDollyCart>().enabled = doEnable;
         });
     }
 
-    public void DisableRaceComponents()
+    public void EnableRecorders(bool doEnable)
     {
         players.ForEach(p => {
-            p.enabled = false;
-            p.GetComponent<CinemachineDollyCart>().enabled = false;
+            if (Options.instance.recordPlayerData)
+            {
+                p.GetComponent<InputRecorder>().enabled = doEnable;
+            }
         });
     }
 

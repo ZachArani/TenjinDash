@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
@@ -19,28 +20,14 @@ using UnityEngine.UI.Extensions;
 /// </summary>
 public class NewMovement : MonoBehaviour
 {
-    /// <summary>
-    /// Reads joycon data
-    /// </summary>
-    Joycon j;
+    public event Action<int> OnNewGyroData;
 
-    /// <summary>
-    /// Public access to playerNum in other methods.
-    /// </summary>
-    public int playerNum { get { return _playerNum; } private set { _playerNum = value; } }
+    public int playerNum;
 
-    /// <summary>
-    /// Which player this is (i.e. P1, P2, etc.)
-    /// </summary>
-    [SerializeField]
-    private int _playerNum = 1;
+    public bool isAuto;
+    public bool isPlayback; 
 
-    /// <summary>
-    /// Determines if this player is running on auto mode or not.
-    /// </summary>
-    public bool isAuto { set; get; }
 
-   
     //Time variables for gyro measurements
     /// <summary>
     /// Keeps track of the current sum of gyro data based on the time window
@@ -72,7 +59,7 @@ public class NewMovement : MonoBehaviour
     /// </summary>
     float maxGyroChange;
     /// <summary>
-    /// A basic correction factor that subtracs from the gyro readings
+    /// A basic correction factor that subtracts from the gyro readings
     /// Used to put "base level" readings close to 0
     /// Otherwise, "no movement" might read as something like 3 or 5 or 15 instead of 0
     /// </summary>
@@ -81,10 +68,12 @@ public class NewMovement : MonoBehaviour
     /// <summary>
     /// Defines how much speed can be generated from the gyro readings itself.
     /// Basically defines the maximum cap of effort a player can put into physically running
-    /// NOTE: this is different from the max player speed. That controls the actual in-game speed of the player. This controls the data read from the gyro sensor.
+    /// NOTE: this is different from the max player speed. That controls the actual in-game speed of the player. 
+    /// This controls the data read from the gyro sensor.
     /// </summary>
     [Range(50f, 100f)]
     public float maxGyroSpeed = 80f;
+
     /// <summary>
     /// Utility variable that defines what "percentage" the current gyro data is at.
     /// i.e., if the current gyro value is at 40, and the current maxGyroSpeed is at 80, then the gyroPercentage is 50%
@@ -92,19 +81,14 @@ public class NewMovement : MonoBehaviour
     /// </summary>
     public float gyroPercentage { get; private set; }
 
-    //Player's speed info. NOTE: This is seperate from the GYRO READINGS, which are taken above.
-    /// <summary>
-    /// Defines the maximum speed the player's character can run in-game.
-    /// </summary>
+
     [Range(5f, 30f)]
     public float maxRunnerSpeed;
-    /// <summary>
-    /// Current player speed.
-    /// </summary>
+
     public float speed { get; private set; }
     /// <summary>
     /// The speed the player starts when the race begins.
-    /// This varaible is required because the characters "leap" into a sprint at the race's start.
+    /// This variable is required because the characters "leap" into a sprint at the race's start.
     /// Meanwhile, the people *playing* the game usually don't start running until *after* the countdown begins
     /// So we define a starting speed for each player character, which will be their speed for the first few seconds of the game
     /// Eventually is replaced by actual gyro data from players. 
@@ -112,10 +96,7 @@ public class NewMovement : MonoBehaviour
     [SerializeField]
     [Range(0f, 25f)]
     float startingSpeed;
-    /// <summary>
-    /// Speed curve that defines the player's acceleration 
-    /// Changing the curve will affect how fast/slow a player speeds up/slows down
-    /// </summary>
+
     public AnimationCurve speedCurve;
 
     /// <summary>
@@ -123,17 +104,17 @@ public class NewMovement : MonoBehaviour
     /// Based on the most current gyro data. Indicates if the player should speed up or slow down from their current in-game speed.
     /// Can be manipulated by other classes. Namely the PhotoFinish state to handle a skipToPhotoFinish mode
     /// </summary>
-    [SerializeField, ReadOnly]
-    float _desiredSpeed;
-    public float desiredSpeed { get { return _desiredSpeed; } set { _desiredSpeed = value; } }
+    [ReadOnly]
+    public float desiredSpeed;
 
     /// <summary>
     /// Defines the maximum change of the t value, which is used in lerping the player's speed up or down.
-    /// Basically, this forces the player to smoothly accelerate. If there was no max cap to the t value, then the player could go from 0 to 100 in an instant.
+    /// Basically, this forces the player to smoothly accelerate.
+    /// If there was no max cap to the t value change, then the player could go from 0 to 100 in an instant.
     /// </summary>
-    /// 
     [Range(0f, 0.4f)]
     public float maxTChange;
+
     /// <summary>
     /// The t value is used in calculating the player's current in-game speed. 
     /// The value decides the player's speed by referencing the acceleration curve defined. 
@@ -143,12 +124,9 @@ public class NewMovement : MonoBehaviour
     float t;
     bool isAccelerating;
 
-    /// <summary>
-    /// Used in creating fake data for demo/auto modes. Defines the possible random spread of speed values.
-    /// </summary>
     [SerializeField]
     [Range(0f, 10f)]
-    float randomFakeRange = 3f;
+    float randomFakeSpeedRange = 3f;
 
     /// <summary>
     /// Used in creating fake data for demo/auto modes. Defines the distance traveled before a new random speed is calculated.
@@ -165,10 +143,12 @@ public class NewMovement : MonoBehaviour
     public CinemachineSmoothPath runningTrack;
     CinemachineDollyCart track;
 
-    /// <summary>
-    /// Animator used for controlling player animations.
-    /// </summary>
     Animator animator;
+
+    public TextAsset playbackFile;
+
+    Queue<string> playbackData;
+
 
 
     // Start is called before the first frame update
@@ -180,18 +160,24 @@ public class NewMovement : MonoBehaviour
         maxGyroChange = Mathf.Exp(maxGyroChangeLog); //Calculate the maximum gyro change value based on the logarithmic value we defined earlier.
         speed = startingSpeed;
         t = 0.05f; //Set at 0.05 right now to fix a bug. TODO: Allow t-value to run at 0.00
-        j = JoyconManager.Instance.j[_playerNum-1]; //Reads data from first joycon connected to pc.
+
+        if(Options.instance.isPlayback && playbackFile != null)
+        {
+            playbackData = new Queue<string>(playbackFile.text.Split(","));
+            
+        }
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_desiredSpeed > 0.1f && _desiredSpeed + StateManager.instance.losingSpeedBoost > speed) //If the new gyro readings are faster then the current in-game speed
+        if (desiredSpeed > 0.1f && desiredSpeed + StateManager.instance.losingSpeedBoost > speed) //If the new gyro readings are faster then the current in-game speed
         {
             t += maxTChange * Time.deltaTime; //Increase t (speed up)
             isAccelerating = true;
         }
-        else if (_desiredSpeed + StateManager.instance.losingSpeedBoost < speed) //If the new gyro readings are slower than current in-game speed
+        else if (desiredSpeed + StateManager.instance.losingSpeedBoost < speed) //If the new gyro readings are slower than current in-game speed
         {
             t -= maxTChange * Time.deltaTime; //decrease t (slow down)
             isAccelerating = false;
@@ -214,6 +200,9 @@ public class NewMovement : MonoBehaviour
         if (isAuto)
         {
             AutoSpeed(distanceToNextRand);
+        }
+        else if(Options.instance.isPlayback)
+        {
         }
         else
         {
@@ -243,17 +232,14 @@ public class NewMovement : MonoBehaviour
             gyroPercentage = Mathf.Clamp(Mathf.Lerp(gyroPercentage, currentGyroAverage, Mathf.Exp(-maxGyroChange * Time.deltaTime)) - correctionFactor,
                                         0,
                                         maxGyroSpeed) / maxGyroSpeed;
-            _desiredSpeed = gyroPercentage * maxRunnerSpeed; //New desired speed is based on % gyro readings (player running IRL) relative to player character's max speed
+            desiredSpeed = gyroPercentage * maxRunnerSpeed; //New desired speed is based on % gyro readings (player running IRL) relative to player character's max speed
             currentGyroAverage = 0;
         }
     }
 
-    /// <summary>
-    /// Method for grabbing the newest gyro data.
-    /// </summary>
-    void GetNewGyroData()
+    void GetNewGyroData(Vector3 data)
     {
-        currentGyroAverage += j.GetGyro().magnitude;
+        currentGyroAverage += data.magnitude;
     }
 
     /// <summary>
@@ -264,10 +250,10 @@ public class NewMovement : MonoBehaviour
     {
         if (GetComponent<CinemachineDollyCart>().m_Position % distanceToSpeedChange < 0.1) //If we've approached the required distance
         {
-            float speedPush = UnityEngine.Random.Range(-randomFakeRange, randomFakeRange);
-            _desiredSpeed += speedPush;
-            Debug.Log(_desiredSpeed);
-            _desiredSpeed = Mathf.Clamp(_desiredSpeed, 12, 14);
+            float speedPush = UnityEngine.Random.Range(-randomFakeSpeedRange, randomFakeSpeedRange);
+            desiredSpeed += speedPush;
+            Debug.Log(desiredSpeed);
+            desiredSpeed = Mathf.Clamp(desiredSpeed, 12, 14);
             //Debug.Log($"{gameObject.name}: {speedPush}, new Speed: {_desiredSpeed}");
         }
     }
@@ -275,17 +261,16 @@ public class NewMovement : MonoBehaviour
 
     private void OnEnable()
     {
-        j = JoyconManager.Instance.j[_playerNum - 1]; //Grab the joycon object again.
-        Joycon.OnNewGyroData += GetNewGyroData; //Subscribe to the OnNewGyroData event in the Joycon Class.
+        GetComponent<JoyconReceiver>().j.OnNewGyroData += GetNewGyroData;
     }
 
     private void OnDisable()
     {
-        Joycon.OnNewGyroData -= GetNewGyroData;
+        GetComponent<JoyconReceiver>().j.OnNewGyroData -= GetNewGyroData;
     }
 
     private void OnDestroy()
     {
-        Joycon.OnNewGyroData -= GetNewGyroData;
+        GetComponent<JoyconReceiver>().j.OnNewGyroData -= GetNewGyroData;
     }
 }

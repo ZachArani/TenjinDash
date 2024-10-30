@@ -24,7 +24,7 @@ namespace Assets.Scripts.FSM.States
         {
             if(to == GAME_STATE.PHOTO_FINISH)
             {
-                StateManager.instance.EnableRaceComponents();
+                StateManager.instance.EnableRaceComponents(true);
                 StateManager.instance.players.ForEach(p => {
                     p.desiredSpeed = p.desiredSpeed > 0 ? p.desiredSpeed : p.maxRunnerSpeed; //In case they weren't running beforehand (i.e. we skipped here through menu options)
                     p.isAuto = true;
@@ -42,7 +42,7 @@ namespace Assets.Scripts.FSM.States
         void EndPhotoFinish()
         {
             UIManager.instance.toggleFinishText(false);
-            StateManager.instance.DisableRaceComponents();
+            StateManager.instance.EnableRaceComponents(false);
             StateManager.instance.TransitionTo(GAME_STATE.FINISH);
             photoFinishTimeline.Stop();
         }

@@ -13,7 +13,6 @@ using UnityEngine.Rendering;
 /// </summary>
 public class Options : MonoBehaviour
 {
-
     public static Options instance { get; private set; }
 
     [SerializeField]
@@ -23,7 +22,7 @@ public class Options : MonoBehaviour
     [SerializeField]
     private bool _skipPreroll;
     public bool skipPreroll { get { return _skipPreroll; } set { _skipPreroll = value; } }
-
+    
     [SerializeField]
     private bool _skipCountdown;
     public bool skipCountdown { get { return _skipCountdown; } set { _skipCountdown = value;  } }
@@ -43,13 +42,16 @@ public class Options : MonoBehaviour
     private bool _skipFinishMenu;
     public bool skipFinishMenu { get { return _skipFinishMenu; } set { _skipFinishMenu = value; } }
 
-
     /// <summary>
     /// Decides if all characters are running automatically.
     /// </summary>
     [SerializeField]
     private bool _isAuto;
     public bool isAuto { get { return _isAuto; } set { _isAuto = value; } }
+
+    [SerializeField]
+    private bool _isPlayback;
+    public bool isPlayback {  get { return _isPlayback; } set { _isPlayback = value; } }
 
     /// <summary>
     /// Decides if only player one is running.
@@ -71,6 +73,13 @@ public class Options : MonoBehaviour
     [SerializeField]
     private bool _muteMusic;
     public bool muteMusic { get { return _muteMusic; } set { _muteMusic = value; } }
+
+    /// <summary>
+    /// Records player data in .csv format using the InputRecorders attached to the various players.
+    /// </summary>
+    [SerializeField]
+    private bool _recordPlayerData;
+    public bool recordPlayerData { get { return _recordPlayerData; } set { _recordPlayerData = value; } }
 
     private void Awake()
     {

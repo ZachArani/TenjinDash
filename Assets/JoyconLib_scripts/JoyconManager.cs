@@ -7,7 +7,6 @@ using System;
 
 public class JoyconManager: MonoBehaviour
 {
-
     // Settings accessible via Unity
     public bool EnableIMU = true;
     public bool EnableLocalize = true;
@@ -20,6 +19,7 @@ public class JoyconManager: MonoBehaviour
 	
     public List<Joycon> j; // Array of all connected Joy-Cons
     static JoyconManager instance;
+	public List<GameObject> players;
 
     public static JoyconManager Instance
     {
@@ -95,7 +95,12 @@ public class JoyconManager: MonoBehaviour
     {
 		for (int i = 0; i < j.Count; ++i)
 		{
-			Debug.Log (i);
+			Debug.Log(i);
+
+			if (i + 1 <= players.Count)
+			{
+				players[i].GetComponent<JoyconReceiver>().j = j[i];
+			}
 			Joycon jc = j [i];
 			byte LEDs = 0x0;
 			LEDs |= (byte)(0x1 << i);
