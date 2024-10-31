@@ -18860,7 +18860,7 @@ MonoBehaviour:
   randomFakeSpeedRange: 3
   distanceToNextRand: 5
   runningTrack: {fileID: 1866473068}
-  playbackFile: {fileID: 4900000, guid: 47c08edb6d0f15e46a23cb574c096ee0, type: 3}
+  playbackFile: {fileID: 4900000, guid: d957ea1b12779914ea0f75ea1325359a, type: 3}
 --- !u!114 &1025176339
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22424,7 +22424,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1537760888}
-  m_LocalRotation: {x: 0.19202507, y: 0.48852786, z: -0.11116653, w: 0.84386545}
+  m_LocalRotation: {x: 0.19202505, y: 0.48852783, z: -0.111166514, w: 0.8438654}
   m_LocalPosition: {x: -406.95166, y: -28.867462, z: -563.21594}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -25989,7 +25989,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091541679}
-  m_LocalRotation: {x: 0.19202507, y: 0.48852786, z: -0.11116653, w: 0.84386545}
+  m_LocalRotation: {x: 0.19202505, y: 0.48852783, z: -0.111166514, w: 0.8438654}
   m_LocalPosition: {x: -406.95166, y: -28.867462, z: -563.21594}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

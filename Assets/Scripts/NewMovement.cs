@@ -149,7 +149,7 @@ public class NewMovement : MonoBehaviour
 
     public TextAsset playbackFile;
 
-    Queue<string> playbackData;
+    Queue<string> playbackData = new Queue<string>();
 
 
 
@@ -168,7 +168,7 @@ public class NewMovement : MonoBehaviour
         if(Options.instance.isPlayback && playbackFile != null)
         {
             playbackData = new Queue<string>(playbackFile.text.Split(","));
-            
+            Debug.Log(playbackData.Count);
         }
 
     }
@@ -205,9 +205,11 @@ public class NewMovement : MonoBehaviour
         {
             AutoSpeed(distanceToNextRand);
         }
-        else if(Options.instance.isPlayback)
+        else if(Options.instance.isPlayback && playbackData.Count > 0)
         {
+            Debug.Log(playbackData.Peek());
             currentGyroAverage += float.Parse(playbackData.Dequeue());
+            CalcGyroData();
         }
         else
         {

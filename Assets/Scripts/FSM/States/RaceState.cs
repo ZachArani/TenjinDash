@@ -77,35 +77,6 @@ namespace Assets.Scripts.FSM.States
         // Update is called once per frame
         void Update()
         {
-            /* if(inFirst != player1 && (player1Pos.m_Position + playerPositionMOE) - (player2Pos.m_Position + player2Moe) > posDistanceMOE) //IF P1 ahead of P2
-             {
-                 inFirst = player1.gameObject;
-                 player1.losingSpeedBoost = 0f;
-                 player2.losingSpeedBoost = losingSpeedBoost;
-                 updateStandingUI();
-             }
-             else if(inFirst != player2 && (player2Pos.m_Position + player2Moe) - (player1Pos.m_Position + playerPositionMOE) > posDistanceMOE) //If P2 ahead of P1
-             {
-                 inFirst = player2.gameObject;
-                 player2.losingSpeedBoost = 0f;
-                 player1.GetComponent<NewMovement>().losingSpeedBoost = losingSpeedBoost;
-                 updateStandingUI();
-             }
-
-            if(enforceCloseRace) //If we're enforcing a close race.
-            {
-                if(Mathf.Abs(player1._desiredSpeed - player2._desiredSpeed) > raceCloseness) //If one player is too fast or slow
-                {
-                    Debug.Log("Players too far apart! Enforcing close race!");
-                    float avgSpeed = (player1._desiredSpeed + player2._desiredSpeed) / 2; 
-                    player1._desiredSpeed = (inFirst == player1.gameObject) ? //Pushes both players in the same speed range based on their combined average speed.
-                        Mathf.Clamp(player1._desiredSpeed, player1._desiredSpeed - raceCloseness, player1._desiredSpeed) :
-                        Mathf.Clamp(player1._desiredSpeed, player2._desiredSpeed - raceCloseness, player2._desiredSpeed);
-                    player2._desiredSpeed = (inFirst == player2.gameObject) ?
-                        Mathf.Clamp(player2._desiredSpeed, player2._desiredSpeed - raceCloseness, player2._desiredSpeed) :
-                        Mathf.Clamp(player2._desiredSpeed, player1._desiredSpeed - raceCloseness, player1._desiredSpeed);
-                }
-            } */
             updateStandingUI();
             if(Options.instance.isAuto)
             {

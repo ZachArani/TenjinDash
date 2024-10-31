@@ -27,7 +27,10 @@ public class InputRecorder : MonoBehaviour
 
     private void FixedUpdate()
     {
-        data.AppendLine($"{joycon.GetGyro().magnitude},");
+        var gyro = joycon.GetGyro();
+        var accel = joycon.GetAccel();
+        //data.AppendLine($"{joycon.GetGyro().magnitude},");
+        data.AppendLine($"{gyro.x},{gyro.y},{gyro.z},{gyro.magnitude},{accel.x},{accel.y},{accel.z},{accel.magnitude},");
     }
 
 

@@ -146,7 +146,6 @@ public class StateManager : MonoBehaviour
 
     public void EnableRaceComponents(bool doEnable)
     {
-        Debug.Log(players.Count);
         players.ForEach(p => {
             p.enabled = doEnable;
             p.GetComponent<CinemachineDollyCart>().enabled = doEnable;
