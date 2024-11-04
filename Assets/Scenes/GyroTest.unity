@@ -251,10 +251,10 @@ RectTransform:
   m_Father: {fileID: 1865674725}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -300}
-  m_SizeDelta: {x: -8, y: -300}
+  m_SizeDelta: {x: 62, y: -300}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &246311562
 MonoBehaviour:
@@ -303,11 +303,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 246311560}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5962de87719dcb1489b15c5ee5413ddf, type: 3}
+  m_Script: {fileID: 11500000, guid: c7f3efbf1e2642840b5123ceb88fcd91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   meterUI: {fileID: 246311561}
-  smoothFactor: 0.07
+  smoothFactor: 0.05
   speedInfo: {fileID: 1912839541}
 --- !u!1 &503660931
 GameObject:
@@ -608,6 +608,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnableIMU: 1
   EnableLocalize: 1
+  players: []
 --- !u!4 &1511634091
 Transform:
   m_ObjectHideFlags: 0
@@ -658,7 +659,7 @@ MonoBehaviour:
   m_BlockingObjects: 0
   m_BlockingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2147483647
 --- !u!114 &1715422181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -750,7 +751,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1865674724}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -761,7 +762,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 118.6, y: 200.8}
+  m_AnchoredPosition: {x: 118.599976, y: 200.8}
   m_SizeDelta: {x: 70.8, y: 308}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1865674726
@@ -801,7 +802,7 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1865674724}
-  m_CullTransparentMesh: 1
+  m_CullTransparentMesh: 0
 --- !u!1 &1912839540
 GameObject:
   m_ObjectHideFlags: 0
@@ -831,15 +832,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 1912839540}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e52e0dab967e7547ba4bdd9f2427d86, type: 3}
+  m_Script: {fileID: 11500000, guid: a654de1005e09d140befde3254826fe3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speedUI: {fileID: 503660933}
-  timeWindow: 0.1
-  maxSpeedChangeLog: 3
-  correctionFactor: 3
-  maxInputSpeed: 80
-  maxRunnerVelocity: 10
+  debugText: {fileID: 503660933}
+  speedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2.1779284
+      outSlope: 2.1779284
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.33333334
+      outWeight: 0.29909152
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.43113354
+      outSlope: 0.43113354
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.47589105
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  speedPercent: 0
+  runnerSpeed: 32.8
+  targetSpeed: 0
+  currentSpeed: 0
+  t: 0
+  delta_t: 0
+  runnerTrack: {fileID: 0}
+  dist: 0
 --- !u!65 &1912839542
 BoxCollider:
   m_ObjectHideFlags: 0
