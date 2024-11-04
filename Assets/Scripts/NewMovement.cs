@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI.Extensions;
@@ -153,6 +154,42 @@ public class NewMovement : MonoBehaviour
 
 
 
+
+    /// <summary>
+    /// Improvement
+    /// </summary>
+
+    Queue<float> speedAvg = new Queue<float>();
+    const int AVG_WINDOW = 75;
+    float max;
+    const float EST_MAX = 2.5f;
+
+    public TextMeshProUGUI debugText;
+    public AnimationCurve speedCurveImproved;
+
+    public float speedPercent;
+
+    [Range(0f, 1000f)]
+    public float runnerSpeed;
+
+    [Range(0f, 100f)]
+    public float targetSpeed;
+    [ReadOnly]
+    public float currentSpeed;
+    [ReadOnly]
+    public float finalSpeed;
+
+    [ReadOnly]
+    public float tImproved;
+
+    const float TIME_TO_100 = 4f;
+    [ReadOnly]
+    public float delta_t;
+
+    [ReadOnly]
+    public float dist;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -171,10 +208,12 @@ public class NewMovement : MonoBehaviour
             Debug.Log(playbackData.Count);
         }
 
+        delta_t = Time.fixedDeltaTime / TIME_TO_100;
+
     }
 
     // Update is called once per frame
-    void Update()
+    void OldUpdate()
     {
         if (desiredSpeed > 0.1f && desiredSpeed + StateManager.instance.losingSpeedBoost > speed) //If the new gyro readings are faster then the current in-game speed
         {
@@ -196,10 +235,43 @@ public class NewMovement : MonoBehaviour
         animator.SetBool("isAccelerating", isAccelerating);
     }
 
+    private void FixedUpdate()
+    {
+        var speed = Mathf.Abs(JoyconManager.Instance.j[0].GetAccel().y);
+        if (speedAvg.Count > AVG_WINDOW)
+        {
+            speedAvg.Dequeue();
+        }
+        speedAvg.Enqueue(speed);
+        speedPercent = speedAvg.Average() / EST_MAX;
+        if (speedPercent > max) max = speedPercent;
+
+        if (debugText != null)
+        {
+            debugText.text = speedPercent.ToString();
+        }
+        if (currentSpeed < targetSpeed)
+        {
+            tImproved += delta_t;
+            isAccelerating = true;
+        }
+        else if (currentSpeed > targetSpeed)
+        {
+            tImproved -= delta_t;
+            isAccelerating = false;
+        }
+        tImproved = Mathf.Clamp(tImproved, 0, 1);
+        currentSpeed = speedCurveImproved.Evaluate(tImproved) * 100f;
+        finalSpeed = currentSpeed / 100f * runnerSpeed * Time.fixedDeltaTime;
+        track.m_Speed = finalSpeed;
+        animator.SetFloat("runningSpeed", finalSpeed);
+        animator.SetBool("isAccelerating", isAccelerating);
+    }
+
     /// <summary>
     /// time and gyro calculations done in FixedUpdate for reliable timings.
     /// </summary>
-    private void FixedUpdate()
+    private void OldFixedUpdate()
     {
         if (isAuto)
         {
@@ -209,12 +281,12 @@ public class NewMovement : MonoBehaviour
         {
             Debug.Log(playbackData.Peek());
             currentGyroAverage += float.Parse(playbackData.Dequeue());
-            CalcGyroData();
+            OldCalcGyroData();
         }
         else
         {
             currentGyroAverage += joycon.GetGyro().magnitude;
-            CalcGyroData();
+            OldCalcGyroData();
         }
     }
 
@@ -222,7 +294,7 @@ public class NewMovement : MonoBehaviour
     /// Measures Gyro data from Joycon.
     /// Uses this data to decide the speed the player should move at next step.
     /// </summary>
-    private void CalcGyroData()
+    private void OldCalcGyroData()
     {
         //Check if our current gyro reading period is within the timeWindow
         if (currentTimeInWindow < timeWindow)
