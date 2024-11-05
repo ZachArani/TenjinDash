@@ -211,6 +211,8 @@ public class NewMovement : MonoBehaviour
         delta_t = Time.fixedDeltaTime / TIME_TO_100;
         Debug.Log(delta_t);
 
+        setOpeningSpeed();
+
     }
 
     // Update is called once per frame
@@ -251,6 +253,8 @@ public class NewMovement : MonoBehaviour
         {
             debugText.text = speedPercent.ToString();
         }
+
+
         if (currentSpeed < targetSpeed)
         {
             tImproved += delta_t;
@@ -338,6 +342,12 @@ public class NewMovement : MonoBehaviour
             desiredSpeed = Mathf.Clamp(desiredSpeed, 12, 14);
             //Debug.Log($"{gameObject.name}: {speedPush}, new Speed: {_desiredSpeed}");
         }
+    }
+
+    void setOpeningSpeed()
+    {
+        tImproved = 0.5f;
+        currentSpeed = speedCurveImproved.Evaluate(tImproved);
     }
 
 
