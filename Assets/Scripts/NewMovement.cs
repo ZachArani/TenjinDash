@@ -196,7 +196,7 @@ public class NewMovement : MonoBehaviour
         track = GetComponent<CinemachineDollyCart>();
         animator = GetComponent<Animator>();
 
-        joycon = JoyconManager.Instance.GetJoycon(gameObject);
+        //joycon = JoyconManager.Instance.GetJoycon(gameObject);
 
         maxGyroChange = Mathf.Exp(maxGyroChangeLog); //Calculate the maximum gyro change value based on the logarithmic value we defined earlier.
         speed = startingSpeed;
@@ -209,6 +209,7 @@ public class NewMovement : MonoBehaviour
         }
 
         delta_t = Time.fixedDeltaTime / TIME_TO_100;
+        Debug.Log(delta_t);
 
     }
 
@@ -237,7 +238,7 @@ public class NewMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var speed = Mathf.Abs(JoyconManager.Instance.j[0].GetAccel().y);
+        var speed = JoyconManager.Instance.j.Count > 0 ? Mathf.Abs(JoyconManager.Instance.j[0].GetAccel().y) : 0;
         if (speedAvg.Count > AVG_WINDOW)
         {
             speedAvg.Dequeue();
@@ -266,6 +267,7 @@ public class NewMovement : MonoBehaviour
         track.m_Speed = finalSpeed;
         animator.SetFloat("runningSpeed", finalSpeed);
         animator.SetBool("isAccelerating", isAccelerating);
+        animator.SetFloat("runnerSpeed", runnerSpeed);
     }
 
     /// <summary>
