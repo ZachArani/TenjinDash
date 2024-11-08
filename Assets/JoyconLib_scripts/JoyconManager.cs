@@ -119,8 +119,10 @@ public class JoyconManager: MonoBehaviour
 		}
     }
 
-	public Joycon GetJoycon(GameObject player)
+	public Joycon GetJoyconByPlayer(GameObject player)
 	{
-		return j[players.IndexOf(player)];
+		if(players.IndexOf(player) < j.Count)
+			return j[players.IndexOf(player)];
+		return null;
 	}
 }

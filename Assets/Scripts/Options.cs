@@ -49,10 +49,6 @@ public class Options : MonoBehaviour
     private bool _isAuto;
     public bool isAuto { get { return _isAuto; } set { _isAuto = value; } }
 
-    [SerializeField]
-    private bool _isPlayback;
-    public bool isPlayback {  get { return _isPlayback; } set { _isPlayback = value; } }
-
     /// <summary>
     /// Decides if only player one is running.
     /// </summary>

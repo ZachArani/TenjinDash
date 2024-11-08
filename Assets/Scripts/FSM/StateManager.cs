@@ -1,3 +1,4 @@
+using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using System;
 using System.Collections;
@@ -29,12 +30,14 @@ public class StateManager : MonoBehaviour
     /// </summary>
     public static event Action<GAME_STATE, GAME_STATE> onGameStateChanged;
 
-    /// <summary>
-    /// Current game state (As an enum value).
-    /// </summary>
-    [ReadOnly, SerializeField]
-    private GAME_STATE _currentState; //Current game state
-    public GAME_STATE currentState { get { return _currentState; } set { _currentState = value; } }
+    [ReadOnly]
+    public GAME_STATE currentState;
+
+    [SerializedDictionary("State Enum", "GameObject")]
+    public SerializedDictionary<GAME_STATE, GameObject> stateDictionary;
+
+    [ReadOnly]
+    public GameObject currentStateObject;
 
 
     /// <summary>
@@ -107,6 +110,7 @@ public class StateManager : MonoBehaviour
     public void Initialize(GAME_STATE startingState)
     {
         currentState = startingState;
+        currentStateObject = stateDictionary[currentState];
         Debug.Log($"STARTING GAME WITH {currentState} STATE.");
         stateStopwatch.Start();
         onGameStateChanged.Invoke(GAME_STATE.NONE, currentState);
@@ -123,6 +127,7 @@ public class StateManager : MonoBehaviour
         Debug.Log($"TRANSITION TO {nextState}");
         onGameStateChanged.Invoke(currentState, nextState);
         currentState = nextState;
+        currentStateObject = stateDictionary[currentState];
         stateStopwatch.Restart();
     }
 

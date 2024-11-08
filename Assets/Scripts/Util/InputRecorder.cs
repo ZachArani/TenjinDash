@@ -17,7 +17,7 @@ public class InputRecorder : MonoBehaviour
     void OnEnable()
     {
         data = new StringBuilder();
-        joycon = JoyconManager.Instance.GetJoycon(gameObject);
+        joycon = JoyconManager.Instance.GetJoyconByPlayer(gameObject);
     }
 
     // Update is called once per frame
@@ -30,7 +30,7 @@ public class InputRecorder : MonoBehaviour
         var gyro = joycon.GetGyro();
         var accel = joycon.GetAccel();
         //data.AppendLine($"{joycon.GetGyro().magnitude},");
-        data.AppendLine($"{gyro.x},{gyro.y},{gyro.z},{gyro.magnitude},{accel.x},{accel.y},{accel.z},{accel.magnitude},");
+        data.AppendLine($"{Mathf.Abs(accel.y)},");
     }
 
 

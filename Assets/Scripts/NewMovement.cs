@@ -1,3 +1,4 @@
+using Assets.Scripts.FSM.States;
 using Cinemachine;
 using System;
 using System.Collections;
@@ -21,7 +22,6 @@ using UnityEngine.UI.Extensions;
 /// </summary>
 public class NewMovement : MonoBehaviour
 {
-    public event Action<int> OnNewGyroData;
 
     public int playerNum;
 
@@ -30,12 +30,6 @@ public class NewMovement : MonoBehaviour
 
     Joycon joycon;
 
-
-    //Time variables for gyro measurements
-    /// <summary>
-    /// Keeps track of the current sum of gyro data based on the time window
-    /// </summary>
-    float currentGyroAverage = 0f;
     /// <summary>
     /// Defines the time window of gyro readings
     /// Once we reach the end of a time window, we average the summed data to calculate the next speed data point.
@@ -118,33 +112,14 @@ public class NewMovement : MonoBehaviour
     [Range(0f, 0.4f)]
     public float maxTChange;
 
-    /// <summary>
-    /// The t value is used in calculating the player's current in-game speed. 
-    /// The value decides the player's speed by referencing the acceleration curve defined. 
-    /// So a t value of 0.7 means it will pick the Y value of the acceleration curve at the x==0.7 mark.
-    /// The value is clamped between 0 and 1--i.e., 0% and 100%
-    /// </summary>
-    float t;
     bool isAccelerating;
-
-    [SerializeField]
-    [Range(0f, 10f)]
-    float randomFakeSpeedRange = 3f;
-
-    /// <summary>
-    /// Used in creating fake data for demo/auto modes. Defines the distance traveled before a new random speed is calculated.
-    /// </summary>
-    [SerializeField]
-    [Range(1f, 50f)]
-    float distanceToNextRand = 5f;
 
 
     /// <summary>
     /// The running track this player races on.
     /// Defines exactly where they are running during the race.
     /// </summary>
-    public CinemachineSmoothPath runningTrack;
-    CinemachineDollyCart track;
+    public CinemachineDollyCart track;
 
     Animator animator;
 
@@ -159,15 +134,15 @@ public class NewMovement : MonoBehaviour
     /// Improvement
     /// </summary>
 
-    Queue<float> speedAvg = new Queue<float>();
-    const int AVG_WINDOW = 75;
+    Queue<float> joyconInput = new Queue<float>();
+    const int AVG_WINDOW = 35;
     float max;
-    const float EST_MAX = 2.5f;
+    const float EST_MAX = 3f;
 
     public TextMeshProUGUI debugText;
     public AnimationCurve speedCurveImproved;
 
-    public float speedPercent;
+    public float joyconEffort;
 
     [Range(0f, 1000f)]
     public float runnerSpeed;
@@ -189,6 +164,11 @@ public class NewMovement : MonoBehaviour
     [ReadOnly]
     public float dist;
 
+    RaceState raceManager;
+
+    [ReadOnly]
+    public float rubberbandBoost;
+
 
     // Start is called before the first frame update
     void Start()
@@ -196,13 +176,12 @@ public class NewMovement : MonoBehaviour
         track = GetComponent<CinemachineDollyCart>();
         animator = GetComponent<Animator>();
 
-        //joycon = JoyconManager.Instance.GetJoycon(gameObject);
+        joycon = JoyconManager.Instance.GetJoyconByPlayer(gameObject);
 
         maxGyroChange = Mathf.Exp(maxGyroChangeLog); //Calculate the maximum gyro change value based on the logarithmic value we defined earlier.
         speed = startingSpeed;
-        t = 0.05f; //Set at 0.05 right now to fix a bug. TODO: Allow t-value to run at 0.00
 
-        if(Options.instance.isPlayback && playbackFile != null)
+        if(isPlayback && playbackFile != null)
         {
             playbackData = new Queue<string>(playbackFile.text.Split(","));
             Debug.Log(playbackData.Count);
@@ -213,47 +192,20 @@ public class NewMovement : MonoBehaviour
 
         setOpeningSpeed();
 
+        raceManager = StateManager.instance.currentStateObject.GetComponent<RaceState>();
+
     }
 
-    // Update is called once per frame
-    void OldUpdate()
-    {
-        if (desiredSpeed > 0.1f && desiredSpeed + StateManager.instance.losingSpeedBoost > speed) //If the new gyro readings are faster then the current in-game speed
-        {
-            t += maxTChange * Time.deltaTime; //Increase t (speed up)
-            isAccelerating = true;
-        }
-        else if (desiredSpeed + StateManager.instance.losingSpeedBoost < speed) //If the new gyro readings are slower than current in-game speed
-        {
-            t -= maxTChange * Time.deltaTime; //decrease t (slow down)
-            isAccelerating = false;
-        }
-        Mathf.Clamp(t, 0f, 1f); //Clamp t between 0% and 100%
-        speed = speedCurve.Evaluate(t); //Get new speed by evaluating t value on curve.
-        speed = Mathf.Round(speed * 100f) / 100f;  //Truncate speed to 2 decimal places (X.XXXXXXXXX -> X.XX)
-        track.m_Speed = speed; //Updates our actual movement along the running track. Tells the track the speed to advance at.
-
-        //Update animation info
-        animator.SetFloat("runningSpeed", speed);
-        animator.SetBool("isAccelerating", isAccelerating);
-    }
 
     private void FixedUpdate()
     {
-        var speed = JoyconManager.Instance.j.Count > 0 ? Mathf.Abs(JoyconManager.Instance.j[0].GetAccel().y) : 0;
-        if (speedAvg.Count > AVG_WINDOW)
-        {
-            speedAvg.Dequeue();
-        }
-        speedAvg.Enqueue(speed);
-        speedPercent = speedAvg.Average() / EST_MAX;
-        if (speedPercent > max) max = speedPercent;
 
-        if (debugText != null)
-        {
-            debugText.text = speedPercent.ToString();
-        }
+        UpdateJoyconEffort();
+        UpdateRubberband();
 
+        var estSpeed = raceManager.speedMax * (0.7f + joyconEffort + rubberbandBoost) * Time.fixedDeltaTime;
+
+        Debug.Log($"{estSpeed}");
 
         if (currentSpeed < targetSpeed)
         {
@@ -267,81 +219,46 @@ public class NewMovement : MonoBehaviour
         }
         tImproved = Mathf.Clamp(tImproved, 0, 1);
         currentSpeed = speedCurveImproved.Evaluate(tImproved) * 100f;
-        finalSpeed = currentSpeed / 100f * runnerSpeed * Time.fixedDeltaTime;
+        finalSpeed = currentSpeed / 100f * raceManager.speedMax * Time.fixedDeltaTime;
         track.m_Speed = finalSpeed;
         animator.SetFloat("runningSpeed", finalSpeed);
         animator.SetBool("isAccelerating", isAccelerating);
-        animator.SetFloat("runnerSpeed", runnerSpeed);
+        animator.SetFloat("runnerSpeed", raceManager.speedMax);
     }
 
-    /// <summary>
-    /// time and gyro calculations done in FixedUpdate for reliable timings.
-    /// </summary>
-    private void OldFixedUpdate()
+    void UpdateJoyconEffort()
     {
-        if (isAuto)
+        var speed = 0f;
+        var tick = 0;
+        if (isPlayback)
         {
-            AutoSpeed(distanceToNextRand);
+            speed = float.Parse(playbackData.Dequeue());
         }
-        else if(Options.instance.isPlayback && playbackData.Count > 0)
+        else if (JoyconManager.Instance.GetJoyconByPlayer(gameObject) != null)
         {
-            Debug.Log(playbackData.Peek());
-            currentGyroAverage += float.Parse(playbackData.Dequeue());
-            OldCalcGyroData();
+            joycon = JoyconManager.Instance.GetJoyconByPlayer(gameObject);
+            speed = Mathf.Abs(joycon.GetAccel().y);
         }
-        else
+        else return;
+
+        if (joyconInput.Count > AVG_WINDOW)
         {
-            currentGyroAverage += joycon.GetGyro().magnitude;
-            OldCalcGyroData();
+            joyconInput.Dequeue();
         }
+        joyconInput.Enqueue(speed);
+        joyconEffort = joyconInput.Average() / EST_MAX * 0.3f;
     }
 
-    /// <summary>
-    /// Measures Gyro data from Joycon.
-    /// Uses this data to decide the speed the player should move at next step.
-    /// </summary>
-    private void OldCalcGyroData()
+    void UpdateRubberband()
     {
-        //Check if our current gyro reading period is within the timeWindow
-        if (currentTimeInWindow < timeWindow)
+        if (raceManager.firstPlace == this)
         {
-            currentTimeInWindow += Time.fixedDeltaTime;
+            rubberbandBoost = 0;
+            return;
         }
-        else //If we're past the current window
-        {
-            currentTimeInWindow = 0;
-            //Calculate the gyro percentage (current value vs max possible value) based on:
-            //1) The current average of gyro samples taken during the window
-            //2) The maximum gyro change as defined by the developer (meaning the new percentage can't change *too* much compared to the last one)
-            //3) The correction factor as defined by the developer (subtracts a constant from the max gyro change)
-            //4) The max gyro speed, which is the max possible value for gyro readings.
-            gyroPercentage = Mathf.Clamp(Mathf.Lerp(gyroPercentage, currentGyroAverage, Mathf.Exp(-maxGyroChange * Time.deltaTime)) - correctionFactor,
-                                        0,
-                                        maxGyroSpeed) / maxGyroSpeed;
-            desiredSpeed = gyroPercentage * maxRunnerSpeed; //New desired speed is based on % gyro readings (player running IRL) relative to player character's max speed
-            currentGyroAverage = 0;
-        }
-    }
 
-    void GetNewGyroData(Vector3 data)
-    {
-        currentGyroAverage += data.magnitude;
-    }
-
-    /// <summary>
-    /// Fake movement for videos, etc.
-    /// </summary>
-    /// <param name="distanceToSpeedChange">How often to change speeds</param>
-    void AutoSpeed(float distanceToSpeedChange)
-    {
-        if (GetComponent<CinemachineDollyCart>().m_Position % distanceToSpeedChange < 0.1) //If we've approached the required distance
-        {
-            float speedPush = UnityEngine.Random.Range(-randomFakeSpeedRange, randomFakeSpeedRange);
-            desiredSpeed += speedPush;
-            Debug.Log(desiredSpeed);
-            desiredSpeed = Mathf.Clamp(desiredSpeed, 12, 14);
-            //Debug.Log($"{gameObject.name}: {speedPush}, new Speed: {_desiredSpeed}");
-        }
+        var dist = Mathf.Abs(track.m_Position - raceManager.firstPlace.track.m_Position);
+        rubberbandBoost = (dist / raceManager.maxRubberbandDistance) * raceManager.maxRubberbandBoost / 100f;
     }
 
     void setOpeningSpeed()

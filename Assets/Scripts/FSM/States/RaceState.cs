@@ -2,7 +2,6 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using TMPro;
 using UnityEditor;
@@ -19,9 +18,32 @@ namespace Assets.Scripts.FSM.States
         /// <summary>
         /// Current standings in the race. Returns an List of the players based on their current position on their track.
         /// </summary>
-        public List<NewMovement> playerPos 
+        public List<NewMovement> playerPos
         {
             get => StateManager.instance.players.OrderByDescending(p => p.GetComponent<CinemachineDollyCart>().m_Position).ToList();
+        }
+
+        public NewMovement firstPlace
+        {
+            get => playerPos[0];
+        }
+
+        [Range(5f, 50f)]
+        public float maxRubberbandDistance = 30f;
+
+        [Range(0f, 20f)]
+        public float maxRubberbandBoost = 10f;
+
+        float pathLength;
+
+        public float percentDone
+        {
+            get => playerPos[0].GetComponent<CinemachineDollyCart>().m_Position / pathLength;
+        }
+
+        public float speedMax
+        {
+            get => 600f + 400f * percentDone;
         }
 
         /// <summary>
@@ -35,43 +57,12 @@ namespace Assets.Scripts.FSM.States
         private List<string> _playerPosText;
         public List<string> playerPosText { get { return _playerPosText; } private set { _playerPosText = value; } } 
 
-        
-        //Margin of error when calcuating player positions.
-        //If there is no MOE, then the 1st/2nd place UI flashes a *ton* when its a close race.
-        [SerializeField]
-        [Range(0, 2f)]
-        float playerPositionMOE;
 
-        /// <summary>
-        /// Used during demo modes to "fake" running speed. Decides how often (in terms of distance) to randomly roll a new speed for the player.
-        /// </summary>
-        [SerializeField]
-        [Range(10f, 100f)]
-        float fakeItDistance = 15f;
-
-
-
-        [SerializeField]
-        [Range(0f, 3f)]
-        float posDistanceMOE = 0.5f;
-
-
-        /// <summary>
-        /// Basically enforces "rubberbanding" behavior. 
-        /// If a player falls too far behind, the game will give them a massive speed boost so they can catch up with the other runner.
-        /// </summary>
-        [SerializeField]
-        bool enforceCloseRace = false;
-
-        /// <summary>
-        /// Indicates the maximum difference between player speeds. If someone is too far behind or ahead, the game will force them into this speed range.
-        /// Used alongside enforceCloseRace to keep the race close. 
-        /// </summary>
-        float raceCloseness = 1f;
 
         // Use this for initialization
         void Start()
         {
+            pathLength = StateManager.instance.players[0].GetComponent<CinemachineDollyCart>().m_Path.PathLength;
         }
 
         // Update is called once per frame
@@ -104,22 +95,22 @@ namespace Assets.Scripts.FSM.States
 
                 StateManager.instance.EnableRaceComponents(true);
                 
-                if (Options.instance.isAuto) //If auto mode
+                if (Options.instance.isAuto) 
                 {
                     StateManager.instance.players.ForEach(p => p.isAuto = true);
                 }
-                else if(Options.instance.isSolo) //If 1 player
+                else if(Options.instance.isSolo)
                 {
                     var players = StateManager.instance.players.OrderByDescending(p => p.playerNum);
-                    players.First().isAuto = false; //First player is playing
+                    players.First().isAuto = false;
                     foreach(NewMovement player in players.Skip(1))
                     {
-                        player.isAuto = true; //The rest are auto
+                        player.isAuto = true;
                     }
                 }
                 else
                 {
-                    StateManager.instance.players.ForEach(p => p.isAuto = false); //Everyone is playing
+                    StateManager.instance.players.ForEach(p => p.isAuto = false); 
                 }
 
                 if(Options.instance.recordPlayerData)
