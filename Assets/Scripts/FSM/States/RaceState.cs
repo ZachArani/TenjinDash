@@ -41,9 +41,9 @@ namespace Assets.Scripts.FSM.States
             get => playerPos[0].GetComponent<CinemachineDollyCart>().m_Position / pathLength;
         }
 
-        public float speedMax
+        public float maxSpeed
         {
-            get => 600f + 400f * percentDone;
+            get => (600f + 400f * percentDone) * Time.fixedDeltaTime;
         }
 
         /// <summary>

@@ -923,7 +923,6 @@ MonoBehaviour:
   meterUI: {fileID: 144121342}
   smoothFactor: 0.07
   player: {fileID: 1025176338}
-  raceManager: {fileID: 1028837022}
   baseSpeed: 0.25
 --- !u!114 &144121344
 MonoBehaviour:
@@ -17901,6 +17900,10 @@ PrefabInstance:
       value: 3.9980283
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 34e75add84c1958479ed3c0b6185357f, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+    - target: {fileID: 919132149155446097, guid: 34e75add84c1958479ed3c0b6185357f, type: 3}
       propertyPath: m_Name
       value: Player1
       objectReference: {fileID: 0}
@@ -18672,46 +18675,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32654e80b40cef946823bf7446aee7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raceManager: {fileID: 1028837022}
   playerNum: 0
-  isAuto: 0
-  isPlayback: 1
-  timeWindow: 0.1
-  maxGyroChangeLog: 3
-  correctionFactor: 3
-  maxGyroSpeed: 80
-  maxRunnerSpeed: 25
-  startingSpeed: 10
-  speedCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 230.83133
-      outSlope: 230.83133
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.08510643
-    - serializedVersion: 3
-      time: 1
-      value: 80
-      inSlope: 17.389482
-      outSlope: 17.389482
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.21040207
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  desiredSpeed: 0
-  maxTChange: 0.02
-  track: {fileID: 1025176339}
+  runningTrack: {fileID: 0}
   playbackFile: {fileID: 4900000, guid: e56240afb06dbe1438650323a4e62809, type: 3}
   debugText: {fileID: 0}
-  speedCurveImproved:
+  speedCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -18735,12 +18703,15 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  isAuto: 0
+  isPlayback: 1
+  MAX_AVG: 3
+  ZERO_TO_100: 4
+  epsilon: 0.1
   joyconEffort: 0
-  runnerSpeed: 1000
   targetSpeed: 85
   currentSpeed: 0
-  finalSpeed: 0
-  tImproved: 0
+  t: 0
   delta_t: 0
   dist: 0
   rubberbandBoost: 0
@@ -18785,6 +18756,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ff2e519d225004198e2d38af2cd9ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1025176342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1025176333}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49170fcb81c7a08459b59e4bec97a84f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  filename: playerSpeedData2
+  player: {fileID: 1025176338}
 --- !u!1 &1028837020
 GameObject:
   m_ObjectHideFlags: 0
@@ -22144,7 +22129,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1537760888}
-  m_LocalRotation: {x: 0.19202304, y: 0.48850626, z: -0.11115858, w: 0.8438795}
+  m_LocalRotation: {x: 0.19202302, y: 0.4885062, z: -0.111158565, w: 0.8438795}
   m_LocalPosition: {x: -406.95166, y: -28.867462, z: -563.21594}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -23167,7 +23152,6 @@ MonoBehaviour:
   meterUI: {fileID: 1864263969}
   smoothFactor: 0.07
   player: {fileID: 1972611484}
-  raceManager: {fileID: 1028837022}
   baseSpeed: 0
 --- !u!114 &1864263971
 MonoBehaviour:
@@ -24301,6 +24285,10 @@ PrefabInstance:
       value: 99.79803
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 5e956cd6041f2c94bacbf18ff3ab5c32, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+    - target: {fileID: 919132149155446097, guid: 5e956cd6041f2c94bacbf18ff3ab5c32, type: 3}
       propertyPath: m_Name
       value: Player2
       objectReference: {fileID: 0}
@@ -25072,75 +25060,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32654e80b40cef946823bf7446aee7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raceManager: {fileID: 1028837022}
   playerNum: 0
-  isAuto: 0
-  isPlayback: 0
-  timeWindow: 0.1
-  maxGyroChangeLog: 3
-  correctionFactor: 3
-  maxGyroSpeed: 80
-  maxRunnerSpeed: 25
-  startingSpeed: 10
-  speedCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 2.7762933
-      outSlope: 2.7762933
-      tangentMode: 0
-      weightedMode: 3
-      inWeight: 0.33333334
-      outWeight: 0.15752894
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0.036260106
-      outSlope: 0.036260106
-      tangentMode: 0
-      weightedMode: 3
-      inWeight: 0.27104253
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  desiredSpeed: 0
-  maxTChange: 0.02
-  track: {fileID: 1972611485}
+  runningTrack: {fileID: 0}
   playbackFile: {fileID: 0}
   debugText: {fileID: 0}
-  speedCurveImproved:
+  speedCurve:
     serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 2.7762933
-      outSlope: 2.7762933
-      tangentMode: 0
-      weightedMode: 3
-      inWeight: 0.33333334
-      outWeight: 0.15752894
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0.036260106
-      outSlope: 0.036260106
-      tangentMode: 0
-      weightedMode: 3
-      inWeight: 0.27104253
-      outWeight: 0.33333334
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  isAuto: 0
+  isPlayback: 0
+  MAX_AVG: 3
+  ZERO_TO_100: 4
+  epsilon: 0.1
   joyconEffort: 0
-  runnerSpeed: 600
   targetSpeed: 85
   currentSpeed: 0
-  finalSpeed: 0
-  tImproved: 0
+  t: 0
   delta_t: 0
   dist: 0
   rubberbandBoost: 0
@@ -25786,7 +25724,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091541679}
-  m_LocalRotation: {x: 0.19202304, y: 0.48850626, z: -0.11115858, w: 0.8438795}
+  m_LocalRotation: {x: 0.19202302, y: 0.4885062, z: -0.111158565, w: 0.8438795}
   m_LocalPosition: {x: -406.95166, y: -28.867462, z: -563.21594}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -25839,3 +25777,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startMenuTimeline: {fileID: 932609232}
+--- !u!1 &2141147645
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2141147646}
+  - component: {fileID: 2141147647}
+  m_Layer: 0
+  m_Name: P1Follow
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2141147646
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2141147645}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1540.3293, y: 257.9138, z: -497.48535}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2141147647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2141147645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0ce2a2e0f70b504b8ed31d00d65f536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1025176333}

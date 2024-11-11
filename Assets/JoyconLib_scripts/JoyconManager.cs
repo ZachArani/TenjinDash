@@ -113,7 +113,7 @@ public class JoyconManager: MonoBehaviour
 
     void OnApplicationQuit()
     {
-		if (j.Count == 0)
+		if (j != null && j.Count == 0)
 			return;
 		for (int i = 0; i < j.Count; ++i)
 		{

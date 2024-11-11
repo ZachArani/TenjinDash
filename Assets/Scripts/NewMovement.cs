@@ -1,13 +1,11 @@
 using Assets.Scripts.FSM.States;
 using Cinemachine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI.Extensions;
+using static UtilFunctions;
 
 
 /// <summary>
@@ -33,20 +31,13 @@ public class NewMovement : MonoBehaviour
 
     public TextAsset playbackFile;
     public TextMeshProUGUI debugText;
-    public AnimationCurve speedCurveImproved;
+    public AnimationCurve speedCurve;
 
     public bool isAuto;
     public bool isPlayback;
 
     Joycon joycon;
 
-    /// <summary>
-    /// The player's desired speed.
-    /// Based on the most current gyro data. Indicates if the player should speed up or slow down from their current in-game speed.
-    /// Can be manipulated by other classes. Namely the PhotoFinish state to handle a skipToPhotoFinish mode
-    /// </summary>
-    [ReadOnly]
-    public float desiredSpeed;
 
     bool isAccelerating;
 
@@ -54,25 +45,27 @@ public class NewMovement : MonoBehaviour
 
     Queue<float> joyconInput = new Queue<float>();
     const int AVG_WINDOW = 35;
-    const float EST_MAX = 3f;
+
+    [Range(2f, 4f)]
+    public float MAX_AVG = 3f;
+
+    [Range(2f, 100f)]
+    public float ZERO_TO_100 = 4f;
+
+    [Range(0.01f, 1f)]
+    public float epsilon = 0.1f;
 
     [ReadOnly]
     public float joyconEffort;
 
-    [Range(0f, 1000f)]
-    public float runnerSpeed;
-
-    [Range(0f, 100f)]
+    [ReadOnly]
     public float targetSpeed;
     [ReadOnly]
     public float currentSpeed;
-    [ReadOnly]
-    public float finalSpeed;
 
     [ReadOnly]
-    public float tImproved;
-
-    const float TIME_TO_100 = 4f;
+    public float t;
+    
     [ReadOnly]
     public float delta_t;
 
@@ -97,8 +90,7 @@ public class NewMovement : MonoBehaviour
             Debug.Log(playbackData.Count);
         }
 
-        delta_t = Time.fixedDeltaTime / TIME_TO_100;
-        Debug.Log(delta_t);
+        delta_t = Time.fixedDeltaTime / ZERO_TO_100;
 
         setOpeningSpeed();
 
@@ -111,25 +103,25 @@ public class NewMovement : MonoBehaviour
         UpdateJoyconEffort();
         UpdateRubberband();
 
-        var estSpeed = raceManager.speedMax * (0.7f + joyconEffort + rubberbandBoost) * Time.fixedDeltaTime;
+        targetSpeed = raceManager.maxSpeed * (0.7f + joyconEffort + rubberbandBoost);
+
         if (currentSpeed < targetSpeed)
         {
-            tImproved += delta_t;
+            t += delta_t;
             isAccelerating = true;
         }
         else if (currentSpeed > targetSpeed)
         {
-            tImproved -= delta_t;
+            t -= delta_t;
             isAccelerating = false;
         }
-        tImproved = Mathf.Clamp(tImproved, 0, 1);
-        currentSpeed = speedCurveImproved.Evaluate(tImproved) * 100f;
-        //finalSpeed = currentSpeed / 100f * raceManager.speedMax * Time.fixedDeltaTime;
-        finalSpeed = estSpeed;
-        runningTrack.m_Speed = finalSpeed;
-        animator.SetFloat("runningSpeed", finalSpeed);
+        t = Mathf.Clamp(t, 0, 1);
+        currentSpeed = speedCurve.Evaluate(t) * raceManager.maxSpeed;
+        runningTrack.m_Speed = currentSpeed;
+
+        animator.SetFloat("runningSpeed", currentSpeed);
         animator.SetBool("isAccelerating", isAccelerating);
-        animator.SetFloat("runnerSpeed", raceManager.speedMax);
+        animator.SetFloat("runnerSpeed", raceManager.maxSpeed);
     }
 
     void UpdateJoyconEffort()
@@ -151,7 +143,7 @@ public class NewMovement : MonoBehaviour
             joyconInput.Dequeue();
         }
         joyconInput.Enqueue(speed);
-        joyconEffort = joyconInput.Average() / EST_MAX * 0.3f;
+        joyconEffort = joyconInput.Average() / MAX_AVG * 0.3f;
     }
 
     void UpdateRubberband()
@@ -168,8 +160,8 @@ public class NewMovement : MonoBehaviour
 
     void setOpeningSpeed()
     {
-        tImproved = 0.5f;
-        currentSpeed = speedCurveImproved.Evaluate(tImproved);
+        t = 0.5f;
+        currentSpeed = speedCurve.Evaluate(t);
     }
 
 
