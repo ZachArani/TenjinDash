@@ -43,7 +43,7 @@ namespace Assets.Scripts.FSM.States
 
         public float maxSpeed
         {
-            get => (600f + 400f * percentDone) * Time.fixedDeltaTime;
+            get => 12f + 8 * percentDone;
         }
 
         /// <summary>

@@ -52,7 +52,7 @@ public class NewMovement : MonoBehaviour
     [Range(2f, 100f)]
     public float ZERO_TO_100 = 4f;
 
-    [Range(0.01f, 1f)]
+    [Range(0.0001f, 1f)]
     public float epsilon = 0.1f;
 
     [ReadOnly]
@@ -65,8 +65,8 @@ public class NewMovement : MonoBehaviour
 
     [ReadOnly]
     public float t;
-    
-    [ReadOnly]
+
+    [Range(0f, 0.05f)]
     public float delta_t;
 
     [ReadOnly]
@@ -74,6 +74,8 @@ public class NewMovement : MonoBehaviour
 
     [ReadOnly]
     public float rubberbandBoost;
+
+    public bool killswitch = false;
 
 
     // Start is called before the first frame update
@@ -90,33 +92,40 @@ public class NewMovement : MonoBehaviour
             Debug.Log(playbackData.Count);
         }
 
-        delta_t = Time.fixedDeltaTime / ZERO_TO_100;
+        //delta_t = Time.fixedDeltaTime / ZERO_TO_100;
 
         setOpeningSpeed();
 
     }
 
 
-    private void FixedUpdate()
+    private void Update()
     {
 
         UpdateJoyconEffort();
         UpdateRubberband();
 
+        
+
         targetSpeed = raceManager.maxSpeed * (0.7f + joyconEffort + rubberbandBoost);
+        if (killswitch)
+            targetSpeed = 0;
 
         if (currentSpeed < targetSpeed)
         {
-            t += delta_t;
+            t += Time.deltaTime;
             isAccelerating = true;
         }
         else if (currentSpeed > targetSpeed)
         {
-            t -= delta_t;
+            t -= Time.deltaTime;
             isAccelerating = false;
         }
         t = Mathf.Clamp(t, 0, 1);
-        currentSpeed = speedCurve.Evaluate(t) * raceManager.maxSpeed;
+        var curveValue = Math.Round((double)speedCurve.Evaluate(t), 4);
+        Debug.Log($"{t}, {curveValue}, {(float)curveValue * raceManager.maxSpeed}, {raceManager.maxSpeed} {Time.deltaTime}");
+        currentSpeed = (float)curveValue * raceManager.maxSpeed;
+        //currentSpeed = 10f;
         runningTrack.m_Speed = currentSpeed;
 
         animator.SetFloat("runningSpeed", currentSpeed);
