@@ -16,7 +16,7 @@ namespace Assets.Scripts.FSM.States
 
 
         /// <summary>
-        /// Current standings in the race. Returns an List of the players based on their current position on their track.
+        /// Current standings in the race. Returns an List of the players based on their current position on their runningTrack.
         /// </summary>
         public List<NewMovement> playerPos
         {

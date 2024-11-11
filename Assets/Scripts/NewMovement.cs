@@ -25,76 +25,20 @@ public class NewMovement : MonoBehaviour
 
     public int playerNum;
 
+    RaceState raceManager;
+
+    public CinemachineDollyCart runningTrack;
+
+    Animator animator;
+
+    public TextAsset playbackFile;
+    public TextMeshProUGUI debugText;
+    public AnimationCurve speedCurveImproved;
+
     public bool isAuto;
     public bool isPlayback;
 
     Joycon joycon;
-
-    /// <summary>
-    /// Defines the time window of gyro readings
-    /// Once we reach the end of a time window, we average the summed data to calculate the next speed data point.
-    /// </summary>
-    [Range(0.05f, 1f)]
-    public float timeWindow = 0.1f;
-    /// <summary>
-    /// Keeps track of the current time WITHIN the time window
-    /// Used to check if we've past the time window
-    /// </summary>
-    float currentTimeInWindow;
-
-
-    //Gyro measurements
-    /// <summary>
-    /// Factor used to control smoothing the gyro data.
-    /// Calculated in logarithm format for easier modification
-    /// </summary>
-    [Range(0f, 5f)]
-    public float maxGyroChangeLog = 3f;
-    /// <summary>
-    /// Defines how rapidly the gyro data readings change
-    /// Basically, this helps smooth data in case of bad readings or sudden stops.
-    /// </summary>
-    float maxGyroChange;
-    /// <summary>
-    /// A basic correction factor that subtracts from the gyro readings
-    /// Used to put "base level" readings close to 0
-    /// Otherwise, "no movement" might read as something like 3 or 5 or 15 instead of 0
-    /// </summary>
-    [Range(0f, 10f)]
-    public float correctionFactor = 3;
-    /// <summary>
-    /// Defines how much speed can be generated from the gyro readings itself.
-    /// Basically defines the maximum cap of effort a player can put into physically running
-    /// NOTE: this is different from the max player speed. That controls the actual in-game speed of the player. 
-    /// This controls the data read from the gyro sensor.
-    /// </summary>
-    [Range(50f, 100f)]
-    public float maxGyroSpeed = 80f;
-
-    /// <summary>
-    /// Utility variable that defines what "percentage" the current gyro data is at.
-    /// i.e., if the current gyro value is at 40, and the current maxGyroSpeed is at 80, then the gyroPercentage is 50%
-    /// Variable is used to understand how fast the player is running relative to the possible maximum effort.
-    /// </summary>
-    public float gyroPercentage { get; private set; }
-
-
-    [Range(5f, 30f)]
-    public float maxRunnerSpeed;
-
-    public float speed { get; private set; }
-    /// <summary>
-    /// The speed the player starts when the race begins.
-    /// This variable is required because the characters "leap" into a sprint at the race's start.
-    /// Meanwhile, the people *playing* the game usually don't start running until *after* the countdown begins
-    /// So we define a starting speed for each player character, which will be their speed for the first few seconds of the game
-    /// Eventually is replaced by actual gyro data from players. 
-    /// </summary>
-    [SerializeField]
-    [Range(0f, 25f)]
-    float startingSpeed;
-
-    public AnimationCurve speedCurve;
 
     /// <summary>
     /// The player's desired speed.
@@ -104,44 +48,15 @@ public class NewMovement : MonoBehaviour
     [ReadOnly]
     public float desiredSpeed;
 
-    /// <summary>
-    /// Defines the maximum change of the t value, which is used in lerping the player's speed up or down.
-    /// Basically, this forces the player to smoothly accelerate.
-    /// If there was no max cap to the t value change, then the player could go from 0 to 100 in an instant.
-    /// </summary>
-    [Range(0f, 0.4f)]
-    public float maxTChange;
-
     bool isAccelerating;
-
-
-    /// <summary>
-    /// The running track this player races on.
-    /// Defines exactly where they are running during the race.
-    /// </summary>
-    public CinemachineDollyCart track;
-
-    Animator animator;
-
-    public TextAsset playbackFile;
 
     Queue<string> playbackData = new Queue<string>();
 
-
-
-
-    /// <summary>
-    /// Improvement
-    /// </summary>
-
     Queue<float> joyconInput = new Queue<float>();
     const int AVG_WINDOW = 35;
-    float max;
     const float EST_MAX = 3f;
 
-    public TextMeshProUGUI debugText;
-    public AnimationCurve speedCurveImproved;
-
+    [ReadOnly]
     public float joyconEffort;
 
     [Range(0f, 1000f)]
@@ -164,8 +79,6 @@ public class NewMovement : MonoBehaviour
     [ReadOnly]
     public float dist;
 
-    RaceState raceManager;
-
     [ReadOnly]
     public float rubberbandBoost;
 
@@ -173,13 +86,10 @@ public class NewMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        track = GetComponent<CinemachineDollyCart>();
+        runningTrack = GetComponent<CinemachineDollyCart>();
         animator = GetComponent<Animator>();
-
         joycon = JoyconManager.Instance.GetJoyconByPlayer(gameObject);
-
-        maxGyroChange = Mathf.Exp(maxGyroChangeLog); //Calculate the maximum gyro change value based on the logarithmic value we defined earlier.
-        speed = startingSpeed;
+        raceManager = StateManager.instance.stateDictionary[GAME_STATE.RACE].GetComponent<RaceState>();
 
         if(isPlayback && playbackFile != null)
         {
@@ -192,8 +102,6 @@ public class NewMovement : MonoBehaviour
 
         setOpeningSpeed();
 
-        raceManager = StateManager.instance.currentStateObject.GetComponent<RaceState>();
-
     }
 
 
@@ -204,9 +112,6 @@ public class NewMovement : MonoBehaviour
         UpdateRubberband();
 
         var estSpeed = raceManager.speedMax * (0.7f + joyconEffort + rubberbandBoost) * Time.fixedDeltaTime;
-
-        Debug.Log($"{estSpeed}");
-
         if (currentSpeed < targetSpeed)
         {
             tImproved += delta_t;
@@ -219,8 +124,9 @@ public class NewMovement : MonoBehaviour
         }
         tImproved = Mathf.Clamp(tImproved, 0, 1);
         currentSpeed = speedCurveImproved.Evaluate(tImproved) * 100f;
-        finalSpeed = currentSpeed / 100f * raceManager.speedMax * Time.fixedDeltaTime;
-        track.m_Speed = finalSpeed;
+        //finalSpeed = currentSpeed / 100f * raceManager.speedMax * Time.fixedDeltaTime;
+        finalSpeed = estSpeed;
+        runningTrack.m_Speed = finalSpeed;
         animator.SetFloat("runningSpeed", finalSpeed);
         animator.SetBool("isAccelerating", isAccelerating);
         animator.SetFloat("runnerSpeed", raceManager.speedMax);
@@ -229,7 +135,6 @@ public class NewMovement : MonoBehaviour
     void UpdateJoyconEffort()
     {
         var speed = 0f;
-        var tick = 0;
         if (isPlayback)
         {
             speed = float.Parse(playbackData.Dequeue());
@@ -257,7 +162,7 @@ public class NewMovement : MonoBehaviour
             return;
         }
 
-        var dist = Mathf.Abs(track.m_Position - raceManager.firstPlace.track.m_Position);
+        var dist = Mathf.Abs(runningTrack.m_Position - raceManager.firstPlace.runningTrack.m_Position);
         rubberbandBoost = (dist / raceManager.maxRubberbandDistance) * raceManager.maxRubberbandBoost / 100f;
     }
 

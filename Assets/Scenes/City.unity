@@ -922,7 +922,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meterUI: {fileID: 144121342}
   smoothFactor: 0.07
-  speedInfo: {fileID: 1025176338}
+  player: {fileID: 1025176338}
+  raceManager: {fileID: 1028837022}
+  baseSpeed: 0.25
 --- !u!114 &144121344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18670,6 +18672,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32654e80b40cef946823bf7446aee7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  raceManager: {fileID: 1028837022}
   playerNum: 0
   isAuto: 0
   isPlayback: 1
@@ -22141,7 +22144,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1537760888}
-  m_LocalRotation: {x: 0.19202302, y: 0.48850623, z: -0.11115858, w: 0.8438795}
+  m_LocalRotation: {x: 0.19202304, y: 0.48850626, z: -0.11115858, w: 0.8438795}
   m_LocalPosition: {x: -406.95166, y: -28.867462, z: -563.21594}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -23163,7 +23166,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meterUI: {fileID: 1864263969}
   smoothFactor: 0.07
-  speedInfo: {fileID: 1972611484}
+  player: {fileID: 1972611484}
+  raceManager: {fileID: 1028837022}
+  baseSpeed: 0
 --- !u!114 &1864263971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25067,6 +25072,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32654e80b40cef946823bf7446aee7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  raceManager: {fileID: 1028837022}
   playerNum: 0
   isAuto: 0
   isPlayback: 0
@@ -25780,7 +25786,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091541679}
-  m_LocalRotation: {x: 0.19202302, y: 0.4885062, z: -0.111158565, w: 0.8438795}
+  m_LocalRotation: {x: 0.19202304, y: 0.48850626, z: -0.11115858, w: 0.8438795}
   m_LocalPosition: {x: -406.95166, y: -28.867462, z: -563.21594}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

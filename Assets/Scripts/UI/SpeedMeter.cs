@@ -1,3 +1,4 @@
+using Assets.Scripts.FSM.States;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,21 +22,39 @@ public class SpeedMeter : MonoBehaviour
     [Range(0f, 1f)]
     public float smoothFactor = 0.1f;
 
+    public NewMovement player;
+
+    RaceState raceManager;
+
     /// <summary>
-    /// Gets the current speed from the relevant player
-    /// TODO: Encapsulate this better!
+    /// Adjusts what % of the meter is filled when players are at 0 speed. 
+    /// Makes players "feel" faster even if they're jogging slowly.
+    /// For example, a base of 0.25 means a player nearing 0 effort will still register 25% speed on the UI
+    /// Once a player enters a "stop" mode, the bar will still move to 0%.l
     /// </summary>
-    public NewMovement speedInfo;
+    [Range(0f, 1f)]
+    public float baseSpeed;
+
+
     // Start is called before the first frame update
     void Start()
     {
+        raceManager = StateManager.instance.stateDictionary[GAME_STATE.RACE].GetComponent<RaceState>();
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        float ratio = player.finalSpeed / (0.3f * Time.fixedDeltaTime * raceManager.speedMax) - 2.33f;
+        ratio = ratio > 0 ? ratio : 0;
+        ratio = (1 - baseSpeed) * ratio + baseSpeed; //Adjust ratio to fit baseSpeed value (to make players "feel" faster)
+
+        //Debug.Log($"{raceManager.speedMax * 0.7f * Time.fixedDeltaTime}, {player.finalSpeed}, {raceManager.speedMax * Time.fixedDeltaTime}, {ratio}");
+
+
         //Lerp to new speed based on smoothing factor
-        float newMeterValue = Mathf.Lerp(meterUI.offsetMax.y, -300 + 300 * (speedInfo.speed / speedInfo.maxRunnerSpeed), smoothFactor);
+        float newMeterValue = Mathf.Lerp(meterUI.offsetMax.y, -300 + 300f * ratio, smoothFactor);
         meterUI.offsetMax = new Vector2(meterUI.offsetMax.x, newMeterValue); //Update UI
     }
 }
