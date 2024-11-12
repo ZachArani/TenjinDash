@@ -2,6 +2,7 @@ using Assets.Scripts.FSM.States;
 using Cinemachine;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -41,7 +42,7 @@ public class NewMovement : MonoBehaviour
 
     bool isAccelerating;
 
-    Queue<string> playbackData = new Queue<string>();
+    Queue<float> playbackData = new Queue<float>();
 
     Queue<float> joyconInput = new Queue<float>();
     const int AVG_WINDOW = 35;
@@ -54,6 +55,9 @@ public class NewMovement : MonoBehaviour
 
     [Range(0.0001f, 1f)]
     public float epsilon = 0.1f;
+
+    [Range(0f, 0.2f)]
+    public float effortFloor = 0.1f;
 
     [ReadOnly]
     public float joyconEffort;
@@ -75,6 +79,8 @@ public class NewMovement : MonoBehaviour
     [ReadOnly]
     public float rubberbandBoost;
 
+
+
     public bool killswitch = false;
 
 
@@ -88,8 +94,7 @@ public class NewMovement : MonoBehaviour
 
         if(isPlayback && playbackFile != null)
         {
-            playbackData = new Queue<string>(playbackFile.text.Split(","));
-            Debug.Log(playbackData.Count);
+            playbackData = new Queue<float>(Array.ConvertAll(playbackFile.text.Split(",", StringSplitOptions.RemoveEmptyEntries), float.Parse));
         }
 
         //delta_t = Time.fixedDeltaTime / ZERO_TO_100;
@@ -107,9 +112,7 @@ public class NewMovement : MonoBehaviour
 
         
 
-        targetSpeed = raceManager.maxSpeed * (0.7f + joyconEffort + rubberbandBoost);
-        if (killswitch)
-            targetSpeed = 0;
+        targetSpeed = joyconEffort < effortFloor ? 0 : raceManager.maxSpeed * (0.7f + joyconEffort + rubberbandBoost);
 
         if (currentSpeed < targetSpeed)
         {
@@ -138,7 +141,8 @@ public class NewMovement : MonoBehaviour
         var speed = 0f;
         if (isPlayback)
         {
-            speed = float.Parse(playbackData.Dequeue());
+            speed = playbackData.Dequeue();
+            playbackData.Enqueue(speed); //Shitty circular queue interpretation. Need to loop data points.
         }
         else if (JoyconManager.Instance.GetJoyconByPlayer(gameObject) != null)
         {
@@ -151,6 +155,8 @@ public class NewMovement : MonoBehaviour
         {
             joyconInput.Dequeue();
         }
+        if (killswitch)
+            speed = 0;
         joyconInput.Enqueue(speed);
         joyconEffort = joyconInput.Average() / MAX_AVG * 0.3f;
     }
