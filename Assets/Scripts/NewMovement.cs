@@ -26,12 +26,11 @@ public class NewMovement : MonoBehaviour
 
     RaceState raceManager;
 
-    public CinemachineDollyCart runningTrack;
+    CinemachineDollyCart runningTrack;
 
     Animator animator;
 
     public TextAsset playbackFile;
-    public TextMeshProUGUI debugText;
     public AnimationCurve accCurve;
     public AnimationCurve dccCurve;
 
@@ -50,12 +49,6 @@ public class NewMovement : MonoBehaviour
 
     [Range(2f, 4f)]
     public float MAX_AVG = 3f;
-
-    [Range(2f, 100f)]
-    public float ZERO_TO_100 = 4f;
-
-    [Range(0.0001f, 1f)]
-    public float epsilon = 0.1f;
 
     [Range(0f, 0.2f)]
     public float effortFloor = 0.1f;
@@ -97,8 +90,6 @@ public class NewMovement : MonoBehaviour
         {
             playbackData = new Queue<float>(Array.ConvertAll(playbackFile.text.Split(",", StringSplitOptions.RemoveEmptyEntries), float.Parse));
         }
-
-        //delta_t = Time.fixedDeltaTime / ZERO_TO_100;
 
         setOpeningSpeed();
 
