@@ -793,7 +793,7 @@ Camera:
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 25
+  m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -802,7 +802,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 51.28201
+  field of view: 26.991467
   orthographic: 0
   orthographic size: 15.3
   m_Depth: 0
@@ -827,8 +827,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 138246238}
-  m_LocalRotation: {x: 0.24897765, y: 0.46355888, z: -0.13753557, w: 0.83917063}
-  m_LocalPosition: {x: -408.50098, y: -28.867462, z: -560.2258}
+  m_LocalRotation: {x: 0.70703787, y: -0.009872763, z: 0.009872763, w: 0.70703787}
+  m_LocalPosition: {x: 128.31421, y: -18.700958, z: -503.4132}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2145,7 +2145,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 17.061533
+    FieldOfView: 33.39849
     OrthographicSize: 15.3
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -2622,7 +2622,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 0}
   m_Follow: {fileID: 0}
   m_Lens:
-    FieldOfView: 17.061533
+    FieldOfView: 26.991467
     OrthographicSize: 15.3
     NearClipPlane: 0.3
     FarClipPlane: 1000
@@ -14913,7 +14913,7 @@ Camera:
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 25
+  m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: -0.5
@@ -14922,7 +14922,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 51.28201
+  field of view: 26.991467
   orthographic: 0
   orthographic size: 15.3
   m_Depth: 0
@@ -14947,8 +14947,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 677470222}
-  m_LocalRotation: {x: 0.24897765, y: 0.46355888, z: -0.13753557, w: 0.83917063}
-  m_LocalPosition: {x: -408.50098, y: -28.867462, z: -560.2258}
+  m_LocalRotation: {x: 0.70703787, y: -0.009872763, z: 0.009872763, w: 0.70703787}
+  m_LocalPosition: {x: 128.31421, y: -18.700958, z: -503.4132}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18744,7 +18744,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   isAuto: 0
-  isPlayback: 1
+  isPlayback: 0
   MAX_AVG: 3
   effortFloor: 0.023
   joyconEffort: 0
@@ -22169,7 +22169,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1537760888}
-  m_LocalRotation: {x: 0.19202302, y: 0.48850623, z: -0.11115858, w: 0.8438795}
+  m_LocalRotation: {x: 0.192023, y: 0.48850623, z: -0.11115857, w: 0.8438795}
   m_LocalPosition: {x: -406.95166, y: -28.867462, z: -563.21594}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -22314,7 +22314,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1586808638}
-  m_LocalRotation: {x: 0.24897765, y: 0.46355888, z: -0.13753557, w: 0.83917063}
+  m_LocalRotation: {x: 0.24897765, y: 0.46355888, z: -0.13753554, w: 0.83917063}
   m_LocalPosition: {x: -408.50098, y: -28.867462, z: -560.2258}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -22431,7 +22431,7 @@ MonoBehaviour:
   _skipMenu: 1
   _skipPreroll: 1
   _skipCountdown: 1
-  _skipRace: 0
+  _skipRace: 1
   _skipPhotoFinish: 0
   _skipFinishMenu: 0
   _isAuto: 0
@@ -25100,29 +25100,83 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32654e80b40cef946823bf7446aee7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerNum: 0
-  playbackFile: {fileID: 0}
+  playerNum: 1
+  playbackFile: {fileID: 4900000, guid: e56240afb06dbe1438650323a4e62809, type: 3}
   accCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2.7762933
+      outSlope: 2.7762933
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.33333334
+      outWeight: 0.19256283
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.7
+      inSlope: 0.915481
+      outSlope: 0.915481
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.40755135
+      outWeight: 0.38311902
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.036260106
+      outSlope: 0.036260106
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.2269053
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   dccCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.011232323
+      outSlope: 0.011232323
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.33333334
+      outWeight: 0.3992443
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.7
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 136
+      weightedMode: 3
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.036260106
+      outSlope: 0.036260106
+      tangentMode: 0
+      weightedMode: 3
+      inWeight: 0.2269053
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   isAuto: 0
   isPlayback: 0
   MAX_AVG: 3
-  effortFloor: 0.1
+  effortFloor: 0.023
   joyconEffort: 0
   targetSpeed: 85
   currentSpeed: 0
   t: 0
-  delta_t: 0
+  delta_t: 0.504
   dist: 0
   rubberbandBoost: 0
   killswitch: 0
@@ -25734,7 +25788,7 @@ Camera:
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 20.78461
+  m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0.5
@@ -25743,7 +25797,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60.000004
+  field of view: 26.991467
   orthographic: 0
   orthographic size: 15.3
   m_Depth: 0
@@ -25768,8 +25822,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091541679}
-  m_LocalRotation: {x: 0.19202302, y: 0.48850623, z: -0.11115858, w: 0.8438795}
-  m_LocalPosition: {x: -406.95166, y: -28.867462, z: -563.21594}
+  m_LocalRotation: {x: 0.70703787, y: -0.009872763, z: 0.009872763, w: 0.70703787}
+  m_LocalPosition: {x: 128.31421, y: -18.700958, z: -503.4132}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

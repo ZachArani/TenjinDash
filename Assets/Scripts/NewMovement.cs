@@ -123,13 +123,10 @@ public class NewMovement : MonoBehaviour
             }
             else
             {
-                Debug.Log("Going to stop!");
                 curveValue = Math.Round((double)dccCurve.Evaluate(t), 4);
             }
         }
-        Debug.Log($"{t}, {curveValue}, {(float)curveValue * raceManager.maxSpeed}, {raceManager.maxSpeed} {Time.deltaTime}");
         currentSpeed = (float)curveValue * raceManager.maxSpeed;
-        //currentSpeed = 10f;
         runningTrack.m_Speed = currentSpeed;
 
         animator.SetFloat("runningSpeed", currentSpeed);
