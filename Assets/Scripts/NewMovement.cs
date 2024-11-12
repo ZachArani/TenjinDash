@@ -32,7 +32,8 @@ public class NewMovement : MonoBehaviour
 
     public TextAsset playbackFile;
     public TextMeshProUGUI debugText;
-    public AnimationCurve speedCurve;
+    public AnimationCurve accCurve;
+    public AnimationCurve dccCurve;
 
     public bool isAuto;
     public bool isPlayback;
@@ -70,7 +71,7 @@ public class NewMovement : MonoBehaviour
     [ReadOnly]
     public float t;
 
-    [Range(0f, 0.05f)]
+    [Range(0f, 1f)]
     public float delta_t;
 
     [ReadOnly]
@@ -106,6 +107,7 @@ public class NewMovement : MonoBehaviour
 
     private void Update()
     {
+        double curveValue = 0f;
 
         UpdateJoyconEffort();
         UpdateRubberband();
@@ -116,16 +118,24 @@ public class NewMovement : MonoBehaviour
 
         if (currentSpeed < targetSpeed)
         {
-            t += Time.deltaTime;
+            t += (t + Time.deltaTime * delta_t) <= 1 ? Time.deltaTime * delta_t : 0;
+            curveValue = Math.Round((double)accCurve.Evaluate(t), 4);
             isAccelerating = true;
         }
         else if (currentSpeed > targetSpeed)
         {
-            t -= Time.deltaTime;
+            t -= (t - Time.deltaTime * delta_t >= 0) ? Time.deltaTime * delta_t : 0;
             isAccelerating = false;
+            if(t >= 0.5f)
+            {
+                curveValue = Math.Round((double)accCurve.Evaluate(t), 4);
+            }
+            else
+            {
+                Debug.Log("Going to stop!");
+                curveValue = Math.Round((double)dccCurve.Evaluate(t), 4);
+            }
         }
-        t = Mathf.Clamp(t, 0, 1);
-        var curveValue = Math.Round((double)speedCurve.Evaluate(t), 4);
         Debug.Log($"{t}, {curveValue}, {(float)curveValue * raceManager.maxSpeed}, {raceManager.maxSpeed} {Time.deltaTime}");
         currentSpeed = (float)curveValue * raceManager.maxSpeed;
         //currentSpeed = 10f;
@@ -176,7 +186,7 @@ public class NewMovement : MonoBehaviour
     void setOpeningSpeed()
     {
         t = 0.5f;
-        currentSpeed = speedCurve.Evaluate(t);
+        currentSpeed = accCurve.Evaluate(t);
     }
 
 
