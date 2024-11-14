@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEditor;
+using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 using static UnityEditor.Experimental.GraphView.GraphView;
 
@@ -35,6 +36,8 @@ namespace Assets.Scripts.FSM.States
         public float maxRubberbandBoost = 10f;
 
         float pathLength;
+
+        public bool p1Won;
 
         public float percentDone
         {
@@ -125,6 +128,8 @@ namespace Assets.Scripts.FSM.States
         /// </summary>
         void endRace()
         {
+            p1Won = firstPlace.playerNum == 0 ? true : false;
+
             StateManager.instance.EnableRaceComponents(false);
             StateManager.instance.EnableRecorders(false);
             StateManager.instance.TransitionTo(GAME_STATE.PHOTO_FINISH);
