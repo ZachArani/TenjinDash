@@ -73,7 +73,7 @@ public class NewMovement : MonoBehaviour
     [ReadOnly]
     public float rubberbandBoost;
 
-
+    public bool isPhotoFinish = false;
 
     public bool killswitch = false;
 
@@ -103,9 +103,8 @@ public class NewMovement : MonoBehaviour
         UpdateJoyconEffort();
         UpdateRubberband();
 
-        
-
-        targetSpeed = joyconEffort < effortFloor ? 0 : raceManager.maxSpeed * (0.7f + joyconEffort + rubberbandBoost);
+        if(!isPhotoFinish)
+            targetSpeed = joyconEffort < effortFloor ? 0 : raceManager.maxSpeed * (0.7f + joyconEffort + rubberbandBoost);
 
         if (currentSpeed < targetSpeed)
         {

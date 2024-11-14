@@ -27,8 +27,8 @@ namespace Assets.Scripts.FSM.States
                 var raceManager = StateManager.instance.stateDictionary[GAME_STATE.RACE].GetComponent<RaceState>();
                 StateManager.instance.EnableRaceComponents(true);
                 StateManager.instance.players.ForEach(p => {
+                    p.isPhotoFinish = true;
                     p.targetSpeed = p.targetSpeed > 0 ? p.targetSpeed : raceManager.maxSpeed; //In case they weren't running beforehand (i.e. we skipped here through menu options)
-                    p.isAuto = true;
                     p.GetComponent<Animator>().Play("RunTree");
                     p.GetComponent<CinemachineDollyCart>().m_Position = StateManager.instance.trackFinishPos;
                 });
