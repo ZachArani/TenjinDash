@@ -100,7 +100,6 @@ public class NewMovement : MonoBehaviour
 
     }
 
-
     private void Update()
     {
         double curveValue = 0f;
