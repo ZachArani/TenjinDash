@@ -2265,6 +2265,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 2340c4c437d054e4dbc5f27dd23fccd4, type: 2}
     - {fileID: 11400000, guid: 0cc85d0b57582b645a92ce5f617c4c50, type: 2}
     - {fileID: 11400000, guid: 00bd7ccbbff02564ba0b2d03761378d7, type: 2}
+    - {fileID: 11400000, guid: 82678a2b7753f494e9f3b0148e017361, type: 2}
+    - {fileID: 11400000, guid: b0652f5798c40a64f8263641543b6c85, type: 2}
     m_Events:
     - m_PersistentCalls:
         m_Calls:
@@ -2299,6 +2301,34 @@ MonoBehaviour:
         - m_Target: {fileID: 462989457}
           m_TargetAssemblyTypeName: Assets.Scripts.FSM.States.PhotoFinishState, Assembly-CSharp
           m_MethodName: ShowFinishText
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 462989457}
+          m_TargetAssemblyTypeName: Assets.Scripts.FSM.States.PhotoFinishState, Assembly-CSharp
+          m_MethodName: EndPhotoFinish
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    - m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 462989457}
+          m_TargetAssemblyTypeName: Assets.Scripts.FSM.States.PhotoFinishState, Assembly-CSharp
+          m_MethodName: StopRunning
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -20603,7 +20633,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1537760888}
-  m_LocalRotation: {x: 0.19202505, y: 0.48852783, z: -0.111166514, w: 0.8438654}
+  m_LocalRotation: {x: 0.19202508, y: 0.4885279, z: -0.111166544, w: 0.84386545}
   m_LocalPosition: {x: -406.95166, y: -28.867462, z: -563.21594}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -20930,8 +20960,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a71e98f98ed617643b25d94368d12790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skipMenu: 1
-  _skipPreroll: 1
+  _skipMenu: 0
+  _skipPreroll: 0
   _skipCountdown: 0
   _skipRace: 0
   _skipPhotoFinish: 0
@@ -22676,7 +22706,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091541679}
-  m_LocalRotation: {x: 0.19202505, y: 0.48852783, z: -0.111166514, w: 0.8438654}
+  m_LocalRotation: {x: 0.19202508, y: 0.4885279, z: -0.111166544, w: 0.84386545}
   m_LocalPosition: {x: -406.95166, y: -28.867462, z: -563.21594}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

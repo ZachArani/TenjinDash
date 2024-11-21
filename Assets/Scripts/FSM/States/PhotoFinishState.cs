@@ -40,12 +40,20 @@ namespace Assets.Scripts.FSM.States
             }
         }
 
-        void EndPhotoFinish()
+        public void EndPhotoFinish()
         {
             UIManager.instance.toggleFinishText(false);
             StateManager.instance.EnableRaceComponents(false);
             StateManager.instance.TransitionTo(GAME_STATE.FINISH);
             photoFinishTimeline.Stop();
+        }
+
+        public void StopRunning()
+        {
+            StateManager.instance.players.ForEach(p =>
+            {
+                p.GetComponent<Animator>().SetTrigger("FinishRace");
+            });
         }
 
         public void ShowFinishText()
