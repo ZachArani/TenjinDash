@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Cinemachine;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -26,7 +27,8 @@ namespace Assets.Scripts.FSM.States
             if (to == GAME_STATE.PREROLL)
             {
                 Cursor.visible = false;
-                preRollTimeline.Play();  
+                preRollTimeline.Play();
+                StateManager.instance.players.ForEach(p => p.GetComponent<CinemachineDollyCart>().enabled = true);
             }
         }
 

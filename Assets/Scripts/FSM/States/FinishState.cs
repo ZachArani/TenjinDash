@@ -18,9 +18,8 @@ namespace Assets.Scripts.FSM.States
         [SerializeField]
         public PlayableDirector finishedTimeline;
 
-        public string podiumTrackName;
-        public GameObject P1WinPodium;
-        public GameObject P2WinPodium;
+        public string winnerTrackName;
+        public string loserTrackName;
 
         RaceState raceManager;
 
@@ -39,25 +38,19 @@ namespace Assets.Scripts.FSM.States
         {
             if(to == GAME_STATE.FINISH)
             {
-                GameObject podiums;
-                if(raceManager.p1Won)
-                {
-                    podiums = Instantiate(P1WinPodium);
-                }
-                else
-                {
-                    podiums = Instantiate(P2WinPodium);
-                }
-
+                var winner = raceManager.playerPos[0].gameObject;
+                var loser = raceManager.playerPos[1].gameObject;
                 foreach (var playableAssetOutput in finishedTimeline.playableAsset.outputs)
                 {
-                    if (playableAssetOutput.streamName == podiumTrackName)
+                    if (playableAssetOutput.streamName == winnerTrackName)
                     {
-                        //finishedTimeline.SetGenericBinding(playableAssetOutput.sourceObject, podiums);
-                        ControlPlayableAsset test = (ControlPlayableAsset)(((ControlTrack)playableAssetOutput.sourceObject).GetClips().ElementAt(0).asset);
-                        test.prefabGameObject = podiums;
-                        Debug.Log(test.prefabGameObject);
-                        break;
+                        winner.GetComponent<Animator>().SetTrigger("Win");
+                        finishedTimeline.SetGenericBinding(playableAssetOutput.sourceObject, winner);
+                    }
+                    else if(playableAssetOutput.streamName == loserTrackName)
+                    {
+                        loser.GetComponent<Animator>().SetTrigger("Lose");
+                        finishedTimeline.SetGenericBinding(playableAssetOutput.sourceObject, loser);
                     }
                 }
                 Cursor.visible = true;
@@ -69,16 +62,24 @@ namespace Assets.Scripts.FSM.States
 
         public void onRestartSelect()
         {
-            UIManager.instance.toggleFinishUI(false);
+            cleanUp();
             StateManager.instance.TransitionTo(GAME_STATE.PREROLL);
-            finishedTimeline.Pause();
+            finishedTimeline.Stop();
         }
 
         public void onMenuSelect()
         {
-            UIManager.instance.toggleFinishUI(false);
+            cleanUp();
             StateManager.instance.TransitionTo(GAME_STATE.START_MENU);
-            finishedTimeline.Pause();
+            finishedTimeline.Stop();
+        }
+
+        public void cleanUp()
+        {
+            raceManager.playerPos.ForEach(p => {
+                p.GetComponent<Animator>().SetTrigger("Restart");
+            });
+            UIManager.instance.toggleFinishUI(false);
         }
 
         private void OnEnable()

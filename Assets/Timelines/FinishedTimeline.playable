@@ -38,14 +38,14 @@ MonoBehaviour:
   sourceGameObject:
     exposedName: 8cac229c5ee87b641a2d47bedc2638d7
     defaultValue: {fileID: 0}
-  prefabGameObject: {fileID: 971243335114884560, guid: edd71897696a4de4ba8e02561783280c, type: 3}
+  prefabGameObject: {fileID: 7382675711218191516, guid: 47480e4dde586cb4d9989c335e6948eb, type: 3}
   updateParticle: 1
   particleRandomSeed: 9349
   updateDirector: 1
   updateITimeControl: 1
   searchHierarchy: 0
   active: 1
-  postPlayback: 2
+  postPlayback: 1
 --- !u!114 &-7312205894146193885
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -564,7 +564,7 @@ MonoBehaviour:
   m_Name: Recorded (1)
   m_EditorClassIdentifier: 
   m_Clip: {fileID: -6651788473161239417}
-  m_Position: {x: -1538.33, y: 257.02, z: -500.2399}
+  m_Position: {x: -1538.36, y: 257.24, z: -500}
   m_EulerAngles: {x: 0, y: 59.371002, z: 0}
   m_UseTrackMatchFields: 1
   m_MatchTargetFields: 63
@@ -1040,7 +1040,7 @@ MonoBehaviour:
   m_Version: 3
   m_AnimClip: {fileID: 0}
   m_Locked: 0
-  m_Muted: 1
+  m_Muted: 0
   m_CustomPlayableFullTypename: 
   m_Curves: {fileID: 0}
   m_Parent: {fileID: 11400000}
@@ -1150,7 +1150,7 @@ MonoBehaviour:
   m_Version: 3
   m_AnimClip: {fileID: 0}
   m_Locked: 0
-  m_Muted: 1
+  m_Muted: 0
   m_CustomPlayableFullTypename: 
   m_Curves: {fileID: 0}
   m_Parent: {fileID: 11400000}
@@ -1422,7 +1422,7 @@ MonoBehaviour:
   m_Name: Recorded (2)
   m_EditorClassIdentifier: 
   m_Clip: {fileID: -6868437022116250683}
-  m_Position: {x: -980.3, y: 257.02, z: -438.6}
+  m_Position: {x: -980.3, y: 256.913, z: -438.6}
   m_EulerAngles: {x: 0, y: 266.46747, z: 0}
   m_UseTrackMatchFields: 1
   m_MatchTargetFields: 63

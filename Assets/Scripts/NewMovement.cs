@@ -77,6 +77,11 @@ public class NewMovement : MonoBehaviour
 
     public bool killswitch = false;
 
+    [ReadOnly]
+    public bool isPreMove = false;
+
+    public float preMoveSpeed = 7f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -91,7 +96,7 @@ public class NewMovement : MonoBehaviour
             playbackData = new Queue<float>(Array.ConvertAll(playbackFile.text.Split(",", StringSplitOptions.RemoveEmptyEntries), float.Parse));
         }
 
-        setOpeningSpeed();
+        SetOpeningSpeed();
 
     }
 
@@ -103,7 +108,7 @@ public class NewMovement : MonoBehaviour
         UpdateJoyconEffort();
         UpdateRubberband();
 
-        if(!isPhotoFinish)
+        if (!isPhotoFinish && !isPreMove)
             targetSpeed = joyconEffort < effortFloor ? 0 : raceManager.maxSpeed * (0.7f + joyconEffort + rubberbandBoost);
 
         if (currentSpeed < targetSpeed)
@@ -170,10 +175,15 @@ public class NewMovement : MonoBehaviour
         rubberbandBoost = (dist / raceManager.maxRubberbandDistance) * raceManager.maxRubberbandBoost / 100f;
     }
 
-    void setOpeningSpeed()
+    void SetOpeningSpeed()
     {
         t = 0.5f;
         currentSpeed = accCurve.Evaluate(t);
+    }
+
+    void StartPreMove()
+    {
+        targetSpeed = preMoveSpeed;
     }
 
 

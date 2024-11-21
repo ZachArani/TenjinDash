@@ -39,6 +39,7 @@ namespace Assets.Scripts.FSM.States
 
         public bool p1Won;
 
+
         public float percentDone
         {
             get => playerPos[0].GetComponent<CinemachineDollyCart>().m_Position / pathLength;
@@ -145,6 +146,22 @@ namespace Assets.Scripts.FSM.States
                 var pos = playerPos.FindIndex(i => i == p);
                 playerPosUI[StateManager.instance.players.FindIndex(i => i == p)].text = _playerPosText[pos];
             });
+        }
+
+        public IEnumerator PreMove()
+        {
+            playerPos.ForEach(p => { p.enabled = true;  p.isPreMove = true; });
+            for(int i = 0; i<120; i++)
+            {
+                Debug.Log($"CURRENT PREMOVE FRAME: {i}");
+                yield return null;
+            }
+            playerPos.ForEach(p =>
+            {
+                p.GetComponent<Animator>().SetTrigger("ExitPreMove");
+                p.isPreMove = false;
+            });
+            StateManager.instance.stateDictionary[GAME_STATE.COUNTDOWN].GetComponent<CountdownState>().countdownTimeline.Stop();
         }
 
         private void OnEnable()

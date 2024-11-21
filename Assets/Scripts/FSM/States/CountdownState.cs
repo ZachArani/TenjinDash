@@ -26,9 +26,14 @@ namespace Assets.Scripts.FSM.States
         /// </summary>
         int countdown;
 
+        public int preMoveTime = 240;
+        public AnimationCurve preMoveCurve;
+
+        RaceState raceManager;
+
         void Start()
         {
-
+            raceManager = StateManager.instance.stateDictionary[GAME_STATE.RACE].GetComponent<RaceState>();
         }
 
         // Update is called once per frame
@@ -46,6 +51,7 @@ namespace Assets.Scripts.FSM.States
                 {
                     StateManager.instance.EnableRaceCameras();
                     Cursor.visible = false;
+                    StateManager.instance.players.ForEach(p => p.GetComponent<CinemachineDollyCart>().enabled = true);
                 }
                 countdownTimeline.Play();
                 UIManager.instance.toggleCountdownUI(true);
@@ -68,6 +74,24 @@ namespace Assets.Scripts.FSM.States
                 StateManager.instance.TransitionTo(GAME_STATE.RACE);
             }
         }
+
+        public void StartPreMove()
+        {
+            /*StateManager.instance.players.ForEach(p =>
+            {
+                p.isPreMove = true;
+                p.enabled = true;
+            });*/
+            StartCoroutine(raceManager.PreMove());
+        }
+
+        /*IEnumerator PreMoveSpeed()
+        {
+            for(int i = 0; i < raceManager.preMoveTime; i++)
+            {
+
+            }
+        }*/
 
         private void OnEnable()
         {
