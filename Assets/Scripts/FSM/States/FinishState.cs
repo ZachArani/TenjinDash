@@ -38,8 +38,8 @@ namespace Assets.Scripts.FSM.States
         {
             if(to == GAME_STATE.FINISH)
             {
-                var winner = raceManager.playerPos[0].gameObject;
-                var loser = raceManager.playerPos[1].gameObject;
+                var winner = raceManager.standings[0].gameObject;
+                var loser = raceManager.standings[1].gameObject;
                 foreach (var playableAssetOutput in finishedTimeline.playableAsset.outputs)
                 {
                     if (playableAssetOutput.streamName == winnerTrackName)
@@ -76,7 +76,7 @@ namespace Assets.Scripts.FSM.States
 
         public void cleanUp()
         {
-            raceManager.playerPos.ForEach(p => {
+            raceManager.standings.ForEach(p => {
                 p.GetComponent<Animator>().SetTrigger("Restart");
             });
             UIManager.instance.toggleFinishUI(false);

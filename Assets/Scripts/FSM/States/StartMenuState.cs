@@ -68,15 +68,6 @@ namespace Assets.Scripts
             moveToNextState();
         }
 
-        /// <summary>
-        /// Called when Solo mode is selected. 
-        /// Adds 'solo' flag to context
-        /// </summary>
-        public void OnSoloSelect()
-        {
-            Options.instance.isSolo = true;
-            moveToNextState();
-        }
 
         /// <summary>
         /// Called when start button is selected. Chooses next state based on options.

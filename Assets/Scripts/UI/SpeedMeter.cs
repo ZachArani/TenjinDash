@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class SpeedMeter : MonoBehaviour
 {
@@ -46,9 +47,9 @@ public class SpeedMeter : MonoBehaviour
     void Update()
     {
 
-        float ratio = player.currentSpeed / (0.3f * raceManager.maxSpeed) - 2.33f;
+        float ratio = player.currentSpeed / (0.3f * raceManager.maxSpeed) - 2.33f; //Mathematically derived value. Basically a shortcutted percent diff. 
         ratio = ratio > 0 ? ratio : 0;
-        ratio = (1 - baseSpeed) * ratio + baseSpeed; //Adjust ratio to fit baseSpeed value (to make players "feel" faster)
+        ratio = player.isStopping ? ratio : (1 - baseSpeed) * ratio + baseSpeed; //Adjust ratio to fit baseSpeed value (to make players "feel" faster)
 
         //Debug.Log($"{raceManager.maxSpeed * 0.7f}, {player.finalSpeed}, {raceManager.maxSpeed * Time.fixedDeltaTime}, {ratio}");
 

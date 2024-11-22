@@ -1,6 +1,7 @@
 using Assets.Scripts.FSM.States;
 using Cinemachine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -30,12 +31,8 @@ public class NewMovement : MonoBehaviour
 
     Animator animator;
 
-    public TextAsset playbackFile;
     public AnimationCurve accCurve;
     public AnimationCurve dccCurve;
-
-    public bool isAuto;
-    public bool isPlayback;
 
     Joycon joycon;
 
@@ -78,6 +75,9 @@ public class NewMovement : MonoBehaviour
     public bool killswitch = false;
 
     [ReadOnly]
+    public bool isStopping = false;
+
+    [ReadOnly]
     public bool isPreMove = false;
 
     public float preMoveSpeed = 7f;
@@ -91,9 +91,11 @@ public class NewMovement : MonoBehaviour
         joycon = JoyconManager.Instance.GetJoyconByPlayer(gameObject);
         raceManager = StateManager.instance.stateDictionary[GAME_STATE.RACE].GetComponent<RaceState>();
 
-        if(isPlayback && playbackFile != null)
+        if(Options.instance.isAuto)
         {
-            playbackData = new Queue<float>(Array.ConvertAll(playbackFile.text.Split(",", StringSplitOptions.RemoveEmptyEntries), float.Parse));
+            var autoFile = raceManager.PickAutoFile();
+            Debug.Log($"AUTO MODE ENABLED. READING DATA FROM {autoFile.name}");
+            playbackData = new Queue<float>(Array.ConvertAll(autoFile.text.Split(",", StringSplitOptions.RemoveEmptyEntries), float.Parse));
         }
 
         SetOpeningSpeed();
@@ -114,7 +116,15 @@ public class NewMovement : MonoBehaviour
         {
             t += (t + Time.deltaTime * delta_t) <= 1 ? Time.deltaTime * delta_t : 0;
             curveValue = Math.Round((double)accCurve.Evaluate(t), 4);
+            if(curveValue > 0.95)
+            {
+                curveValue += 0.3 * rubberbandBoost;
+            }
             isAccelerating = true;
+            if (t > 0.2f)
+            {
+                isStopping = false;
+            }
         }
         else if (currentSpeed > targetSpeed)
         {
@@ -126,10 +136,11 @@ public class NewMovement : MonoBehaviour
             }
             else
             {
+                isStopping = true;
                 curveValue = Math.Round((double)dccCurve.Evaluate(t), 4);
             }
         }
-        currentSpeed = (float)curveValue * raceManager.maxSpeed;
+        currentSpeed = (float)(curveValue) * raceManager.maxSpeed;
         runningTrack.m_Speed = currentSpeed;
 
         animator.SetFloat("runningSpeed", currentSpeed);
@@ -140,7 +151,7 @@ public class NewMovement : MonoBehaviour
     void UpdateJoyconEffort()
     {
         var speed = 0f;
-        if (isPlayback)
+        if (Options.instance.isAuto)
         {
             speed = playbackData.Dequeue();
             playbackData.Enqueue(speed); //Shitty circular queue interpretation. Need to loop data points.
@@ -169,10 +180,10 @@ public class NewMovement : MonoBehaviour
             rubberbandBoost = 0;
             return;
         }
-
         var dist = Mathf.Abs(runningTrack.m_Position - raceManager.firstPlace.runningTrack.m_Position);
-        rubberbandBoost = (dist / raceManager.maxRubberbandDistance) * raceManager.maxRubberbandBoost / 100f;
+        rubberbandBoost = (dist / raceManager.maxRubberbandDistance) * raceManager.rubberbandBoostMax / 100f + raceManager.rubberbandBonusCur;        
     }
+
 
     void SetOpeningSpeed()
     {

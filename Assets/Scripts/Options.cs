@@ -50,13 +50,6 @@ public class Options : MonoBehaviour
     public bool isAuto { get { return _isAuto; } set { _isAuto = value; } }
 
     /// <summary>
-    /// Decides if only player one is running.
-    /// </summary>
-    [SerializeField]
-    private bool _isSolo;
-    public bool isSolo { get { return _isSolo; } set { _isSolo = value; } }
-
-    /// <summary>
     /// Mute game SFX
     /// </summary>
     [SerializeField]
