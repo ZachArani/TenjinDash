@@ -57,25 +57,6 @@ public class StateManager : MonoBehaviour
     /// </summary>
     public int numPlayers => _players.Count;
 
-    /// <summary>
-    /// Determines where the finish point is that ends the race and starts the photoFinish/Finish modes
-    /// Stored as the distance from the starting point (e.g. 541.5 units)
-    /// </summary>
-    [SerializeField]
-    private float _finishLinePos;
-    public float finishLinePos { get { return _finishLinePos; } private set { _finishLinePos = value; } }
-
-    [SerializeField]
-    private float _trackFinishPos;
-    public float trackFinishPos { get { return _trackFinishPos; } private set { _trackFinishPos = value; } }
-
-    /// <summary>
-    /// Decides how much of a speed boost to give to the losing runners
-    /// </summary>
-    [SerializeField]
-    [Range(0f, 2f)]
-    float _losingSpeedBoost = 0.3f;
-    public float losingSpeedBoost { get { return _losingSpeedBoost; } set { _losingSpeedBoost = value; } }
 
     public Stopwatch stateStopwatch;
 

@@ -29,8 +29,9 @@ namespace Assets.Scripts.FSM.States
                 StateManager.instance.players.ForEach(p => {
                     p.isPhotoFinish = true;
                     p.targetSpeed = p.targetSpeed > 0 ? p.targetSpeed : raceManager.maxSpeed; //In case they weren't running beforehand (i.e. we skipped here through menu options)
+                    p.currentSpeed = p.currentSpeed > 0 ? p.currentSpeed : raceManager.maxSpeed;
                     p.GetComponent<Animator>().Play("RunTree");
-                    p.GetComponent<CinemachineDollyCart>().m_Position = StateManager.instance.trackFinishPos;
+                    p.GetComponent<CinemachineDollyCart>().m_Position = 545;
                 });
                 StateManager.instance.DisableRaceCameras();
                 UIManager.instance.toggleRaceUI(false);
@@ -43,7 +44,6 @@ namespace Assets.Scripts.FSM.States
         public void EndPhotoFinish()
         {
             UIManager.instance.toggleFinishText(false);
-            StateManager.instance.EnableRaceComponents(false);
             StateManager.instance.TransitionTo(GAME_STATE.FINISH);
             photoFinishTimeline.Stop();
         }
@@ -52,7 +52,7 @@ namespace Assets.Scripts.FSM.States
         {
             StateManager.instance.players.ForEach(p =>
             {
-                p.GetComponent<Animator>().SetTrigger("FinishRace");
+                p.GetComponent<Animator>().SetTrigger("finishRace");
             });
         }
 

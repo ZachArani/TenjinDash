@@ -11,9 +11,6 @@ namespace Assets.Scripts.FSM.States
     public class FinishState : MonoBehaviour
     {
 
-        public TextMeshProUGUI finish;
-        public TextMeshProUGUI restart;
-        public TextMeshProUGUI menu;
 
         [SerializeField]
         public PlayableDirector finishedTimeline;
@@ -38,18 +35,20 @@ namespace Assets.Scripts.FSM.States
         {
             if(to == GAME_STATE.FINISH)
             {
+                raceManager = StateManager.instance.stateDictionary[GAME_STATE.RACE].GetComponent<RaceState>();
                 var winner = raceManager.standings[0].gameObject;
                 var loser = raceManager.standings[1].gameObject;
+                StateManager.instance.EnableRaceComponents(false);
                 foreach (var playableAssetOutput in finishedTimeline.playableAsset.outputs)
                 {
                     if (playableAssetOutput.streamName == winnerTrackName)
                     {
-                        winner.GetComponent<Animator>().SetTrigger("Win");
+                        winner.GetComponent<Animator>().SetTrigger("win");
                         finishedTimeline.SetGenericBinding(playableAssetOutput.sourceObject, winner);
                     }
                     else if(playableAssetOutput.streamName == loserTrackName)
                     {
-                        loser.GetComponent<Animator>().SetTrigger("Lose");
+                        loser.GetComponent<Animator>().SetTrigger("lose");
                         finishedTimeline.SetGenericBinding(playableAssetOutput.sourceObject, loser);
                     }
                 }

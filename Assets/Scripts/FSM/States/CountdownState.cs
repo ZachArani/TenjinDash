@@ -67,6 +67,7 @@ namespace Assets.Scripts.FSM.States
             if (countdown == -1)
             {
                 countdownGUI.text = "GO!";
+                StateManager.instance.TransitionTo(GAME_STATE.RACE);
             }
             else if(countdown == -2) //We've past the countdown time, hide from screen and transition to next state.
             {
@@ -77,21 +78,8 @@ namespace Assets.Scripts.FSM.States
 
         public void StartPreMove()
         {
-            /*StateManager.instance.players.ForEach(p =>
-            {
-                p.isPreMove = true;
-                p.enabled = true;
-            });*/
-            StartCoroutine(raceManager.PreMove());
         }
 
-        /*IEnumerator PreMoveSpeed()
-        {
-            for(int i = 0; i < raceManager.preMoveTime; i++)
-            {
-
-            }
-        }*/
 
         private void OnEnable()
         {

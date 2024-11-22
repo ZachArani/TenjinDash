@@ -32,26 +32,35 @@ namespace Assets.Scripts.FSM.States
         [Range(0f, 20f)]
         public float rubberbandBoostMax = 10f;
 
-        [Range(0, 1f)]
-        public float rubberbandBonusMax = 0.5f;
-
-        [ReadOnly]
-        public float rubberbandBonusCur = 0.0f;
-
-        [Range(0.0001f, 0.01f)]
-        public float rubberbandBonusInc = 0.001f;
-
-
         [Range(0, 2f)]
         public float standingsUpdateThreshold = 0.5f;
+
+        [Range(0, 1f)]
+        public float slipstreamMax = 0.5f;
+
+        [Range(0.00001f, 0.001f)]
+        public float slipstreamInc = 0.001f;
+
+        [Range(0, 5f)]
+        public float loserBoostWait = 2f;
+        [Range(0, 5f)]
+        public float winnerBoostWait = 2f;
+
+        public float PreMoveTime = 3f;
 
         float pathLength;
 
         public bool p1Won;
 
+        [SerializeField]
+        float finishLinePos;
+
         public List<TextAsset> autoFiles;
 
-        IEnumerator loserBoostCoroutine;
+        IEnumerator loserBoost;
+        IEnumerator winnerBoost;
+
+        public AnimationCurve preMoveCurve;
 
 
         public float percentDone
@@ -89,14 +98,9 @@ namespace Assets.Scripts.FSM.States
         {
             UpdateStandings();
             UpdateStandingUI();
-            Debug.Log($"{standings[0]}, {standings[1]}");
-            if(Options.instance.isAuto)
-            {
-
-            }
 
             //A little dirty (uses GetComponent in Update) TODO: Improve system
-            if(standings.First().transform.position.x >= StateManager.instance.finishLinePos && StateManager.instance.currentState == GAME_STATE.RACE)
+            if(firstPlace.transform.position.x >= finishLinePos && StateManager.instance.currentState == GAME_STATE.RACE)
             {
                 StateManager.instance.TransitionTo(GAME_STATE.PHOTO_FINISH);
             }
@@ -112,14 +116,11 @@ namespace Assets.Scripts.FSM.States
                     UIManager.instance.toggleRaceUI(true);
                     UIManager.instance.toggleScreenSplitter(false);
                     Cursor.visible = false;
-                    standings.ForEach(p => p.GetComponent<Animator>().SetTrigger("StartRace"));
-
                 }
-
+                standings.ForEach(p => { p.enabled = true; p.isPreMove = true; p.GetComponent<Animator>().SetTrigger("startRace"); });
+                StartCoroutine(PreMove());
                 StateManager.instance.EnableRaceComponents(true);
                 
-                
-
                 if(Options.instance.recordPlayerData)
                 {
                     StateManager.instance.players.ForEach(p => { p.GetComponent<InputRecorder>().enabled = true;});
@@ -158,10 +159,17 @@ namespace Assets.Scripts.FSM.States
             {
                 if (newStandings[0].GetComponent<CinemachineDollyCart>().m_Position - newStandings[1].GetComponent<CinemachineDollyCart>().m_Position > standingsUpdateThreshold)
                 {
-                    if(loserBoostCoroutine != null) { StopCoroutine(loserBoostCoroutine); }
-                    loserBoostCoroutine = UpdateLoserBoost();
-                    StartCoroutine(loserBoostCoroutine);
+                    StopCoroutine(loserBoost);
+                    StopCoroutine(winnerBoost);
+
                     standings = newStandings;
+
+                    loserBoost = AddLoserBoost();
+                    winnerBoost = RemoveWinnerBoost();
+
+                    StartCoroutine(loserBoost);
+                    StartCoroutine(winnerBoost);
+
                     Debug.Log("Updated Standings!");
                 }
                 
@@ -170,28 +178,42 @@ namespace Assets.Scripts.FSM.States
 
         public IEnumerator PreMove()
         {
-            standings.ForEach(p => { p.enabled = true;  p.isPreMove = true; });
-            for(int i = 0; i<120; i++)
-            {
-                yield return null;
-            }
+            yield return new WaitForSeconds(1);
+            StateManager.instance.stateDictionary[GAME_STATE.COUNTDOWN].GetComponent<CountdownState>().countdownGUI.enabled = false;
+            yield return new WaitForSeconds(PreMoveTime-1);
+            Debug.Log("Exiting Premove");
+            loserBoost = AddLoserBoost();
+            winnerBoost = RemoveWinnerBoost();
+            StartCoroutine(loserBoost);
+            StartCoroutine(winnerBoost);
             standings.ForEach(p =>
             {
-                p.GetComponent<Animator>().SetTrigger("StartRace");
                 p.isPreMove = false;
             });
-            StateManager.instance.stateDictionary[GAME_STATE.COUNTDOWN].GetComponent<CountdownState>().countdownTimeline.Stop();
         }
 
-        IEnumerator UpdateLoserBoost()
+        IEnumerator AddLoserBoost()
         {
-            Debug.Log("Starting LoserBoostCoroutine");
-            rubberbandBonusCur = 0f;
-            for (float i = 0; i < rubberbandBonusMax; i += rubberbandBonusInc)
+            yield return new WaitForSeconds(loserBoostWait);
+            Debug.Log($"Boosting Loser: {standings[1].name}");
+            while (standings[1].slipstream + slipstreamInc <= slipstreamMax)
             {
-                rubberbandBonusCur += rubberbandBonusInc;
+                standings[1].slipstream += slipstreamInc;
                 yield return null;
             }
+            Debug.Log($"FINISHED boosting {standings[1].name}");
+        }
+
+        IEnumerator RemoveWinnerBoost()
+        {
+            yield return new WaitForSeconds(winnerBoostWait);
+            Debug.Log($"Deboosting Winner: {standings[0].name}");
+            while (standings[0].slipstream - slipstreamInc >= 0)
+            {
+                standings[0].slipstream -= slipstreamInc;
+                yield return null;
+            }
+            Debug.Log($"FINISHED deboosting {standings[0].name}");
         }
 
         private void OnEnable()

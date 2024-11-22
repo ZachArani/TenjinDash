@@ -70,6 +70,9 @@ public class NewMovement : MonoBehaviour
     [ReadOnly]
     public float rubberbandBoost;
 
+    [ReadOnly]
+    public float slipstream;
+
     public bool isPhotoFinish = false;
 
     public bool killswitch = false;
@@ -98,7 +101,7 @@ public class NewMovement : MonoBehaviour
             playbackData = new Queue<float>(Array.ConvertAll(autoFile.text.Split(",", StringSplitOptions.RemoveEmptyEntries), float.Parse));
         }
 
-        SetOpeningSpeed();
+        //SetOpeningSpeed();
 
     }
 
@@ -109,7 +112,7 @@ public class NewMovement : MonoBehaviour
         UpdateJoyconEffort();
         UpdateRubberband();
 
-        if (!isPhotoFinish && !isPreMove)
+        if (!isPreMove)
             targetSpeed = joyconEffort < effortFloor ? 0 : raceManager.maxSpeed * (0.7f + joyconEffort + rubberbandBoost);
 
         if (currentSpeed < targetSpeed)
@@ -181,20 +184,14 @@ public class NewMovement : MonoBehaviour
             return;
         }
         var dist = Mathf.Abs(runningTrack.m_Position - raceManager.firstPlace.runningTrack.m_Position);
-        rubberbandBoost = (dist / raceManager.maxRubberbandDistance) * raceManager.rubberbandBoostMax / 100f + raceManager.rubberbandBonusCur;        
+        rubberbandBoost = (dist / raceManager.maxRubberbandDistance) * raceManager.rubberbandBoostMax / 100f + slipstream;        
     }
 
 
-    void SetOpeningSpeed()
+    void SetOpeningSpeed(float eventInfo)
     {
-        t = 0.5f;
-        currentSpeed = accCurve.Evaluate(t);
+        Debug.Log("Tried to call SetOpeningSpeed!");
+        targetSpeed = accCurve.Evaluate(0.9f) * raceManager.maxSpeed;
     }
-
-    void StartPreMove()
-    {
-        targetSpeed = preMoveSpeed;
-    }
-
 
 }
