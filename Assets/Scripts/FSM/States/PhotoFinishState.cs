@@ -31,7 +31,7 @@ namespace Assets.Scripts.FSM.States
                     p.targetSpeed = p.targetSpeed > 0 ? p.targetSpeed : raceManager.maxSpeed; //In case they weren't running beforehand (i.e. we skipped here through menu options)
                     p.currentSpeed = p.currentSpeed > 0 ? p.currentSpeed : raceManager.maxSpeed;
                     p.GetComponent<Animator>().Play("RunTree");
-                    p.GetComponent<CinemachineDollyCart>().m_Position = 545;
+                    //p.GetComponent<CinemachineDollyCart>().m_Position = 545;
                 });
                 StateManager.instance.DisableRaceCameras();
                 UIManager.instance.toggleRaceUI(false);

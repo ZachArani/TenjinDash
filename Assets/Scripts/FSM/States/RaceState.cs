@@ -232,7 +232,7 @@ namespace Assets.Scripts.FSM.States
         /// <returns></returns>
         public TextAsset PickAutoFile()
         {
-            var file = autoFiles[Random.Range(0, autoFiles.Count - 1)];
+            var file = autoFiles[Random.Range(0, autoFiles.Count)];
             autoFiles.Remove(file);
             return file;
         }

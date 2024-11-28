@@ -17200,10 +17200,10 @@ MonoBehaviour:
   maxRubberbandDistance: 10
   rubberbandBoostMax: 10
   standingsUpdateThreshold: 0.3
-  slipstreamMax: 0.268
-  slipstreamInc: 0.000595
+  slipstreamMax: 0.043
+  slipstreamInc: 0.000058
   loserBoostWait: 2
-  winnerBoostWait: 3.05
+  winnerBoostWait: 3
   PreMoveTime: 3
   p1Won: 0
   finishLinePos: -1005
@@ -17211,8 +17211,6 @@ MonoBehaviour:
   - {fileID: 4900000, guid: 803bb10d6b9bbfb4393d241c57b6ed8d, type: 3}
   - {fileID: 4900000, guid: 9cd7dd8065cd1c2409795b9405486d3f, type: 3}
   - {fileID: 4900000, guid: 7c0351c405463b940803f075559faa43, type: 3}
-  - {fileID: 4900000, guid: 36d691e118024d545a541d39ab58597f, type: 3}
-  - {fileID: 4900000, guid: 0c25aec81579e1947a9b0c0f9ed99416, type: 3}
   preMoveCurve:
     serializedVersion: 2
     m_Curve:
@@ -21004,9 +21002,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a71e98f98ed617643b25d94368d12790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skipMenu: 1
-  _skipPreroll: 1
-  _skipCountdown: 1
+  _skipMenu: 0
+  _skipPreroll: 0
+  _skipCountdown: 0
   _skipRace: 0
   _skipPhotoFinish: 0
   _skipFinishMenu: 0
