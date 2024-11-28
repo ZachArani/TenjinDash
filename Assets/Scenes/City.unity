@@ -21006,7 +21006,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _skipMenu: 1
   _skipPreroll: 1
-  _skipCountdown: 0
+  _skipCountdown: 1
   _skipRace: 0
   _skipPhotoFinish: 0
   _skipFinishMenu: 0
@@ -22891,6 +22891,18 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5399910748005552085, guid: f63a8bbb657b7c148a2c4479028256c3, type: 3}
+      propertyPath: dccCurve.m_Curve.Array.data[0].inSlope
+      value: -0.055553857
+      objectReference: {fileID: 0}
+    - target: {fileID: 5399910748005552085, guid: f63a8bbb657b7c148a2c4479028256c3, type: 3}
+      propertyPath: dccCurve.m_Curve.Array.data[0].outSlope
+      value: -0.055553857
+      objectReference: {fileID: 0}
+    - target: {fileID: 5399910748005552085, guid: f63a8bbb657b7c148a2c4479028256c3, type: 3}
+      propertyPath: dccCurve.m_Curve.Array.data[0].outWeight
+      value: 0.22499998
+      objectReference: {fileID: 0}
     - target: {fileID: 5583037790780794932, guid: f63a8bbb657b7c148a2c4479028256c3, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -23412,6 +23424,18 @@ PrefabInstance:
       propertyPath: playbackFile
       value: 
       objectReference: {fileID: 4900000, guid: 803bb10d6b9bbfb4393d241c57b6ed8d, type: 3}
+    - target: {fileID: 5598321326029190754, guid: 4d53e6b7a4cd34c45acb0e0d46982df2, type: 3}
+      propertyPath: dccCurve.m_Curve.Array.data[0].inSlope
+      value: -0.055553857
+      objectReference: {fileID: 0}
+    - target: {fileID: 5598321326029190754, guid: 4d53e6b7a4cd34c45acb0e0d46982df2, type: 3}
+      propertyPath: dccCurve.m_Curve.Array.data[0].outSlope
+      value: -0.055553857
+      objectReference: {fileID: 0}
+    - target: {fileID: 5598321326029190754, guid: 4d53e6b7a4cd34c45acb0e0d46982df2, type: 3}
+      propertyPath: dccCurve.m_Curve.Array.data[0].outWeight
+      value: 0.22499998
+      objectReference: {fileID: 0}
     - target: {fileID: 5598321326029190755, guid: 4d53e6b7a4cd34c45acb0e0d46982df2, type: 3}
       propertyPath: m_Path
       value: 
