@@ -1,9 +1,9 @@
-using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.SceneManagement;
-using UnityEditor;
 using RealtimeCSG;
 using RealtimeCSG.Components;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace InternalRealtimeCSG
 {
@@ -18,7 +18,7 @@ namespace InternalRealtimeCSG
                 return;
 
             var currentScene = randomObject.gameObject.scene;
-            
+
             var foundMeshContainers = SceneQueryUtility.GetAllComponentsInScene<GeneratedMeshes>(currentScene);
             foreach (var meshContainer in foundMeshContainers)
             {
@@ -28,7 +28,7 @@ namespace InternalRealtimeCSG
                     UnityEngine.Object.DestroyImmediate(meshContainer.gameObject);
                     continue;
                 }
-                
+
                 if (model.NeedAutoUpdateRigidBody)
                     AutoUpdateRigidBody(meshContainer);
 
@@ -75,7 +75,7 @@ namespace InternalRealtimeCSG
                     {
                         var meshRenderer = instance.gameObject.GetComponent<MeshRenderer>();
                         if (meshRenderer)
-                        { 
+                        {
                             meshRenderer.enabled = true;
                         }
                     }
@@ -143,8 +143,8 @@ namespace InternalRealtimeCSG
                 }
             }
 
-            var csgnodes				= new HashSet<CSGNode>(SceneQueryUtility.GetAllComponentsInScene<CSGNode>(currentScene));
-            var removableGameObjects	= new List<GameObject>();
+            var csgnodes = new HashSet<CSGNode>(SceneQueryUtility.GetAllComponentsInScene<CSGNode>(currentScene));
+            var removableGameObjects = new List<GameObject>();
             foreach (var csgnode in csgnodes)
             {
                 if (!csgnode)
@@ -154,7 +154,7 @@ namespace InternalRealtimeCSG
                 var model = csgnode as CSGModel;
 
                 if (
-                        (model && model.name == InternalCSGModelManager.DefaultModelName && 
+                        (model && model.name == InternalCSGModelManager.DefaultModelName &&
                             (model.transform.childCount == 0 ||
                                 (model.transform.childCount == 1 &&
                                 model.transform.GetChild(0).name == MeshContainerName &&
@@ -165,12 +165,14 @@ namespace InternalRealtimeCSG
                 {
                     UnityEngine.Object.DestroyImmediate(gameObject);
                     continue;
-                } else
+                }
+                else
                 if (model)
                 {
                     gameObject.tag = "Untagged";
                     AssignLayerToChildren(gameObject);
-                } else
+                }
+                else
                 if (gameObject.CompareTag("Untagged"))
                     removableGameObjects.Add(gameObject);
                 if (csgnode)

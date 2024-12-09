@@ -1,9 +1,5 @@
 ﻿using Assets.Scripts.UI;
 using Cinemachine;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -44,7 +40,7 @@ namespace Assets.Scripts.FSM.States
 
         void StartCountdown(GAME_STATE from, GAME_STATE to)
         {
-            if(to == GAME_STATE.COUNTDOWN)
+            if (to == GAME_STATE.COUNTDOWN)
             {
                 countdown = 3;
                 if (Options.instance.skipPreroll) //We need to enable the player cameras manually if we skipped Preroll.
@@ -69,7 +65,7 @@ namespace Assets.Scripts.FSM.States
                 countdownGUI.text = "GO!";
                 StateManager.instance.TransitionTo(GAME_STATE.RACE);
             }
-            else if(countdown == -2) //We've past the countdown time, hide from screen and transition to next state.
+            else if (countdown == -2) //We've past the countdown time, hide from screen and transition to next state.
             {
                 countdownGUI.enabled = false;
                 StateManager.instance.TransitionTo(GAME_STATE.RACE);

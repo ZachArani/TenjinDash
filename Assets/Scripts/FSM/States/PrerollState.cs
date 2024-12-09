@@ -1,6 +1,4 @@
 ﻿using Cinemachine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -35,7 +33,7 @@ namespace Assets.Scripts.FSM.States
         public void FinishedPreRoll()
         {
             Debug.Log("FINISHED PREROLL!");
-            if(!Options.instance.skipCountdown)
+            if (!Options.instance.skipCountdown)
             {
                 StateManager.instance.TransitionTo(GAME_STATE.COUNTDOWN);
             }

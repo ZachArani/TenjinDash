@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TestSpeed : MonoBehaviour
@@ -44,17 +42,17 @@ public class TestSpeed : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(desiredSpeed > currentSpeed) //If we want to go faster
+        if (desiredSpeed > currentSpeed) //If we want to go faster
         {
             t += maxTChange * Time.deltaTime; //Add to our t value
         }
-        else if(desiredSpeed < currentSpeed) //if we want to go slower
+        else if (desiredSpeed < currentSpeed) //if we want to go slower
         {
             t -= maxTChange * Time.deltaTime; //Lower our t value 
         }

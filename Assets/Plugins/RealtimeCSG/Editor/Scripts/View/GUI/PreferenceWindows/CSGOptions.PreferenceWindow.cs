@@ -1,5 +1,4 @@
 ﻿using RealtimeCSG.Legacy;
-using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -15,12 +14,12 @@ namespace RealtimeCSG
         {
             EditorGUI.BeginChangeCheck();
             {
-                CSGSettings.ShowTooltips		= EditorGUILayout.ToggleLeft("Show Tool-Tips",						CSGSettings.ShowTooltips);
-                CSGSettings.SnapNonCSGObjects	= EditorGUILayout.ToggleLeft("Snap Non-CSG Objects to the grid",	CSGSettings.SnapNonCSGObjects);
-                CSGSettings.DefaultPreserveUVs  = EditorGUILayout.ToggleLeft("Preserve UVs (Default)",              CSGSettings.DefaultPreserveUVs);
+                CSGSettings.ShowTooltips = EditorGUILayout.ToggleLeft("Show Tool-Tips", CSGSettings.ShowTooltips);
+                CSGSettings.SnapNonCSGObjects = EditorGUILayout.ToggleLeft("Snap Non-CSG Objects to the grid", CSGSettings.SnapNonCSGObjects);
+                CSGSettings.DefaultPreserveUVs = EditorGUILayout.ToggleLeft("Preserve UVs (Default)", CSGSettings.DefaultPreserveUVs);
                 EditorGUILayout.Space();
-                CSGSettings.MaxCircleSides		= EditorGUILayout.IntField("Max Circle Sides",  CSGSettings.MaxCircleSides);
-                CSGSettings.MaxSphereSplits		= EditorGUILayout.IntField("Max Sphere Splits", CSGSettings.MaxSphereSplits);
+                CSGSettings.MaxCircleSides = EditorGUILayout.IntField("Max Circle Sides", CSGSettings.MaxCircleSides);
+                CSGSettings.MaxSphereSplits = EditorGUILayout.IntField("Max Sphere Splits", CSGSettings.MaxSphereSplits);
                 EditorGUILayout.Space();
 
                 EditorGUILayout.LabelField("Surfaces", EditorStyles.boldLabel);
@@ -34,7 +33,7 @@ namespace RealtimeCSG
                         CSGSettings.DefaultTexGenFlags |= TexGenFlags.WorldSpaceTexture;
                 }
 
-                CSGSettings.ShowSceneInfo = EditorGUILayout.ToggleLeft( "Show Scene Info", CSGSettings.ShowSceneInfo );
+                CSGSettings.ShowSceneInfo = EditorGUILayout.ToggleLeft("Show Scene Info", CSGSettings.ShowSceneInfo);
             }
             if (EditorGUI.EndChangeCheck())
             {

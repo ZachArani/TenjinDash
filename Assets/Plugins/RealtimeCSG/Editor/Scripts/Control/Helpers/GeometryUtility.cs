@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using InternalRealtimeCSG;
+using RealtimeCSG.Components;
+using RealtimeCSG.Legacy;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using InternalRealtimeCSG;
-using RealtimeCSG.Legacy;
-using RealtimeCSG.Components;
 
 namespace RealtimeCSG
 {
     internal enum PrincipleAxis
     {
-        X,Y,Z
+        X, Y, Z
     }
 
     internal enum PrincipleAxis2
@@ -21,10 +21,10 @@ namespace RealtimeCSG
     {
         public static float ProjectedSignedMagnitudeOnAxis(Vector3 vector, Vector3 axis)
         {
-            var projected = Vector3.Project(vector, axis);			
+            var projected = Vector3.Project(vector, axis);
             return projected.magnitude * Mathf.Sign(Vector3.Dot(projected, axis));
         }
-        
+
         public static float ProjectedSignedMagnitudeOnAxis(Vector3 vector1, Vector3 vector2, Vector3 axis)
         {
             var projected1 = Vector3.Project(vector1, axis);
@@ -61,15 +61,15 @@ namespace RealtimeCSG
 
             var dot = (from.x * to.x + from.y * to.y) / denominator;
             if (dot < -1) dot = -1;
-            if (dot >  1) dot = 1;
+            if (dot > 1) dot = 1;
             return System.Math.Acos(dot) * (360.0 / (System.Math.PI * 2.0));
         }
 
         public static float SignedAngle2D(Vector2 from, Vector2 to)
         {
-            var unsignedAngle   = Angle2D(from, to);
-            var cross_z         = from.x * to.y - from.y * to.x;
-            var sign            = System.Math.Sign(cross_z);
+            var unsignedAngle = Angle2D(from, to);
+            var cross_z = from.x * to.y - from.y * to.x;
+            var sign = System.Math.Sign(cross_z);
             return (float)(unsignedAngle * sign);
         }
         /*
@@ -113,9 +113,9 @@ namespace RealtimeCSG
         //*/
 
         public static Vector3 ProjectPointOnPlane(CSGPlane plane, Vector3 point)
-        { 
-             var distance = -Vector3.Dot(plane.normal, (point - plane.pointOnPlane));
-             return point + plane.normal * distance;
+        {
+            var distance = -Vector3.Dot(plane.normal, (point - plane.pointOnPlane));
+            return point + plane.normal * distance;
         }
 
 
@@ -126,9 +126,9 @@ namespace RealtimeCSG
 
         public static bool Intersects(Vector2 A1, Vector2 A2, Vector2 B1, Vector2 B2)
         {
-           if (CounterClockwise(A1, A2, B1) * CounterClockwise(A1, A2, B2) > 0) return false;
-           if (CounterClockwise(B1, B2, A1) * CounterClockwise(B1, B2, A2) > 0) return false;
-           return true;
+            if (CounterClockwise(A1, A2, B1) * CounterClockwise(A1, A2, B2) > 0) return false;
+            if (CounterClockwise(B1, B2, A1) * CounterClockwise(B1, B2, A2) > 0) return false;
+            return true;
         }
 
         public static bool TryIntersection(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3, out Vector2 intersection)
@@ -141,24 +141,24 @@ namespace RealtimeCSG
 
             float s, t;
             s = (-s1.y * s3.x + s1.x * s3.y) / divisor;
-            t = ( s2.x * s3.y - s2.y * s3.x) / divisor;
+            t = (s2.x * s3.y - s2.y * s3.x) / divisor;
 
-            if (s >=     MathConstants.EqualityEpsilon && 
-                s <= 1 - MathConstants.EqualityEpsilon && 
-                t >=     MathConstants.EqualityEpsilon && 
+            if (s >= MathConstants.EqualityEpsilon &&
+                s <= 1 - MathConstants.EqualityEpsilon &&
+                t >= MathConstants.EqualityEpsilon &&
                 t <= 1 - MathConstants.EqualityEpsilon)
             {
                 // Collision detected
                 intersection = p0 + (t * s1);
 
                 //if ( (intersection - p0).sqrMagnitude > MathConstants.EqualityEpsilonSqr
-                    //   (intersection - p1).sqrMagnitude > MathConstants.EqualityEpsilonSqr 
-                    //&& (intersection - p2).sqrMagnitude > MathConstants.EqualityEpsilonSqr 
-                    //&& (intersection - p3).sqrMagnitude > MathConstants.EqualityEpsilonSqr
-                    //)
-                    return true;
+                //   (intersection - p1).sqrMagnitude > MathConstants.EqualityEpsilonSqr 
+                //&& (intersection - p2).sqrMagnitude > MathConstants.EqualityEpsilonSqr 
+                //&& (intersection - p3).sqrMagnitude > MathConstants.EqualityEpsilonSqr
+                //)
+                return true;
             }
-            
+
             intersection = MathConstants.zeroVector2;
             return false; // No collision
         }
@@ -219,7 +219,7 @@ namespace RealtimeCSG
                         lines[i].Index0 == lines[j].Index1)
                         continue;
 
-                    if (Intersects(points[lines[i].Index0], points[lines[i].Index1], 
+                    if (Intersects(points[lines[i].Index0], points[lines[i].Index1],
                                    points[lines[j].Index0], points[lines[j].Index1]))
                     {
                         return true;
@@ -246,7 +246,7 @@ namespace RealtimeCSG
                         lines[i].Index0 == lines[j].Index1)
                         continue;
 
-                    if (Intersects(points[lines[i].Index0], points[lines[i].Index1], 
+                    if (Intersects(points[lines[i].Index0], points[lines[i].Index1],
                                    points[lines[j].Index0], points[lines[j].Index1]))
                     {
                         return true;
@@ -273,7 +273,7 @@ namespace RealtimeCSG
         public static Vector2[] RotatePlaneTo2D(Vector3[] points, CSGPlane plane)
         {
             var mat = RotatePlaneTo2DMatrix(plane);
-            
+
             var points2D = new Vector2[points.Length];
             for (var i = 0; i < points2D.Length; i++)
             {
@@ -299,14 +299,14 @@ namespace RealtimeCSG
             var from = Quaternion.LookRotation(surface.BiNormal, -surface.Plane.normal);
             return Matrix4x4.TRS(MathConstants.zeroVector3, Quaternion.Inverse(from), MathConstants.oneVector3);
         }
-        
+
         public static Matrix4x4 Rotate2DToPlaneMatrix(CSGPlane plane)
         {
             return RotatePlaneTo2DMatrix(plane).inverse;
             //return   Matrix4x4.TRS(plane.pointOnPlane, MathConstants.identityQuaternion, MathConstants.oneVector3)
             //	   * Matrix4x4.TRS(MathConstants.zeroVector3, Quaternion.FromToRotation(MathConstants.upVector3, plane.normal), MathConstants.oneVector3);
         }
-        
+
         public static void RotateTransform2DToPlane(CSGPlane plane, Vector3 origin, Transform transform)
         {
             // rotate upward shape into direction of plane
@@ -348,7 +348,7 @@ namespace RealtimeCSG
         public static Vector3[] ToVector3XZReversed(List<Vector2> points2D)
         {
             var points = new Vector3[points2D.Count];
-            
+
             for (int i = 0, last = points2D.Count - 1; i <= last; i++)
             {
                 points[last - i].x = points2D[i].x;
@@ -370,19 +370,19 @@ namespace RealtimeCSG
 
         public static float CleanLength(float length)
         {
-            var intLength	= Mathf.FloorToInt(length);
+            var intLength = Mathf.FloorToInt(length);
 
-            var fractLength	= (length - intLength);
+            var fractLength = (length - intLength);
 
             fractLength = Mathf.Round(fractLength * 1000.0f) / 1000.0f;
 
             const float epsilon = MathConstants.EqualityEpsilon;
 
-            if (fractLength >=    - epsilon && 
-                fractLength <       epsilon) fractLength = 0;			
-            if (fractLength >=  1 - epsilon) fractLength = 1;			
+            if (fractLength >= -epsilon &&
+                fractLength < epsilon) fractLength = 0;
+            if (fractLength >= 1 - epsilon) fractLength = 1;
             if (fractLength <= -1 + epsilon) fractLength = -1;
-            
+
             return intLength + fractLength;
             //return new Vector3(intPosX, intPosY, intPosZ);
         }
@@ -391,7 +391,7 @@ namespace RealtimeCSG
         {
             for (int i = points.Count - 2, j = points.Count - 1, k = 0; k < points.Count; i = j, j = k, k++)
             {
-                if (CounterClockwise(points[i],points[j],points[k]) < 0)
+                if (CounterClockwise(points[i], points[j], points[k]) < 0)
                 {
                     return true;
                 }
@@ -484,13 +484,13 @@ namespace RealtimeCSG
                 var v0 = points[0];
                 var v1 = points[1];
                 var v2 = points[2];
-                
+
                 var ab = (v1 - v0);
                 var ac = (v2 - v0);
 
                 return (ab.x * ac.y - ab.y * ac.x);
             }
-            
+
             var length = 0.0f;
             var prevIndex = points.Length - 1;
             var prevVertex = points[prevIndex];
@@ -574,7 +574,7 @@ namespace RealtimeCSG
                 return absX > absZ ? new Vector3(Mathf.Sign(vector.x), 0, 0) : new Vector3(0, 0, Mathf.Sign(vector.z));
             return absY > absZ ? new Vector3(0, Mathf.Sign(vector.y), 0) : new Vector3(0, 0, Mathf.Sign(vector.z));
         }
-        
+
         public static Quaternion QuaternionFromMatrix(Matrix4x4 m)
         {
             // Adapted from: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
@@ -588,8 +588,8 @@ namespace RealtimeCSG
             q.z *= Mathf.Sign(q.z * (m[1, 0] - m[0, 1]));
             return q;
         }
-        
-//		private static readonly Vector3 PositiveY = new Vector3(0, 1, 0);
+
+        //		private static readonly Vector3 PositiveY = new Vector3(0, 1, 0);
         private static readonly Vector3 NegativeY = new Vector3(0, -1, 0);
         private static readonly Vector3 PositiveZ = new Vector3(0, 0, 1);
 
@@ -598,7 +598,7 @@ namespace RealtimeCSG
             var absX = Mathf.Abs(vector.x);
             var absY = Mathf.Abs(vector.y);
             var absZ = Mathf.Abs(vector.z);
-            
+
             if (absY > absX && absY > absZ)
                 return PositiveZ;
 
@@ -606,8 +606,8 @@ namespace RealtimeCSG
             //if (absX > absY && absX > absZ)
             //if (Mathf.Abs(absX - absY) > MathConstants.NormalEpsilon &&
             //	Mathf.Abs(absX - absZ) > MathConstants.NormalEpsilon)
-                return NegativeY;
-            
+            return NegativeY;
+
             //if (absZ > absY && absZ > absX)
             //if (Mathf.Abs(absZ - absY) > MathConstants.NormalEpsilon &&
             //	Mathf.Abs(absZ - absX) > MathConstants.NormalEpsilon)
@@ -618,9 +618,9 @@ namespace RealtimeCSG
 
         public static void CalculateTangents(Vector3 normal, out Vector3 tangent, out Vector3 binormal)
         {
-            tangent		= GeometryUtility.CalculateTangent(normal);
-            tangent		= Vector3.Cross(normal, tangent).normalized;
-            binormal	= Vector3.Cross(normal, tangent).normalized;
+            tangent = GeometryUtility.CalculateTangent(normal);
+            tangent = Vector3.Cross(normal, tangent).normalized;
+            binormal = Vector3.Cross(normal, tangent).normalized;
         }
 
         public static Vector3 ProjectPointOnInfiniteLine(Vector3 point, Vector3 lineOrigin, Vector3 normalizedLineDirection)
@@ -628,15 +628,15 @@ namespace RealtimeCSG
             var dot = Vector3.Dot(normalizedLineDirection, point - lineOrigin);
             return lineOrigin + normalizedLineDirection * dot;
         }
-        
-        public static CSGPlane InverseTransformPlane(Matrix4x4 inverseMatrix, CSGPlane plane) 
+
+        public static CSGPlane InverseTransformPlane(Matrix4x4 inverseMatrix, CSGPlane plane)
         {
             var dstMatrix = Matrix4x4.Transpose(inverseMatrix);
             var dstPlaneV = dstMatrix * new Vector4(plane.a, plane.b, plane.c, -plane.d);
             return new CSGPlane(dstPlaneV.x, dstPlaneV.y, dstPlaneV.z, -dstPlaneV.w);
         }
-        
-        public static CSGPlane TransformPlane(Matrix4x4 matrix, CSGPlane plane) 
+
+        public static CSGPlane TransformPlane(Matrix4x4 matrix, CSGPlane plane)
         {
             var dstMatrix = Matrix4x4.Transpose(Matrix4x4.Inverse(matrix));
             var dstPlaneV = dstMatrix * new Vector4(plane.a, plane.b, plane.c, -plane.d);
@@ -650,12 +650,12 @@ namespace RealtimeCSG
             Quaternion q = Quaternion.LookRotation(tangent, normal);
             return q;
         }
-        
+
         public static float DistancePointToCircle(SceneView sceneView, Vector3 point, Vector3 circleCenter, float circleRadius)
         {
-            var pointCenter  = HandleUtility.WorldToGUIPoint(point);
+            var pointCenter = HandleUtility.WorldToGUIPoint(point);
             var screenCenter = HandleUtility.WorldToGUIPoint(circleCenter);
-            var cam			 = sceneView.camera;
+            var cam = sceneView.camera;
             if (cam)
             {
                 var screenEdge = HandleUtility.WorldToGUIPoint(circleCenter + cam.transform.right * circleRadius);
@@ -666,9 +666,9 @@ namespace RealtimeCSG
                 return 0;
             return dist - circleRadius;
         }
-        
+
         public static void MoveControlMeshVertices(CSGBrush[] brushes, Vector3 offset)
-        {			
+        {
             for (int b = 0; b < brushes.Length; b++)
             {
                 var controlMesh = brushes[b].ControlMesh;
@@ -713,7 +713,7 @@ namespace RealtimeCSG
                         (p1.x * 2.0f) + // TODO: change to 1.0f?
                         (-p0.x + p2.x) * t0 +
                         (2.0f * p0.x - 5.0f * p1.x + 4.0f * p2.x - p3.x) * t1 +
-                        (      -p0.x + 3.0f * p1.x - 3.0f * p2.x + p3.x) * t2
+                        (-p0.x + 3.0f * p1.x - 3.0f * p2.x + p3.x) * t2
                     );
 
             ret.y = 0.5f * // TODO: remove this?
@@ -721,7 +721,7 @@ namespace RealtimeCSG
                         (p1.y * 2.0f) + // TODO: change to 1.0f?
                         (-p0.y + p2.y) * t0 +
                         (2.0f * p0.y - 5.0f * p1.y + 4.0f * p2.y - p3.y) * t1 +
-                        (      -p0.y + 3.0f * p1.y - 3.0f * p2.y + p3.y) * t2
+                        (-p0.y + 3.0f * p1.y - 3.0f * p2.y + p3.y) * t2
                     );
 
             return ret;
@@ -855,23 +855,23 @@ namespace RealtimeCSG
             if (srcSurfaceIndex < 0 || srcSurfaceIndex >= brush.Shape.TexGens.Length ||
                 !brush)
                 return false;
-                        
-            var shape		= brush.Shape;
-            var texGens		= shape.TexGens;
+
+            var shape = brush.Shape;
+            var texGens = shape.TexGens;
             var texGenFlags = shape.TexGenFlags;
-            var surfaces	= shape.Surfaces;
+            var surfaces = shape.Surfaces;
 
             var srcTexGenIndex = surfaces[srcSurfaceIndex].TexGenIndex;
             var dstTexGenIndex = surfaces[dstSurfaceIndex].TexGenIndex;
 
-//          var src_is_world_space = (texGenFlags[srcTexGenIndex] & TexGenFlags.WorldSpaceTexture) != TexGenFlags.None;
-//          var dst_is_world_space = (texGenFlags[dstTexGenIndex] & TexGenFlags.WorldSpaceTexture) != TexGenFlags.None;
-            
-//          if (src_is_world_space) SurfaceUtility.SetTextureLock(brush, srcSurfaceIndex, true);
-//          if (dst_is_world_space) SurfaceUtility.SetTextureLock(brush, dstSurfaceIndex, true);
+            //          var src_is_world_space = (texGenFlags[srcTexGenIndex] & TexGenFlags.WorldSpaceTexture) != TexGenFlags.None;
+            //          var dst_is_world_space = (texGenFlags[dstTexGenIndex] & TexGenFlags.WorldSpaceTexture) != TexGenFlags.None;
 
-            var dstLocalPlane	= surfaces[dstSurfaceIndex].Plane;
-            var srcLocalPlane   = surfaces[srcSurfaceIndex].Plane;
+            //          if (src_is_world_space) SurfaceUtility.SetTextureLock(brush, srcSurfaceIndex, true);
+            //          if (dst_is_world_space) SurfaceUtility.SetTextureLock(brush, dstSurfaceIndex, true);
+
+            var dstLocalPlane = surfaces[dstSurfaceIndex].Plane;
+            var srcLocalPlane = surfaces[srcSurfaceIndex].Plane;
 
             CSGModel parentModel;
             CSGOperation parentOp;
@@ -884,13 +884,13 @@ namespace RealtimeCSG
             //var localToWorldMatrix = brush.transform.localToWorldMatrix;
 
             // convert planes into worldspace
-            var dstWorldPlane   = InverseTransformPlane(localFromWorld, dstLocalPlane);
-            var srcWorldPlane   = InverseTransformPlane(localFromWorld, srcLocalPlane);
-                
-            var dstWorldNormal  = dstWorldPlane.normal;
-            var srcWorldNormal  = srcWorldPlane.normal;
-                
-            
+            var dstWorldPlane = InverseTransformPlane(localFromWorld, dstLocalPlane);
+            var srcWorldPlane = InverseTransformPlane(localFromWorld, srcLocalPlane);
+
+            var dstWorldNormal = dstWorldPlane.normal;
+            var srcWorldNormal = srcWorldPlane.normal;
+
+
             shape.TexGens[dstSurfaceIndex].RenderMaterial = shape.TexGens[srcSurfaceIndex].RenderMaterial;
             Vector3 srcWorldPoint1, srcWorldPoint2;
             Vector3 dstWorldPoint1, dstWorldPoint2;
@@ -904,8 +904,9 @@ namespace RealtimeCSG
 
                 dstWorldPoint1 = GeometryUtility.ProjectPointOnPlane(dstWorldPlane, srcWorldPoint1);
                 dstWorldPoint2 = GeometryUtility.ProjectPointOnPlane(dstWorldPlane, srcWorldPoint2);
-            } else
-            {	
+            }
+            else
+            {
                 // Find 2 points on intersection of 2 planes
                 srcWorldPoint1 = ((Vector3.Cross(edgeDirection, srcWorldNormal) * -dstWorldPlane.d) +
                                 (Vector3.Cross(dstWorldNormal, edgeDirection) * -srcWorldPlane.d)) / det;
@@ -920,13 +921,13 @@ namespace RealtimeCSG
             var dstModelPoint1 = modelFromWorld.MultiplyPoint(dstWorldPoint1);
             var dstModelPoint2 = modelFromWorld.MultiplyPoint(dstWorldPoint2);
 
-            var result = SurfaceUtility.AlignTextureSpaces(localFromModel,     texGens[srcTexGenIndex], texGenFlags[srcTexGenIndex], ref surfaces[srcSurfaceIndex], srcModelPoint1, srcModelPoint2,
+            var result = SurfaceUtility.AlignTextureSpaces(localFromModel, texGens[srcTexGenIndex], texGenFlags[srcTexGenIndex], ref surfaces[srcSurfaceIndex], srcModelPoint1, srcModelPoint2,
                                                            localFromModel, ref texGens[dstTexGenIndex], texGenFlags[dstTexGenIndex], ref surfaces[dstSurfaceIndex], dstModelPoint1, dstModelPoint2, false);
 
-//          if (src_is_world_space) SurfaceUtility.SetTextureLock(brush, srcSurfaceIndex, false);
-//          if (dst_is_world_space) SurfaceUtility.SetTextureLock(brush, dstSurfaceIndex, false);
+            //          if (src_is_world_space) SurfaceUtility.SetTextureLock(brush, srcSurfaceIndex, false);
+            //          if (dst_is_world_space) SurfaceUtility.SetTextureLock(brush, dstSurfaceIndex, false);
             return result;
         }
-        
+
     }
 }

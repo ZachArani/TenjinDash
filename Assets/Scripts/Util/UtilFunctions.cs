@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UtilFunctions
@@ -21,7 +19,7 @@ public class UtilFunctions
             return diff < (epsilon * float.MinValue);
         }
         else
-        { 
+        {
             return diff < epsilon;
         }
     }

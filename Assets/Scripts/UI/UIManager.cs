@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.UI
 {
@@ -48,7 +45,7 @@ namespace Assets.Scripts.UI
         // Update is called once per frame
         void Update()
         {
-            
+
         }
 
         public void toggleStartUI(bool toggle)
@@ -56,9 +53,9 @@ namespace Assets.Scripts.UI
             startMenu.SetActive(toggle);
         }
 
-        public void toggleFinishUI(bool toggle) 
+        public void toggleFinishUI(bool toggle)
         {
-            finishMenu.SetActive(toggle); 
+            finishMenu.SetActive(toggle);
         }
 
         public void toggleRaceUI(bool toggle)
@@ -78,7 +75,7 @@ namespace Assets.Scripts.UI
 
         public void toggleScreenSplitter(bool toggle)
         {
-            screenSplitter.SetActive(toggle); 
+            screenSplitter.SetActive(toggle);
         }
 
         private void OnApplicationQuit()

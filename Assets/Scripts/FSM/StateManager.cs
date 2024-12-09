@@ -1,11 +1,9 @@
 using AYellowpaper.SerializedCollections;
 using Cinemachine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.Playables;
 using Debug = UnityEngine.Debug;
 
 
@@ -65,7 +63,7 @@ public class StateManager : MonoBehaviour
     /// </summary>
     private void Awake()
     {
-        if(instance != null && instance != this)
+        if (instance != null && instance != this)
         {
             Destroy(this);
         }
@@ -132,7 +130,8 @@ public class StateManager : MonoBehaviour
 
     public void EnableRaceComponents(bool doEnable)
     {
-        players.ForEach(p => {
+        players.ForEach(p =>
+        {
             p.enabled = doEnable;
             p.GetComponent<CinemachineDollyCart>().enabled = doEnable;
         });
@@ -140,7 +139,8 @@ public class StateManager : MonoBehaviour
 
     public void EnableRecorders(bool doEnable)
     {
-        players.ForEach(p => {
+        players.ForEach(p =>
+        {
             if (Options.instance.recordPlayerData)
             {
                 p.GetComponent<InputRecorder>().enabled = doEnable;

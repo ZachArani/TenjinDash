@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using RealtimeCSG;
 using UnityEngine;
-using UnityEditor;
-using RealtimeCSG;
 
 namespace InternalRealtimeCSG
 {
@@ -20,7 +16,8 @@ namespace InternalRealtimeCSG
                     targetTransform.position = selection.BackupPositions[t];
                     targetTransform.rotation = selection.BackupRotations[t];
                 }
-            } else
+            }
+            else
             {
                 for (var t = 0; t < selection.Transforms.Length; t++)
                 {

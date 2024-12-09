@@ -1,78 +1,78 @@
-﻿using System;
-using UnityEngine;
-using RealtimeCSG;
+﻿using RealtimeCSG;
 using RealtimeCSG.Components;
+using System;
+using UnityEngine;
 using GeometryUtility = RealtimeCSG.GeometryUtility;
 
 namespace InternalRealtimeCSG
 {
-	[Serializable]
-	internal enum HandleConstraints
-	{
-		Straight,	// Tangents are ignored (used for straight lines)
-		Broken,		// Both tangents are assumed to go in different directions
-		Mirrored	// Both tangents are aligned and mirror each other
-	}
+    [Serializable]
+    internal enum HandleConstraints
+    {
+        Straight,   // Tangents are ignored (used for straight lines)
+        Broken,     // Both tangents are assumed to go in different directions
+        Mirrored    // Both tangents are aligned and mirror each other
+    }
 
-	[Serializable]
-	internal struct TangentCurve2D
-	{
-		public Vector3 Tangent;
-		public HandleConstraints Constraint;
-	}
+    [Serializable]
+    internal struct TangentCurve2D
+    {
+        public Vector3 Tangent;
+        public HandleConstraints Constraint;
+    }
 
-	[Serializable]
-	internal class Curve2D
-	{
-		public Vector3[] Points;
-		public TangentCurve2D[] Tangents;
-	}
+    [Serializable]
+    internal class Curve2D
+    {
+        public Vector3[] Points;
+        public TangentCurve2D[] Tangents;
+    }
 
-	public static class BrushUtility
-	{
-		public static void SetPivotToLocalCenter(CSGBrush brush)
-		{
-			if (!brush)
-				return;
-			
-			var localCenter = BoundsUtilities.GetLocalCenter(brush);
-			var worldCenter	= brush.transform.localToWorldMatrix.MultiplyPoint(localCenter);
+    public static class BrushUtility
+    {
+        public static void SetPivotToLocalCenter(CSGBrush brush)
+        {
+            if (!brush)
+                return;
 
-			SetPivot(brush, worldCenter);
-		}
+            var localCenter = BoundsUtilities.GetLocalCenter(brush);
+            var worldCenter = brush.transform.localToWorldMatrix.MultiplyPoint(localCenter);
 
-		public static void SetPivot(CSGBrush brush, Vector3 newCenter)
-		{
-			if (!brush)
-				return;
+            SetPivot(brush, worldCenter);
+        }
 
-			var transform = brush.transform;
-			var realCenter = transform.position;
-			var difference = newCenter - realCenter;
+        public static void SetPivot(CSGBrush brush, Vector3 newCenter)
+        {
+            if (!brush)
+                return;
 
-			if (difference.sqrMagnitude < MathConstants.ConsideredZero)
-				return;
+            var transform = brush.transform;
+            var realCenter = transform.position;
+            var difference = newCenter - realCenter;
 
-			transform.position += difference;
+            if (difference.sqrMagnitude < MathConstants.ConsideredZero)
+                return;
 
-			GeometryUtility.MoveControlMeshVertices(brush, -difference);
-			SurfaceUtility.TranslateSurfacesInWorldSpace(brush, -difference);
-			ControlMeshUtility.RebuildShape(brush);
-		}
+            transform.position += difference;
 
-		public static void TranslatePivot(CSGBrush[] brushes, Vector3 offset)
-		{
-			if (brushes == null ||
-				brushes.Length == 0 ||
-				offset.sqrMagnitude < MathConstants.ConsideredZero)
-				return;
+            GeometryUtility.MoveControlMeshVertices(brush, -difference);
+            SurfaceUtility.TranslateSurfacesInWorldSpace(brush, -difference);
+            ControlMeshUtility.RebuildShape(brush);
+        }
 
-			for (int i = 0; i < brushes.Length; i++)
-				brushes[i].transform.position += offset;
+        public static void TranslatePivot(CSGBrush[] brushes, Vector3 offset)
+        {
+            if (brushes == null ||
+                brushes.Length == 0 ||
+                offset.sqrMagnitude < MathConstants.ConsideredZero)
+                return;
 
-			GeometryUtility.MoveControlMeshVertices(brushes, -offset);
-			SurfaceUtility.TranslateSurfacesInWorldSpace(brushes, -offset);
-			ControlMeshUtility.RebuildShapes(brushes);
-		}
-	}
+            for (int i = 0; i < brushes.Length; i++)
+                brushes[i].transform.position += offset;
+
+            GeometryUtility.MoveControlMeshVertices(brushes, -offset);
+            SurfaceUtility.TranslateSurfacesInWorldSpace(brushes, -offset);
+            ControlMeshUtility.RebuildShapes(brushes);
+        }
+    }
 }

@@ -1,13 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEditor;
+﻿using Assets.Scripts.UI;
 using UnityEngine;
-using UnityEngine.UI;
-using System;
-using System.Linq;
 using UnityEngine.Playables;
-using Assets.Scripts.UI;
 
 namespace Assets.Scripts
 {
@@ -25,7 +18,7 @@ namespace Assets.Scripts
 
         void Start()
         {
-          
+
         }
 
         // Update is called once per frame
@@ -50,12 +43,12 @@ namespace Assets.Scripts
                 UIManager.instance.toggleStartUI(true);
                 Cursor.visible = true;
             }
-            else if(from == GAME_STATE.START_MENU) 
+            else if (from == GAME_STATE.START_MENU)
             {
                 UIManager.instance.toggleStartUI(false);
                 Cursor.visible = false;
             }
-            
+
         }
 
         /// <summary>

@@ -1,10 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace RealtimeCSG
 {
-	public class EnumAsFlagsAttribute : PropertyAttribute
-	{
-		public EnumAsFlagsAttribute() { }
-	}
+    public class EnumAsFlagsAttribute : PropertyAttribute
+    {
+        public EnumAsFlagsAttribute() { }
+    }
 }

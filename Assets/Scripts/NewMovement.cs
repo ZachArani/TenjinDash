@@ -1,13 +1,9 @@
 using Assets.Scripts.FSM.States;
 using Cinemachine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using TMPro;
 using UnityEngine;
-using static UtilFunctions;
 
 
 /// <summary>
@@ -94,7 +90,7 @@ public class NewMovement : MonoBehaviour
         joycon = JoyconManager.Instance.GetJoyconByPlayer(gameObject);
         raceManager = StateManager.instance.stateDictionary[GAME_STATE.RACE].GetComponent<RaceState>();
 
-        if(Options.instance.isAuto)
+        if (Options.instance.isAuto)
         {
             var autoFile = raceManager.PickAutoFile();
             Debug.Log($"AUTO MODE ENABLED. READING DATA FROM {autoFile.name}");
@@ -119,7 +115,7 @@ public class NewMovement : MonoBehaviour
         {
             t += (t + Time.deltaTime * delta_t) <= 1 ? Time.deltaTime * delta_t : 0;
             curveValue = Math.Round((double)accCurve.Evaluate(t), 4);
-            if(curveValue > 0.95)
+            if (curveValue > 0.95)
             {
                 curveValue += 0.3 * rubberbandBoost;
             }
@@ -133,7 +129,7 @@ public class NewMovement : MonoBehaviour
         {
             t -= (t - Time.deltaTime * delta_t >= 0) ? Time.deltaTime * delta_t : 0;
             isAccelerating = false;
-            if(t >= 0.5f)
+            if (t >= 0.5f)
             {
                 curveValue = Math.Round((double)accCurve.Evaluate(t), 4);
             }
@@ -184,7 +180,7 @@ public class NewMovement : MonoBehaviour
             return;
         }
         var dist = Mathf.Abs(runningTrack.m_Position - raceManager.firstPlace.runningTrack.m_Position);
-        rubberbandBoost = (dist / raceManager.maxRubberbandDistance) * raceManager.rubberbandBoostMax / 100f + slipstream;        
+        rubberbandBoost = (dist / raceManager.maxRubberbandDistance) * raceManager.rubberbandBoostMax / 100f + slipstream;
     }
 
 

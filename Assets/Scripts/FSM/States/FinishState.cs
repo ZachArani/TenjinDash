@@ -1,10 +1,6 @@
 ﻿using Assets.Scripts.UI;
-using System.Collections;
-using System.Linq;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.Timeline;
 
 namespace Assets.Scripts.FSM.States
 {
@@ -33,7 +29,7 @@ namespace Assets.Scripts.FSM.States
 
         void StartFinish(GAME_STATE from, GAME_STATE to)
         {
-            if(to == GAME_STATE.FINISH)
+            if (to == GAME_STATE.FINISH)
             {
                 raceManager = StateManager.instance.stateDictionary[GAME_STATE.RACE].GetComponent<RaceState>();
                 var winner = raceManager.standings[0].gameObject;
@@ -46,7 +42,7 @@ namespace Assets.Scripts.FSM.States
                         winner.GetComponent<Animator>().SetTrigger("win");
                         finishedTimeline.SetGenericBinding(playableAssetOutput.sourceObject, winner);
                     }
-                    else if(playableAssetOutput.streamName == loserTrackName)
+                    else if (playableAssetOutput.streamName == loserTrackName)
                     {
                         loser.GetComponent<Animator>().SetTrigger("lose");
                         finishedTimeline.SetGenericBinding(playableAssetOutput.sourceObject, loser);
@@ -75,7 +71,8 @@ namespace Assets.Scripts.FSM.States
 
         public void cleanUp()
         {
-            raceManager.standings.ForEach(p => {
+            raceManager.standings.ForEach(p =>
+            {
                 p.GetComponent<Animator>().SetTrigger("Restart");
             });
             UIManager.instance.toggleFinishUI(false);

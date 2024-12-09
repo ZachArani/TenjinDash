@@ -1,5 +1,5 @@
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 // Put this script in the "Editor" folder
 [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]

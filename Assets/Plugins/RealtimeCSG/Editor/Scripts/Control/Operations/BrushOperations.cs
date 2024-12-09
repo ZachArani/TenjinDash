@@ -1,11 +1,11 @@
-﻿using System;
+﻿using RealtimeCSG;
+using RealtimeCSG.Components;
+using RealtimeCSG.Legacy;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using UnityEditor;
-using RealtimeCSG;
-using RealtimeCSG.Legacy;
-using RealtimeCSG.Components;
+using UnityEngine;
 
 namespace InternalRealtimeCSG
 {
@@ -69,54 +69,55 @@ namespace InternalRealtimeCSG
                 Vector3 brushCenter;
                 if (isGlobal)
                 {
-                    brushFlip	= brush.transform.localToWorldMatrix *
+                    brushFlip = brush.transform.localToWorldMatrix *
                                        flipMatrix *
                                        brush.transform.worldToLocalMatrix;
                     brushCenter = brush.transform.InverseTransformPoint(centerAll) - position;
-                } else
+                }
+                else
                 {
-                    brushFlip	= flipMatrix;
+                    brushFlip = flipMatrix;
                     brushCenter = brush.transform.InverseTransformPoint(centerAll);
                 }
 
-				brushFlip = Matrix4x4.TRS(brushCenter, Quaternion.identity, Vector3.one) *
-							brushFlip *
-							Matrix4x4.TRS(-brushCenter, Quaternion.identity, Vector3.one);
-				
+                brushFlip = Matrix4x4.TRS(brushCenter, Quaternion.identity, Vector3.one) *
+                            brushFlip *
+                            Matrix4x4.TRS(-brushCenter, Quaternion.identity, Vector3.one);
+
                 brush.EnsureInitialized();
                 var shape = brush.Shape;
                 for (var s = 0; s < shape.Surfaces.Length; s++)
                 {
                     var plane = shape.Surfaces[s].Plane;
 
-                    var normal		= brushFlip.MultiplyVector(plane.normal);
-                    var biNormal	= brushFlip.MultiplyVector(shape.Surfaces[s].BiNormal);
-                    var tangent		= brushFlip.MultiplyVector(shape.Surfaces[s].Tangent);
+                    var normal = brushFlip.MultiplyVector(plane.normal);
+                    var biNormal = brushFlip.MultiplyVector(shape.Surfaces[s].BiNormal);
+                    var tangent = brushFlip.MultiplyVector(shape.Surfaces[s].Tangent);
 
                     var pointOnPlane = plane.pointOnPlane;
                     pointOnPlane = brushFlip.MultiplyPoint(pointOnPlane);
 
-                    shape.Surfaces[s].Plane		= new CSGPlane(normal, pointOnPlane);
-                    shape.Surfaces[s].BiNormal	= biNormal;
-                    shape.Surfaces[s].Tangent	= tangent;
+                    shape.Surfaces[s].Plane = new CSGPlane(normal, pointOnPlane);
+                    shape.Surfaces[s].BiNormal = biNormal;
+                    shape.Surfaces[s].Tangent = tangent;
                 }
 
                 var controlMesh = brush.ControlMesh;
-				var vertices = controlMesh.Vertices;
-				for (var v = 0; v < vertices.Length; v++)
-					vertices[v] = brushFlip.MultiplyPoint(vertices[v]);
+                var vertices = controlMesh.Vertices;
+                for (var v = 0; v < vertices.Length; v++)
+                    vertices[v] = brushFlip.MultiplyPoint(vertices[v]);
 
-				var polygons = controlMesh.Polygons;
-				for (var p = 0; p < polygons.Length; p++)
-					Array.Reverse(polygons[p].EdgeIndices);
+                var polygons = controlMesh.Polygons;
+                for (var p = 0; p < polygons.Length; p++)
+                    Array.Reverse(polygons[p].EdgeIndices);
 
-				var edges = controlMesh.Edges;
-				var twinVertices = new short[edges.Length];
-				for (var e = 0; e < edges.Length; e++)
-					twinVertices[e] = edges[edges[e].TwinIndex].VertexIndex;
-				
-				for (var e = 0; e < edges.Length; e++)
-					edges[e].VertexIndex = twinVertices[e];
+                var edges = controlMesh.Edges;
+                var twinVertices = new short[edges.Length];
+                for (var e = 0; e < edges.Length; e++)
+                    twinVertices[e] = edges[edges[e].TwinIndex].VertexIndex;
+
+                for (var e = 0; e < edges.Length; e++)
+                    edges[e].VertexIndex = twinVertices[e];
 
                 brush.ControlMesh.SetDirty();
                 EditorUtility.SetDirty(brush);

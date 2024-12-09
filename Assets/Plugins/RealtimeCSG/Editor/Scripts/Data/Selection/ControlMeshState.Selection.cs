@@ -1,68 +1,68 @@
-﻿using System;
+﻿using RealtimeCSG.Legacy;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using RealtimeCSG.Legacy;
 
 namespace RealtimeCSG
 {
-	internal class ControlMeshSelection
-	{
-        [SerializeField] public SelectState[]   Points;
-        [SerializeField] public SelectState[]   Edges;
-        [SerializeField] public SelectState[]   Polygons;
-		
+    internal class ControlMeshSelection
+    {
+        [SerializeField] public SelectState[] Points;
+        [SerializeField] public SelectState[] Edges;
+        [SerializeField] public SelectState[] Polygons;
+
         public void CopyTo(ControlMeshSelection other)
         {
-			if (other == null)
-				return;
+            if (other == null)
+                return;
 
             if (Points != null)
             {
-				if (other.Points == null || Points.Length != other.Points.Length)
-					other.Points = new SelectState[Points.Length];
+                if (other.Points == null || Points.Length != other.Points.Length)
+                    other.Points = new SelectState[Points.Length];
                 Array.Copy(Points, other.Points, Points.Length);
             }
 
             if (Edges != null)
             {
                 if (other.Edges == null || Edges.Length != other.Edges.Length)
-					other.Edges = new SelectState[Edges.Length];
+                    other.Edges = new SelectState[Edges.Length];
                 Array.Copy(Edges, other.Edges, Edges.Length);
             }
 
             if (Polygons != null)
             {
-				if (other.Polygons == null || Polygons.Length != other.Polygons.Length)
-					other.Polygons = new SelectState[Polygons.Length];
+                if (other.Polygons == null || Polygons.Length != other.Polygons.Length)
+                    other.Polygons = new SelectState[Polygons.Length];
                 Array.Copy(Polygons, other.Polygons, Polygons.Length);
             }
         }
-		
-		public ControlMeshSelection Clone()
-		{
-			var clone = new ControlMeshSelection();
-			CopyTo(clone);
-			return clone;
-		}
 
-		public void Clear()
-		{
+        public ControlMeshSelection Clone()
+        {
+            var clone = new ControlMeshSelection();
+            CopyTo(clone);
+            return clone;
+        }
+
+        public void Clear()
+        {
             Points = null;
             Edges = null;
             Polygons = null;
-		}
+        }
 
-		public void DeselectAll()
-		{
-			if (Points != null)
-				Array.Clear(Points, 0, Points.Length);
-			if (Edges != null)
-				Array.Clear(Edges, 0, Edges.Length);
-			if (Polygons != null)
-				Array.Clear(Polygons, 0, Polygons.Length);
+        public void DeselectAll()
+        {
+            if (Points != null)
+                Array.Clear(Points, 0, Points.Length);
+            if (Edges != null)
+                Array.Clear(Edges, 0, Edges.Length);
+            if (Polygons != null)
+                Array.Clear(Polygons, 0, Polygons.Length);
 
-		}
-		
+        }
+
         public bool Equals(ControlMeshSelection other)
         {
             if (Points != null)
@@ -93,27 +93,27 @@ namespace RealtimeCSG
             }
             return true;
         }
-	}
+    }
 
     internal partial class ControlMeshState
     {
-		// selection
+        // selection
 
-		public readonly ControlMeshSelection Selection = new ControlMeshSelection();
+        public readonly ControlMeshSelection Selection = new ControlMeshSelection();
 
         // backup stuff
 
-		public readonly ControlMeshSelection SelectionBackup = new ControlMeshSelection();
+        public readonly ControlMeshSelection SelectionBackup = new ControlMeshSelection();
 
         public void BackupSelection()
-        {	
-			Selection.CopyTo(SelectionBackup);
+        {
+            Selection.CopyTo(SelectionBackup);
         }
 
         public void RevertSelection()
         {
-			SelectionBackup.CopyTo(Selection);
-		}
+            SelectionBackup.CopyTo(Selection);
+        }
 
         public void DestroySelectionBackup()
         {
@@ -122,7 +122,7 @@ namespace RealtimeCSG
 
         public bool HasSelectionChanged()
         {
-			return !Selection.Equals(SelectionBackup);
+            return !Selection.Equals(SelectionBackup);
         }
 
         public float GetClosestEdgeDistance(CSGPlane cameraPlane, int pointIndex0, int pointIndex1)
@@ -133,24 +133,24 @@ namespace RealtimeCSG
 
             var point0 = WorldPoints[pointIndex0];
             var point1 = WorldPoints[pointIndex1];
-			
-			var mousePoint = Event.current.mousePosition;
+
+            var mousePoint = Event.current.mousePosition;
             var minDistance = CameraUtility.DistanceToLine(cameraPlane, mousePoint, point0, point1) * 3.0f;
             if (!(Mathf.Abs(minDistance) < 4.0f))
-				return minDistance;
+                return minDistance;
 
             var surfaceIndex1 = EdgeSurfaces[pointIndex0];
             var surfaceIndex2 = EdgeSurfaces[pointIndex1];
-			 
+
             for (var p = 0; p < PolygonCenterPoints.Length; p++)
             {
                 if (p != surfaceIndex1 &&
                     p != surfaceIndex2)
                     continue;
 
-                var polygonCenterPoint          = PolygonCenterPoints[p];
-                var polygonCenterPointOnLine    = GeometryUtility.ProjectPointOnInfiniteLine(PolygonCenterPoints[p], point0, (point1 - point0).normalized);
-                var direction                   = (polygonCenterPointOnLine - polygonCenterPoint).normalized;
+                var polygonCenterPoint = PolygonCenterPoints[p];
+                var polygonCenterPointOnLine = GeometryUtility.ProjectPointOnInfiniteLine(PolygonCenterPoints[p], point0, (point1 - point0).normalized);
+                var direction = (polygonCenterPointOnLine - polygonCenterPoint).normalized;
 
                 var nudgedPoint0 = point0 - (direction * 0.05f);
                 var nudgedPoint1 = point1 - (direction * 0.05f);
@@ -181,7 +181,7 @@ namespace RealtimeCSG
             {
                 if ((Selection.Edges[e] & SelectState.Selected) != SelectState.Selected)
                     continue;
-				
+
                 indices.Add((short)Edges[(e * 2) + 0]);
                 indices.Add((short)Edges[(e * 2) + 1]);
             }

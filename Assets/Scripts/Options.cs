@@ -1,11 +1,5 @@
-using Assets.Scripts.UI;
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 /// <summary>
 /// Controls game options.
@@ -22,12 +16,12 @@ public class Options : MonoBehaviour
     [SerializeField]
     private bool _skipPreroll;
     public bool skipPreroll { get { return _skipPreroll; } set { _skipPreroll = value; } }
-    
+
     [SerializeField]
     private bool _skipCountdown;
-    public bool skipCountdown { get { return _skipCountdown; } set { _skipCountdown = value;  } }
+    public bool skipCountdown { get { return _skipCountdown; } set { _skipCountdown = value; } }
 
-    [SerializeField] 
+    [SerializeField]
     private bool _skipRace;
     public bool skipRace { get { return _skipRace; } set { _skipRace = value; } }
 
@@ -90,10 +84,10 @@ public class Options : MonoBehaviour
 
     public GAME_STATE GetStartingState()
     {
-        bool[] skipOptions = { skipMenu, skipPreroll, skipCountdown, skipRace, skipPhotoFinish, skipFinishMenu};
-        foreach (var skip in skipOptions.Select((value, i) => new { i, value}))
+        bool[] skipOptions = { skipMenu, skipPreroll, skipCountdown, skipRace, skipPhotoFinish, skipFinishMenu };
+        foreach (var skip in skipOptions.Select((value, i) => new { i, value }))
         {
-            if(!skip.value)
+            if (!skip.value)
             {
                 return (GAME_STATE)skip.i + 1;
             }

@@ -25,76 +25,76 @@
 //
 // ===============================================================================================
 
-using UnityEngine;
-using System.Collections;
 using UnityEditor;
+using UnityEngine;
 
 namespace UnityFBXExporter
 {
-	public sealed class ExporterMenu : Editor 
-	{
+    public sealed class ExporterMenu : Editor
+    {
 
-		/// <summary>
-		/// Exports ANY Game Object given to it. Will provide a dialog and return the path of the newly exported file
-		/// </summary>
-		/// <returns>The path of the newly exported FBX file</returns>
-		/// <param name="gameObj">Game object to be exported</param>
-		/// <param name="copyMaterials">If set to <c>true</c> copy materials.</param>
-		/// <param name="copyTextures">If set to <c>true</c> copy textures.</param>
-		/// <param name="oldPath">Old path.</param>
-		public static string ExportGameObject(GameObject gameObj, bool exportColliders, bool copyMaterials, bool copyTextures, string oldPath = null)
-		{
-			if(gameObj == null)
-			{
-				EditorUtility.DisplayDialog("Object is null", "Please select any GameObject to Export to FBX", "Okay");
-				return null;
-			}
-			
-			string newPath = GetNewPath(gameObj, oldPath);
-			
-			if(newPath != null && newPath.Length != 0)
-			{
-				bool isSuccess = FBXExporter.ExportGameObjToFBX(gameObj, newPath, exportColliders, copyMaterials, copyTextures);
-				
-				if(isSuccess)
-				{
-					return newPath;
-				}
-				else
-					EditorUtility.DisplayDialog("Warning", "The extension probably wasn't an FBX file, could not export.", "Okay");
-			}
-			return null;
-		}
-		
-		/// <summary>
-		/// Creates save dialog window depending on old path or right to the /Assets folder no old path is given
-		/// </summary>
-		/// <returns>The new path.</returns>
-		/// <param name="gameObject">Item to be exported</param>
-		/// <param name="oldPath">The old path that this object was original at.</param>
-		public static string GetNewPath(GameObject gameObject, string typeName = "FBX", string extension = "fbx", string oldPath = null)
-		{
-			// NOTE: This must return a path with the starting "Assets/" or else textures won't copy right
-			
-			string name;
-			if (string.IsNullOrEmpty(oldPath))
-			{
-				oldPath = Application.dataPath;
-				name = gameObject.name;
-			} else
-				name = System.IO.Path.GetFileNameWithoutExtension(oldPath);
+        /// <summary>
+        /// Exports ANY Game Object given to it. Will provide a dialog and return the path of the newly exported file
+        /// </summary>
+        /// <returns>The path of the newly exported FBX file</returns>
+        /// <param name="gameObj">Game object to be exported</param>
+        /// <param name="copyMaterials">If set to <c>true</c> copy materials.</param>
+        /// <param name="copyTextures">If set to <c>true</c> copy textures.</param>
+        /// <param name="oldPath">Old path.</param>
+        public static string ExportGameObject(GameObject gameObj, bool exportColliders, bool copyMaterials, bool copyTextures, string oldPath = null)
+        {
+            if (gameObj == null)
+            {
+                EditorUtility.DisplayDialog("Object is null", "Please select any GameObject to Export to FBX", "Okay");
+                return null;
+            }
 
-			var newPath = EditorUtility.SaveFilePanel("Export " + typeName + " File", oldPath, name + "." + extension, extension);
-			
-			int assetsIndex = newPath.IndexOf("Assets");
-			
-			if(assetsIndex < 0)
-				return null;
-			
-			if(assetsIndex > 0)
-				newPath = newPath.Remove(0, assetsIndex);
-			
-			return newPath;
-		}
-	}
+            string newPath = GetNewPath(gameObj, oldPath);
+
+            if (newPath != null && newPath.Length != 0)
+            {
+                bool isSuccess = FBXExporter.ExportGameObjToFBX(gameObj, newPath, exportColliders, copyMaterials, copyTextures);
+
+                if (isSuccess)
+                {
+                    return newPath;
+                }
+                else
+                    EditorUtility.DisplayDialog("Warning", "The extension probably wasn't an FBX file, could not export.", "Okay");
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Creates save dialog window depending on old path or right to the /Assets folder no old path is given
+        /// </summary>
+        /// <returns>The new path.</returns>
+        /// <param name="gameObject">Item to be exported</param>
+        /// <param name="oldPath">The old path that this object was original at.</param>
+        public static string GetNewPath(GameObject gameObject, string typeName = "FBX", string extension = "fbx", string oldPath = null)
+        {
+            // NOTE: This must return a path with the starting "Assets/" or else textures won't copy right
+
+            string name;
+            if (string.IsNullOrEmpty(oldPath))
+            {
+                oldPath = Application.dataPath;
+                name = gameObject.name;
+            }
+            else
+                name = System.IO.Path.GetFileNameWithoutExtension(oldPath);
+
+            var newPath = EditorUtility.SaveFilePanel("Export " + typeName + " File", oldPath, name + "." + extension, extension);
+
+            int assetsIndex = newPath.IndexOf("Assets");
+
+            if (assetsIndex < 0)
+                return null;
+
+            if (assetsIndex > 0)
+                newPath = newPath.Remove(0, assetsIndex);
+
+            return newPath;
+        }
+    }
 }

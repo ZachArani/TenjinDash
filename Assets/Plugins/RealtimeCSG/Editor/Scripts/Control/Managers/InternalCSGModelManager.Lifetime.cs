@@ -1,138 +1,129 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
-using UnityEngine.SceneManagement;
-using UnityEditor.SceneManagement;
+﻿using InternalRealtimeCSG;
 using UnityEditor;
-using InternalRealtimeCSG;
-using System.Reflection;
-using UnityEngine.Rendering;
-using System.Runtime.InteropServices;
 
 namespace RealtimeCSG
 {
-	internal partial class InternalCSGModelManager
-	{
-		private static bool				_isInitialized	= false;
-		private static readonly object	_lockObj		= new object();
+    internal partial class InternalCSGModelManager
+    {
+        private static bool _isInitialized = false;
+        private static readonly object _lockObj = new object();
 
-		internal static NativeMethods External;
+        internal static NativeMethods External;
 
-		#region Clear
-		public static void Clear()
-		{
-			BrushOutlineManager.ClearOutlines();
-			ClearRegistration();
-			ClearCaches();
-			_isHierarchyModified = true;
-		}
-		#endregion
-		
-		#region InitOnNewScene
-		public static void InitOnNewScene()
-		{
-			if (EditorApplication.isPlayingOrWillChangePlaymode)
-			{
-				return;
-			}
+        #region Clear
+        public static void Clear()
+        {
+            BrushOutlineManager.ClearOutlines();
+            ClearRegistration();
+            ClearCaches();
+            _isHierarchyModified = true;
+        }
+        #endregion
 
-			if (External == null ||
-				External.ResetCSG == null)
-			{
-				NativeMethodBindings.RegisterUnityMethods();
-				NativeMethodBindings.RegisterExternalMethods();
-			}
+        #region InitOnNewScene
+        public static void InitOnNewScene()
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                return;
+            }
 
-			if (External == null)
-				return;
-			
-			if (RegisterAllComponents())
-				External.ResetCSG();
-		}
-		#endregion
+            if (External == null ||
+                External.ResetCSG == null)
+            {
+                NativeMethodBindings.RegisterUnityMethods();
+                NativeMethodBindings.RegisterExternalMethods();
+            }
 
-		#region Shutdown
-		public static void Shutdown()
-		{
-			SceneStates.Clear();
+            if (External == null)
+                return;
 
-			ClearRegistration();
-			ClearCaches();
+            if (RegisterAllComponents())
+                External.ResetCSG();
+        }
+        #endregion
 
-			_isInitialized = false;
-		}
-		#endregion
+        #region Shutdown
+        public static void Shutdown()
+        {
+            SceneStates.Clear();
 
-		#region UndoRedoPerformed
-		public static void UndoRedoPerformed()
-		{
-			BrushOutlineManager.ClearOutlines();
-			
-			CheckForChanges(forceHierarchyUpdate: true);
-		}
-		#endregion
-		
-		#region CheckForChanges
-		public static bool skipCheckForChanges = false;
-		public static void CheckForChanges(bool forceHierarchyUpdate = false)
-		{
-			if (EditorApplication.isPlayingOrWillChangePlaymode)
-				return;
+            ClearRegistration();
+            ClearCaches();
 
-			if (!forceHierarchyUpdate && skipCheckForChanges)
-				return;
-			
-			lock (_lockObj)
-			{ 
-				if (!_isInitialized)
-				{
-					RegisterAllComponents();
-					forceHierarchyUpdate = true;
-					_isInitialized = true;
-					
-					InternalCSGModelManager.OnHierarchyModified();
-					UpdateRemoteMeshes(); 
-				}
-				
-				forceHierarchyUpdate = InternalCSGModelManager.UpdateModelSettings() || forceHierarchyUpdate;
-				
-				// unfortunately this is the only reliable way I could find
-				// to determine when a transform is modified, either in 
-				// the inspector or the scene.
-				InternalCSGModelManager.CheckTransformChanged(forceHierarchyUpdate);
-				
-				if (_isHierarchyModified || forceHierarchyUpdate)
-				{
-					InternalCSGModelManager.OnHierarchyModified();
-					InternalCSGModelManager.OnHierarchyModified();
-					_isHierarchyModified = false;
-				}
+            _isInitialized = false;
+        }
+        #endregion
 
-				InternalCSGModelManager.UpdateMeshes();
-				MeshInstanceManager.UpdateHelperSurfaceVisibility();
-			}
-		}
-		#endregion
+        #region UndoRedoPerformed
+        public static void UndoRedoPerformed()
+        {
+            BrushOutlineManager.ClearOutlines();
 
-		#region ForceRebuildAll
-		public static void ForceRebuildAll()
-		{
-			Clear();
+            CheckForChanges(forceHierarchyUpdate: true);
+        }
+        #endregion
 
-			if (External == null ||
-				External.ResetCSG == null)
-			{
-				NativeMethodBindings.RegisterUnityMethods();
-				NativeMethodBindings.RegisterExternalMethods();
-			}
+        #region CheckForChanges
+        public static bool skipCheckForChanges = false;
+        public static void CheckForChanges(bool forceHierarchyUpdate = false)
+        {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+                return;
 
-			ClearMeshInstances();
+            if (!forceHierarchyUpdate && skipCheckForChanges)
+                return;
 
-			if (RegisterAllComponents())
-				External.ResetCSG();
+            lock (_lockObj)
+            {
+                if (!_isInitialized)
+                {
+                    RegisterAllComponents();
+                    forceHierarchyUpdate = true;
+                    _isInitialized = true;
 
-		}
-		#endregion
-	}
+                    InternalCSGModelManager.OnHierarchyModified();
+                    UpdateRemoteMeshes();
+                }
+
+                forceHierarchyUpdate = InternalCSGModelManager.UpdateModelSettings() || forceHierarchyUpdate;
+
+                // unfortunately this is the only reliable way I could find
+                // to determine when a transform is modified, either in 
+                // the inspector or the scene.
+                InternalCSGModelManager.CheckTransformChanged(forceHierarchyUpdate);
+
+                if (_isHierarchyModified || forceHierarchyUpdate)
+                {
+                    InternalCSGModelManager.OnHierarchyModified();
+                    InternalCSGModelManager.OnHierarchyModified();
+                    _isHierarchyModified = false;
+                }
+
+                InternalCSGModelManager.UpdateMeshes();
+                MeshInstanceManager.UpdateHelperSurfaceVisibility();
+            }
+        }
+        #endregion
+
+        #region ForceRebuildAll
+        public static void ForceRebuildAll()
+        {
+            Clear();
+
+            if (External == null ||
+                External.ResetCSG == null)
+            {
+                NativeMethodBindings.RegisterUnityMethods();
+                NativeMethodBindings.RegisterExternalMethods();
+            }
+
+            ClearMeshInstances();
+
+            if (RegisterAllComponents())
+                External.ResetCSG();
+
+        }
+        #endregion
+    }
 }

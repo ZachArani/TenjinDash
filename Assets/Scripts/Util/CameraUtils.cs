@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Timeline;
 
@@ -26,7 +24,7 @@ public class CameraUtils : MonoBehaviour, ITimeControl
     // Update is called once per frame
     void Update()
     {
-        if(isActive)
+        if (isActive)
         {
             /*circleTimer = circleTimer > 6.283 ?
                 0 : circleTimer + Time.deltaTime * speed;

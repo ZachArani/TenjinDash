@@ -4,10 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using UnityEditor;
-using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 namespace Assets.Scripts.FSM.States
 {
@@ -82,7 +79,7 @@ namespace Assets.Scripts.FSM.States
 
         [SerializeField]
         private List<string> _playerPosText;
-        public List<string> playerPosText { get { return _playerPosText; } private set { _playerPosText = value; } } 
+        public List<string> playerPosText { get { return _playerPosText; } private set { _playerPosText = value; } }
 
 
 
@@ -100,7 +97,7 @@ namespace Assets.Scripts.FSM.States
             UpdateStandingUI();
 
             //A little dirty (uses GetComponent in Update) TODO: Improve system
-            if(firstPlace.transform.position.x >= finishLinePos && StateManager.instance.currentState == GAME_STATE.RACE)
+            if (firstPlace.transform.position.x >= finishLinePos && StateManager.instance.currentState == GAME_STATE.RACE)
             {
                 StateManager.instance.TransitionTo(GAME_STATE.PHOTO_FINISH);
             }
@@ -108,7 +105,7 @@ namespace Assets.Scripts.FSM.States
 
         void startRace(GAME_STATE from, GAME_STATE to)
         {
-            if(to == GAME_STATE.RACE)
+            if (to == GAME_STATE.RACE)
             {
                 if (Options.instance.skipCountdown) //We need to enable the player cameras manually if we skipped countdown.
                 {
@@ -120,10 +117,10 @@ namespace Assets.Scripts.FSM.States
                 standings.ForEach(p => { p.enabled = true; p.isPreMove = true; p.GetComponent<Animator>().SetTrigger("startRace"); });
                 StartCoroutine(PreMove());
                 StateManager.instance.EnableRaceComponents(true);
-                
-                if(Options.instance.recordPlayerData)
+
+                if (Options.instance.recordPlayerData)
                 {
-                    StateManager.instance.players.ForEach(p => { p.GetComponent<InputRecorder>().enabled = true;});
+                    StateManager.instance.players.ForEach(p => { p.GetComponent<InputRecorder>().enabled = true; });
                 }
             }
         }
@@ -172,7 +169,7 @@ namespace Assets.Scripts.FSM.States
 
                     Debug.Log("Updated Standings!");
                 }
-                
+
             }
         }
 
@@ -180,7 +177,7 @@ namespace Assets.Scripts.FSM.States
         {
             yield return new WaitForSeconds(1);
             StateManager.instance.stateDictionary[GAME_STATE.COUNTDOWN].GetComponent<CountdownState>().countdownGUI.enabled = false;
-            yield return new WaitForSeconds(PreMoveTime-1);
+            yield return new WaitForSeconds(PreMoveTime - 1);
             Debug.Log("Exiting Premove");
             loserBoost = AddLoserBoost();
             winnerBoost = RemoveWinnerBoost();

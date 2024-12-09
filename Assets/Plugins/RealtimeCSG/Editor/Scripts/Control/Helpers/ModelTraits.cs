@@ -1,14 +1,12 @@
 ﻿using InternalRealtimeCSG;
-using UnityEditor;
 using RealtimeCSG.Components;
-using UnityEngine;
-using UnityEditor.SceneManagement;
-using System;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 
 namespace RealtimeCSG
 {
-	internal static class ModelTraits
+    internal static class ModelTraits
     {
         static bool IsObjectPartOfAsset(string assetPath, UnityEngine.Object obj)
         {
@@ -24,7 +22,7 @@ namespace RealtimeCSG
             if (!obj ||
                 string.IsNullOrEmpty(assetPath))
                 return false;
-            
+
             var objPath = AssetDatabase.GetAssetPath(obj);
             if (assetPath == objPath)
                 return false;
@@ -144,8 +142,8 @@ namespace RealtimeCSG
             if (!CSGPrefabUtility.IsPrefab(model))
                 return;
 
-            var asset       = CSGPrefabUtility.GetPrefabAsset(model.gameObject);
-            var assetPath   = AssetDatabase.GetAssetPath(asset);
+            var asset = CSGPrefabUtility.GetPrefabAsset(model.gameObject);
+            var assetPath = AssetDatabase.GetAssetPath(asset);
             foreach (var obj in objs)
             {
                 if (!obj)
@@ -192,10 +190,10 @@ namespace RealtimeCSG
 
         static HashSet<Mesh> oldMeshes = new HashSet<Mesh>();
         static HashSet<Mesh> newMeshes = new HashSet<Mesh>();
-        static List<GeneratedMeshInstance>      foundGeneratedMeshInstances = new List<GeneratedMeshInstance>();
-        static List<HelperSurfaceDescription>   foundHelperSurfaces         = new List<HelperSurfaceDescription>();
-        static HashSet<string>                  foundNestedPrefabs          = new HashSet<string>();
-        
+        static List<GeneratedMeshInstance> foundGeneratedMeshInstances = new List<GeneratedMeshInstance>();
+        static List<HelperSurfaceDescription> foundHelperSurfaces = new List<HelperSurfaceDescription>();
+        static HashSet<string> foundNestedPrefabs = new HashSet<string>();
+
 
         public static void OnPrefabSaving(GameObject obj)
         {
@@ -226,8 +224,8 @@ namespace RealtimeCSG
                 }
             }
 
-            var asset       = CSGPrefabUtility.GetPrefabAsset(obj);
-            var assetPath   = AssetDatabase.GetAssetPath(asset);
+            var asset = CSGPrefabUtility.GetPrefabAsset(obj);
+            var assetPath = AssetDatabase.GetAssetPath(asset);
 
             var assetObjects = AssetDatabase.LoadAllAssetsAtPath(assetPath);
             foreach (var assetObject in assetObjects)
@@ -317,75 +315,75 @@ namespace RealtimeCSG
             {
                 if (!CSGPrefabUtility.IsEditedInPrefabMode(model))
                     return false;
-			}
+            }
 #endif
-			// Does our model have a meshRenderer?
-			if (model.IsRenderable)
-			{
-				// If so, is it shadow-only?
-//				if (model.ShadowsOnly)
-//				{
-					// .. and do we need to show shadow-only surfaces?
-//					return CSGSettings.ShowCastShadowsSurfaces;
-//				}
+            // Does our model have a meshRenderer?
+            if (model.IsRenderable)
+            {
+                // If so, is it shadow-only?
+                //				if (model.ShadowsOnly)
+                //				{
+                // .. and do we need to show shadow-only surfaces?
+                //					return CSGSettings.ShowCastShadowsSurfaces;
+                //				}
 
-				// Otherwise, it is always rendering (with the exception of manually hidden surfaces)
-				return true;
-			}
+                // Otherwise, it is always rendering (with the exception of manually hidden surfaces)
+                return true;
+            }
 
-			// Is it a trigger and are we showing triggers?
-			if (model.IsTrigger && CSGSettings.ShowTriggerSurfaces)
-				return true;
+            // Is it a trigger and are we showing triggers?
+            if (model.IsTrigger && CSGSettings.ShowTriggerSurfaces)
+                return true;
 
-			// Check if it's a collider and are we showing colliders?
-			if (model.HaveCollider && CSGSettings.ShowColliderSurfaces)
-				return true;
+            // Check if it's a collider and are we showing colliders?
+            if (model.HaveCollider && CSGSettings.ShowColliderSurfaces)
+                return true;
 
-			// Otherwise see if we're showing surfaces culled by the CSG process ...
-			return CSGSettings.ShowCulledSurfaces;
-		}
+            // Otherwise see if we're showing surfaces culled by the CSG process ...
+            return CSGSettings.ShowCulledSurfaces;
+        }
 
-		public static RenderSurfaceType GetModelSurfaceType(CSGModel model)
-		{
-			if (model.IsRenderable) // if it's renderable then it's already being rendered using a MeshRenderer
-			{
-				// except if it's a shadow only surface, it has a MeshRenderer, but is not usually visible ...
-//				if (model.ShadowsOnly)
-//					return RenderSurfaceType.ShadowOnly;
+        public static RenderSurfaceType GetModelSurfaceType(CSGModel model)
+        {
+            if (model.IsRenderable) // if it's renderable then it's already being rendered using a MeshRenderer
+            {
+                // except if it's a shadow only surface, it has a MeshRenderer, but is not usually visible ...
+                //				if (model.ShadowsOnly)
+                //					return RenderSurfaceType.ShadowOnly;
 
-				return RenderSurfaceType.Normal;
-			}
+                return RenderSurfaceType.Normal;
+            }
 
-			if (model.IsTrigger)
-				return RenderSurfaceType.Trigger;
+            if (model.IsTrigger)
+                return RenderSurfaceType.Trigger;
 
-			if (model.HaveCollider)
-				return RenderSurfaceType.Collider;
+            if (model.HaveCollider)
+                return RenderSurfaceType.Collider;
 
-			return RenderSurfaceType.Culled;
-		}
+            return RenderSurfaceType.Culled;
+        }
 
-		public static bool NeedsRigidBody(CSGModel model)
+        public static bool NeedsRigidBody(CSGModel model)
         {
             if (!IsModelEditable(model))
                 return false;
 
-            var collidable			= model.HaveCollider;
-			var isTrigger			= collidable && model.IsTrigger;
-			var ownerStaticFlags	= GameObjectUtility.GetStaticEditorFlags(model.gameObject);
-			var batchingstatic		= (ownerStaticFlags & StaticEditorFlags.BatchingStatic) == StaticEditorFlags.BatchingStatic;
+            var collidable = model.HaveCollider;
+            var isTrigger = collidable && model.IsTrigger;
+            var ownerStaticFlags = GameObjectUtility.GetStaticEditorFlags(model.gameObject);
+            var batchingstatic = (ownerStaticFlags & StaticEditorFlags.BatchingStatic) == StaticEditorFlags.BatchingStatic;
 
-			return (batchingstatic || collidable) && !isTrigger;
-		}
+            return (batchingstatic || collidable) && !isTrigger;
+        }
 
-		public static bool NeedsStaticRigidBody(CSGModel model)
+        public static bool NeedsStaticRigidBody(CSGModel model)
         {
             if (!IsModelEditable(model))
                 return false;
 
             var ownerStaticFlags = GameObjectUtility.GetStaticEditorFlags(model.gameObject);
-			var batchingstatic = (ownerStaticFlags & StaticEditorFlags.BatchingStatic) == StaticEditorFlags.BatchingStatic;
-			return batchingstatic;
-		}
-	}
+            var batchingstatic = (ownerStaticFlags & StaticEditorFlags.BatchingStatic) == StaticEditorFlags.BatchingStatic;
+            return batchingstatic;
+        }
+    }
 }

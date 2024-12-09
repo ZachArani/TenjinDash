@@ -1,68 +1,69 @@
 ﻿//#define SHOW_GENERATED_MESHES
-using UnityEngine;
-using System.Collections.Generic;
-using UnityEditor.SceneManagement;
-using UnityEditor;
 using RealtimeCSG;
 using RealtimeCSG.Components;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
 
 namespace InternalRealtimeCSG
 {
-	internal sealed partial class MeshInstanceManager
-	{
-		public static void Export(CSGModel model, ExportType exportType, bool exportColliders)
-		{
-			string typeName;
-			string extension;
-			switch (exportType)
-			{
-				case ExportType.FBX: typeName = "FBX"; extension = @"fbx"; break;
-				default:
-				//case ExportType.UnityMesh:
-					typeName = "Mesh"; extension = @"prefab"; exportType = ExportType.UnityMesh; break;
-			}
-			var newPath = model.exportPath;
-			if (exportType != ExportType.UnityMesh)
-			{
-				newPath = UnityFBXExporter.ExporterMenu.GetNewPath(model.gameObject, typeName, extension, model.exportPath);
-				if (string.IsNullOrEmpty(newPath))
-					return;
-			}
+    internal sealed partial class MeshInstanceManager
+    {
+        public static void Export(CSGModel model, ExportType exportType, bool exportColliders)
+        {
+            string typeName;
+            string extension;
+            switch (exportType)
+            {
+                case ExportType.FBX: typeName = "FBX"; extension = @"fbx"; break;
+                default:
+                    //case ExportType.UnityMesh:
+                    typeName = "Mesh"; extension = @"prefab"; exportType = ExportType.UnityMesh; break;
+            }
+            var newPath = model.exportPath;
+            if (exportType != ExportType.UnityMesh)
+            {
+                newPath = UnityFBXExporter.ExporterMenu.GetNewPath(model.gameObject, typeName, extension, model.exportPath);
+                if (string.IsNullOrEmpty(newPath))
+                    return;
+            }
 
-			model.ShowGeneratedMeshes = false;
-			var foundModels = model.GetComponentsInChildren<CSGModel>(true);
-			for (var index = 0; index < foundModels.Length; index++)
-			{
-				if (!foundModels[index].ShowGeneratedMeshes)
-					continue;
-				foundModels[index].ShowGeneratedMeshes = false;
-				UpdateGeneratedMeshesVisibility(foundModels[index]);
-			}
+            model.ShowGeneratedMeshes = false;
+            var foundModels = model.GetComponentsInChildren<CSGModel>(true);
+            for (var index = 0; index < foundModels.Length; index++)
+            {
+                if (!foundModels[index].ShowGeneratedMeshes)
+                    continue;
+                foundModels[index].ShowGeneratedMeshes = false;
+                UpdateGeneratedMeshesVisibility(foundModels[index]);
+            }
 
-			GameObject tempExportObject;
+            GameObject tempExportObject;
 
-			if (!string.IsNullOrEmpty(model.exportPath))
-			{
-				tempExportObject = new GameObject(System.IO.Path.GetFileNameWithoutExtension(model.exportPath));
-				if (string.IsNullOrEmpty(tempExportObject.name))
-					tempExportObject.name = model.name;
-			} else
-				tempExportObject = new GameObject(model.name);
+            if (!string.IsNullOrEmpty(model.exportPath))
+            {
+                tempExportObject = new GameObject(System.IO.Path.GetFileNameWithoutExtension(model.exportPath));
+                if (string.IsNullOrEmpty(tempExportObject.name))
+                    tempExportObject.name = model.name;
+            }
+            else
+                tempExportObject = new GameObject(model.name);
 
-			tempExportObject.transform.position		= MathConstants.zeroVector3;
-			tempExportObject.transform.rotation		= MathConstants.identityQuaternion;
-			tempExportObject.transform.localScale	= MathConstants.oneVector3;
+            tempExportObject.transform.position = MathConstants.zeroVector3;
+            tempExportObject.transform.rotation = MathConstants.identityQuaternion;
+            tempExportObject.transform.localScale = MathConstants.oneVector3;
 
-			int colliderCounter = 1;
-			int shadowOnlyCounter = 1;
-			var materialMeshCounters = new Dictionary<Material, int>();
-			
-			var currentScene = model.gameObject.scene;
-			var foundMeshContainers = SceneQueryUtility.GetAllComponentsInScene<GeneratedMeshes>(currentScene);
-			var bounds = new AABB();
-			bounds.Reset();
-			var foundMeshFilters = new List<MeshFilter>();
-			var foundMeshColliders = new List<MeshCollider>();
+            int colliderCounter = 1;
+            int shadowOnlyCounter = 1;
+            var materialMeshCounters = new Dictionary<Material, int>();
+
+            var currentScene = model.gameObject.scene;
+            var foundMeshContainers = SceneQueryUtility.GetAllComponentsInScene<GeneratedMeshes>(currentScene);
+            var bounds = new AABB();
+            bounds.Reset();
+            var foundMeshFilters = new List<MeshFilter>();
+            var foundMeshColliders = new List<MeshCollider>();
             foreach (var meshContainer in foundMeshContainers)
             {
                 var owner = meshContainer.owner;
@@ -91,7 +92,8 @@ namespace InternalRealtimeCSG
                         if (!materialMeshCounters.TryGetValue(instance.RenderMaterial, out counter))
                         {
                             counter = 1;
-                        } else
+                        }
+                        else
                             counter++;
                     }
 
@@ -100,7 +102,8 @@ namespace InternalRealtimeCSG
                     {
                         //bounds.Extend(mesh.bounds.min);
                         //bounds.Extend(mesh.bounds.max);
-                    } else
+                    }
+                    else
                     {
                         var vertices = mesh.vertices;
                         for (int v = 0; v < vertices.Length; v++)
@@ -122,7 +125,8 @@ namespace InternalRealtimeCSG
                     if (surfaceType == RenderSurfaceType.Collider)
                     {
                         subObj.name = "no-material Mesh (" + colliderCounter + ") COLLIDER"; colliderCounter++;
-                    } else
+                    }
+                    else
                     {
                         if (surfaceType == RenderSurfaceType.ShadowOnly)
                         {
@@ -130,14 +134,16 @@ namespace InternalRealtimeCSG
                             var meshRenderer = subObj.GetComponent<MeshRenderer>();
                             if (meshRenderer)
                                 meshRenderer.sharedMaterial = MaterialUtility.DefaultMaterial;
-                        } else
+                        }
+                        else
                         {
                             Material renderMaterial = instance.RenderMaterial;
                             if (!renderMaterial)
                             {
                                 renderMaterial = MaterialUtility.DefaultMaterial;
                                 subObj.name = "missing-material Mesh (" + counter + ")"; counter++;
-                            } else
+                            }
+                            else
                                 subObj.name = renderMaterial.name + " Mesh (" + counter + ")"; counter++;
                             materialMeshCounters[instance.RenderMaterial] = counter;
                         }
@@ -154,254 +160,254 @@ namespace InternalRealtimeCSG
             }
 
             Undo.IncrementCurrentGroup();
-			var groupIndex = Undo.GetCurrentGroup();
-			Undo.SetCurrentGroupName("Exported model");
-			try
-			{
-				Vector3 position = model.transform.position;
-				if (float.IsInfinity(position.x) || float.IsNaN(position.x)) position.x = 0;
-				if (float.IsInfinity(position.y) || float.IsNaN(position.y)) position.y = 0;
-				if (float.IsInfinity(position.z) || float.IsNaN(position.z)) position.z = 0;
+            var groupIndex = Undo.GetCurrentGroup();
+            Undo.SetCurrentGroupName("Exported model");
+            try
+            {
+                Vector3 position = model.transform.position;
+                if (float.IsInfinity(position.x) || float.IsNaN(position.x)) position.x = 0;
+                if (float.IsInfinity(position.y) || float.IsNaN(position.y)) position.y = 0;
+                if (float.IsInfinity(position.z) || float.IsNaN(position.z)) position.z = 0;
 
-				Vector3 center = bounds.Center;
-				switch (model.originType)
-				{
-					default:
-					case OriginType.ModelCenter:	center = bounds.Center + position; break;
-					case OriginType.ModelPivot:		center = position; break;
-					case OriginType.WorldSpace:		center = Vector3.zero; break;
-				}
-				if (float.IsInfinity(center.x) || float.IsNaN(center.x)) center.x = 0;
-				if (float.IsInfinity(center.y) || float.IsNaN(center.y)) center.y = 0;
-				if (float.IsInfinity(center.z) || float.IsNaN(center.z)) center.z = 0;
-				
-				var modifiedMeshes = new Dictionary<Mesh, Mesh>();
-				foreach (var meshFilter in foundMeshFilters)
-				{
-					var mesh = meshFilter.sharedMesh;
-					if (!mesh.isReadable)
-					{
-						continue;
-					}
-					
-					Mesh newMesh;
-					if (!modifiedMeshes.TryGetValue(mesh, out newMesh))
-					{
-						newMesh = (Mesh)UnityEngine.Object.Instantiate(mesh);
-						var vertices = mesh.vertices;
-						for (int v = 0; v < vertices.Length; v++)
-						{
-							vertices[v] += position;
-							vertices[v] -= center;
-						}
-						newMesh.vertices = vertices;
-						newMesh.RecalculateBounds();
-						modifiedMeshes[mesh] = newMesh;
-					}
-					meshFilter.sharedMesh = newMesh;
-					meshFilter.transform.position = Vector3.zero;
-				}
-				
-				foreach (var meshCollider in foundMeshColliders)
-				{
-					var mesh = meshCollider.sharedMesh;
-					if (!mesh.isReadable)
-					{
-						continue;
-					}
-					
-					Mesh newMesh;
-					if (!modifiedMeshes.TryGetValue(mesh, out newMesh))
-					{
-						newMesh = (Mesh)UnityEngine.Object.Instantiate(mesh);
-						var vertices = mesh.vertices;
-						for (int v = 0; v < vertices.Length; v++)
-						{
-							vertices[v] += position;
-							vertices[v] -= center;
-						}
-						newMesh.vertices = vertices;
-						newMesh.RecalculateBounds();
-						modifiedMeshes[mesh] = newMesh;
-					}
-					meshCollider.sharedMesh = newMesh;
-					meshCollider.transform.position = Vector3.zero;
-				}
-				
-				UnityEngine.GameObject prefabObj;
-				GameObject modelGameObject;
-				switch (exportType)
-				{
-					case ExportType.FBX:
-					{
-						if (!UnityFBXExporter.FBXExporter.ExportGameObjToFBX(tempExportObject, newPath, exportColliders: exportColliders))
-						{
-							//InternalCSGModelManager.ClearMeshInstances();
-							EditorUtility.DisplayDialog("Warning", "Failed to export the FBX file.", "Ok");
-							return;
-						}
-						prefabObj = AssetDatabase.LoadAssetAtPath<UnityEngine.GameObject>(newPath);
+                Vector3 center = bounds.Center;
+                switch (model.originType)
+                {
+                    default:
+                    case OriginType.ModelCenter: center = bounds.Center + position; break;
+                    case OriginType.ModelPivot: center = position; break;
+                    case OriginType.WorldSpace: center = Vector3.zero; break;
+                }
+                if (float.IsInfinity(center.x) || float.IsNaN(center.x)) center.x = 0;
+                if (float.IsInfinity(center.y) || float.IsNaN(center.y)) center.y = 0;
+                if (float.IsInfinity(center.z) || float.IsNaN(center.z)) center.z = 0;
 
-						modelGameObject = CSGPrefabUtility.Instantiate(prefabObj);
-						
-						foreach (var renderer in modelGameObject.GetComponentsInChildren<MeshRenderer>())
-						{
-							var gameObject = renderer.gameObject;
-							if (gameObject.name.EndsWith("COLLIDER"))
-							{
-								var filter = gameObject.GetComponent<MeshFilter>();
-								var meshCollider = gameObject.AddComponent<MeshCollider>();
-								meshCollider.sharedMesh = filter.sharedMesh;
-								UnityEngine.Object.DestroyImmediate(renderer);
-								UnityEngine.Object.DestroyImmediate(filter);
-							}
-						}
-						model.exportPath = newPath;
-						break;
-					}
-					default:
-					//case ExportType.UnityMesh:
-					{
-						prefabObj = tempExportObject;// AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(newPath);
-						modelGameObject = tempExportObject;
+                var modifiedMeshes = new Dictionary<Mesh, Mesh>();
+                foreach (var meshFilter in foundMeshFilters)
+                {
+                    var mesh = meshFilter.sharedMesh;
+                    if (!mesh.isReadable)
+                    {
+                        continue;
+                    }
 
-						foreach (var meshFilter in tempExportObject.GetComponentsInChildren<MeshFilter>())
-						{
-							var mesh = meshFilter.sharedMesh;
-							mesh.name = tempExportObject.name;
-							meshFilter.mesh = mesh;
-						}
-						break;
-					}
-				}
+                    Mesh newMesh;
+                    if (!modifiedMeshes.TryGetValue(mesh, out newMesh))
+                    {
+                        newMesh = (Mesh)UnityEngine.Object.Instantiate(mesh);
+                        var vertices = mesh.vertices;
+                        for (int v = 0; v < vertices.Length; v++)
+                        {
+                            vertices[v] += position;
+                            vertices[v] -= center;
+                        }
+                        newMesh.vertices = vertices;
+                        newMesh.RecalculateBounds();
+                        modifiedMeshes[mesh] = newMesh;
+                    }
+                    meshFilter.sharedMesh = newMesh;
+                    meshFilter.transform.position = Vector3.zero;
+                }
 
+                foreach (var meshCollider in foundMeshColliders)
+                {
+                    var mesh = meshCollider.sharedMesh;
+                    if (!mesh.isReadable)
+                    {
+                        continue;
+                    }
 
-				model.exportPath = newPath;
+                    Mesh newMesh;
+                    if (!modifiedMeshes.TryGetValue(mesh, out newMesh))
+                    {
+                        newMesh = (Mesh)UnityEngine.Object.Instantiate(mesh);
+                        var vertices = mesh.vertices;
+                        for (int v = 0; v < vertices.Length; v++)
+                        {
+                            vertices[v] += position;
+                            vertices[v] -= center;
+                        }
+                        newMesh.vertices = vertices;
+                        newMesh.RecalculateBounds();
+                        modifiedMeshes[mesh] = newMesh;
+                    }
+                    meshCollider.sharedMesh = newMesh;
+                    meshCollider.transform.position = Vector3.zero;
+                }
 
-				if (exportType == ExportType.FBX && prefabObj)
-				{
-					foreach (var meshRenderer in prefabObj.GetComponentsInChildren<MeshRenderer>())
-					{
-						if (meshRenderer.sharedMaterials.Length != 1)
-							continue;
+                UnityEngine.GameObject prefabObj;
+                GameObject modelGameObject;
+                switch (exportType)
+                {
+                    case ExportType.FBX:
+                        {
+                            if (!UnityFBXExporter.FBXExporter.ExportGameObjToFBX(tempExportObject, newPath, exportColliders: exportColliders))
+                            {
+                                //InternalCSGModelManager.ClearMeshInstances();
+                                EditorUtility.DisplayDialog("Warning", "Failed to export the FBX file.", "Ok");
+                                return;
+                            }
+                            prefabObj = AssetDatabase.LoadAssetAtPath<UnityEngine.GameObject>(newPath);
 
-						var gameObject	= meshRenderer.gameObject;
-						var nameSplit	= gameObject.name.Split('|');
-						if (nameSplit.Length == 1)
-							continue;
+                            modelGameObject = CSGPrefabUtility.Instantiate(prefabObj);
 
-						int instanceId;
-						if (!int.TryParse(nameSplit[1], out instanceId))
-							continue;
+                            foreach (var renderer in modelGameObject.GetComponentsInChildren<MeshRenderer>())
+                            {
+                                var gameObject = renderer.gameObject;
+                                if (gameObject.name.EndsWith("COLLIDER"))
+                                {
+                                    var filter = gameObject.GetComponent<MeshFilter>();
+                                    var meshCollider = gameObject.AddComponent<MeshCollider>();
+                                    meshCollider.sharedMesh = filter.sharedMesh;
+                                    UnityEngine.Object.DestroyImmediate(renderer);
+                                    UnityEngine.Object.DestroyImmediate(filter);
+                                }
+                            }
+                            model.exportPath = newPath;
+                            break;
+                        }
+                    default:
+                        //case ExportType.UnityMesh:
+                        {
+                            prefabObj = tempExportObject;// AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(newPath);
+                            modelGameObject = tempExportObject;
 
-						var realMaterial = EditorUtility.InstanceIDToObject(instanceId) as Material;
-						if (!realMaterial)
-							continue;
-						
-						meshRenderer.sharedMaterial = realMaterial;
-						gameObject.name = nameSplit[0];
-					}
-				}
+                            foreach (var meshFilter in tempExportObject.GetComponentsInChildren<MeshFilter>())
+                            {
+                                var mesh = meshFilter.sharedMesh;
+                                mesh.name = tempExportObject.name;
+                                meshFilter.mesh = mesh;
+                            }
+                            break;
+                        }
+                }
 
 
-				var staticFlags = GameObjectUtility.GetStaticEditorFlags(model.gameObject);
-				var modelLayer = model.gameObject.layer;
-				foreach (var transform in modelGameObject.GetComponentsInChildren<Transform>())
-				{
-					var gameObject = transform.gameObject;
-					GameObjectUtility.SetStaticEditorFlags(gameObject, staticFlags);
-					gameObject.layer = modelLayer;
-				}
+                model.exportPath = newPath;
 
-				modelGameObject.transform.SetParent(model.transform, true);
-				modelGameObject.transform.SetSiblingIndex(0);
-				modelGameObject.tag						= model.gameObject.tag;
-				
-				modelGameObject.transform.localPosition = center - position; 
+                if (exportType == ExportType.FBX && prefabObj)
+                {
+                    foreach (var meshRenderer in prefabObj.GetComponentsInChildren<MeshRenderer>())
+                    {
+                        if (meshRenderer.sharedMaterials.Length != 1)
+                            continue;
 
-				
-				Undo.RegisterCreatedObjectUndo(modelGameObject, "Instantiated model");
+                        var gameObject = meshRenderer.gameObject;
+                        var nameSplit = gameObject.name.Split('|');
+                        if (nameSplit.Length == 1)
+                            continue;
 
+                        int instanceId;
+                        if (!int.TryParse(nameSplit[1], out instanceId))
+                            continue;
 
-				var exported = model.gameObject.AddComponent<CSGModelExported>();
-				exported.containedModel			= null;
-				exported.containedExportedModel = modelGameObject;
-				exported.disarm					= true;
-				Undo.RegisterCreatedObjectUndo (exported, "Created CSGModelExported");
-				Undo.RegisterCompleteObjectUndo(exported, "Created CSGModelExported");
+                        var realMaterial = EditorUtility.InstanceIDToObject(instanceId) as Material;
+                        if (!realMaterial)
+                            continue;
 
-
-				var foundBrushes	= model.GetComponentsInChildren<CSGBrush>(true);
-				var foundOperations = model.GetComponentsInChildren<CSGOperation>(true);
-				var foundContainers = model.GetComponentsInChildren<GeneratedMeshes>(true);
-
-				var foundBehaviours = new HashSet<MonoBehaviour>();
-					
-				foreach (var foundBrush		in foundBrushes	  ) foundBehaviours.Add(foundBrush);
-				foreach (var foundOperation in foundOperations) foundBehaviours.Add(foundOperation);
-				foreach (var foundModel		in foundModels	  ) foundBehaviours.Add(foundModel);
-				foreach (var foundContainer in foundContainers) foundBehaviours.Add(foundContainer);
+                        meshRenderer.sharedMaterial = realMaterial;
+                        gameObject.name = nameSplit[0];
+                    }
+                }
 
 
-				exported.hiddenComponents = new HiddenComponentData[foundBehaviours.Count];
-				var index = 0;
-				foreach (var foundBehaviour in foundBehaviours)
-				{
-					Undo.RegisterCompleteObjectUndo(foundBehaviour, "Hide component");
-					exported.hiddenComponents[index] = new HiddenComponentData {behaviour = foundBehaviour};
-					index++;
-				}
+                var staticFlags = GameObjectUtility.GetStaticEditorFlags(model.gameObject);
+                var modelLayer = model.gameObject.layer;
+                foreach (var transform in modelGameObject.GetComponentsInChildren<Transform>())
+                {
+                    var gameObject = transform.gameObject;
+                    GameObjectUtility.SetStaticEditorFlags(gameObject, staticFlags);
+                    gameObject.layer = modelLayer;
+                }
 
-				for (var i = 0; i < exported.hiddenComponents.Length; i++)
-				{
-					exported.hiddenComponents[i].hideFlags	= exported.hiddenComponents[i].behaviour.hideFlags;
-					exported.hiddenComponents[i].enabled	= exported.hiddenComponents[i].behaviour.enabled;
-				}
-				
-				for (var i = 0; i < exported.hiddenComponents.Length; i++)
-				{
-					exported.hiddenComponents[i].behaviour.hideFlags	= exported.hiddenComponents[i].behaviour.hideFlags | ComponentHideFlags;
-					exported.hiddenComponents[i].behaviour.enabled		= false;
-				}
+                modelGameObject.transform.SetParent(model.transform, true);
+                modelGameObject.transform.SetSiblingIndex(0);
+                modelGameObject.tag = model.gameObject.tag;
 
-				EditorSceneManager.MarkSceneDirty(currentScene);
-				Undo.CollapseUndoOperations(groupIndex);
-				groupIndex = 0;
-				exported.disarm = false;
-			}
-			finally
-			{
-				switch (exportType)
-				{
-					case ExportType.FBX:
-					{
-						UnityEngine.Object.DestroyImmediate(tempExportObject);
-						break;
-					}
-				}
-				if (groupIndex != 0)
-					Undo.CollapseUndoOperations(groupIndex);
-			}
-		}
+                modelGameObject.transform.localPosition = center - position;
 
-		public static void ReverseExport(CSGModelExported exported)
-		{
-			if (exported.hiddenComponents != null)
-			{
-				for (var i = exported.hiddenComponents.Length - 1; i >= 0; i--)
-				{
-					if (!exported.hiddenComponents[i].behaviour)
-						continue;
-					
-					Undo.RegisterCompleteObjectUndo(exported.hiddenComponents[i].behaviour, "Show hidden component");
-					exported.hiddenComponents[i].behaviour.enabled = exported.hiddenComponents[i].enabled;
-					exported.hiddenComponents[i].behaviour.hideFlags = exported.hiddenComponents[i].hideFlags;
-				}
-			}
-			if (exported.containedExportedModel)
-			{
-				UnityEditor.Undo.DestroyObjectImmediate(exported.containedExportedModel);
-			}
-		}
-	}
+
+                Undo.RegisterCreatedObjectUndo(modelGameObject, "Instantiated model");
+
+
+                var exported = model.gameObject.AddComponent<CSGModelExported>();
+                exported.containedModel = null;
+                exported.containedExportedModel = modelGameObject;
+                exported.disarm = true;
+                Undo.RegisterCreatedObjectUndo(exported, "Created CSGModelExported");
+                Undo.RegisterCompleteObjectUndo(exported, "Created CSGModelExported");
+
+
+                var foundBrushes = model.GetComponentsInChildren<CSGBrush>(true);
+                var foundOperations = model.GetComponentsInChildren<CSGOperation>(true);
+                var foundContainers = model.GetComponentsInChildren<GeneratedMeshes>(true);
+
+                var foundBehaviours = new HashSet<MonoBehaviour>();
+
+                foreach (var foundBrush in foundBrushes) foundBehaviours.Add(foundBrush);
+                foreach (var foundOperation in foundOperations) foundBehaviours.Add(foundOperation);
+                foreach (var foundModel in foundModels) foundBehaviours.Add(foundModel);
+                foreach (var foundContainer in foundContainers) foundBehaviours.Add(foundContainer);
+
+
+                exported.hiddenComponents = new HiddenComponentData[foundBehaviours.Count];
+                var index = 0;
+                foreach (var foundBehaviour in foundBehaviours)
+                {
+                    Undo.RegisterCompleteObjectUndo(foundBehaviour, "Hide component");
+                    exported.hiddenComponents[index] = new HiddenComponentData { behaviour = foundBehaviour };
+                    index++;
+                }
+
+                for (var i = 0; i < exported.hiddenComponents.Length; i++)
+                {
+                    exported.hiddenComponents[i].hideFlags = exported.hiddenComponents[i].behaviour.hideFlags;
+                    exported.hiddenComponents[i].enabled = exported.hiddenComponents[i].behaviour.enabled;
+                }
+
+                for (var i = 0; i < exported.hiddenComponents.Length; i++)
+                {
+                    exported.hiddenComponents[i].behaviour.hideFlags = exported.hiddenComponents[i].behaviour.hideFlags | ComponentHideFlags;
+                    exported.hiddenComponents[i].behaviour.enabled = false;
+                }
+
+                EditorSceneManager.MarkSceneDirty(currentScene);
+                Undo.CollapseUndoOperations(groupIndex);
+                groupIndex = 0;
+                exported.disarm = false;
+            }
+            finally
+            {
+                switch (exportType)
+                {
+                    case ExportType.FBX:
+                        {
+                            UnityEngine.Object.DestroyImmediate(tempExportObject);
+                            break;
+                        }
+                }
+                if (groupIndex != 0)
+                    Undo.CollapseUndoOperations(groupIndex);
+            }
+        }
+
+        public static void ReverseExport(CSGModelExported exported)
+        {
+            if (exported.hiddenComponents != null)
+            {
+                for (var i = exported.hiddenComponents.Length - 1; i >= 0; i--)
+                {
+                    if (!exported.hiddenComponents[i].behaviour)
+                        continue;
+
+                    Undo.RegisterCompleteObjectUndo(exported.hiddenComponents[i].behaviour, "Show hidden component");
+                    exported.hiddenComponents[i].behaviour.enabled = exported.hiddenComponents[i].enabled;
+                    exported.hiddenComponents[i].behaviour.hideFlags = exported.hiddenComponents[i].hideFlags;
+                }
+            }
+            if (exported.containedExportedModel)
+            {
+                UnityEditor.Undo.DestroyObjectImmediate(exported.containedExportedModel);
+            }
+        }
+    }
 }
