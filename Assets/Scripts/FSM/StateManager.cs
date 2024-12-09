@@ -156,6 +156,11 @@ public class StateManager : MonoBehaviour
         });
     }
 
+    public void OnApplicationQuit()
+    {
+        StopAllCoroutines();
+    }
+
 }
 
 

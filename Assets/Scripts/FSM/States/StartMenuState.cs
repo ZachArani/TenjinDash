@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.UI;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -10,7 +11,6 @@ namespace Assets.Scripts
     /// </summary>
     public class StartMenuState : MonoBehaviour
     {
-
         /// <summary>
         /// Timeline that controls the start menu cutscene
         /// </summary>
@@ -43,6 +43,7 @@ namespace Assets.Scripts
                 startMenuTimeline.Play();
                 UIManager.instance.toggleStartUI(true);
                 Cursor.visible = true;
+                UIManager.instance.UpdateJoyConStatus();
             }
             else if (from == GAME_STATE.START_MENU)
             {

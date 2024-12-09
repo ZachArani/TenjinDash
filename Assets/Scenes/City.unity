@@ -793,7 +793,7 @@ Camera:
   m_FOVAxisMode: 0
   m_SensorSize: {x: 36, y: 24}
   m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 25
+  m_FocalLength: 20.78461
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -802,7 +802,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 51.28201
+  field of view: 60.000004
   orthographic: 0
   orthographic size: 15.3
   m_Depth: 0
@@ -827,8 +827,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 138246238}
-  m_LocalRotation: {x: 0.24897765, y: 0.46355888, z: -0.13753557, w: 0.83917063}
-  m_LocalPosition: {x: -408.50098, y: -28.867462, z: -560.2258}
+  m_LocalRotation: {x: 0.1904885, y: 0.49820486, z: -0.11321271, w: 0.8382655}
+  m_LocalPosition: {x: -408.63855, y: -28.867462, z: -564.16705}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17204,43 +17204,13 @@ MonoBehaviour:
   slipstreamInc: 0.000058
   loserBoostWait: 2
   winnerBoostWait: 3
-  PreMoveTime: 3
+  openingTime: 3
   p1Won: 0
   finishLinePos: -1005
-  autoFiles:
-  - {fileID: 4900000, guid: 803bb10d6b9bbfb4393d241c57b6ed8d, type: 3}
-  - {fileID: 4900000, guid: 9cd7dd8065cd1c2409795b9405486d3f, type: 3}
-  - {fileID: 4900000, guid: 7c0351c405463b940803f075559faa43, type: 3}
-  preMoveCurve:
+  autoRunFiles: []
+  openingCurve:
     serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0.003831533
-      outSlope: 0.003831533
-      tangentMode: 0
-      weightedMode: 3
-      inWeight: 0
-      outWeight: 0.45926213
-    - serializedVersion: 3
-      time: 0.25159013
-      value: 0
-      inSlope: -0
-      outSlope: 9.176136
-      tangentMode: 5
-      weightedMode: 3
-      inWeight: 0.23819192
-      outWeight: 0.02598964
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1.3361663
-      outSlope: 1.3361663
-      tangentMode: 34
-      weightedMode: 1
-      inWeight: 0.33333334
-      outWeight: 0
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -18991,6 +18961,7 @@ MonoBehaviour:
   countdown: {fileID: 1057728663}
   screenSplitter: {fileID: 1599621878}
   finishText: {fileID: 1344596701}
+  joyCons: {fileID: 1642443885}
 --- !u!1 &1230135819
 GameObject:
   m_ObjectHideFlags: 0
@@ -20211,6 +20182,8 @@ MonoBehaviour:
   target: {fileID: 679263049}
   radius: 8
   speed: 22
+  circleTimer: 0
+  isActive: 0
 --- !u!1 &1394852838
 GameObject:
   m_ObjectHideFlags: 3
@@ -20675,7 +20648,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1537760888}
-  m_LocalRotation: {x: 0.1904885, y: 0.49820486, z: -0.1132127, w: 0.8382655}
+  m_LocalRotation: {x: 0.1904885, y: 0.49820486, z: -0.11321271, w: 0.8382655}
   m_LocalPosition: {x: -408.63855, y: -28.867462, z: -564.16705}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -21515,6 +21488,7 @@ MonoBehaviour:
   - {fileID: 677470225}
   - {fileID: 2091541682}
   currentState: 0
+  currentStateObject: {fileID: 0}
   stateDictionary:
     _serializedList:
     - Key: 1
@@ -21529,7 +21503,6 @@ MonoBehaviour:
       Value: {fileID: 462989455}
     - Key: 6
       Value: {fileID: 974755357}
-  currentStateObject: {fileID: 0}
   _players:
   - {fileID: 1025176338}
   - {fileID: 1972611484}
@@ -22744,7 +22717,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091541679}
-  m_LocalRotation: {x: 0.1904885, y: 0.49820486, z: -0.1132127, w: 0.8382655}
+  m_LocalRotation: {x: 0.1904885, y: 0.49820486, z: -0.11321271, w: 0.8382655}
   m_LocalPosition: {x: -408.63855, y: -28.867462, z: -564.16705}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

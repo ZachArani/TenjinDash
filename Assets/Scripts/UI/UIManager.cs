@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEditor.Profiling.Memory.Experimental;
+using UnityEngine;
 
 namespace Assets.Scripts.UI
 {
@@ -20,6 +22,7 @@ namespace Assets.Scripts.UI
         [SerializeField] GameObject countdown;
         [SerializeField] GameObject screenSplitter;
         [SerializeField] GameObject finishText;
+        [SerializeField] GameObject joyCons;
 
         /// <summary>
         /// Used to ensure singleton is properly loaded. Either creates one instance or kills any other instance.
@@ -39,7 +42,6 @@ namespace Assets.Scripts.UI
 
         void Start()
         {
-
         }
 
         // Update is called once per frame
@@ -87,6 +89,32 @@ namespace Assets.Scripts.UI
             toggleCountdownUI(false);
             toggleScreenSplitter(false);
             toggleFinishText(false);
+        }
+
+        /// <summary>
+        /// Checks how many joycons are connected every three seconds.
+        /// Updates JoyCon UI element on start menu.
+        /// Needs to be started and stopped as a Unity Coroutine.
+        /// </summary>
+        /// <returns>IEnumerator for Unity Coroutine use</returns>
+        public void UpdateJoyConStatus()
+        {
+            Debug.Log($"Checking Joycon Status! {JoyconManager.Instance.j.Count} connected!");
+            switch (JoyconManager.Instance.j.Count)
+            {
+                case 1: //One joycon connected
+                    joyCons.transform.GetChild(0).gameObject.SetActive(true);
+                    joyCons.transform.GetChild(1).gameObject.SetActive(false);
+                    break;
+                case 0: //No joycons
+                    joyCons.transform.GetChild(0).gameObject.SetActive(false);
+                    joyCons.transform.GetChild(1).gameObject.SetActive(false);
+                    break;
+                default: //In 2 or more:
+                    joyCons.transform.GetChild(0).gameObject.SetActive(true);
+                    joyCons.transform.GetChild(1).gameObject.SetActive(true);
+                    break;
+            }
         }
     }
 }
