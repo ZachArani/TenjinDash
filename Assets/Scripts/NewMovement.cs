@@ -229,7 +229,7 @@ public class NewMovement : MonoBehaviour
         //We need to slow down!
         else if (currentSpeed > targetSpeed)
         {
-            t -= (t - Time.deltaTime * delta_t >= 0) ? Time.deltaTime * delta_t : 0;
+            t -= (t - Time.deltaTime * delta_t >= 0) ? Time.deltaTime * delta_t : 0; //Cap off value at 0.
             isAccelerating = false;
             if (t >= 0.5f)
             {
@@ -241,8 +241,8 @@ public class NewMovement : MonoBehaviour
                 curveValue = Math.Round((double)dccCurve.Evaluate(t), 4);
             }
         }
-        currentSpeed = (float)(curveValue) * raceManager.maxSpeed;
-        runningTrack.m_Speed = currentSpeed;
+        currentSpeed = (float)(curveValue) * raceManager.maxSpeed; //Set relative to current Max speed.
+        runningTrack.m_Speed = currentSpeed; //This controls actual movement (via dolly track)
 
         animator.SetFloat("runningSpeed", currentSpeed);
         animator.SetBool("isAccelerating", isAccelerating);
