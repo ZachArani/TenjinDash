@@ -82,6 +82,10 @@ public class Options : MonoBehaviour
     {
     }
 
+    /// <summary>
+    /// Calculates the starting state for the game based on the selected options.
+    /// </summary>
+    /// <returns>The correct game starting based on options selected</returns>
     public GAME_STATE GetStartingState()
     {
         bool[] skipOptions = { skipMenu, skipPreroll, skipCountdown, skipRace, skipPhotoFinish, skipFinishMenu };

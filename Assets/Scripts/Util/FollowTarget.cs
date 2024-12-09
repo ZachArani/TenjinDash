@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Util class for following a camera's target.
+/// </summary>
 public class FollowTarget : MonoBehaviour
 {
     // Start is called before the first frame update

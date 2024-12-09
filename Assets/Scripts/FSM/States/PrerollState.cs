@@ -4,6 +4,9 @@ using UnityEngine.Playables;
 
 namespace Assets.Scripts.FSM.States
 {
+    /// <summary>
+    /// FSM state for the pre-race cutscenes.-
+    /// </summary>
     public class PrerollState : MonoBehaviour
     {
         public PlayableDirector preRollTimeline;
@@ -19,7 +22,12 @@ namespace Assets.Scripts.FSM.States
 
         }
 
-
+        /// <summary>
+        /// Starts PreRoll state. 
+        /// Handles event fired by <see cref="StateManager.onGameStateChanged"/>
+        /// </summary>
+        /// <param name="from">State we transitioned from</param>
+        /// <param name="to">State we're going to. Always this (PreRoll) state in this case.</param>
         private void StartPreRoll(GAME_STATE from, GAME_STATE to)
         {
             if (to == GAME_STATE.PREROLL)
@@ -30,6 +38,10 @@ namespace Assets.Scripts.FSM.States
             }
         }
 
+        /// <summary>
+        /// Handle preroll ending.
+        /// Transition to next state.
+        /// </summary>
         public void FinishedPreRoll()
         {
             Debug.Log("FINISHED PREROLL!");

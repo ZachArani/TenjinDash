@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Utility class to maintain joycon references.
+/// </summary>
 public class JoyconReceiver : MonoBehaviour
 {
     [ReadOnly]

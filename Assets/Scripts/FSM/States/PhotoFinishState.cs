@@ -4,6 +4,9 @@ using UnityEngine.Playables;
 
 namespace Assets.Scripts.FSM.States
 {
+    /// <summary>
+    /// FSM state for the photo-finish mode at the race's end.
+    /// </summary>
     public class PhotoFinishState : MonoBehaviour
     {
 
@@ -18,19 +21,25 @@ namespace Assets.Scripts.FSM.States
 
         }
 
+        /// <summary>
+        /// Starts PhotoFinish state
+        /// Handles event fired by <see cref="StateManager.onGameStateChanged"/>
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
         void StartPhotoFinish(GAME_STATE from, GAME_STATE to)
         {
             if (to == GAME_STATE.PHOTO_FINISH)
             {
+                //Enable our various components (in case we skipped here via debug statements)
                 var raceManager = StateManager.instance.stateDictionary[GAME_STATE.RACE].GetComponent<RaceState>();
-                StateManager.instance.EnableRaceComponents(true);
+                StateManager.instance.EnableRaceComponents(true); 
                 StateManager.instance.players.ForEach(p =>
                 {
                     p.isPhotoFinish = true;
                     p.targetSpeed = p.targetSpeed > 0 ? p.targetSpeed : raceManager.maxSpeed; //In case they weren't running beforehand (i.e. we skipped here through menu options)
                     p.currentSpeed = p.currentSpeed > 0 ? p.currentSpeed : raceManager.maxSpeed;
                     p.GetComponent<Animator>().Play("RunTree");
-                    //p.GetComponent<CinemachineDollyCart>().m_Position = 545;
                 });
                 StateManager.instance.DisableRaceCameras();
                 UIManager.instance.toggleRaceUI(false);
@@ -40,6 +49,9 @@ namespace Assets.Scripts.FSM.States
             }
         }
 
+        /// <summary>
+        /// End photoFinish (transition to next state)
+        /// </summary>
         public void EndPhotoFinish()
         {
             UIManager.instance.toggleFinishText(false);
@@ -47,6 +59,10 @@ namespace Assets.Scripts.FSM.States
             photoFinishTimeline.Stop();
         }
 
+        /// <summary>
+        /// Stop the player running animations. 
+        /// Lets player animators transition to winning/losing animations.
+        /// </summary>
         public void StopRunning()
         {
             StateManager.instance.players.ForEach(p =>
@@ -55,6 +71,9 @@ namespace Assets.Scripts.FSM.States
             });
         }
 
+        /// <summary>
+        /// Shows finished UI element on screen
+        /// </summary>
         public void ShowFinishText()
         {
             UIManager.instance.toggleFinishText(true);

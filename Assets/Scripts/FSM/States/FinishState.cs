@@ -27,6 +27,11 @@ namespace Assets.Scripts.FSM.States
 
         }
 
+        /// <summary>
+        /// Handles event fired by <see cref="StateManager.onGameStateChanged"/>
+        /// </summary>
+        /// <param name="from">State we came from</param>
+        /// <param name="to">State we're at (this one)</param>
         void StartFinish(GAME_STATE from, GAME_STATE to)
         {
             if (to == GAME_STATE.FINISH)
@@ -69,6 +74,9 @@ namespace Assets.Scripts.FSM.States
             finishedTimeline.Stop();
         }
 
+        /// <summary>
+        /// Handles any sort of 'clean up' that needs to be done before restarting the game.
+        /// </summary>
         public void cleanUp()
         {
             raceManager.standings.ForEach(p =>

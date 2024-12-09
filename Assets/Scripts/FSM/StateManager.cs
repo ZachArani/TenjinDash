@@ -24,19 +24,23 @@ public class StateManager : MonoBehaviour
     [field: SerializeField] public List<Camera> playerCams;
 
     /// <summary>
-    /// Event that triggers whenever the FSM changes state
+    /// Event that triggers whenever the FSM changes state.
+    /// Event handled by each state.
     /// </summary>
     public static event Action<GAME_STATE, GAME_STATE> onGameStateChanged;
 
     [ReadOnly]
     public GAME_STATE currentState;
 
-    [SerializedDictionary("State Enum", "GameObject")]
-    public SerializedDictionary<GAME_STATE, GameObject> stateDictionary;
-
     [ReadOnly]
     public GameObject currentStateObject;
 
+    /// <summary>
+    /// Translates <see cref="GAME_STATE"/> enum values to real gameObjects.
+    /// Can be referenced by other classes as needed.
+    /// </summary>
+    [SerializedDictionary("State Enum", "GameObject")]
+    public SerializedDictionary<GAME_STATE, GameObject> stateDictionary;
 
     /// <summary>
     /// List containing all players (through their NewMovement Component) in the race.
@@ -56,7 +60,6 @@ public class StateManager : MonoBehaviour
     public int numPlayers => _players.Count;
 
 
-    public Stopwatch stateStopwatch;
 
     /// <summary>
     /// Used to ensure singleton is properly loaded. Either creates one instance or kills any other instance.
@@ -77,7 +80,6 @@ public class StateManager : MonoBehaviour
     void Start()
     {
         currentState = Options.instance.GetStartingState();
-        stateStopwatch = new Stopwatch();
 
         Initialize(currentState);
     }
@@ -91,13 +93,12 @@ public class StateManager : MonoBehaviour
         currentState = startingState;
         currentStateObject = stateDictionary[currentState];
         Debug.Log($"STARTING GAME WITH {currentState} STATE.");
-        stateStopwatch.Start();
         onGameStateChanged.Invoke(GAME_STATE.NONE, currentState);
     }
 
     /// <summary>
     /// Transitions the state machine to a new state. 
-    /// Triggers onGameStateChanged event, which allows a subscribed state object the handle the transition.
+    /// Triggers <see cref="onGameStateChanged"/> event, which allows a subscribed state object to handle the transition.
     /// Obviously this requires states to be on good behavior, but we assume the best of our programming here...
     /// </summary>
     /// <param name="nextState">Next state to transition to</param>
@@ -107,7 +108,6 @@ public class StateManager : MonoBehaviour
         onGameStateChanged.Invoke(currentState, nextState);
         currentState = nextState;
         currentStateObject = stateDictionary[currentState];
-        stateStopwatch.Restart();
     }
 
     /// <summary>
@@ -128,6 +128,10 @@ public class StateManager : MonoBehaviour
         playerCams.ForEach(c => c.enabled = false);
     }
 
+    /// <summary>
+    /// Enable all player components used in racing 
+    /// </summary>
+    /// <param name="doEnable"></param>
     public void EnableRaceComponents(bool doEnable)
     {
         players.ForEach(p =>
@@ -137,6 +141,10 @@ public class StateManager : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// Enables any components used in recording player data.
+    /// </summary>
+    /// <param name="doEnable"></param>
     public void EnableRecorders(bool doEnable)
     {
         players.ForEach(p =>

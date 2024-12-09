@@ -1,7 +1,17 @@
 using UnityEngine;
 
+/// <summary>
+/// Misc. Util functions.
+/// </summary>
 public class UtilFunctions
 {
+    /// <summary>
+    /// Check if two values are 'close enough' to be equal.
+    /// </summary>
+    /// <param name="a">Value A</param>
+    /// <param name="b">Value B</param>
+    /// <param name="epsilon">How different A can be from B.</param>
+    /// <returns></returns>
     public static bool NearlyEqual(float a, float b, float epsilon)
     {
         float absA = Mathf.Abs(a);

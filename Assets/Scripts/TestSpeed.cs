@@ -1,5 +1,9 @@
 using UnityEngine;
 
+/// <summary>
+/// Scratchpad script for testing player speed ideas.
+/// Not for use in prod.
+/// </summary>
 public class TestSpeed : MonoBehaviour
 {
 
@@ -17,14 +21,14 @@ public class TestSpeed : MonoBehaviour
     public float desiredSpeed = 0f;
 
     /// <summary>
-    /// The speed the player character is *actually* running at
-    /// Desired speed will shift this value over time to produce a smooth movement.
+    /// The rotationSpeed the player character is *actually* running at
+    /// Desired rotationSpeed will shift this value over time to produce a smooth movement.
     /// </summary>
     public float currentSpeed = 0f;
 
 
     /// <summary>
-    /// Maximum amount that the t value (used in the lerping equations for speed) can change
+    /// Maximum amount that the t value (used in the lerping equations for rotationSpeed) can change
     /// Basically, defines how fast the character can accelerate
     /// If there wasn't a max cap to the t value changes, then a character might go from 0 to 100 in an instant.
     /// </summary>
@@ -57,6 +61,6 @@ public class TestSpeed : MonoBehaviour
             t -= maxTChange * Time.deltaTime; //Lower our t value 
         }
         Mathf.Clamp(t, 0, 1); //Force t to be between 0 and 1
-        currentSpeed = speedCurve.Evaluate(t); //Convert t value into speed based on animation curve. 
+        currentSpeed = speedCurve.Evaluate(t); //Convert t value into rotationSpeed based on animation curve. 
     }
 }

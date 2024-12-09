@@ -32,9 +32,10 @@ namespace Assets.Scripts
         /// Updates the start menu's visibility
         /// If we are transitioning *to* StartMenu, then we show the UI elements
         /// Else if we are transitioning *away* from StartMenu, then we hide the UI elements
+        /// Handles event fired by <see cref="StateManager.onGameStateChanged"/>
         /// </summary>
         /// <param name="from">State we transition from</param>
-        /// <param name="to">State we transition to</param>
+        /// <param name="to">State we transition to (this one)</param>
         public void UpdateMenuVisibility(GAME_STATE from, GAME_STATE to)
         {
             if (to == GAME_STATE.START_MENU)

@@ -2,6 +2,9 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
+/// <summary>
+/// Util class for writing files based on player data.
+/// </summary>
 public class FileWriter : MonoBehaviour
 {
 

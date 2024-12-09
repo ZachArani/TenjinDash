@@ -2,6 +2,9 @@ using System.IO;
 using System.Text;
 using UnityEngine;
 
+/// <summary>
+/// Util class for recording data input from Joy-Cons.
+/// </summary>
 public class InputRecorder : MonoBehaviour
 {
 
@@ -22,6 +25,9 @@ public class InputRecorder : MonoBehaviour
     {
     }
 
+    /// <summary>
+    /// Get Joy-Con data. Append data to buffer.
+    /// </summary>
     private void FixedUpdate()
     {
         var gyro = joycon.GetGyro();

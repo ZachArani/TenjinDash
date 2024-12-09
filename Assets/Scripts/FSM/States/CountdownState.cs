@@ -38,6 +38,12 @@ namespace Assets.Scripts.FSM.States
 
         }
 
+
+        /// <summary>
+        /// Handles event fired by <see cref="StateManager.onGameStateChanged"/>
+        /// </summary>
+        /// <param name="from">State we came from</param>
+        /// <param name="to">State we're at (this one).</param>
         void StartCountdown(GAME_STATE from, GAME_STATE to)
         {
             if (to == GAME_STATE.COUNTDOWN)
@@ -56,6 +62,10 @@ namespace Assets.Scripts.FSM.States
             }
         }
 
+        /// <summary>
+        /// Update countdown UI in-game
+        /// Runs every second via timeline signals
+        /// </summary>
         public void UpdateCountdown()
         {
             countdownGUI.text = countdown.ToString();
