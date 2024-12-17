@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using UnityEditor.Profiling.Memory.Experimental;
 using UnityEngine;
 
 namespace Assets.Scripts.UI
@@ -23,6 +22,7 @@ namespace Assets.Scripts.UI
         [SerializeField] GameObject screenSplitter;
         [SerializeField] GameObject finishText;
         [SerializeField] GameObject joyCons;
+        [SerializeField] GameObject speedMeters;
 
         /// <summary>
         /// Used to ensure singleton is properly loaded. Either creates one instance or kills any other instance.
@@ -50,45 +50,69 @@ namespace Assets.Scripts.UI
 
         }
 
-        public void toggleStartUI(bool toggle)
+        public void ToggleStartUI(bool toggle)
         {
             startMenu.SetActive(toggle);
         }
 
-        public void toggleFinishUI(bool toggle)
+        public void ToggleFinishUI(bool toggle)
         {
             finishMenu.SetActive(toggle);
         }
 
-        public void toggleRaceUI(bool toggle)
+        public void ToggleRaceUI(bool toggle)
         {
             raceUI.SetActive(toggle);
         }
 
-        public void toggleCountdownUI(bool toggle)
+        public void ToggleCountdownUI(bool toggle)
         {
             countdown.SetActive(toggle);
         }
 
-        public void toggleFinishText(bool toggle)
+        public void ToggleFinishText(bool toggle)
         {
             finishText.SetActive(toggle);
         }
 
-        public void toggleScreenSplitter(bool toggle)
+        public void ToggleScreenSplitter(bool toggle)
         {
             screenSplitter.SetActive(toggle);
+        }
+
+        /// <summary>
+        /// Toggle Speed Meter visibility
+        /// </summary>
+        /// <param name="toggle"></param>
+        public void ToggleSpeedMeters(bool toggle)
+        {
+            foreach(Transform t in speedMeters.transform)
+            {
+                t.GetChild(0).GetComponent<SpeedMeter>().enabled = toggle;
+            }
+
+        }
+
+        /// <summary>
+        /// Clean up after restart
+        /// </summary>
+        public void CleanUp()
+        {
+            foreach (Transform t in speedMeters.transform)
+            {
+                t.GetChild(0).GetComponent<SpeedMeter>().CleanUp();
+            }
         }
 
         private void OnApplicationQuit()
         {
             Debug.Log("Stopping operation");
-            toggleStartUI(false);
-            toggleFinishUI(false);
-            toggleRaceUI(false);
-            toggleCountdownUI(false);
-            toggleScreenSplitter(false);
-            toggleFinishText(false);
+            ToggleStartUI(false);
+            ToggleFinishUI(false);
+            ToggleRaceUI(false);
+            ToggleCountdownUI(false);
+            ToggleScreenSplitter(false);
+            ToggleFinishText(false);
         }
 
         /// <summary>

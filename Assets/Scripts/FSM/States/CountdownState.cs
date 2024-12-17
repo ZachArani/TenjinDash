@@ -56,9 +56,11 @@ namespace Assets.Scripts.FSM.States
                     StateManager.instance.players.ForEach(p => p.GetComponent<CinemachineDollyCart>().enabled = true);
                 }
                 countdownTimeline.Play();
-                UIManager.instance.toggleCountdownUI(true);
-                UIManager.instance.toggleScreenSplitter(true);
-                UIManager.instance.toggleRaceUI(true);
+                countdownGUI.text = countdown.ToString();
+                countdownGUI.enabled = true;
+                UIManager.instance.ToggleCountdownUI(true);
+                UIManager.instance.ToggleScreenSplitter(true);
+                UIManager.instance.ToggleRaceUI(true);
             }
         }
 

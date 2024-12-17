@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.UI;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.Playables;
 
@@ -54,7 +55,7 @@ namespace Assets.Scripts.FSM.States
                     }
                 }
                 Cursor.visible = true;
-                UIManager.instance.toggleFinishUI(true);
+                UIManager.instance.ToggleFinishUI(true);
                 finishedTimeline.Play();
             }
 
@@ -82,8 +83,12 @@ namespace Assets.Scripts.FSM.States
             raceManager.standings.ForEach(p =>
             {
                 p.GetComponent<Animator>().SetTrigger("Restart");
+                //Reset dolly/player position
+                p.GetComponent<NewMovement>().CleanUp();
+                
             });
-            UIManager.instance.toggleFinishUI(false);
+            UIManager.instance.ToggleFinishUI(false);
+            UIManager.instance.CleanUp();
         }
 
         private void OnEnable()

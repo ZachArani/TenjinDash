@@ -42,8 +42,8 @@ namespace Assets.Scripts.FSM.States
                     p.GetComponent<Animator>().Play("RunTree");
                 });
                 StateManager.instance.DisableRaceCameras();
-                UIManager.instance.toggleRaceUI(false);
-                UIManager.instance.toggleScreenSplitter(false);
+                UIManager.instance.ToggleRaceUI(false);
+                UIManager.instance.ToggleScreenSplitter(false);
                 Time.timeScale = 0f;
                 photoFinishTimeline.Play();
             }
@@ -54,7 +54,8 @@ namespace Assets.Scripts.FSM.States
         /// </summary>
         public void EndPhotoFinish()
         {
-            UIManager.instance.toggleFinishText(false);
+            UIManager.instance.ToggleFinishText(false);
+            SoundManager.instance.StopRaceMusic();
             StateManager.instance.TransitionTo(GAME_STATE.FINISH);
             photoFinishTimeline.Stop();
         }
@@ -76,7 +77,7 @@ namespace Assets.Scripts.FSM.States
         /// </summary>
         public void ShowFinishText()
         {
-            UIManager.instance.toggleFinishText(true);
+            UIManager.instance.ToggleFinishText(true);
         }
 
         // Update is called once per frame

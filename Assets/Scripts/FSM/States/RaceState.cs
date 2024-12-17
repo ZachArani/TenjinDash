@@ -128,7 +128,7 @@ namespace Assets.Scripts.FSM.States
             //A little dirty (uses GetComponent in Update) TODO: Improve system
             if (firstPlace.transform.position.x >= finishLinePos && StateManager.instance.currentState == GAME_STATE.RACE)
             {
-                StateManager.instance.TransitionTo(GAME_STATE.PHOTO_FINISH);
+                endRace();
             }
         }
 
@@ -144,10 +144,13 @@ namespace Assets.Scripts.FSM.States
                 if (Options.instance.skipCountdown) //We need to enable the player cameras manually if we skipped countdown.
                 {
                     StateManager.instance.EnableRaceCameras();
-                    UIManager.instance.toggleRaceUI(true);
-                    UIManager.instance.toggleScreenSplitter(false);
+                    UIManager.instance.ToggleRaceUI(true);
+                    UIManager.instance.ToggleScreenSplitter(false);
                     Cursor.visible = false;
                 }
+                SoundManager.instance.PlayCountDownFinish();
+                SoundManager.instance.PlayRaceMusic();
+                UIManager.instance.ToggleSpeedMeters(true);
                 standings.ForEach(p => { p.enabled = true; p.isOpening = true; p.GetComponent<Animator>().SetTrigger("startRace"); });
                 StartCoroutine(OpenRace()); 
                 StateManager.instance.EnableRaceComponents(true);
@@ -166,8 +169,6 @@ namespace Assets.Scripts.FSM.States
         {
             p1Won = firstPlace.playerNum == 0 ? true : false;
 
-            StateManager.instance.EnableRaceComponents(false);
-            StateManager.instance.EnableRecorders(false);
             StateManager.instance.TransitionTo(GAME_STATE.PHOTO_FINISH);
         }
 
@@ -213,7 +214,7 @@ namespace Assets.Scripts.FSM.States
 
         /// <summary>
         /// Coroutine used for race opening.
-        /// Ignores user data. Uses a pre-baked rotationSpeed curve instead
+        /// Ignores user data. Uses a pre-baked speed curve instead
         /// </summary>
         /// <returns>IEnumerator used for coroutine work</returns>
         public IEnumerator OpenRace()
@@ -287,6 +288,11 @@ namespace Assets.Scripts.FSM.States
             var file = autoRunFiles[Random.Range(0, autoRunFiles.Count)];
             autoRunFiles.Remove(file);
             return file;
+        }
+
+        public void CleanUp()
+        {
+
         }
 
 

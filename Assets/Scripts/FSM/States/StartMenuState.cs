@@ -41,13 +41,13 @@ namespace Assets.Scripts
             if (to == GAME_STATE.START_MENU)
             {
                 startMenuTimeline.Play();
-                UIManager.instance.toggleStartUI(true);
+                UIManager.instance.ToggleStartUI(true);
                 Cursor.visible = true;
                 UIManager.instance.UpdateJoyConStatus();
             }
             else if (from == GAME_STATE.START_MENU)
             {
-                UIManager.instance.toggleStartUI(false);
+                UIManager.instance.ToggleStartUI(false);
                 Cursor.visible = false;
             }
 

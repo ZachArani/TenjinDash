@@ -168,11 +168,13 @@ public class NewMovement : MonoBehaviour
     [ReadOnly]
     public bool isOpening = false;
 
+    [ReadOnly]
+    public float currentEffort = 0f;
+
     /// <summary>
-    /// Speed we used to 'fake' the opening seconds of the race.
-    /// <seealso cref="RaceState.OpenRace"/>
+    /// targetSpeed used in opening race
     /// </summary>
-    public float openingMoveSpeed = 7f;
+    public float openingTargetSpeed = 85f;
 
 
     // Start is called before the first frame update
@@ -214,7 +216,7 @@ public class NewMovement : MonoBehaviour
         if (currentSpeed < targetSpeed)
         {
             //Increase our t value based on delta_t. Cap at 1
-            t += (t + Time.deltaTime * delta_t) <= 1 ? Time.deltaTime * delta_t : 1;
+            t = Mathf.Clamp(t + Time.deltaTime * delta_t, 0, 1);
             curveValue = Math.Round((double)accCurve.Evaluate(t), 4); 
             if (curveValue > 0.95)
             {
@@ -229,7 +231,7 @@ public class NewMovement : MonoBehaviour
         //We need to slow down!
         else if (currentSpeed > targetSpeed)
         {
-            t -= (t - Time.deltaTime * delta_t >= 0) ? Time.deltaTime * delta_t : 0; //Cap off value at 0.
+            t = Mathf.Clamp(t - Time.deltaTime * delta_t, 0, 1); //Cap off value at 0.
             isAccelerating = false;
             if (t >= 0.5f)
             {
@@ -265,6 +267,7 @@ public class NewMovement : MonoBehaviour
         {
             joycon = JoyconManager.Instance.GetJoyconByPlayer(gameObject);
             speed = Mathf.Abs(joycon.GetAccel().y);
+            currentEffort = speed;
         }
         else return;
 
@@ -290,6 +293,33 @@ public class NewMovement : MonoBehaviour
         }
         var dist = Mathf.Abs(runningTrack.m_Position - raceManager.firstPlace.runningTrack.m_Position);
         rubberbandBoost = (dist / raceManager.maxRubberbandDistance) * raceManager.rubberbandBoostMax / 100f + slipstream;
+    }
+
+    /// <summary>
+    /// Util method other objects use when <see cref="isOpening"/> is true.
+    /// Other classes may need to do math based on <see cref="targetSpeed"/> even when its not being updated accurately here.
+    /// </summary>
+    /// <returns></returns>
+    public float CalcTargetSpeed()
+    {
+        return joyconEffort < effortFloor ? 0 : raceManager.maxSpeed * (0.7f + joyconEffort + rubberbandBoost);
+    }
+
+    public void CleanUp()
+    {
+        currentSpeed = 0;
+        targetSpeed = openingTargetSpeed;
+        joyconEffort = 0;
+        t = 0;
+        isPhotoFinish = false;
+        rubberbandBoost = 0;
+        slipstream = 0;
+        isOpening = true;
+
+        var dolly = GetComponent<CinemachineDollyCart>();
+        transform.position = dolly.m_Path.transform.position;
+        dolly.m_Position = 0;
+        dolly.m_Speed = 0;
     }
 
 
