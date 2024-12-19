@@ -12,16 +12,22 @@ namespace InternalRealtimeCSG
             {
                 var targetControlMesh = selection.BackupControlMeshes[t].Clone();
                 if (!targetControlMesh.Valid)
+                {
                     targetControlMesh.Valid = ControlMeshUtility.Validate(targetControlMesh, selection.Shapes[t]);
+                }
 
                 if (!targetControlMesh.Valid)
+                {
                     continue;
+                }
 
                 var targetBrush = selection.Brushes[t];
                 var targetMeshState = selection.States[t];
 
                 if (targetMeshState.BackupPoints == null)
+                {
                     continue;
+                }
 
                 var targetShape = selection.Shapes[t].Clone();
                 var worldToLocalMatrix = targetMeshState.BrushTransform.worldToLocalMatrix;
@@ -32,7 +38,9 @@ namespace InternalRealtimeCSG
                 for (var p = 0; p < targetMeshState.WorldPoints.Length; p++)
                 {
                     if (!selectedIndices.Contains((short)p))
+                    {
                         continue;
+                    }
 
                     targetControlMesh.Vertices[p] = GridUtility.CleanPosition(targetMeshState.BackupPoints[p] + localDeltaMovement);
                 }
@@ -48,16 +56,22 @@ namespace InternalRealtimeCSG
             {
                 var targetControlMesh = selection.BackupControlMeshes[t].Clone();
                 if (!targetControlMesh.Valid)
+                {
                     targetControlMesh.Valid = ControlMeshUtility.Validate(targetControlMesh, selection.Shapes[t]);
+                }
 
                 if (!targetControlMesh.Valid)
+                {
                     continue;
+                }
 
                 var targetBrush = selection.Brushes[t];
                 var targetMeshState = selection.States[t];
 
                 if (targetMeshState.BackupPoints == null)
+                {
                     continue;
+                }
 
                 var targetShape = selection.Shapes[t].Clone();
                 var localToWorldMatrix = targetMeshState.BrushTransform.localToWorldMatrix;
@@ -72,7 +86,9 @@ namespace InternalRealtimeCSG
                 for (var p = 0; p < targetMeshState.BackupPoints.Length; p++)
                 {
                     if (!selectedIndices.Contains((short)p))
+                    {
                         continue;
+                    }
 
                     var point = targetMeshState.BackupPoints[p];
 
@@ -122,7 +138,9 @@ namespace InternalRealtimeCSG
             if (float.IsInfinity(scale.x) || float.IsNaN(scale.x) ||
                 float.IsInfinity(scale.y) || float.IsNaN(scale.y) ||
                 float.IsInfinity(scale.z) || float.IsNaN(scale.z))
+            {
                 scale = Vector3.zero;
+            }
 
             if (scale.x <= MathConstants.EqualityEpsilon) { scale.x = 0.0f; }
             if (scale.y <= MathConstants.EqualityEpsilon) { scale.y = 0.0f; }
@@ -155,7 +173,9 @@ namespace InternalRealtimeCSG
             {
                 var brush = selection.Brushes[t];
                 if (!brush)
+                {
                     continue;
+                }
 
                 //				var brushTransform		= brush.GetComponent<Transform>();
                 //				var brushLocalToWorld	= brushTransform.localToWorldMatrix;
@@ -170,7 +190,10 @@ namespace InternalRealtimeCSG
                     if (controlMesh.Vertices[i].x == cleanedPoint.x &&
                         controlMesh.Vertices[i].y == cleanedPoint.y &&
                         controlMesh.Vertices[i].z == cleanedPoint.z)
+                    {
                         continue;
+                    }
+
                     controlMesh.Vertices[i] = cleanedPoint;
                     vertexModified = true;
                 }
@@ -181,7 +204,9 @@ namespace InternalRealtimeCSG
                 }
             }
             if (brushModified)
+            {
                 InternalCSGModelManager.CheckForChanges();
+            }
         }
 
         public static void PointSnapToGrid(this BrushSelection selection, Camera camera)
@@ -191,7 +216,9 @@ namespace InternalRealtimeCSG
             {
                 var brush = selection.Brushes[t];
                 if (!brush)
+                {
                     continue;
+                }
 
                 var controlMeshState = selection.States[t];
                 var brushTransform = brush.GetComponent<Transform>();
@@ -218,14 +245,18 @@ namespace InternalRealtimeCSG
             }
 
             if (float.IsInfinity(minWorldDeltaMovement.x))
+            {
                 return; // nothing to do
+            }
 
             var brushModified = false;
             for (var t = 0; t < selection.States.Length; t++)
             {
                 var brush = selection.Brushes[t];
                 if (!brush)
+                {
                     continue;
+                }
 
                 var controlMeshState = selection.States[t];
 
@@ -246,7 +277,10 @@ namespace InternalRealtimeCSG
                     if (controlMesh.Vertices[index].x == snappedPoint.x &&
                         controlMesh.Vertices[index].y == snappedPoint.y &&
                         controlMesh.Vertices[index].z == snappedPoint.z)
+                    {
                         continue;
+                    }
+
                     controlMesh.Vertices[index] = snappedPoint;
                     vertexModified = true;
                 }
@@ -257,7 +291,9 @@ namespace InternalRealtimeCSG
                 }
             }
             if (brushModified)
+            {
                 InternalCSGModelManager.CheckForChanges();
+            }
         }
     }
 }

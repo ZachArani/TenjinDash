@@ -26,7 +26,9 @@ namespace RealtimeCSG
                                               width, CSG_GUIStyleUtility.BottomToolBarHeight);
                 }
                 else
+                {
                     bottomBarRect = new Rect(0, height - (CSG_GUIStyleUtility.BottomToolBarHeight + 1), width, CSG_GUIStyleUtility.BottomToolBarHeight);
+                }
 
                 try
                 {
@@ -34,7 +36,10 @@ namespace RealtimeCSG
 
                     bool prevGUIChanged = GUI.changed;
                     if (Event.current.type == EventType.Repaint)
+                    {
                         CSG_GUIStyleUtility.BottomToolBarStyle.Draw(bottomBarRect, false, false, false, false);
+                    }
+
                     OnBottomBarGUI(sceneView, bottomBarRect);
                     GUI.changed = prevGUIChanged || GUI.changed;
 
@@ -110,12 +115,16 @@ namespace RealtimeCSG
                 #endregion
 
                 if (viewWidth >= 800)
+                {
                     layoutX += 6; //(x:33.00, y:0.00, width:6.00, height:6.00)
+                }
 
                 var prevBackgroundColor = GUI.backgroundColor;
                 var lockedBackgroundColor = skin.lockedBackgroundColor;
                 if (lockAxisX)
+                {
                     GUI.backgroundColor = lockedBackgroundColor;
+                }
 
                 #region "X" lock button
                 currentRect.width = 17;
@@ -128,9 +137,14 @@ namespace RealtimeCSG
                 lockAxisX = !GUI.Toggle(currentRect, !lockAxisX, xLabel, skin.xToolbarButton);
                 //(x:39.00, y:0.00, width:17.00, height:18.00)
                 if (lockAxisX)
+                {
                     TooltipUtility.SetToolTip(xTooltipOn, currentRect);
+                }
                 else
+                {
                     TooltipUtility.SetToolTip(xTooltipOff, currentRect);
+                }
+
                 GUI.backgroundColor = prevBackgroundColor;
                 #endregion
 
@@ -139,13 +153,21 @@ namespace RealtimeCSG
                 layoutX += currentRect.width;
 
                 if (lockAxisY)
+                {
                     GUI.backgroundColor = lockedBackgroundColor;
+                }
+
                 lockAxisY = !GUI.Toggle(currentRect, !lockAxisY, yLabel, skin.yToolbarButton);
                 //(x:56.00, y:0.00, width:17.00, height:18.00)
                 if (lockAxisY)
+                {
                     TooltipUtility.SetToolTip(yTooltipOn, currentRect);
+                }
                 else
+                {
                     TooltipUtility.SetToolTip(yTooltipOff, currentRect);
+                }
+
                 GUI.backgroundColor = prevBackgroundColor;
                 #endregion
 
@@ -154,20 +176,30 @@ namespace RealtimeCSG
                 layoutX += currentRect.width;
 
                 if (lockAxisZ)
+                {
                     GUI.backgroundColor = lockedBackgroundColor;
+                }
+
                 lockAxisZ = !GUI.Toggle(currentRect, !lockAxisZ, zLabel, skin.zToolbarButton);
                 //(x:56.00, y:0.00, width:17.00, height:18.00)
                 if (lockAxisZ)
+                {
                     TooltipUtility.SetToolTip(zTooltipOn, currentRect);
+                }
                 else
+                {
                     TooltipUtility.SetToolTip(zTooltipOff, currentRect);
+                }
+
                 GUI.backgroundColor = prevBackgroundColor;
                 #endregion
             }
             modified = GUI.changed || modified;
 
             if (viewWidth >= 800)
+            {
                 layoutX += 6; // (x:91.00, y:0.00, width:6.00, height:6.00)
+            }
 
             #region "SnapMode" button
             GUI.changed = false;
@@ -416,7 +448,9 @@ namespace RealtimeCSG
                         rotationSnap = EditorGUI.FloatField(currentRect, rotationSnap, textInputStyle);//, MinSnapWidth, MaxSnapWidth);
                                                                                                        //(x:486.00, y:3.00, width:70.00, height:16.00)
                         if (viewWidth <= 750)
+                        {
                             TooltipUtility.SetToolTip(angleTooltip, currentRect);
+                        }
                     }
                     modified = GUI.changed || modified;
                     #endregion
@@ -515,7 +549,9 @@ namespace RealtimeCSG
                         scaleSnap = EditorGUI.FloatField(currentRect, scaleSnap, textInputStyle);//, MinSnapWidth, MaxSnapWidth);
                                                                                                  //(x:648.00, y:3.00, width:70.00, height:16.00)
                         if (viewWidth <= 750)
+                        {
                             TooltipUtility.SetToolTip(scaleTooltip, currentRect);
+                        }
                     }
                     modified = GUI.changed || modified;
                     #endregion
@@ -621,7 +657,9 @@ namespace RealtimeCSG
 
                 var scenes = new HashSet<UnityEngine.SceneManagement.Scene>();
                 foreach (var model in InternalCSGModelManager.Models)
+                {
                     scenes.Add(model.gameObject.scene);
+                }
 
                 text.AppendFormat(CultureInfo.InvariantCulture, "{0} brushes. ", Foundation.CSGManager.TreeBrushCount);
 
@@ -632,7 +670,9 @@ namespace RealtimeCSG
             #endregion
 
             if (viewWidth >= 800)
+            {
                 layoutX -= 6; //(x:1436.00, y:0.00, width:6.00, height:6.00)
+            }
 
             #region "Helper Surface Flags" Mask
             if (viewWidth >= 250)
@@ -642,7 +682,7 @@ namespace RealtimeCSG
                     prevLayoutX += 8;  // extra space
                     prevLayoutX += 26; // width of "Show wireframe" button
 
-                    currentRect.width = Mathf.Max(20, Mathf.Min(165, (viewWidth - prevLayoutX - currentRect.width)));
+                    currentRect.width = Mathf.Max(20, Mathf.Min(165, viewWidth - prevLayoutX - currentRect.width));
 
                     currentRect.y = 0;
                     currentRect.height = layoutHeight - currentRect.y;
@@ -710,7 +750,7 @@ namespace RealtimeCSG
 
 
             #region Store modified values
-            rotationSnap = Mathf.Max(1.0f, Mathf.Abs((360 + (rotationSnap % 360))) % 360);
+            rotationSnap = Mathf.Max(1.0f, Mathf.Abs(360 + (rotationSnap % 360)) % 360);
             moveSnapVector.x = Mathf.Max(1.0f / 1024.0f, moveSnapVector.x);
             moveSnapVector.y = Mathf.Max(1.0f / 1024.0f, moveSnapVector.y);
             moveSnapVector.z = Mathf.Max(1.0f / 1024.0f, moveSnapVector.z);

@@ -136,7 +136,7 @@ namespace PathCreationEditor
             {
                 case EventType.Repaint:
                     Color originalColour = Handles.color;
-                    Handles.color = (isInteractive) ? colours.defaultColour : colours.disabledColour;
+                    Handles.color = isInteractive ? colours.defaultColour : colours.disabledColour;
 
                     if (id == GUIUtility.hotControl)
                     {
@@ -159,7 +159,7 @@ namespace PathCreationEditor
                         }
                         else
                         {
-                            lookForward = (cam.transform.position - position);
+                            lookForward = cam.transform.position - position;
                         }
                     }
 
@@ -198,7 +198,7 @@ namespace PathCreationEditor
         static void AddIDs(int upToIndex)
         {
             int numIDAtStart = ids.Count;
-            int numToAdd = (upToIndex - numIDAtStart) + 1;
+            int numToAdd = upToIndex - numIDAtStart + 1;
             for (int i = 0; i < numToAdd; i++)
             {
                 string hashString = string.Format("pathhandle({0})", numIDAtStart + i);

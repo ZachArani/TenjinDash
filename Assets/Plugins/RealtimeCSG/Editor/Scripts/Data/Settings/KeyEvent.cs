@@ -14,21 +14,28 @@ namespace RealtimeCSG
         public readonly bool hold;
         public bool IsKeyPressed()
         {
-            return (//EditorGUIUtility.editingTextField && 
-                    Event.current.keyCode == keyCode && (Event.current.modifiers & ~EventModifiers.FunctionKey) == modifiers);
+            return //EditorGUIUtility.editingTextField && 
+                    Event.current.keyCode == keyCode && (Event.current.modifiers & ~EventModifiers.FunctionKey) == modifiers;
         }
 
         public override string ToString()
         {
             var builder = new StringBuilder();
-            if ((modifiers & EventModifiers.Command) > 0) { if (builder.Length > 0) builder.Append('+'); builder.Append("Command"); }
-            if ((modifiers & EventModifiers.Control) > 0) { if (builder.Length > 0) builder.Append('+'); builder.Append("Control"); }
-            if ((modifiers & EventModifiers.Alt) > 0) { if (builder.Length > 0) builder.Append('+'); builder.Append("Alt"); }
-            if ((modifiers & EventModifiers.Shift) > 0) { if (builder.Length > 0) builder.Append('+'); builder.Append("Shift"); }
-            if (builder.Length > 0) builder.Append('+');
+            if ((modifiers & EventModifiers.Command) > 0) { if (builder.Length > 0) { builder.Append('+'); } builder.Append("Command"); }
+            if ((modifiers & EventModifiers.Control) > 0) { if (builder.Length > 0) { builder.Append('+'); } builder.Append("Control"); }
+            if ((modifiers & EventModifiers.Alt) > 0) { if (builder.Length > 0) { builder.Append('+'); } builder.Append("Alt"); }
+            if ((modifiers & EventModifiers.Shift) > 0) { if (builder.Length > 0) { builder.Append('+'); } builder.Append("Shift"); }
+            if (builder.Length > 0)
+            {
+                builder.Append('+');
+            }
+
             builder.Append(KeyEvent.CodeToString(keyCode));
             if (hold)
+            {
                 builder.Append(" (hold)");
+            }
+
             return builder.ToString();
         }
     }
@@ -46,7 +53,11 @@ namespace RealtimeCSG
         public KeyEvent(params KeyCode[] keyCodes)
         {
             keys = new KeyCodeWithModifier[keyCodes.Length];
-            for (int i = 0; i < keyCodes.Length; i++) keys[i] = new KeyCodeWithModifier(keyCodes[i], EventModifiers.None);
+            for (int i = 0; i < keyCodes.Length; i++)
+            {
+                keys[i] = new KeyCodeWithModifier(keyCodes[i], EventModifiers.None);
+            }
+
             defaultKeys = keys.ToList().ToArray();
         }
         public KeyEvent(params KeyCodeWithModifier[] _keys) { keys = _keys; defaultKeys = _keys.ToList().ToArray(); }
@@ -61,7 +72,10 @@ namespace RealtimeCSG
         public bool IsKeyPressed()
         {
             if (!RealtimeCSG.CSGSettings.EnableRealtimeCSG)
+            {
                 return false;
+            }
+
             for (int i = 0; i < keys.Length; i++)
             {
                 if (keys[i].IsKeyPressed())
@@ -75,14 +89,23 @@ namespace RealtimeCSG
         public override string ToString()
         {
             if (keys.Length == 0)
+            {
                 return string.Empty;
+            }
+
             if (keys.Length == 1)
+            {
                 return keys[0].ToString();
+            }
+
             var builder = new StringBuilder();
             for (int i = 0; i < keys.Length; i++)
             {
                 if (i > 0)
+                {
                     builder.Append(" or ");
+                }
+
                 builder.Append(keys[i].ToString());
             }
             return builder.ToString();
@@ -129,12 +152,12 @@ namespace RealtimeCSG
                 case KeyCode.Caret: return "^";
                 case KeyCode.Underscore: return "_";
                 case KeyCode.BackQuote: return "`";
-                case KeyCode.KeypadPeriod: return ("Keypad '.'");
-                case KeyCode.KeypadDivide: return ("Keypad '/'");
-                case KeyCode.KeypadMultiply: return ("Keypad '*'");
-                case KeyCode.KeypadMinus: return ("Keypad '-'");
-                case KeyCode.KeypadPlus: return ("Keypad '+'");
-                case KeyCode.KeypadEquals: return ("Keypad '='");
+                case KeyCode.KeypadPeriod: return "Keypad '.'";
+                case KeyCode.KeypadDivide: return "Keypad '/'";
+                case KeyCode.KeypadMultiply: return "Keypad '*'";
+                case KeyCode.KeypadMinus: return "Keypad '-'";
+                case KeyCode.KeypadPlus: return "Keypad '+'";
+                case KeyCode.KeypadEquals: return "Keypad '='";
                 default: return ObjectNames.NicifyVariableName(code.ToString());
             }
         }

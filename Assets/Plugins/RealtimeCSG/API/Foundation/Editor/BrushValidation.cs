@@ -129,7 +129,10 @@ namespace RealtimeCSG.Foundation
                 float.IsInfinity(max.x) || float.IsInfinity(max.y) || float.IsInfinity(max.z) ||
                 float.IsNaN(min.x) || float.IsNaN(min.y) || float.IsNaN(min.z) ||
                 float.IsNaN(max.x) || float.IsNaN(max.y) || float.IsNaN(max.z))
+            {
                 return false;
+            }
+
             return true;
         }
     }

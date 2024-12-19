@@ -12,7 +12,9 @@ public class EditModeToolWindowSceneGUI : EditorWindow
         for (int i = windows.Count - 1; i >= 0; i--)
         {
             if (!windows[i])
+            {
                 windows.Remove(windows[i]);
+            }
         }
         return windows;
     }
@@ -40,7 +42,10 @@ public class EditModeToolWindowSceneGUI : EditorWindow
     {
         // apparently 'Awake' is not reliable ...
         if (windows.Contains(this))
+        {
             return;
+        }
+
         windows.Add(this);
     }
 

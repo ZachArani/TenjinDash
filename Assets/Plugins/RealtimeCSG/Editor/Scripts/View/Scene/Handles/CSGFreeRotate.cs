@@ -26,12 +26,18 @@ namespace RealtimeCSG.Helpers
                 case EventType.MouseDown:
                     {
                         if (CSGHandles.disabled)
+                        {
                             break;
+                        }
+
                         if (((HandleUtility.nearestControl == id && evt.button == 0) ||
                               (GUIUtility.keyboardControl == id && evt.button == 2)) && GUIUtility.hotControl == 0)
                         {
                             if (initFunction != null)
+                            {
                                 initFunction();
+                            }
+
                             GUIUtility.hotControl = GUIUtility.keyboardControl = id; // Grab mouse focus
                                                                                      //Tools.LockHandlePosition();
                             s_CurrentMousePosition = evt.mousePosition;
@@ -61,7 +67,10 @@ namespace RealtimeCSG.Helpers
                             GUIUtility.hotControl = 0;
                             evt.Use();
                             if (shutdownFunction != null)
+                            {
                                 shutdownFunction();
+                            }
+
                             EditorGUIUtility.SetWantsMouseJumping(0);
                         }
                         break;
@@ -80,10 +89,14 @@ namespace RealtimeCSG.Helpers
                     {
                         var originalColor = Color.white;
                         if (id == GUIUtility.keyboardControl)
+                        {
                             Handles.color = Handles.selectedColor;
+                        }
                         else
                         if (CSGHandles.disabled)
+                        {
                             Handles.color = Color.Lerp(originalColor, Handles.secondaryColor, 0.75f);
+                        }
 
                         // We only want the position to be affected by the Handles.matrix.
                         Handles.matrix = Matrix4x4.identity;

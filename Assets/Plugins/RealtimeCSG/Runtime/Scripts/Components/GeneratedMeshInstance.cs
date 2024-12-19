@@ -40,7 +40,7 @@ namespace InternalRealtimeCSG
             hash *= 389 + hash2;
             hash *= 397 + hash3;
 
-            return hash + (hash1 ^ hash2 ^ hash3) + (hash1 + hash2 + hash3) + (hash1 * hash2 * hash3);
+            return hash + (hash1 ^ hash2 ^ hash3) + hash1 + hash2 + hash3 + (hash1 * hash2 * hash3);
         }
 
         public int GetHashCode(MeshInstanceKey obj)
@@ -51,9 +51,15 @@ namespace InternalRealtimeCSG
         public bool Equals(MeshInstanceKey other)
         {
             if (System.Object.ReferenceEquals(this, other))
+            {
                 return true;
+            }
+
             if (System.Object.ReferenceEquals(other, null))
+            {
                 return false;
+            }
+
             return SubMeshIndex == other.SubMeshIndex &&
                    SurfaceParameter == other.SurfaceParameter &&
                    MeshType == other.MeshType;
@@ -62,12 +68,21 @@ namespace InternalRealtimeCSG
         public override bool Equals(object obj)
         {
             if (System.Object.ReferenceEquals(this, obj))
+            {
                 return true;
+            }
+
             if (!(obj is MeshInstanceKey))
+            {
                 return false;
+            }
+
             MeshInstanceKey other = (MeshInstanceKey)obj;
             if (System.Object.ReferenceEquals(other, null))
+            {
                 return false;
+            }
+
             return SubMeshIndex == other.SubMeshIndex &&
                    SurfaceParameter == other.SurfaceParameter &&
                    MeshType == other.MeshType;
@@ -76,10 +91,16 @@ namespace InternalRealtimeCSG
         public bool Equals(MeshInstanceKey left, MeshInstanceKey right)
         {
             if (System.Object.ReferenceEquals(left, right))
+            {
                 return true;
+            }
+
             if (System.Object.ReferenceEquals(left, null) ||
                 System.Object.ReferenceEquals(right, null))
+            {
                 return false;
+            }
+
             return left.SubMeshIndex == right.SubMeshIndex &&
                    left.SurfaceParameter == right.SurfaceParameter &&
                    left.MeshType == right.MeshType;
@@ -88,10 +109,16 @@ namespace InternalRealtimeCSG
         public static bool operator ==(MeshInstanceKey left, MeshInstanceKey right)
         {
             if (System.Object.ReferenceEquals(left, right))
+            {
                 return true;
+            }
+
             if (System.Object.ReferenceEquals(left, null) ||
                 System.Object.ReferenceEquals(right, null))
+            {
                 return false;
+            }
+
             return left.SubMeshIndex == right.SubMeshIndex &&
                    left.SurfaceParameter == right.SurfaceParameter &&
                    left.MeshType == right.MeshType;
@@ -100,10 +127,16 @@ namespace InternalRealtimeCSG
         public static bool operator !=(MeshInstanceKey left, MeshInstanceKey right)
         {
             if (System.Object.ReferenceEquals(left, right))
+            {
                 return false;
+            }
+
             if (System.Object.ReferenceEquals(left, null) ||
                 System.Object.ReferenceEquals(right, null))
+            {
                 return true;
+            }
+
             return left.SubMeshIndex != right.SubMeshIndex ||
                    left.SurfaceParameter != right.SurfaceParameter ||
                    left.MeshType != right.MeshType;
@@ -169,12 +202,17 @@ namespace InternalRealtimeCSG
                 if (SharedMesh)
                 {
                     if (SharedMesh.vertexCount < 0)
+                    {
                         return false;
+                    }
                 }
                 else
                 if (!ReferenceEquals(SharedMesh, null) &&
                     SharedMesh.GetInstanceID() != 0)
+                {
                     return false;
+                }
+
                 return true;
             }
             return false;
@@ -201,12 +239,30 @@ namespace InternalRealtimeCSG
             if (RenderSurfaceType == RenderSurfaceType.Collider ||
                 RenderSurfaceType == RenderSurfaceType.Trigger)
             {
-                if (!ReferenceEquals(PhysicsMaterial, null)) { if (PhysicsMaterial) MeshDescription.surfaceParameter = PhysicsMaterial.GetInstanceID(); }
+                if (!ReferenceEquals(PhysicsMaterial, null))
+                {
+                    if (PhysicsMaterial)
+                    {
+                        MeshDescription.surfaceParameter = PhysicsMaterial.GetInstanceID();
+                    }
+                }
             }
             else
             {
-                if (!ReferenceEquals(RenderMaterial, null)) { if (RenderMaterial) MeshDescription.surfaceParameter = RenderMaterial.GetInstanceID(); }
-                else if (!ReferenceEquals(PhysicsMaterial, null)) { if (PhysicsMaterial) MeshDescription.surfaceParameter = PhysicsMaterial.GetInstanceID(); }
+                if (!ReferenceEquals(RenderMaterial, null))
+                {
+                    if (RenderMaterial)
+                    {
+                        MeshDescription.surfaceParameter = RenderMaterial.GetInstanceID();
+                    }
+                }
+                else if (!ReferenceEquals(PhysicsMaterial, null))
+                {
+                    if (PhysicsMaterial)
+                    {
+                        MeshDescription.surfaceParameter = PhysicsMaterial.GetInstanceID();
+                    }
+                }
             }
         }
 
@@ -231,14 +287,18 @@ namespace InternalRealtimeCSG
                         {
                             var childComponents = gameObject.GetComponentsInChildren<MonoBehaviour>();
                             foreach (var component in childComponents)
+                            {
                                 UnityEngine.Object.DestroyImmediate(component);
+                            }
                         }
                         {
                             var childComponents = gameObject.GetComponentsInChildren<Component>();
                             foreach (var component in childComponents)
                             {
                                 if (!(component is Transform))
+                                {
                                     UnityEngine.Object.DestroyImmediate(component);
+                                }
                             }
                         }
                         gameObject.name = "removed";
@@ -252,7 +312,9 @@ namespace InternalRealtimeCSG
                 HasUV2 = sUVList != null && sUVList.Count == SharedMesh.vertexCount;
             }
             else
+            {
                 HasUV2 = false;
+            }
         }
 
         public void FindMissingSharedMesh()

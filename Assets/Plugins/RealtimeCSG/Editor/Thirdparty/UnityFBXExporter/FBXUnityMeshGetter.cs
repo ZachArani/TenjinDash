@@ -77,21 +77,29 @@ namespace UnityFBXExporter
                     {
                         var meshCollider = gameObj.GetComponent<MeshCollider>();
                         if (meshCollider)
+                        {
                             mesh = meshCollider.sharedMesh;
+                        }
                     }
                 }
                 else
+                {
                     mesh = skinnedMeshRenderer.sharedMesh;
+                }
             }
             else
+            {
                 mesh = filter.sharedMesh;
+            }
 
             string meshName = gameObj.name;
 
             bool needObject = gameObj.transform.childCount > 0 || mesh;
 
             if (!needObject)
+            {
                 return 0;
+            }
 
             // A NULL parent means that the gameObject is at the top
             string isMesh = "Null";
@@ -103,9 +111,14 @@ namespace UnityFBXExporter
             }
 
             if (parentModelId == 0)
+            {
                 tempConnectionsSb.AppendLine("\t;Model::" + meshName + ", Model::RootNode");
+            }
             else
+            {
                 tempConnectionsSb.AppendLine("\t;Model::" + meshName + ", Model::USING PARENT");
+            }
+
             tempConnectionsSb.AppendLine("\tC: \"OO\"," + modelId + "," + parentModelId);
             tempConnectionsSb.AppendLine();
             tempObjectSb.AppendLine("\tModel: " + modelId + ", \"Model::" + gameObj.name + "\", \"" + isMesh + "\" {");
@@ -161,7 +174,9 @@ namespace UnityFBXExporter
                 for (int i = 0; i < vertices.Length; i++)
                 {
                     if (i > 0)
+                    {
                         tempObjectSb.Append(",");
+                    }
 
                     // Points in the vertices. We also reverse the x value because Unity has a reverse X coordinate
                     tempObjectSb.AppendFormat(CultureInfo.InvariantCulture, "{0},{1},{2}", vertices[i].x * -1, vertices[i].y, vertices[i].z);
@@ -181,7 +196,9 @@ namespace UnityFBXExporter
                 for (int i = 0; i < triangleCount; i += 3)
                 {
                     if (i > 0)
+                    {
                         tempObjectSb.Append(",");
+                    }
 
                     // To get the correct normals, must rewind the triangles since we flipped the x direction
                     tempObjectSb.AppendFormat(CultureInfo.InvariantCulture, "{0},{1},{2}",
@@ -214,7 +231,9 @@ namespace UnityFBXExporter
                     for (int i = 0; i < triangleCount; i += 3)
                     {
                         if (i > 0)
+                        {
                             tempObjectSb.Append(",");
+                        }
 
                         // To get the correct normals, must rewind the normal triangles like the triangles above since x was flipped
                         Vector3 newNormal = normals[triangles[i]];
@@ -264,7 +283,9 @@ namespace UnityFBXExporter
                     for (int i = 0; i < triangleCount; i += 3)
                     {
                         if (i > 0)
+                        {
                             tempObjectSb.Append(",");
+                        }
 
                         // To get the correct tangents, must rewind the tangent triangles like the triangles above since x was flipped
                         Vector3 newTangent = tangents[triangles[i]];
@@ -309,7 +330,9 @@ namespace UnityFBXExporter
                     for (int i = 0; i < triangleCount; i += 3)
                     {
                         if (i > 0)
+                        {
                             tempObjectSb.Append(",");
+                        }
 
                         // To get the correct binormals, must rewind the binormal triangles like the triangles above since x was flipped
                         Vector4 packed_tangent = tangents[triangles[i]];
@@ -358,13 +381,15 @@ namespace UnityFBXExporter
                     tempObjectSb.AppendLine("\t\t\tName: \"map1\"");
                     tempObjectSb.AppendLine("\t\t\tMappingInformationType: \"ByPolygonVertex\"");
                     tempObjectSb.AppendLine("\t\t\tReferenceInformationType: \"IndexToDirect\"");
-                    tempObjectSb.AppendLine("\t\t\tUV: *" + uvLength * 2 + " {");
+                    tempObjectSb.AppendLine("\t\t\tUV: *" + (uvLength * 2) + " {");
                     tempObjectSb.Append("\t\t\t\ta: ");
 
                     for (int i = 0; i < uvLength; i++)
                     {
                         if (i > 0)
+                        {
                             tempObjectSb.Append(",");
+                        }
 
                         tempObjectSb.AppendFormat(CultureInfo.InvariantCulture, "{0},{1}", uvs[i].x, uvs[i].y);
 
@@ -380,7 +405,9 @@ namespace UnityFBXExporter
                     for (int i = 0; i < triangleCount; i += 3)
                     {
                         if (i > 0)
+                        {
                             tempObjectSb.Append(",");
+                        }
 
                         // Triangles need to be fliped for the x flip
                         int index1 = triangles[i];
@@ -434,7 +461,9 @@ namespace UnityFBXExporter
 
                     // Load all submeshes into a space
                     for (int i = 0; i < numberOfSubmeshes; i++)
+                    {
                         allSubmeshes.Add(mesh.GetIndices(i));
+                    }
 
                     // TODO: Optimize this search pattern
                     for (int i = 0; i < triangles.Length; i += 3)
@@ -456,7 +485,9 @@ namespace UnityFBXExporter
                                 }
 
                                 if (breaker)
+                                {
                                     break;
+                                }
                             }
                         }
                     }

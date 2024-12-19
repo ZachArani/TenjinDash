@@ -44,7 +44,7 @@ namespace TMPro.Examples
             else if (Motion == MotionType.BackAndForth)
             {
                 m_time += SpinSpeed * Time.deltaTime;
-                m_transform.rotation = Quaternion.Euler(m_initial_Rotation.x, Mathf.Sin(m_time) * RotationRange + m_initial_Rotation.y, m_initial_Rotation.z);
+                m_transform.rotation = Quaternion.Euler(m_initial_Rotation.x, (Mathf.Sin(m_time) * RotationRange) + m_initial_Rotation.y, m_initial_Rotation.z);
             }
             else
             {

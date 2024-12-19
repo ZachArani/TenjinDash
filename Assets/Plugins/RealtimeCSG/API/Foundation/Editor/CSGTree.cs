@@ -23,7 +23,10 @@ namespace RealtimeCSG.Foundation
         {
             int treeNodeID;
             if (!GenerateTree(userID, out treeNodeID))
+            {
                 return new CSGTree() { treeNodeID = 0 };
+            }
+
             if (children != null && children.Length > 0)
             {
                 if (!CSGTreeNode.InsertChildNodeRange(treeNodeID, 0, children))
@@ -62,7 +65,7 @@ namespace RealtimeCSG.Foundation
 
         /// <summary>Destroy this <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>. Sets the state to invalid.</summary>
         /// <returns><b>true</b> on success, <b>false</b> on failure</returns>
-        public bool Destroy() { if (!CSGTreeNode.DestroyNode(treeNodeID)) return false; treeNodeID = 0; return true; }
+        public bool Destroy() { if (!CSGTreeNode.DestroyNode(treeNodeID)) { return false; } treeNodeID = 0; return true; }
         #endregion
 
         #region ChildNodeContainer
@@ -83,7 +86,7 @@ namespace RealtimeCSG.Foundation
         /// <summary>Adds the <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>s of the specified array to the end of the  <see cref="RealtimeCSG.Foundation.CSGTree"/>.</summary>
         /// <param name="array">The array whose <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>s should be added to the end of the <see cref="RealtimeCSG.Foundation.CSGTree"/>. The array itself cannot be null.</param>
         /// <returns><b>true</b> on success, <b>false</b> on failure</returns>
-        public bool AddRange(params CSGTreeNode[] array) { if (array == null) throw new ArgumentNullException("array"); return CSGTreeNode.InsertChildNodeRange(treeNodeID, Count, array); }
+        public bool AddRange(params CSGTreeNode[] array) { if (array == null) { throw new ArgumentNullException("array"); } return CSGTreeNode.InsertChildNodeRange(treeNodeID, Count, array); }
 
         /// <summary>Inserts an element into the <see cref="RealtimeCSG.Foundation.CSGTreeNode"/> at the specified index.</summary>
         /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
@@ -95,7 +98,7 @@ namespace RealtimeCSG.Foundation
         /// <param name="index">The zero-based index at which the new <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>s should be inserted.</param>
         /// <param name="array">The array whose <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>s should be inserted into the <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>. The array itself cannot be null.</param>
         /// <returns><b>true</b> on success, <b>false</b> on failure</returns>
-        public bool InsertRange(int index, params CSGTreeNode[] array) { if (array == null) throw new ArgumentNullException("array"); return CSGTreeNode.InsertChildNodeRange(treeNodeID, index, array); }
+        public bool InsertRange(int index, params CSGTreeNode[] array) { if (array == null) { throw new ArgumentNullException("array"); } return CSGTreeNode.InsertChildNodeRange(treeNodeID, index, array); }
 
 
         /// <summary>Removes a specific <see cref="RealtimeCSG.Foundation.CSGTreeNode"/> from the <see cref="RealtimeCSG.Foundation.CSGTree"/>.</summary>
@@ -147,7 +150,7 @@ namespace RealtimeCSG.Foundation
         /// <param name="vertexChannelMask">A mask to prevent certain vertex channels to be generated. By default this value is to <see cref="RealtimeCSG.Foundation.VertexChannelFlags.All"/>.</param>
         /// <returns>An array of <see cref="RealtimeCSG.Foundation.GeneratedMeshDescription"/>'s that can be used to generate <see cref="RealtimeCSG.Foundation.GeneratedMeshContents"/> using <see cref="RealtimeCSG.Foundation.CSGTree.GetGeneratedMesh"/></returns>
         /// <seealso cref="RealtimeCSG.Foundation.CSGTree.GetGeneratedMesh"/>
-        public GeneratedMeshDescription[] GetMeshDescriptions(MeshQuery[] meshQuery, VertexChannelFlags vertexChannelMask = VertexChannelFlags.All) { if (meshQuery == null) throw new ArgumentNullException("meshQuery"); return GetMeshDescriptions(treeNodeID, meshQuery, vertexChannelMask); }
+        public GeneratedMeshDescription[] GetMeshDescriptions(MeshQuery[] meshQuery, VertexChannelFlags vertexChannelMask = VertexChannelFlags.All) { if (meshQuery == null) { throw new ArgumentNullException("meshQuery"); } return GetMeshDescriptions(treeNodeID, meshQuery, vertexChannelMask); }
 
         /// <summary>Creates and returns a <see cref="RealtimeCSG.Foundation.GeneratedMeshContents"/> for a given <see cref="RealtimeCSG.Foundation.GeneratedMeshDescription"/> created by <see cref="RealtimeCSG.Foundation.CSGTree.GetMeshDescriptions"/></summary>
         /// <remarks>See the [Create Unity Meshes](~/documentation/createUnityMesh.md) article for more information.</remarks>

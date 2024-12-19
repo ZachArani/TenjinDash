@@ -15,14 +15,21 @@ namespace RealtimeCSG
         {
             CSGSettings.RegisterSceneView(sceneView);
             if (!RealtimeCSG.CSGSettings.EnableRealtimeCSG)
+            {
                 return;
+            }
 
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
+
             UpdateLoop.UpdateOnSceneChange();
 
             if (!RealtimeCSG.CSGSettings.EnableRealtimeCSG)
+            {
                 ColorSettings.isInitialized = false;
+            }
             else
             if (!ColorSettings.isInitialized)
             {
@@ -33,7 +40,9 @@ namespace RealtimeCSG
             }
 
             if (!UpdateLoop.IsActive())
+            {
                 UpdateLoop.ResetUpdateRoutine();
+            }
 
             if (Event.current.type == EventType.MouseDown ||
                 Event.current.type == EventType.MouseDrag) { mousePressed = true; }
@@ -45,7 +54,9 @@ namespace RealtimeCSG
             EditModeManager.InitSceneGUI(sceneView);
 
             if (Event.current.type == EventType.Repaint)
+            {
                 MeshInstanceManager.UpdateHelperSurfaces();
+            }
 
             if (Event.current.type == EventType.Repaint)
             {

@@ -86,12 +86,16 @@ namespace RealtimeCSG
             for (int i = surfaceStates.Length - 1; i >= 0; i--)
             {
                 if (foundBrushes.Contains(brushTargets[i]))
+                {
                     continue;
+                }
 
                 ArrayUtility.RemoveAt(ref surfaceStates, i);
                 ArrayUtility.RemoveAt(ref brushTargets, i);
                 if (hoverOnTarget > i)
+                {
                     hoverOnTarget--;
+                }
                 else if (hoverOnTarget == i)
                 {
                     hoverOnTarget = -1;
@@ -103,7 +107,9 @@ namespace RealtimeCSG
             {
                 var index = ArrayUtility.IndexOf(brushTargets, brush);
                 if (index != -1)
+                {
                     continue;
+                }
 
                 ArrayUtility.Add(ref brushTargets, brush);
                 var texGenState = new TexGenState(brush);
@@ -113,7 +119,9 @@ namespace RealtimeCSG
 
             hideTool = filteredSelection.NodeTargets.Length > 0;
             if (isEnabled)
+            {
                 Tools.hidden = hideTool;
+            }
 
             UpdateSelectedSurfaces();
             UpdateLayouts();
@@ -124,7 +132,9 @@ namespace RealtimeCSG
         {
             Undo.RecordObject(this, "Select all surfaces of selected brushes");
             for (int i = surfaceStates.Length - 1; i >= 0; i--)
+            {
                 surfaceStates[i].SelectAll();
+            }
 
             UpdateSelectedSurfaces();
             UpdateLayouts();
@@ -144,7 +154,9 @@ namespace RealtimeCSG
                         ArrayUtility.RemoveAt(ref surfaceStates, i);
                         ArrayUtility.RemoveAt(ref brushTargets, i);
                         if (hoverOnTarget > i)
+                        {
                             hoverOnTarget--;
+                        }
                         else if (hoverOnTarget == i)
                         {
                             hoverOnTarget = -1;
@@ -171,7 +183,9 @@ namespace RealtimeCSG
                 {
                     var index = ArrayUtility.IndexOf(brushTargets, brushSurfaces[j].brush);
                     if (index != -1)
+                    {
                         continue;
+                    }
 
                     ArrayUtility.Add(ref brushTargets, brushSurfaces[j].brush);
                     ArrayUtility.Add(ref surfaceStates, new TexGenState(brushSurfaces[j].brush));
@@ -184,7 +198,9 @@ namespace RealtimeCSG
                     for (int j = 0; j < brushSurfaces.Length; j++)
                     {
                         if (brushTarget != brushSurfaces[j].brush)
+                        {
                             continue;
+                        }
 
                         if (selectAllSurfacesOnBrushes)
                         {
@@ -206,12 +222,18 @@ namespace RealtimeCSG
                 lastSelectedSurface = brushSurfaces[0];
             }
             else
+            {
                 lastSelectedSurface = null;
+            }
 
             if (gameObjects == null)
+            {
                 Selection.activeTransform = null;
+            }
             else
+            {
                 Selection.objects = gameObjects.ToArray();
+            }
 
             UpdateSelectedSurfaces();
             UpdateLayouts();
@@ -234,7 +256,9 @@ namespace RealtimeCSG
             for (int i = 0; i < brushTargets.Length; i++)
             {
                 if (surfaceStates[i].HaveSurfaceSelection)
+                {
                     gameObjects[i] = brushTargets[i].gameObject;
+                }
             }
             return gameObjects;
         }
@@ -274,15 +298,22 @@ namespace RealtimeCSG
         {
             if (intersection.gameObject == null ||
                 intersection.surfaceIndex == -1)
+            {
                 return false;
+            }
 
             var brush = intersection.gameObject.GetComponent<CSGBrush>();
             int brushIndex = ArrayUtility.IndexOf(brushTargets, brush);
             if (brushIndex == -1)
+            {
                 return false;
+            }
 
             if ((surfaceStates[brushIndex].surfaceSelectState[intersection.surfaceIndex] & SelectState.Selected) == SelectState.Selected)
+            {
                 return true;
+            }
+
             return false;
         }
 
@@ -291,14 +322,20 @@ namespace RealtimeCSG
             var brush = intersection.gameObject.GetComponent<CSGBrush>();
             int brushIndex = ArrayUtility.IndexOf(brushTargets, brush);
             if (brushIndex == -1)
+            {
                 return false;
+            }
 
             Undo.RecordObject(this, "Deselect surface selection");
             surfaceStates[brushIndex].surfaceSelectState[intersection.surfaceIndex] &= ~SelectState.Selected;
             if (brushTargets == null || brushTargets.Length == 0)
+            {
                 Selection.activeTransform = null;
+            }
             else
+            {
                 Selection.objects = GetSelectedGameObjects();
+            }
 
             UpdateSelectedSurfaces();
             return true;
@@ -308,7 +345,9 @@ namespace RealtimeCSG
         {
             if (intersection.gameObject == null ||
                 intersection.surfaceIndex == -1)
+            {
                 return false;
+            }
 
             var brush = intersection.gameObject.GetComponent<CSGBrush>();
 
@@ -326,9 +365,13 @@ namespace RealtimeCSG
             surfaceState.surfaceSelectState[intersection.surfaceIndex] |= SelectState.Selected;
 
             if (brushTargets == null || brushTargets.Length == 0)
+            {
                 Selection.activeTransform = null;
+            }
             else
+            {
                 Selection.objects = GetSelectedGameObjects();
+            }
 
             UpdateSelectedSurfaces();
             return true;
@@ -337,7 +380,9 @@ namespace RealtimeCSG
         bool UpdateSelection(bool allowSubstraction = true)
         {
             if (hoverOnTarget == -1)
+            {
                 return false;
+            }
 
             var surfaceState = surfaceStates[hoverOnTarget];
             var selectionType = SelectionUtility.GetEventSelectionType();
@@ -346,10 +391,14 @@ namespace RealtimeCSG
             {
                 if (selectionType == SelectionType.Toggle ||
                     selectionType == SelectionType.Subtractive)
+                {
                     selectionType = SelectionType.Additive;
+                }
 
                 if (surfaceState.IsSurfaceSelected(hoverOnSurfaceIndex))
+                {
                     selectionType = SelectionType.Additive;
+                }
             }
 
             if (selectionType == SelectionType.Replace ||
@@ -363,7 +412,9 @@ namespace RealtimeCSG
             if (selectionType == SelectionType.Replace)
             {
                 for (int t = 0; t < brushTargets.Length; t++)
+                {
                     surfaceStates[t].DeselectAll();
+                }
             }
 
             bool repaint = false;
@@ -378,9 +429,13 @@ namespace RealtimeCSG
             }
 
             if (brushTargets == null || brushTargets.Length == 0)
+            {
                 Selection.activeTransform = null;
+            }
             else
+            {
                 Selection.objects = GetSelectedGameObjects();
+            }
 
             UpdateSelectedSurfaces();
             return repaint;
@@ -477,7 +532,9 @@ namespace RealtimeCSG
         void UpdateMouseCursor()
         {
             if (mouseIsDown)
+            {
                 return;
+            }
 
             switch (SelectionUtility.GetEventSelectionType())
             {
@@ -531,7 +588,9 @@ namespace RealtimeCSG
                     lastSelectedSurface = null;
                 }
                 if (lastSelectedSurface == null)
+                {
                     lastSelectedSurface = new SelectedBrushSurface(intersection.brush, intersection.surfaceIndex, intersection.worldPlane);
+                }
             }
             return true;
         }
@@ -545,7 +604,9 @@ namespace RealtimeCSG
                 if (IsSelected(intersection))
                 {
                     if (dragMode == DragMode.SurfaceSelectToggle)
+                    {
                         dragMode = DragMode.SurfaceSelectRemove;
+                    }
 
                     if (dragMode == DragMode.SurfaceSelectRemove)
                     {
@@ -556,7 +617,9 @@ namespace RealtimeCSG
                 else
                 {
                     if (dragMode == DragMode.SurfaceSelectToggle)
+                    {
                         dragMode = DragMode.SurfaceSelectAdd;
+                    }
 
                     if (dragMode == DragMode.SurfaceSelectAdd)
                     {
@@ -640,12 +703,16 @@ namespace RealtimeCSG
         bool DragRotateTextureCoordinates(SceneView sceneView)
         {
             if (hoverOnTarget == -1 || hoverOnSurfaceIndex == -1)
+            {
                 return false;
+            }
 
             var brush = brushTargets[hoverOnTarget];
             if (brush.ChildData == null ||
                 brush.ChildData.ModelTransform == null)
+            {
                 return false;
+            }
 
             var modelTransform = brush.ChildData.ModelTransform;
             var modelTransformation = modelTransform.localToWorldMatrix;
@@ -669,7 +736,9 @@ namespace RealtimeCSG
                 !SceneQueryUtility.FindSurfaceIntersection(camera, brush, modelTransformation, hoverOnSurfaceIndex, Event.current.mousePosition,
                                                             out surfaceIntersection) ||
                 !rotationCircle.UpdateRadius(backupTexGen, surfaceIntersection.worldIntersection))
+            {
                 return true;
+            }
 
             using (new UndoGroup(selectedSurfaces, "Rotating surface"))
             {
@@ -742,7 +811,9 @@ namespace RealtimeCSG
                     var surfaceState = surfaceStates[t];
 
                     if (!brush.ChildData.ModelTransform)
+                    {
                         continue;
+                    }
 
                     var brush_transformation = brush.compareTransformation.localToWorldMatrix;
                     var brush_shape = brush.Shape;
@@ -760,7 +831,9 @@ namespace RealtimeCSG
                         }
                         var selected_state = surfaceState.surfaceSelectState[texGen_index];
                         if ((selected_state & SelectState.Selected) == SelectState.None)
+                        {
                             continue;
+                        }
 
                         foundSelectedSurfaces.Add(new SelectedBrushSurface(brush, s));
                         foundTransformations.Add(brush_transformation);
@@ -776,7 +849,10 @@ namespace RealtimeCSG
                         if (outlines[i] != null &&
                             outlines[i].vertices != null &&
                             outlines[i].vertices.Length >= 0)
+                        {
                             continue;
+                        }
+
                         ArrayUtility.RemoveAt(ref outlines, i);
                     }
                 }
@@ -837,7 +913,9 @@ namespace RealtimeCSG
                     var surfaceState = surfaceStates[t];
 
                     if (!brush.ChildData.ModelTransform)
+                    {
                         continue;
+                    }
 
                     var brush_translation = brush.compareTransformation.localToWorldMatrix;
                     var brush_shape = brush.Shape;
@@ -855,7 +933,9 @@ namespace RealtimeCSG
                         }
                         var selected_state = surfaceState.surfaceSelectState[texGen_index];
                         if ((selected_state & SelectState.Hovering) == SelectState.None)
+                        {
                             continue;
+                        }
 
                         foundSelectedSurfaces.Add(new SelectedBrushSurface(brush, s));
                         foundTransformations.Add(brush_translation);
@@ -871,7 +951,10 @@ namespace RealtimeCSG
                         if (outlines[i] != null &&
                             outlines[i].vertices != null &&
                             outlines[i].vertices.Length != 0)
+                        {
                             continue;
+                        }
+
                         ArrayUtility.RemoveAt(ref outlines, i);
                     }
                 }
@@ -934,7 +1017,9 @@ namespace RealtimeCSG
             {
                 var surfaceState = surfaceStates[t];
                 if (surfaceState == null)
+                {
                     return;
+                }
 
                 // assign IDs to every surface
                 for (int s = 0; s < surfaceState.surfaceSelectState.Length; s++)
@@ -964,7 +1049,9 @@ namespace RealtimeCSG
             {
                 mouseIsDown = true;
                 if (!mouseIsDragging && (prevMousePos - Event.current.mousePosition).sqrMagnitude > 4.0f)
+                {
                     mouseIsDragging = true;
+                }
             }
 
             try
@@ -980,15 +1067,21 @@ namespace RealtimeCSG
                         {
                             if (Event.current.button != 0 ||
                                 GUIUtility.hotControl != 0)
+                            {
                                 break;
+                            }
 
                             if (!sceneRect.Contains(Event.current.mousePosition))
+                            {
                                 break;
+                            }
 
                             var guiArea = GetLastSceneGUIRect();
                             GameObject gameObject = null;
                             if (guiArea.Contains(Event.current.mousePosition))
+                            {
                                 break;
+                            }
 
                             if (SceneQueryUtility.FindUnityWorldIntersection(camera, Event.current.mousePosition, out gameObject))
                             {
@@ -998,7 +1091,10 @@ namespace RealtimeCSG
                                     SelectionUtility.DeselectAll();
                                 }
                                 else
+                                {
                                     SelectionUtility.DoSelectionClick(sceneView);
+                                }
+
                                 break;
                             }
 
@@ -1012,7 +1108,9 @@ namespace RealtimeCSG
                                     GUIUtility.keyboardControl = textureCopyDragControlID;
                                     EditorGUIUtility.editingTextField = false;
                                     if (Event.current.type != EventType.MouseUp)
+                                    {
                                         Event.current.Use();
+                                    }
                                 }
                                 //if (Event.current.type != EventType.MouseUp)
                                 break;
@@ -1043,7 +1141,9 @@ namespace RealtimeCSG
 
                             if (Event.current.type != EventType.MouseUp &&
                                 Event.current.modifiers != EventModifiers.None)
+                            {
                                 break;
+                            }
 
                             if (hoverOnTarget == -1 || hoverOnSurfaceIndex == -1)
                             {
@@ -1072,7 +1172,10 @@ namespace RealtimeCSG
                             EditorGUIUtility.editingTextField = false;
 
                             if (Event.current.type != EventType.MouseUp)
+                            {
                                 Event.current.Use();
+                            }
+
                             firstMove = true;
 
                             Undo.IncrementCurrentGroup();
@@ -1097,7 +1200,7 @@ namespace RealtimeCSG
                     case EventType.KeyDown:
                         {
                             if (Keys.CancelActionKey.IsKeyPressed()) { Event.current.Use(); break; }
-                            if (Keys.CopyMaterialTexGen.IsKeyPressed()) { if (dragMode == DragMode.None) dragMode = DragMode.TextureCopy; Event.current.Use(); break; }
+                            if (Keys.CopyMaterialTexGen.IsKeyPressed()) { if (dragMode == DragMode.None) { dragMode = DragMode.TextureCopy; } Event.current.Use(); break; }
                             if (Keys.HandleSceneKeyDown(EditModeManager.CurrentTool, false)) { Event.current.Use(); break; }
                             break;
                         }
@@ -1105,7 +1208,7 @@ namespace RealtimeCSG
                     case EventType.KeyUp:
                         {
                             if (Keys.CancelActionKey.IsKeyPressed()) { SelectionUtility.DeselectAll(); Event.current.Use(); break; }
-                            if (Keys.CopyMaterialTexGen.IsKeyPressed()) { if (dragMode == DragMode.TextureCopy) dragMode = DragMode.None; Event.current.Use(); break; }
+                            if (Keys.CopyMaterialTexGen.IsKeyPressed()) { if (dragMode == DragMode.TextureCopy) { dragMode = DragMode.None; } Event.current.Use(); break; }
                             if (Keys.HandleSceneKeyUp(EditModeManager.CurrentTool, false)) { Event.current.Use(); break; }
                             break;
                         }
@@ -1121,18 +1224,25 @@ namespace RealtimeCSG
                     case EventType.Repaint:
                         {
                             if (SceneDragToolManager.IsDraggingObjectInScene)
+                            {
                                 break;
+                            }
 
                             if (sceneView != null)
                             {
                                 var windowRect = new Rect(0, 0, sceneView.position.width, sceneView.position.height - CSG_GUIStyleUtility.BottomToolBarHeight);
                                 if (currentCursor != MouseCursor.Arrow)
+                                {
                                     EditorGUIUtility.AddCursorRect(windowRect, currentCursor);
+                                }
                             }
 
                             if (currentControl == -1 ||
                                 currentControl == surfaceSelectPaintControl)
+                            {
                                 DrawOutlines();
+                            }
+
                             break;
                         }
                     /*
@@ -1167,7 +1277,9 @@ namespace RealtimeCSG
 
                             if (currentControl != -1 ||
                                 camera == null || !camera.pixelRect.Contains(Event.current.mousePosition))
+                            {
                                 return;
+                            }
 
                             var repaint = false;
                             if (brushTargets == null)
@@ -1190,7 +1302,9 @@ namespace RealtimeCSG
                                 {
                                     // see if this control ID is 'hot'
                                     if (hotControl == surfaceState.surfaceControlID[s])
+                                    {
                                         hoverControl = surfaceState.surfaceControlID[s];
+                                    }
                                 }
                             }
 
@@ -1229,10 +1343,14 @@ namespace RealtimeCSG
                                             for (int s = 0; s < surfaceState.surfaceSelectState.Length; s++)
                                             {
                                                 if ((surfaceState.surfaceSelectState[s] & SelectState.Selected) == SelectState.Selected)
+                                                {
                                                     have_selected = true;
+                                                }
                                             }
                                             if (have_selected)
+                                            {
                                                 hoverOnlyTarget = -1;
+                                            }
                                         }
                                         if (hoverOnlyTarget > 0 && hoverOnlyTarget < surfaceStates.Length)
                                         {
@@ -1258,7 +1376,9 @@ namespace RealtimeCSG
 
                                     if (brush.ChildData == null ||
                                         brush.ChildData.ModelTransform == null)
+                                    {
                                         continue;
+                                    }
 
                                     if (intersection == null || intersection.brushNodeID != brush.brushNodeID)
                                     {
@@ -1310,7 +1430,10 @@ namespace RealtimeCSG
                                 if (!repaint)
                                 {
                                     if (oldSurfaceStates.Length < surfaceState.surfaceSelectState.Length)
+                                    {
                                         oldSurfaceStates = new SelectState[surfaceState.surfaceSelectState.Length];
+                                    }
+
                                     Array.Copy(surfaceState.surfaceSelectState, oldSurfaceStates, surfaceState.surfaceSelectState.Length);
                                 }
 
@@ -1328,7 +1451,10 @@ namespace RealtimeCSG
                                                 surfaceState.surfaceSelectState[s] |= SelectState.Hovering;
                                                 if ((surfaceState.surfaceSelectState[s] & SelectState.Selected) == SelectState.Selected &&
                                                     currentCursor == MouseCursor.Arrow)
+                                                {
                                                     currentCursor = CursorUtility.GetToolCursor();
+                                                }
+
                                                 break;
                                             }
                                         }
@@ -1340,7 +1466,9 @@ namespace RealtimeCSG
                                         for (int p = 0; p < surfaceState.surfaceSelectState.Length; p++)
                                         {
                                             if (surfaceState.surfaceSelectState[p] != oldSurfaceStates[p])
+                                            {
                                                 repaint = true;
+                                            }
                                         }
                                     }
                                 }
@@ -1349,7 +1477,9 @@ namespace RealtimeCSG
                             Handles.matrix = origMatrix;
 
                             if (repaint)
+                            {
                                 CSG_EditorGUIUtility.RepaintAll();
+                            }
 
                             if (hoverOnTarget >= 0 && hoverOnSurfaceIndex >= 0 && surfaceStates.Length > hoverOnTarget &&
                                 surfaceStates[hoverOnTarget].surfaceSelectState.Length > hoverOnSurfaceIndex)
@@ -1357,7 +1487,9 @@ namespace RealtimeCSG
                                 if ((surfaceStates[hoverOnTarget].surfaceSelectState[hoverOnSurfaceIndex] & SelectState.Selected) != SelectState.Selected)
                                 {
                                     if (currentCursor == MouseCursor.Arrow)
+                                    {
                                         currentCursor = MouseCursor.ArrowPlus;
+                                    }
                                 }
                             }
                             break;
@@ -1376,7 +1508,10 @@ namespace RealtimeCSG
                         {
                             int controlID = surfaceStates[t].surfaceControlID[s];
                             if (currentHotControl != controlID)
+                            {
                                 continue;
+                            }
+
                             var eventType = Event.current.GetTypeForControl(controlID);
                             switch (eventType)
                             {
@@ -1386,7 +1521,9 @@ namespace RealtimeCSG
                                             (Event.current.modifiers & ~EventModifiers.Control) != EventModifiers.None ||
                                             GUIUtility.hotControl != controlID ||
                                             controlID <= 0)
+                                        {
                                             break;
+                                        }
 
                                         if (Tools.current == Tool.Move)
                                         {
@@ -1407,7 +1544,9 @@ namespace RealtimeCSG
                                     {
                                         if (Event.current.button != 0 ||
                                             GUIUtility.hotControl != controlID)
+                                        {
                                             break;
+                                        }
 
                                         if (!mouseIsDragging)
                                         {
@@ -1439,7 +1578,10 @@ namespace RealtimeCSG
                                 case EventType.Repaint:
                                     {
                                         if (GUIUtility.hotControl != controlID)
+                                        {
                                             break;
+                                        }
+
                                         if (Tools.current == Tool.Rotate)
                                         {
                                             if (dragMode == DragMode.None)
@@ -1482,7 +1624,9 @@ namespace RealtimeCSG
                                 Event.current.modifiers != EventModifiers.None ||
                                 GUIUtility.hotControl != textureCopyDragControlID ||
                                 textureCopyDragControlID <= 0)
+                            {
                                 break;
+                            }
 
                             if (dragMode == DragMode.TextureCopy)
                             {
@@ -1501,7 +1645,9 @@ namespace RealtimeCSG
                         {
                             if (Event.current.button != 0 ||
                                 GUIUtility.hotControl != textureCopyDragControlID)
+                            {
                                 break;
+                            }
 
                             if (dragMode == DragMode.TextureCopy)
                             {
@@ -1510,7 +1656,9 @@ namespace RealtimeCSG
                                     lastSelectedSurface = null;
                                 }
                                 else
+                                {
                                     DragTextureCopy(sceneView);
+                                }
                             }
 
                             if (!mouseIsDragging)
@@ -1545,12 +1693,17 @@ namespace RealtimeCSG
                             if (Event.current.button != 0 ||
                                 GUIUtility.hotControl != surfaceSelectPaintControl ||
                                 surfaceSelectPaintControl <= 0)
+                            {
                                 break;
+                            }
 
                             if (dragMode == DragMode.SurfaceSelectAdd ||
                                 dragMode == DragMode.SurfaceSelectRemove ||
                                 dragMode == DragMode.SurfaceSelectToggle)
+                            {
                                 DragSurfaceSelect(sceneView);
+                            }
+
                             Event.current.Use();
                             break;
                         }
@@ -1558,7 +1711,9 @@ namespace RealtimeCSG
                         {
                             if (Event.current.button != 0 ||
                                 GUIUtility.hotControl != surfaceSelectPaintControl)
+                            {
                                 break;
+                            }
 
                             if (!mouseIsDragging)
                             {
@@ -1609,7 +1764,9 @@ namespace RealtimeCSG
         public bool OnSceneGUI(Rect windowRect)
         {
             if (brushTargets == null)
+            {
                 return false;
+            }
 
             EditModeSurfaceGUI.OnSceneGUI(windowRect, this);
             return true;

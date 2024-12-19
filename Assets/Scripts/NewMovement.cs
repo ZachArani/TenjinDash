@@ -61,7 +61,7 @@ public class NewMovement : MonoBehaviour
     /// When queue is full, the oldest data point is removed.
     /// </summary>
     Queue<float> joyconInput = new Queue<float>();
-    
+
     /// <summary>
     /// How many readings (<see cref="joyconInput"/> elements) we take for our data average. 
     /// Also serves as the size limit of <see cref="joyconInput"/>.
@@ -102,7 +102,7 @@ public class NewMovement : MonoBehaviour
     /// </summary>
     [ReadOnly]
     public float targetSpeed;
-    
+
     /// <summary>
     /// Current in-game speed. 
     /// The actual speed used to calculate physics/animations.
@@ -210,14 +210,16 @@ public class NewMovement : MonoBehaviour
         //So a player running at 100% effort and is far behind, they will get 70% base + 30% 'effort' + 10% 'bonus' = 110% of the max speed
         //Meanwhile a winning player running at 50% effort will get 70% base + (30% possible * 50% current = ) 15% 'effort' + 0% bonus = 85% of the max speed.
         if (!isOpening)
+        {
             targetSpeed = joyconEffort < effortFloor ? 0 : raceManager.maxSpeed * (0.7f + joyconEffort + rubberbandBoost);
-        
+        }
+
         //We need to speed up to match our target speed.
         if (currentSpeed < targetSpeed)
         {
             //Increase our t value based on delta_t. Cap at 1
-            t = Mathf.Clamp(t + Time.deltaTime * delta_t, 0, 1);
-            curveValue = Math.Round((double)accCurve.Evaluate(t), 4); 
+            t = Mathf.Clamp(t + (Time.deltaTime * delta_t), 0, 1);
+            curveValue = Math.Round((double)accCurve.Evaluate(t), 4);
             if (curveValue > 0.95)
             {
                 curveValue += 0.3 * rubberbandBoost; //Edge case for some smoother speeds at higher ends.
@@ -231,7 +233,7 @@ public class NewMovement : MonoBehaviour
         //We need to slow down!
         else if (currentSpeed > targetSpeed)
         {
-            t = Mathf.Clamp(t - Time.deltaTime * delta_t, 0, 1); //Cap off value at 0.
+            t = Mathf.Clamp(t - (Time.deltaTime * delta_t), 0, 1); //Cap off value at 0.
             isAccelerating = false;
             if (t >= 0.5f)
             {
@@ -243,7 +245,7 @@ public class NewMovement : MonoBehaviour
                 curveValue = Math.Round((double)dccCurve.Evaluate(t), 4);
             }
         }
-        currentSpeed = (float)(curveValue) * raceManager.maxSpeed; //Set relative to current Max speed.
+        currentSpeed = (float)curveValue * raceManager.maxSpeed; //Set relative to current Max speed.
         runningTrack.m_Speed = currentSpeed; //This controls actual movement (via dolly track)
 
         animator.SetFloat("runningSpeed", currentSpeed);
@@ -269,14 +271,20 @@ public class NewMovement : MonoBehaviour
             speed = Mathf.Abs(joycon.GetAccel().y);
             currentEffort = speed;
         }
-        else return;
+        else
+        {
+            return;
+        }
 
         if (joyconInput.Count > AVG_WINDOW)
         {
             joyconInput.Dequeue();
         }
         if (killswitch)
+        {
             speed = 0;
+        }
+
         joyconInput.Enqueue(speed);
         joyconEffort = joyconInput.Average() / MAX_AVG * 0.3f;
     }
@@ -292,7 +300,7 @@ public class NewMovement : MonoBehaviour
             return;
         }
         var dist = Mathf.Abs(runningTrack.m_Position - raceManager.firstPlace.runningTrack.m_Position);
-        rubberbandBoost = (dist / raceManager.maxRubberbandDistance) * raceManager.rubberbandBoostMax / 100f + slipstream;
+        rubberbandBoost = (dist / raceManager.maxRubberbandDistance * raceManager.rubberbandBoostMax / 100f) + slipstream;
     }
 
     /// <summary>

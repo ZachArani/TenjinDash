@@ -67,7 +67,10 @@ namespace RealtimeCSG
         internal static void RegisterSceneView(SceneView sceneView)
         {
             if (sceneView)
+            {
                 return;
+            }
+
             sceneViewLookup[sceneView.camera] = sceneView;
         }
 
@@ -79,16 +82,27 @@ namespace RealtimeCSG
         internal static bool IsWireframeShown(SceneView sceneView)
         {
             if (!sceneView)
+            {
                 return false;
+            }
 
             bool isShown;
             if (sceneViewShown.TryGetValue(sceneView, out isShown))
+            {
                 return isShown;
+            }
 
             var name = sceneView.name;
-            if (name != null) name = name.Trim();
+            if (name != null)
+            {
+                name = name.Trim();
+            }
+
             if (string.IsNullOrEmpty(name))
+            {
                 sceneView.name = GetUniqueSceneviewName(GetKnownSceneviewNames());
+            }
+
             isShown = wireframeSceneviews.Contains(sceneView.name);
             sceneViewShown[sceneView] = isShown;
             return isShown;
@@ -98,7 +112,10 @@ namespace RealtimeCSG
         {
             SceneView sceneView;
             if (!sceneViewLookup.TryGetValue(camera, out sceneView))
+            {
                 return false;
+            }
+
             return IsWireframeShown(sceneView);
         }
 
@@ -121,12 +138,21 @@ namespace RealtimeCSG
         internal static void SetWireframeShown(SceneView sceneView, bool show)
         {
             if (!sceneView)
+            {
                 return;
+            }
 
             var name = sceneView.name;
-            if (name != null) name = name.Trim();
+            if (name != null)
+            {
+                name = name.Trim();
+            }
+
             if (string.IsNullOrEmpty(name))
+            {
                 sceneView.name = GetUniqueSceneviewName(GetKnownSceneviewNames());
+            }
+
             if (show)
             {
                 if (!wireframeSceneviews.Contains(sceneView.name))
@@ -164,7 +190,10 @@ namespace RealtimeCSG
                 if (SelectionUtility.IsSnappingToggled)
                 {
                     if (SnapMode != SnapMode.None)
+                    {
                         return SnapMode.None;
+                    }
+
                     return SnapMode.GridSnapping;
                 }
                 return SnapMode;
@@ -270,9 +299,13 @@ namespace RealtimeCSG
             set
             {
                 if (value)
+                {
                     CSGModel.DefaultSettings |= ModelSettingsFlags.PreserveUVs;
+                }
                 else
+                {
                     CSGModel.DefaultSettings &= ~ModelSettingsFlags.PreserveUVs;
+                }
             }
         }
         static public bool SnapNonCSGObjects = true;
@@ -298,7 +331,10 @@ namespace RealtimeCSG
                 UnityGridManager.ShowGrid = CSGSettings.GridVisible;
             }
             else
+            {
                 CSGSettings.GridVisible = UnityGridManager.ShowGrid;
+            }
+
             EditModeManager.UpdateTool();
             RealtimeCSG.CSGSettings.UpdateWireframeModes();
             RealtimeCSG.CSGSettings.Save();
@@ -349,10 +385,14 @@ namespace RealtimeCSG
             if (UnitySnapType != null)
             {
                 if (UnitySnapTypeMoveProperty != null)
+                {
                     UnitySnapTypeMoveProperty.SetValue(UnitySnapType, moveSnapVector, null);
+                }
 
                 if (UnitySnapTypeRotateProperty != null)
+                {
                     UnitySnapTypeRotateProperty.SetValue(UnitySnapType, rotationSnap, null);
+                }
             }
         }
         #endregion
@@ -364,7 +404,10 @@ namespace RealtimeCSG
             {
                 var sceneView = SceneView.sceneViews[i] as SceneView;
                 if (!sceneView || string.IsNullOrEmpty(sceneView.name))
+                {
                     continue;
+                }
+
                 knownNames.Add(sceneView.name);
             }
             return knownNames;
@@ -388,14 +431,22 @@ namespace RealtimeCSG
             {
                 var sceneView = sceneViews[i];
                 if (!sceneView)
+                {
                     continue;
+                }
 
                 var name = sceneView.name;
                 if (name == null || name.Length == 0)
+                {
                     continue;
+                }
+
                 name = name.Trim();
                 if (name.Length == 0)
+                {
                     continue;
+                }
+
                 name = name.Replace(',', '_').Replace(':', '_');
             }
             var knownNames = GetKnownSceneviewNames();
@@ -404,7 +455,10 @@ namespace RealtimeCSG
             {
                 var sceneView = sceneViews[i];
                 if (!sceneView)
+                {
                     continue;
+                }
+
                 if (string.IsNullOrEmpty(sceneView.name) || foundNames.Contains(sceneView.name))
                 {
                     sceneView.name = GetUniqueSceneviewName(knownNames);
@@ -422,7 +476,10 @@ namespace RealtimeCSG
             {
                 var name = items[i];
                 if (string.IsNullOrEmpty(name.Trim()))
+                {
                     continue;
+                }
+
                 wireframeSceneviews.Add(name.Trim());
             }
         }
@@ -551,12 +608,20 @@ namespace RealtimeCSG
         {
             var assetObjectGUID = EditorPrefs.GetString(name, null);
             if (assetObjectGUID == null)
+            {
                 return defaultValue;
+            }
 
             var assetPath = AssetDatabase.GUIDToAssetPath(assetObjectGUID);
             var assetObject = AssetDatabase.LoadAssetAtPath<Material>(assetPath);
-            if (assetObject) return assetObject;
-            else return defaultValue;
+            if (assetObject)
+            {
+                return assetObject;
+            }
+            else
+            {
+                return defaultValue;
+            }
         }
 
         static void SetAssetObject(string name, UnityEngine.Object value)
@@ -748,7 +813,11 @@ namespace RealtimeCSG
             {
                 if (IsWireframeShown(sceneView))
                 {
-                    if (builder.Length != 0) builder.Append(':');
+                    if (builder.Length != 0)
+                    {
+                        builder.Append(':');
+                    }
+
                     builder.Append(sceneView.name);
                 }
             }

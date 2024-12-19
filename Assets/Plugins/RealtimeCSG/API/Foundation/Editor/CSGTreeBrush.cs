@@ -45,13 +45,31 @@ namespace RealtimeCSG.Foundation
             int brushNodeID;
             if (GenerateBrush(userID, out brushNodeID))
             {
-                if (localTransformation != default(Matrix4x4)) SetNodeLocalTransformation(brushNodeID, ref localTransformation);
-                if (operation != CSGOperationType.Additive) SetBrushOperationType(brushNodeID, operation);
-                if (flags != CSGTreeBrushFlags.Default) SetBrushFlags(brushNodeID, flags);
-                if (brushMesh.Valid) SetBrushMesh(brushNodeID, brushMesh);
+                if (localTransformation != default(Matrix4x4))
+                {
+                    SetNodeLocalTransformation(brushNodeID, ref localTransformation);
+                }
+
+                if (operation != CSGOperationType.Additive)
+                {
+                    SetBrushOperationType(brushNodeID, operation);
+                }
+
+                if (flags != CSGTreeBrushFlags.Default)
+                {
+                    SetBrushFlags(brushNodeID, flags);
+                }
+
+                if (brushMesh.Valid)
+                {
+                    SetBrushMesh(brushNodeID, brushMesh);
+                }
             }
             else
+            {
                 brushNodeID = 0;
+            }
+
             return new CSGTreeBrush() { brushNodeID = brushNodeID };
         }
 

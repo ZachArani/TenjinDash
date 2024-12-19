@@ -88,13 +88,25 @@ namespace RealtimeCSG
             MeshQuery[] query;
             if (!model.HaveCollider)
             {
-                if (!model.IsRenderable) query = emptyMeshTypes;
-                else query = renderOnlyTypes;
+                if (!model.IsRenderable)
+                {
+                    query = emptyMeshTypes;
+                }
+                else
+                {
+                    query = renderOnlyTypes;
+                }
             }
             else
             {
-                if (!model.IsRenderable) query = colliderMeshTypes;
-                else query = renderAndColliderMeshTypes;
+                if (!model.IsRenderable)
+                {
+                    query = colliderMeshTypes;
+                }
+                else
+                {
+                    query = renderAndColliderMeshTypes;
+                }
             }
             return query;
         }
@@ -108,7 +120,10 @@ namespace RealtimeCSG
             {
                 var model = Models[i];
                 if (!ModelTraits.IsModelEditable(model))
+                {
                     continue;
+                }
+
                 var modelModified = false;
                 var invertedWorld = model.InvertedWorld;
                 if (invertedWorld)
@@ -122,9 +137,13 @@ namespace RealtimeCSG
                             if (childNodes[c].Flags == BrushFlags.InfiniteBrush)
                             {
                                 if (infiniteBrush != null)
+                                {
                                     UnityEngine.Object.DestroyImmediate(childNodes[c]);
+                                }
                                 else
+                                {
                                     infiniteBrush = childNodes[c];
+                                }
                             }
                         }
 
@@ -152,7 +171,10 @@ namespace RealtimeCSG
                     if (model.infiniteBrush)
                     {
                         if (model.infiniteBrush.gameObject)
+                        {
                             UnityEngine.Object.DestroyImmediate(model.infiniteBrush.gameObject);
+                        }
+
                         model.infiniteBrush = null;
                         modelModified = true;
                     }
@@ -164,7 +186,10 @@ namespace RealtimeCSG
                     {
                         if (!childBrushes[j] ||
                             childBrushes[j].ControlMesh == null)
+                        {
                             continue;
+                        }
+
                         childBrushes[j].ControlMesh.Generation++;
                     }
                     forceHierarchyUpdate = true;
@@ -179,10 +204,14 @@ namespace RealtimeCSG
         public static void RefreshMeshes()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             if (skipCheckForChanges)
+            {
                 return;
+            }
 
             lock (_lockObj)
             {
@@ -198,7 +227,9 @@ namespace RealtimeCSG
         {
             if (External != null &&
                 External.UpdateAllModelMeshes != null)
+            {
                 External.UpdateAllModelMeshes();
+            }
         }
         #endregion
 
@@ -236,7 +267,9 @@ namespace RealtimeCSG
             {
                 generatedMesh = External.GetModelMesh(model.modelNodeID, meshDescription);
                 if (generatedMesh == null)
+                {
                     return false;
+                }
             }
             getModelMeshesTime += EditorApplication.timeSinceStartup - startGetModelMeshesTime;
 
@@ -264,10 +297,20 @@ namespace RealtimeCSG
 
                 // finally, we start filling our (sub)meshes using the C# arrays
                 sharedMesh.vertices = generatedMesh.positions;
-                if (generatedMesh.normals != null) sharedMesh.normals = generatedMesh.normals;
-                if (generatedMesh.tangents != null) sharedMesh.tangents = generatedMesh.tangents;
+                if (generatedMesh.normals != null)
+                {
+                    sharedMesh.normals = generatedMesh.normals;
+                }
+
+                if (generatedMesh.tangents != null)
+                {
+                    sharedMesh.tangents = generatedMesh.tangents;
+                }
                 //				if (generatedMesh.colors   != null) sharedMesh.colors	= generatedMesh.colors;
-                if (generatedMesh.uv0 != null) sharedMesh.uv = generatedMesh.uv0;
+                if (generatedMesh.uv0 != null)
+                {
+                    sharedMesh.uv = generatedMesh.uv0;
+                }
 
                 // fill the mesh with the given indices
                 sharedMesh.SetTriangles(generatedMesh.indices, 0, calculateBounds: true);
@@ -277,7 +320,10 @@ namespace RealtimeCSG
             updateMeshTime += EditorApplication.timeSinceStartup - startUpdateMeshTime;
 
             if (renderSurfaceType != RenderSurfaceType.Normal)
-                outputHasGeneratedNormals = ((inputMeshDescription.meshQuery.UsedVertexChannels & VertexChannelFlags.Normal) != 0);
+            {
+                outputHasGeneratedNormals = (inputMeshDescription.meshQuery.UsedVertexChannels & VertexChannelFlags.Normal) != 0;
+            }
+
             return true;
         }
 
@@ -285,7 +331,7 @@ namespace RealtimeCSG
         {
             var indexCount = meshDescription.indexCount;
             var vertexCount = meshDescription.vertexCount;
-            if ((vertexCount <= 0 || vertexCount > MaxVertexCount) || (indexCount <= 0))
+            if (vertexCount <= 0 || vertexCount > MaxVertexCount || (indexCount <= 0))
             {
                 if (vertexCount > 0 && indexCount > 0)
                 {
@@ -305,7 +351,9 @@ namespace RealtimeCSG
                 meshDescription == meshInstance.MeshDescription &&
                 meshInstance.SharedMesh &&
                 meshInstance.IsValid())
+            {
                 return true;
+            }
 
             meshInstance = null;
             return true;
@@ -329,7 +377,9 @@ namespace RealtimeCSG
                             meshInstance.RenderSurfaceType,
                             ref meshInstance.HasGeneratedNormals,
                             ref meshInstance.SharedMesh))
+            {
                 return null;
+            }
 
             return meshInstance;
         }
@@ -375,7 +425,10 @@ namespace RealtimeCSG
                             ref helperSurfaceDescription.HasGeneratedNormals,
                             ref helperSurfaceDescription.SharedMesh,
                             editorOnly: true))
+            {
                 return null;
+            }
+
             return helperSurfaceDescription;
         }
         #endregion
@@ -385,7 +438,9 @@ namespace RealtimeCSG
         {
             var modelCount = Models.Length;
             if (modelCount == 0)
+            {
                 return;
+            }
 
             for (var i = 0; i < modelCount; i++)
             {
@@ -413,10 +468,14 @@ namespace RealtimeCSG
         {
             if (EditorApplication.isPlaying
                 || EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return false;
+            }
 
             if (inUpdateMeshes)
+            {
                 return false;
+            }
 
             MeshInstanceManager.Update();
 
@@ -431,7 +490,9 @@ namespace RealtimeCSG
             try
             {
                 if (External == null)
+                {
                     return false;
+                }
 
                 if (forcedUpdateRequired)
                 {
@@ -441,7 +502,9 @@ namespace RealtimeCSG
 
                 var modelCount = Models.Length;
                 if (modelCount == 0)
+                {
                     return false;
+                }
 
                 for (var i = 0; i < modelCount; i++)
                 {
@@ -449,10 +512,14 @@ namespace RealtimeCSG
 
                     if (!forceUpdate &&
                         !model.forceUpdate)
+                    {
                         continue;
+                    }
 
                     if (!ModelTraits.IsModelEditable(model))
+                    {
                         continue;
+                    }
 
                     External.SetDirty(model.modelNodeID);
                     model.forceUpdate = false;
@@ -460,7 +527,9 @@ namespace RealtimeCSG
 
                 // update the model meshes
                 if (!External.UpdateAllModelMeshes())
+                {
                     return false; // nothing to do
+                }
 
                 MeshGeneration++;
                 bool haveUpdates = forceUpdate;
@@ -468,14 +537,16 @@ namespace RealtimeCSG
                 {
                     var model = Models[i];
 
-                    if (!(new CSGTreeNode { nodeID = model.modelNodeID }.Dirty))
+                    if (!new CSGTreeNode { nodeID = model.modelNodeID }.Dirty)
                     {
                         continue;
                     }
 
                     var meshContainer = model.generatedMeshes;
                     if (!meshContainer)
+                    {
                         continue;
+                    }
 
                     EnsureInitialized(model);
 
@@ -488,10 +559,14 @@ namespace RealtimeCSG
 
 
                     if (!ModelTraits.IsModelEditable(model))
+                    {
                         continue;
+                    }
 
                     if (!needToUpdateMeshes)
+                    {
                         continue;
+                    }
 
                     __foundHelperSurfaces.Clear();
                     __foundGeneratedMeshInstance.Clear();
@@ -501,7 +576,9 @@ namespace RealtimeCSG
                         for (int meshIndex = 0; meshIndex < __meshDescriptions.Length; meshIndex++)
                         {
                             if (!ValidateMesh(__meshDescriptions[meshIndex]))
+                            {
                                 continue;
+                            }
 
                             haveUpdates = true;
                             var renderSurfaceType = MeshInstanceManager.GetSurfaceType(__meshDescriptions[meshIndex], model.Settings);
@@ -519,7 +596,9 @@ namespace RealtimeCSG
                                         continue;
                                     }
                                     else
+                                    {
                                         __foundGeneratedMeshInstance.Add(meshInstance);
+                                    }
                                 }
                             }
                             if (renderSurfaceType != RenderSurfaceType.Normal)
@@ -528,9 +607,13 @@ namespace RealtimeCSG
                                 if (TryGetHelperSurfaceDescription(meshContainer, model, model.Settings, __meshDescriptions[meshIndex], renderSurfaceType, out helperSurface))
                                 {
                                     if (helperSurface != null)
+                                    {
                                         __foundHelperSurfaces.Add(helperSurface);
+                                    }
                                     else
+                                    {
                                         __unfoundMeshInstances.Add(meshIndex);
+                                    }
                                 }
                             }
                         }
@@ -547,7 +630,10 @@ namespace RealtimeCSG
                                 renderSurfaceType == RenderSurfaceType.Trigger)
                             {
                                 var meshInstance = GenerateMeshInstance(meshContainer, model, model.Settings, __meshDescriptions[meshIndex], renderSurfaceType, unusedInstances);
-                                if (meshInstance != null) __foundGeneratedMeshInstance.Add(meshInstance);
+                                if (meshInstance != null)
+                                {
+                                    __foundGeneratedMeshInstance.Add(meshInstance);
+                                }
                             }
                             if (renderSurfaceType != RenderSurfaceType.Normal)
                             {
@@ -557,13 +643,14 @@ namespace RealtimeCSG
                         }
 
                         MeshInstanceManager.UpdateContainerComponents(meshContainer, __foundGeneratedMeshInstance, __foundHelperSurfaces);
-                        unityMeshUpdates += (EditorApplication.timeSinceStartup - startUnityMeshUpdates);
+                        unityMeshUpdates += EditorApplication.timeSinceStartup - startUnityMeshUpdates;
                     }
                 }
 
                 if (haveUpdates)
+                {
                     MeshInstanceManager.UpdateHelperSurfaceVisibility(force: true);
-
+                }
 
                 if (text != null)
                 {

@@ -11,7 +11,9 @@ namespace RealtimeCSG
         {
 #if UNITY_EDITOR
             if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 #endif
 
             InternalCSGModelManager.ForceRebuildAll();
@@ -26,10 +28,14 @@ namespace RealtimeCSG
             for (int m = 0; m < InternalCSGModelManager.Models.Length; m++)
             {
                 if (!InternalCSGModelManager.Models[m])
+                {
                     continue;
+                }
 
                 if (!force && !MeshInstanceManager.NeedToGenerateLightmapUVsForModel(InternalCSGModelManager.Models[m]))
+                {
                     continue;
+                }
 
                 MeshInstanceManager.GenerateLightmapUVsForModel(InternalCSGModelManager.Models[m]);
             }
@@ -42,14 +48,19 @@ namespace RealtimeCSG
             var meshInstances = MeshInstanceManager.GetAllModelMeshInstances(meshContainer);
 
             if (meshInstances == null)
+            {
                 return new GameObject[0];
+            }
 
             var gameObjects = new List<GameObject>();
             for (var i = 0; i < meshInstances.Length; i++)
             {
                 if (!meshInstances[i] ||
                     meshInstances[i].RenderSurfaceType != RenderSurfaceType.Normal)
+                {
                     continue;
+                }
+
                 gameObjects.Add(meshInstances[i].gameObject);
             }
 

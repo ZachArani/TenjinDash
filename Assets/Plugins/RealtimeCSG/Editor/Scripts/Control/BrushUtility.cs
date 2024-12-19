@@ -33,7 +33,9 @@ namespace InternalRealtimeCSG
         public static void SetPivotToLocalCenter(CSGBrush brush)
         {
             if (!brush)
+            {
                 return;
+            }
 
             var localCenter = BoundsUtilities.GetLocalCenter(brush);
             var worldCenter = brush.transform.localToWorldMatrix.MultiplyPoint(localCenter);
@@ -44,14 +46,18 @@ namespace InternalRealtimeCSG
         public static void SetPivot(CSGBrush brush, Vector3 newCenter)
         {
             if (!brush)
+            {
                 return;
+            }
 
             var transform = brush.transform;
             var realCenter = transform.position;
             var difference = newCenter - realCenter;
 
             if (difference.sqrMagnitude < MathConstants.ConsideredZero)
+            {
                 return;
+            }
 
             transform.position += difference;
 
@@ -65,10 +71,14 @@ namespace InternalRealtimeCSG
             if (brushes == null ||
                 brushes.Length == 0 ||
                 offset.sqrMagnitude < MathConstants.ConsideredZero)
+            {
                 return;
+            }
 
             for (int i = 0; i < brushes.Length; i++)
+            {
                 brushes[i].transform.position += offset;
+            }
 
             GeometryUtility.MoveControlMeshVertices(brushes, -offset);
             SurfaceUtility.TranslateSurfacesInWorldSpace(brushes, -offset);

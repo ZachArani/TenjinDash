@@ -80,14 +80,14 @@ namespace RealtimeCSG.Foundation
         {
             var hashCode = -190551774;
             hashCode = hashCode * -1521134295;
-            hashCode = hashCode * -1521134295 + meshQuery.GetHashCode();
-            hashCode = hashCode * -1521134295 + (int)surfaceParameter;
-            hashCode = hashCode * -1521134295 + (int)subMeshQueryIndex;
-            hashCode = hashCode * -1521134295 + (int)meshQueryIndex;
-            hashCode = hashCode * -1521134295 + (int)geometryHashValue;
-            hashCode = hashCode * -1521134295 + (int)surfaceHashValue;
-            hashCode = hashCode * -1521134295 + (int)vertexCount;
-            hashCode = hashCode * -1521134295 + (int)indexCount;
+            hashCode = (hashCode * -1521134295) + meshQuery.GetHashCode();
+            hashCode = (hashCode * -1521134295) + surfaceParameter;
+            hashCode = (hashCode * -1521134295) + subMeshQueryIndex;
+            hashCode = (hashCode * -1521134295) + meshQueryIndex;
+            hashCode = (hashCode * -1521134295) + (int)geometryHashValue;
+            hashCode = (hashCode * -1521134295) + (int)surfaceHashValue;
+            hashCode = (hashCode * -1521134295) + vertexCount;
+            hashCode = (hashCode * -1521134295) + indexCount;
             return hashCode;
         }
 

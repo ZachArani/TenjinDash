@@ -16,19 +16,25 @@ namespace RealtimeCSG
         public static void CleanCache()
         {
             if (currentStateCache.Count == 0)
+            {
                 return;
+            }
 
             removeObjects.Clear();
             foreach (var item in currentStateCache.Keys)
             {
                 if (!item)
+                {
                     removeObjects.Add(item);
+                }
             }
 
             if (removeObjects.Count > 0)
             {
                 for (int i = 0; i < removeObjects.Count; i++)
+                {
                     currentStateCache.Remove(removeObjects[i]);
+                }
             }
         }
 
@@ -72,7 +78,9 @@ namespace RealtimeCSG
         {
             currentState = state;
             if (Event.current.type != EventType.Repaint)
+            {
                 return;
+            }
 
             currentState.currentToolTip = null;
             currentState.drawnThisFrame = false;
@@ -87,7 +95,9 @@ namespace RealtimeCSG
             currentState = state;
             if (Event.current.type != EventType.Repaint &&
                 Event.current.type != EventType.Layout)
+            {
                 return;
+            }
 
             currentState.currentToolTip = null;
             currentState.drawnThisFrame = false;
@@ -99,14 +109,15 @@ namespace RealtimeCSG
 
         public static bool FoundToolTip()
         {
-            return (currentState.currentToolTip != null);
+            return currentState.currentToolTip != null;
         }
 
         static void UpdateToolTip(bool getLastRect = false, bool goUp = false)
         {
             if (currentState == null)
+            {
                 return;
-
+            }
 
             if (currentState.prevToolTip != currentState.currentToolTip)
             {
@@ -118,7 +129,9 @@ namespace RealtimeCSG
             }
 
             if (currentState.currentToolTip == null)
+            {
                 return;
+            }
 
             var titleStyle = CSG_GUIStyleUtility.toolTipTitleStyle;
             var contentsStyle = CSG_GUIStyleUtility.toolTipContentsStyle;
@@ -132,9 +145,13 @@ namespace RealtimeCSG
                 currentState.currentToolTipTitle = new GUIContent(currentToolTipTitleString);
                 currentState.currentToolTipContents = new GUIContent(currentToolTipContentsString);
                 if (string.IsNullOrEmpty(currentToolTipKeyCodesString))
+                {
                     currentState.currentToolTipKeyCodes = null;
+                }
                 else
+                {
                     currentState.currentToolTipKeyCodes = new GUIContent(currentToolTipKeyCodesString);
+                }
 
                 var currentToolTipTitleSize = titleStyle.CalcSize(currentState.currentToolTipTitle);
                 var currentToolTipContentsSize = contentsStyle.CalcSize(currentState.currentToolTipContents);
@@ -161,7 +178,7 @@ namespace RealtimeCSG
 
                 var currentToolTipTitleHeight = titleStyle.CalcHeight(currentState.currentToolTipTitle, currentState.currentToolTipArea.width);
                 var currentToolTipContentsHeight = contentsStyle.CalcHeight(currentState.currentToolTipContents, currentState.currentToolTipArea.width);
-                var currentToolTipKeyCodesHeight = (currentState.currentToolTipKeyCodes != null ? keycodesStyle.CalcHeight(currentState.currentToolTipKeyCodes, currentState.currentToolTipArea.width) : 0);
+                var currentToolTipKeyCodesHeight = currentState.currentToolTipKeyCodes != null ? keycodesStyle.CalcHeight(currentState.currentToolTipKeyCodes, currentState.currentToolTipArea.width) : 0;
 
                 currentState.currentToolTipArea.height = currentToolTipTitleHeight + currentToolTipContentsHeight + currentToolTipKeyCodesHeight + 4;
 
@@ -188,8 +205,9 @@ namespace RealtimeCSG
                     }
                 }
                 if (currentState.currentToolTipArea.y < 0)
+                {
                     currentState.currentToolTipArea.y = 0;
-
+                }
 
                 currentState.currentToolTipTitleArea.x = currentState.currentToolTipArea.x;
                 currentState.currentToolTipTitleArea.width = currentState.currentToolTipArea.width;
@@ -209,9 +227,13 @@ namespace RealtimeCSG
                 currentState.currentToolTipKeyCodesArea.y = currentState.currentToolTipContentsArea.y + currentState.currentToolTipContentsArea.height;
 
                 if (currentState.currentToolTipKeyCodes != null)
+                {
                     currentState.currentToolTipKeyCodesArea.height += 4;
+                }
                 else
+                {
                     currentState.currentToolTipContentsArea.height += 4;
+                }
             }
         }
 
@@ -219,19 +241,26 @@ namespace RealtimeCSG
         {
             if (!CSGSettings.ShowTooltips ||
                 currentState == null)
+            {
                 return;
+            }
 
             if (Event.current.type != EventType.Repaint/* ||
                 currentState.drawnThisFrame*/)
             {
                 if (currentState.prevToolTip != currentState.currentToolTip &&
                     currentState.editor != null)
+                {
                     currentState.editor.Repaint();
+                }
+
                 return;
             }
 
             if (currentState.currentToolTip == null)
+            {
                 return;
+            }
 
             UpdateToolTip(getLastRect, goUp);
 
@@ -248,7 +277,10 @@ namespace RealtimeCSG
             EditorGUI.LabelField(currentState.currentToolTipTitleArea, currentState.currentToolTipTitle, titleStyle);
             EditorGUI.LabelField(currentState.currentToolTipContentsArea, currentState.currentToolTipContents, contentsStyle);
             if (currentState.currentToolTipKeyCodes != null)
+            {
                 EditorGUI.LabelField(currentState.currentToolTipKeyCodesArea, currentState.currentToolTipKeyCodes, keycodesStyle);
+            }
+
             GUI.backgroundColor = prevBackgroundColor;
             GUI.color = prevColor;
             GUI.depth = prevDepth;
@@ -258,7 +290,10 @@ namespace RealtimeCSG
         public static void SetToolTip(ToolTip tooltip)
         {
             if (tooltip == null || currentState == null)
+            {
                 return;
+            }
+
             SetToolTip(tooltip, GUILayoutUtility.GetLastRect());
         }
 
@@ -272,7 +307,9 @@ namespace RealtimeCSG
         public static void SetToolTip(ToolTip tooltip, Rect currentArea)
         {
             if (tooltip == null || currentState == null)
+            {
                 return;
+            }
 
             if (currentArea.Contains(Event.current.mousePosition) &&
                 (EditorWindow.mouseOverWindow == currentState.editorWindow ||

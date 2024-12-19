@@ -17,7 +17,7 @@ namespace RealtimeCSG.Foundation
     public struct MeshQuery
     {
         const int BitShift = 24;
-        const uint BitMask = (uint)((uint)127 << BitShift);
+        const uint BitMask = (uint)127 << BitShift;
 
         /// <summary>Constructs a <see cref="RealtimeCSG.Foundation.MeshQuery"/> to use to specify which surfaces should be combined into meshes, and should they be subdivided by a particular layer parameter index.</summary>
         /// <param name="query">Which layer combination would we like to look for and generate a mesh with.</param>
@@ -27,7 +27,11 @@ namespace RealtimeCSG.Foundation
         /// <seealso cref="RealtimeCSG.Foundation.SurfaceLayers" />
         public MeshQuery(LayerUsageFlags query, LayerUsageFlags mask = LayerUsageFlags.None, LayerParameterIndex parameterIndex = LayerParameterIndex.None, VertexChannelFlags vertexChannels = VertexChannelFlags.Position)
         {
-            if (mask == LayerUsageFlags.None) mask = query;
+            if (mask == LayerUsageFlags.None)
+            {
+                mask = query;
+            }
+
             this.layers = ((uint)query & ~BitMask) | ((uint)parameterIndex << BitShift);
             this.maskAndChannels = ((uint)mask & ~BitMask) | ((uint)vertexChannels << BitShift);
         }
@@ -40,22 +44,22 @@ namespace RealtimeCSG.Foundation
         /// <value>Which layer combination would we like to look for and generate a mesh with</value>
         /// <seealso cref="RealtimeCSG.Foundation.SurfaceLayers" />
         /// <seealso cref="RealtimeCSG.Foundation.BrushMesh.Polygon" />
-        public LayerUsageFlags LayerQuery { get { return (LayerUsageFlags)((uint)layers & ~BitMask); } set { layers = ((uint)value & ~BitMask) | ((uint)layers & BitMask); } }
+        public LayerUsageFlags LayerQuery { get { return (LayerUsageFlags)(layers & ~BitMask); } set { layers = ((uint)value & ~BitMask) | (layers & BitMask); } }
 
         /// <value>What layers do we ignore, and what layers do we include in our comparison</value>
         /// <seealso cref="RealtimeCSG.Foundation.SurfaceLayers" />
         /// <seealso cref="RealtimeCSG.Foundation.BrushMesh.Polygon" />
-        public LayerUsageFlags LayerQueryMask { get { return (LayerUsageFlags)((uint)maskAndChannels & ~BitMask); } set { maskAndChannels = ((uint)value & ~BitMask) | ((uint)maskAndChannels & BitMask); } }
+        public LayerUsageFlags LayerQueryMask { get { return (LayerUsageFlags)(maskAndChannels & ~BitMask); } set { maskAndChannels = ((uint)value & ~BitMask) | (maskAndChannels & BitMask); } }
 
         /// <value>Which parameter index we use to, for example, differentiate between different [UnityEngine.Material](https://docs.unity3d.com/ScriptReference/Material.html)s.</value>
         /// <seealso cref="RealtimeCSG.Foundation.LayerParameterIndex" />
         /// <seealso cref="RealtimeCSG.Foundation.SurfaceLayers" />
         /// <seealso cref="RealtimeCSG.Foundation.BrushMesh.Polygon" />
-        public LayerParameterIndex LayerParameterIndex { get { return (LayerParameterIndex)(((uint)layers & BitMask) >> BitShift); } set { layers = ((uint)layers & ~BitMask) | ((uint)value << BitShift); } }
+        public LayerParameterIndex LayerParameterIndex { get { return (LayerParameterIndex)((layers & BitMask) >> BitShift); } set { layers = (layers & ~BitMask) | ((uint)value << BitShift); } }
 
         /// <value>Which vertex channels need to be used for the meshes we'd like to generate</value>
         /// <seealso cref="RealtimeCSG.Foundation.CSGTree.GetMeshDescriptions" />
-        public VertexChannelFlags UsedVertexChannels { get { return (VertexChannelFlags)(((uint)maskAndChannels & BitMask) >> BitShift); } set { maskAndChannels = ((uint)maskAndChannels & ~BitMask) | ((uint)value << BitShift); } }
+        public VertexChannelFlags UsedVertexChannels { get { return (VertexChannelFlags)((maskAndChannels & BitMask) >> BitShift); } set { maskAndChannels = (maskAndChannels & ~BitMask) | ((uint)value << BitShift); } }
 
         public override string ToString()
         {
@@ -69,7 +73,7 @@ namespace RealtimeCSG.Foundation
         public static bool operator !=(MeshQuery left, MeshQuery right) { return left.layers != right.layers || left.maskAndChannels != right.maskAndChannels; }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override bool Equals(object obj) { if (!(obj is MeshQuery)) return false; var other = (MeshQuery)obj; return layers == other.layers && maskAndChannels == other.maskAndChannels; }
+        public override bool Equals(object obj) { if (!(obj is MeshQuery)) { return false; } var other = (MeshQuery)obj; return layers == other.layers && maskAndChannels == other.maskAndChannels; }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool Equals(MeshQuery other) { return layers == other.layers && maskAndChannels == other.maskAndChannels; }
@@ -78,7 +82,7 @@ namespace RealtimeCSG.Foundation
         public static bool Equals(MeshQuery left, MeshQuery right) { return left.layers == right.layers && left.maskAndChannels == right.maskAndChannels; }
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public override int GetHashCode() { var hashCode = -1385006369; hashCode = hashCode * -1521134295; hashCode = hashCode * -1521134295 + (int)layers; hashCode = hashCode * -1521134295 + (int)maskAndChannels; return hashCode; }
+        public override int GetHashCode() { var hashCode = -1385006369; hashCode = hashCode * -1521134295; hashCode = (hashCode * -1521134295) + (int)layers; hashCode = (hashCode * -1521134295) + (int)maskAndChannels; return hashCode; }
         #endregion
     }
 }

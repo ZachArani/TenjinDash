@@ -24,7 +24,10 @@ namespace RealtimeCSG
         static void InitLocalStyles()
         {
             if (ContentMeshLabel != null)
+            {
                 return;
+            }
+
             ContentMeshLabel = new GUIContent(CSG_GUIStyleUtility.brushEditModeNames[(int)ToolEditMode.Edit]);
             //			ContentBrushesLabel	= new GUIContent(GUIStyleUtility.brushEditModeNames[(int)BrushEditMode.Brushes]);
             //			ContentEdgesLabel	= new GUIContent("Edges");

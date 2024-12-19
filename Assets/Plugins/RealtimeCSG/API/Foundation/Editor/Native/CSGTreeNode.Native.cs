@@ -41,7 +41,10 @@ namespace RealtimeCSG.Foundation
         internal static bool SetChildNodes(Int32 nodeID, CSGTreeNode[] children)
         {
             if (children == null)
+            {
                 return false;
+            }
+
             GCHandle childrenHandle = GCHandle.Alloc(children, GCHandleType.Pinned);
             IntPtr childrenPtr = childrenHandle.AddrOfPinnedObject();
             var result = SetChildNodes(nodeID, children.Length, childrenPtr);
@@ -54,7 +57,9 @@ namespace RealtimeCSG.Foundation
             var childCount = GetChildNodeCount(nodeID);
             var children = new CSGTreeNode[childCount];
             if (childCount == 0)
+            {
                 return children;
+            }
 
             GCHandle childrenHandle = GCHandle.Alloc(children, GCHandleType.Pinned);
             IntPtr childrenPtr = childrenHandle.AddrOfPinnedObject();
@@ -66,14 +71,20 @@ namespace RealtimeCSG.Foundation
         internal static int CopyTo(Int32 nodeID, CSGTreeNode[] children, int arrayIndex)
         {
             if (children == null)
+            {
                 throw new ArgumentNullException("children");
+            }
 
             var childCount = GetChildNodeCount(nodeID);
             if (childCount <= 0)
+            {
                 return 0;
+            }
 
             if (children.Length + arrayIndex < childCount)
+            {
                 throw new ArgumentException(string.Format("The array does not have enough elements, its length is {0} and needs at least {1}", children.Length, childCount), "children");
+            }
 
             return CopyToUnsafe(nodeID, childCount, children, arrayIndex);
         }
@@ -91,7 +102,10 @@ namespace RealtimeCSG.Foundation
         internal static bool InsertChildNodeRange(Int32 nodeID, Int32 index, CSGTreeNode[] children)
         {
             if (children == null)
+            {
                 return false;
+            }
+
             GCHandle childrenHandle = GCHandle.Alloc(children, GCHandleType.Pinned);
             IntPtr childrenPtr = childrenHandle.AddrOfPinnedObject();
             var result = InsertChildNodeRange(nodeID, index, children.Length, childrenPtr);

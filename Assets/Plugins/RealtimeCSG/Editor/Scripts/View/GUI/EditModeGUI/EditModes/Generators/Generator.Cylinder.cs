@@ -30,49 +30,49 @@ namespace RealtimeCSG
         public int CircleSides
         {
             get { return settings.circleSides; }
-            set { if (settings.circleSides == value) return; Undo.RecordObject(this, "Modified Circle Sides"); settings.circleSides = value; UpdateBaseShape(); }
+            set { if (settings.circleSides == value) { return; } Undo.RecordObject(this, "Modified Circle Sides"); settings.circleSides = value; UpdateBaseShape(); }
         }
 
         public float CircleOffset
         {
             get { return settings.circleOffset; }
-            set { if (settings.circleOffset == value) return; Undo.RecordObject(this, "Modified Circle Offset"); settings.circleOffset = value; UpdateBaseShape(); }
+            set { if (settings.circleOffset == value) { return; } Undo.RecordObject(this, "Modified Circle Offset"); settings.circleOffset = value; UpdateBaseShape(); }
         }
 
         public bool CircleSmoothShading
         {
             get { return settings.circleSmoothShading; }
-            set { if (settings.circleSmoothShading == value) return; Undo.RecordObject(this, "Modified Circle Smoothing"); settings.circleSmoothShading = value; UpdateBaseShape(); }
+            set { if (settings.circleSmoothShading == value) { return; } Undo.RecordObject(this, "Modified Circle Smoothing"); settings.circleSmoothShading = value; UpdateBaseShape(); }
         }
 
         public bool CircleSingleSurfaceEnds
         {
             get { return settings.circleSingleSurfaceEnds; }
-            set { if (settings.circleSingleSurfaceEnds == value) return; Undo.RecordObject(this, "Modified Circle Single Surface Ends"); settings.circleSingleSurfaceEnds = value; UpdateBaseShape(); }
+            set { if (settings.circleSingleSurfaceEnds == value) { return; } Undo.RecordObject(this, "Modified Circle Single Surface Ends"); settings.circleSingleSurfaceEnds = value; UpdateBaseShape(); }
         }
 
         public bool CircleDistanceToSide
         {
             get { return settings.circleDistanceToSide; }
-            set { if (settings.circleDistanceToSide == value) return; Undo.RecordObject(this, "Modified Circle Distance To Side"); settings.circleDistanceToSide = value; UpdateBaseShape(); }
+            set { if (settings.circleDistanceToSide == value) { return; } Undo.RecordObject(this, "Modified Circle Distance To Side"); settings.circleDistanceToSide = value; UpdateBaseShape(); }
         }
 
         public bool CircleRecenter
         {
             get { return settings.circleRecenter; }
-            set { if (settings.circleRecenter == value) return; Undo.RecordObject(this, "Modified Circle Recenter"); settings.circleRecenter = value; UpdateBaseShape(); }
+            set { if (settings.circleRecenter == value) { return; } Undo.RecordObject(this, "Modified Circle Recenter"); settings.circleRecenter = value; UpdateBaseShape(); }
         }
 
         public float RadiusA
         {
             get { return settings.RadiusA; }
-            set { if (settings.RadiusA == value) return; Undo.RecordObject(this, "Modified Circle Radius A"); settings.RadiusA = value; UpdateBaseShape(); }
+            set { if (settings.RadiusA == value) { return; } Undo.RecordObject(this, "Modified Circle Radius A"); settings.RadiusA = value; UpdateBaseShape(); }
         }
 
         public float RadiusB
         {
             get { return settings.RadiusB; }
-            set { if (settings.RadiusB == value) return; Undo.RecordObject(this, "Modified Circle Radius B"); settings.RadiusB = value; UpdateBaseShape(); }
+            set { if (settings.RadiusB == value) { return; } Undo.RecordObject(this, "Modified Circle Radius B"); settings.RadiusB = value; UpdateBaseShape(); }
         }
 
         public override void PerformDeselectAll() { Cancel(); }
@@ -136,21 +136,29 @@ namespace RealtimeCSG
         void IGenerator.OnDefaultMaterialModified()
         {
             if (generatedBrushes == null)
+            {
                 return;
+            }
 
             var defaultMaterial = CSGSettings.DefaultMaterial;
             for (int i = 0; i < generatedBrushes.Length; i++)
             {
                 var brush = generatedBrushes[i];
                 if (!brush)
+                {
                     continue;
+                }
 
                 var shape = brush.Shape;
                 for (var m = 0; m < shape.TexGens.Length; m++)
+                {
                     shape.TexGens[m].RenderMaterial = defaultMaterial;
+                }
 
                 if (brush.ControlMesh != null)
+                {
                     brush.ControlMesh.SetDirty();
+                }
             }
         }
 
@@ -166,14 +174,20 @@ namespace RealtimeCSG
             //CSGBrushEditorManager.ResetMessage();
 
             if (shapeIsValid && newPolygons != null)
+            {
                 UpdatePolygons(outlineVertices, newPolygons.ToArray());
+            }
 
             if (editMode != EditMode.EditShape &&
                 editMode != EditMode.ExtrudeShape)
+            {
                 return false;
+            }
 
             if (!shapeIsValid || !HaveExtrusion)
+            {
                 return true;
+            }
 
             GenerateBrushesFromPolygons(inGridSpace: false);
             UpdateExtrudedShape();
@@ -189,7 +203,10 @@ namespace RealtimeCSG
                 //	realPlane = RealtimeCSG.Grid.CurrentGridPlane;
 
                 if (Vector3.Dot(realPlane.normal, buildPlane.normal) < 0)
+                {
                     return true;
+                }
+
                 return false;
             }
         }
@@ -297,7 +314,9 @@ namespace RealtimeCSG
         void PaintRadiusMessage(Camera camera)
         {
             if (settings.vertices == null || settings.vertices.Length == 0)
+            {
                 return;
+            }
 
             var endPosition = settings.vertices.Length == 1 ? worldPosition : settings.vertices[1];
             var centerPoint = settings.vertices[0];
@@ -365,12 +384,18 @@ namespace RealtimeCSG
             bool isValid;
             var realVertices = settings.GetVertices(buildPlane, worldPosition, gridTangent, gridBinormal, out isValid);
             if (editMode == EditMode.EditShape)
+            {
                 shapeIsValid = isValid;
+            }
+
             if (realVertices != null && realVertices.Length >= 3)
             {
                 var wireframeColor = ColorSettings.WireframeOutline;
                 if (!shapeIsValid || !isValid)
+                {
                     wireframeColor = Color.red;
+                }
+
                 for (int i = 1; i < realVertices.Length; i++)
                 {
                     PaintUtility.DrawLine(realVertices[i - 1], realVertices[i], GUIConstants.oldLineScale, wireframeColor);
@@ -422,7 +447,10 @@ namespace RealtimeCSG
             {
                 if (settings.vertexIDs == null ||
                     settings.vertexIDs.Length != settings.vertices.Length)
+                {
                     settings.vertexIDs = new int[settings.vertices.Length];
+                }
+
                 for (int i = 0; i < settings.vertices.Length; i++)
                 {
                     settings.vertexIDs[i] = GUIUtility.GetControlID(ShapeBuilderPointHash, FocusType.Passive);
@@ -458,9 +486,13 @@ namespace RealtimeCSG
                     }
                 }
                 if (planeIsInversed)
+                {
                     firstSnappedPlanes[i / 2] = worldPlane.Negated();
+                }
                 else
+                {
                     firstSnappedPlanes[i / 2] = worldPlane;
+                }
             }
         }
 
@@ -525,8 +557,8 @@ namespace RealtimeCSG
                         worldPosition = snapFunction(camera, worldPosition, hoverBuildPlane, ref visualSnappedEdges, out snappedOnBrush, generatedBrushes);
                         if (snappedOnBrush != null)
                         {
-                            pointOnEdge = (visualSnappedEdges != null &&
-                                      visualSnappedEdges.Count > 0);
+                            pointOnEdge = visualSnappedEdges != null &&
+                                      visualSnappedEdges.Count > 0;
                             vertexOnBrush = snappedOnBrush;
                             vertexOnGeometry = true;
                         }
@@ -558,8 +590,8 @@ namespace RealtimeCSG
                         worldPosition = snapFunction(camera, worldPosition, hoverBuildPlane, ref visualSnappedEdges, out snappedOnBrush, generatedBrushes);
                         if (snappedOnBrush != null)
                         {
-                            pointOnEdge = (visualSnappedEdges != null &&
-                                            visualSnappedEdges.Count > 0);
+                            pointOnEdge = visualSnappedEdges != null &&
+                                            visualSnappedEdges.Count > 0;
                             vertexOnBrush = snappedOnBrush;
                         }
                     }
@@ -568,14 +600,18 @@ namespace RealtimeCSG
                 if (geometryModel == null && vertexOnBrush != null)
                 {
                     if (vertexOnBrush.ChildData != null && vertexOnBrush.ChildData.Model)
+                    {
                         geometryModel = vertexOnBrush.ChildData.Model;
+                    }
                 }
 
                 if (worldPosition != prevWorldPosition)
                 {
                     prevWorldPosition = worldPosition;
                     if (Event.current.type != EventType.Repaint)
+                    {
                         CSG_EditorGUIUtility.RepaintAll();
+                    }
                 }
 
                 visualSnappedGrid = RealtimeCSG.CSGGrid.FindAllGridEdgesThatTouchPoint(camera, worldPosition);
@@ -640,12 +676,20 @@ namespace RealtimeCSG
                 case EventType.MouseDown:
                     {
                         if (!sceneRect.Contains(Event.current.mousePosition))
+                        {
                             break;
+                        }
+
                         if (Tools.viewTool != ViewTool.None && Tools.viewTool != ViewTool.Pan)
+                        {
                             return;
+                        }
+
                         if ((GUIUtility.hotControl != 0 && GUIUtility.hotControl != shapeEditId && GUIUtility.hotControl != base.shapeId) ||
                             Event.current.button != 0)
+                        {
                             return;
+                        }
 
                         Event.current.Use();
                         if (settings.vertices.Length == 0)
@@ -667,7 +711,10 @@ namespace RealtimeCSG
                                 !float.IsNaN(worldPosition.z) && !float.IsInfinity(worldPosition.z))
                             {
                                 if (hoverBuildPlane.normal.sqrMagnitude != 0)
+                                {
                                     buildPlane = hoverBuildPlane;
+                                }
+
                                 CalculateWorldSpaceTangents(camera);
 
                                 if (settings.vertices.Length == 0)
@@ -692,7 +739,9 @@ namespace RealtimeCSG
                                     if (firstSnappedEdges != null)
                                     {
                                         if (firstSnappedPlanes == null)
+                                        {
                                             CreateSnappedPlanes();
+                                        }
 
                                         bool outside = true;
                                         for (int i = 0; i < firstSnappedPlanes.Length; i++)
@@ -738,7 +787,10 @@ namespace RealtimeCSG
                 case EventType.MouseDrag:
                     {
                         if (Tools.viewTool != ViewTool.None && Tools.viewTool != ViewTool.Pan)
+                        {
                             break;
+                        }
+
                         if (GUIUtility.hotControl == base.shapeId && Event.current.button == 0)
                         {
                             Event.current.Use();
@@ -748,9 +800,15 @@ namespace RealtimeCSG
                 case EventType.MouseUp:
                     {
                         if (GUIUtility.hotControl != base.shapeId)
+                        {
                             return;
+                        }
+
                         if (Tools.viewTool != ViewTool.None && Tools.viewTool != ViewTool.Pan)
+                        {
                             return;
+                        }
+
                         if (Event.current.button == 0)
                         {
                             Event.current.Use();
@@ -791,7 +849,9 @@ namespace RealtimeCSG
                 Event.current.type == EventType.Repaint)
             {
                 if (visualSnappedEdges != null)
+                {
                     PaintUtility.DrawLines(visualSnappedEdges.ToArray(), GUIConstants.oldThickLineScale, ColorSettings.SnappedEdges);
+                }
 
                 if (visualSnappedGrid != null)
                 {
@@ -839,7 +899,9 @@ namespace RealtimeCSG
                     case EventType.Repaint:
                         {
                             if (SceneDragToolManager.IsDraggingObjectInScene)
+                            {
                                 break;
+                            }
 
                             bool isSelected = id == GUIUtility.keyboardControl;
                             var temp = Handles.color;
@@ -874,8 +936,10 @@ namespace RealtimeCSG
 
                     case EventType.Layout:
                         {
-                            if ((Tools.viewTool != ViewTool.None && Tools.viewTool != ViewTool.Pan))
+                            if (Tools.viewTool != ViewTool.None && Tools.viewTool != ViewTool.Pan)
+                            {
                                 break;
+                            }
 
                             var origMatrix = Handles.matrix;
                             Handles.matrix = MathConstants.identityMatrix;
@@ -919,9 +983,15 @@ namespace RealtimeCSG
                     case EventType.MouseDown:
                         {
                             if (!sceneRect.Contains(Event.current.mousePosition))
+                            {
                                 break;
+                            }
+
                             if (Tools.viewTool != ViewTool.None && Tools.viewTool != ViewTool.Pan)
+                            {
                                 break;
+                            }
+
                             if (GUIUtility.hotControl == 0 && HandleUtility.nearestControl == id && Event.current.button == 0)
                             {
                                 GUIUtility.hotControl = id;
@@ -936,7 +1006,10 @@ namespace RealtimeCSG
                     case EventType.MouseDrag:
                         {
                             if (Tools.viewTool != ViewTool.None && Tools.viewTool != ViewTool.Pan)
+                            {
                                 break;
+                            }
+
                             if (GUIUtility.hotControl == id && Event.current.button == 0)
                             {
                                 Undo.RecordObject(this, "Modify shape");
@@ -947,7 +1020,9 @@ namespace RealtimeCSG
                                 if (float.IsInfinity(worldPosition.x) || float.IsNaN(worldPosition.x) ||
                                     float.IsInfinity(worldPosition.y) || float.IsNaN(worldPosition.y) ||
                                     float.IsInfinity(worldPosition.z) || float.IsNaN(worldPosition.z))
+                                {
                                     worldPosition = settings.vertices[i];
+                                }
 
                                 ResetVisuals();
                                 if (snapFunction != null)
@@ -975,9 +1050,15 @@ namespace RealtimeCSG
                     case EventType.MouseUp:
                         {
                             if (GUIUtility.hotControl != id)
+                            {
                                 break;
+                            }
+
                             if (Tools.viewTool != ViewTool.None && Tools.viewTool != ViewTool.Pan)
+                            {
                                 break;
+                            }
+
                             if (Event.current.button == 0)
                             {
                                 GUIUtility.hotControl = 0;

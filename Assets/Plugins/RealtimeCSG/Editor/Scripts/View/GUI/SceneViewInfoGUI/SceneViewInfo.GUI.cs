@@ -28,7 +28,9 @@ namespace RealtimeCSG
                 Handles.BeginGUI();
 
                 if (!CSGSettings.ShowSceneInfo)
+                {
                     return;
+                }
 
                 // -Nuke: internally there is a root model that all other models are grouped under, so we'll subtract 1 to keep an accurate count of user created brushes.
                 int modelCount = Mathf.Clamp(InternalCSGModelManager.Models.Length - 1, 0, int.MaxValue);

@@ -102,8 +102,8 @@ namespace RealtimeCSG.Legacy
         /// <param name="point3">Third point</param>
         public CSGPlane(Vector3 point1, Vector3 point2, Vector3 point3)
         {
-            var ab = (point2 - point1);
-            var ac = (point3 - point1);
+            var ab = point2 - point1;
+            var ac = point3 - point1;
 
             var normal = Vector3.Cross(ab, ac).normalized;
 
@@ -132,7 +132,7 @@ namespace RealtimeCSG.Legacy
             var distanceA = (a * start_x) +
                               (b * start_y) +
                               (c * start_z) -
-                              (d);
+                              d;
             var length = (a * direction_x) +
                               (b * direction_y) +
                               (c * direction_z);
@@ -152,7 +152,7 @@ namespace RealtimeCSG.Legacy
         public bool TryRayIntersection(UnityEngine.Ray ray, out Vector3 intersection)
         {
             var start = ray.origin;
-            var end = ray.origin + ray.direction * 1000.0f;
+            var end = ray.origin + (ray.direction * 1000.0f);
             var distanceA = Distance(start);
             if (float.IsInfinity(distanceA) || float.IsNaN(distanceA))
             {
@@ -263,12 +263,12 @@ namespace RealtimeCSG.Legacy
         public float Distance(Vector3 point)
         {
             return
-                (
+
                     (a * point.x) +
                     (b * point.y) +
                     (c * point.z) -
-                    (d)
-                );
+                    d
+                ;
         }
 
         /// <summary>Normalize the normal of the plane</summary>
@@ -347,9 +347,15 @@ namespace RealtimeCSG.Legacy
         public bool Equals(CSGPlane other)
         {
             if (System.Object.ReferenceEquals(this, other))
+            {
                 return true;
+            }
+
             if (System.Object.ReferenceEquals(other, null))
+            {
                 return false;
+            }
+
             return Mathf.Abs(this.Distance(other.pointOnPlane)) <= MathConstants.DistanceEpsilon &&
                     Mathf.Abs(other.Distance(this.pointOnPlane)) <= MathConstants.DistanceEpsilon &&
                     Mathf.Abs(a - other.a) <= MathConstants.NormalEpsilon &&
@@ -360,12 +366,21 @@ namespace RealtimeCSG.Legacy
         public override bool Equals(object obj)
         {
             if (System.Object.ReferenceEquals(this, obj))
+            {
                 return true;
+            }
+
             if (!(obj is CSGPlane))
+            {
                 return false;
+            }
+
             CSGPlane other = (CSGPlane)obj;
             if (System.Object.ReferenceEquals(other, null))
+            {
                 return false;
+            }
+
             return Mathf.Abs(this.Distance(other.pointOnPlane)) <= MathConstants.DistanceEpsilon &&
                     Mathf.Abs(other.Distance(this.pointOnPlane)) <= MathConstants.DistanceEpsilon &&
                     Mathf.Abs(a - other.a) <= MathConstants.NormalEpsilon &&
@@ -376,10 +391,16 @@ namespace RealtimeCSG.Legacy
         public static bool operator ==(CSGPlane left, CSGPlane right)
         {
             if (System.Object.ReferenceEquals(left, right))
+            {
                 return true;
+            }
+
             if (System.Object.ReferenceEquals(left, null) ||
                 System.Object.ReferenceEquals(right, null))
+            {
                 return false;
+            }
+
             return Mathf.Abs(left.Distance(right.pointOnPlane)) <= MathConstants.DistanceEpsilon &&
                     Mathf.Abs(right.Distance(left.pointOnPlane)) <= MathConstants.DistanceEpsilon &&
                     Mathf.Abs(left.a - right.a) <= MathConstants.NormalEpsilon &&
@@ -390,13 +411,19 @@ namespace RealtimeCSG.Legacy
         public static bool operator !=(CSGPlane left, CSGPlane right)
         {
             if (System.Object.ReferenceEquals(left, right))
+            {
                 return false;
+            }
+
             if (System.Object.ReferenceEquals(left, null) ||
                 System.Object.ReferenceEquals(right, null))
+            {
                 return true;
-            return Mathf.Abs(left.Distance(right.pointOnPlane)) > MathConstants.DistanceEpsilon &&
+            }
+
+            return (Mathf.Abs(left.Distance(right.pointOnPlane)) > MathConstants.DistanceEpsilon &&
                     Mathf.Abs(right.Distance(left.pointOnPlane)) > MathConstants.DistanceEpsilon &&
-                    Mathf.Abs(left.a - right.a) > MathConstants.NormalEpsilon ||
+                    Mathf.Abs(left.a - right.a) > MathConstants.NormalEpsilon) ||
                     Mathf.Abs(left.b - right.b) > MathConstants.NormalEpsilon ||
                     Mathf.Abs(left.c - right.c) > MathConstants.NormalEpsilon;
         }

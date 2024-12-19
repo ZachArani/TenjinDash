@@ -16,7 +16,10 @@ namespace RealtimeCSG
         static void InitReflectedData()
         {
             if (initialized)
+            {
                 return;
+            }
+
             initialized = true;
             reflectionSucceeded = false;
 
@@ -36,7 +39,9 @@ namespace RealtimeCSG
             {
                 UnityShowGridProperty = UnityAnnotationUtility.GetProperty("showGrid", BindingFlags.NonPublic | BindingFlags.Static);
                 if (UnityShowGridProperty != null)
+                {
                     UnityShowGridProperty.SetValue(UnityAnnotationUtility, false, null);
+                }
             }
             else
             {
@@ -52,14 +57,19 @@ namespace RealtimeCSG
             {
                 InitReflectedData();
                 if (reflectionSucceeded && UnityShowGridProperty != null)
+                {
                     return (bool)UnityShowGridProperty.GetValue(UnityAnnotationUtility, null);
+                }
+
                 return true;
             }
             set
             {
                 InitReflectedData();
                 if (reflectionSucceeded && UnityShowGridProperty != null)
+                {
                     UnityShowGridProperty.SetValue(UnityAnnotationUtility, value, null);
+                }
             }
         }
     }

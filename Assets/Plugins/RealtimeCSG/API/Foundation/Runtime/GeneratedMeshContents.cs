@@ -58,9 +58,14 @@ namespace RealtimeCSG.Foundation
         public void CopyTo(UnityEngine.Mesh mesh)
         {
             if (object.ReferenceEquals(mesh, null))
+            {
                 throw new ArgumentNullException("mesh");
+            }
+
             if (!mesh)
+            {
                 throw new ArgumentException("mesh", "mesh is not valid, it might've already be destroyed");
+            }
 
             if (description.vertexCount < 3 ||
                 description.indexCount < 3)
@@ -70,9 +75,20 @@ namespace RealtimeCSG.Foundation
             }
 
             mesh.vertices = positions;
-            if (normals != null) mesh.normals = normals;
-            if (tangents != null) mesh.tangents = tangents;
-            if (uv0 != null) mesh.uv = uv0;
+            if (normals != null)
+            {
+                mesh.normals = normals;
+            }
+
+            if (tangents != null)
+            {
+                mesh.tangents = tangents;
+            }
+
+            if (uv0 != null)
+            {
+                mesh.uv = uv0;
+            }
 
             mesh.SetTriangles(indices, 0, calculateBounds: true);
             //mesh.bounds = bounds;

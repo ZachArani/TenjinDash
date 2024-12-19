@@ -16,22 +16,22 @@ namespace RealtimeCSG
         public int sphereSplits
         {
             get { return Mathf.Max(1, RealtimeCSG.CSGSettings.SphereSplits); }
-            set { if (RealtimeCSG.CSGSettings.SphereSplits == value) return; RealtimeCSG.CSGSettings.SphereSplits = value; RealtimeCSG.CSGSettings.Save(); }
+            set { if (RealtimeCSG.CSGSettings.SphereSplits == value) { return; } RealtimeCSG.CSGSettings.SphereSplits = value; RealtimeCSG.CSGSettings.Save(); }
         }
         public float sphereOffset
         {
             get { return RealtimeCSG.CSGSettings.SphereOffset; }
-            set { if (RealtimeCSG.CSGSettings.SphereOffset == value) return; RealtimeCSG.CSGSettings.SphereOffset = value; RealtimeCSG.CSGSettings.Save(); }
+            set { if (RealtimeCSG.CSGSettings.SphereOffset == value) { return; } RealtimeCSG.CSGSettings.SphereOffset = value; RealtimeCSG.CSGSettings.Save(); }
         }
         public bool sphereSmoothShading
         {
             get { return RealtimeCSG.CSGSettings.SphereSmoothShading; }
-            set { if (RealtimeCSG.CSGSettings.SphereSmoothShading == value) return; RealtimeCSG.CSGSettings.SphereSmoothShading = value; RealtimeCSG.CSGSettings.Save(); }
+            set { if (RealtimeCSG.CSGSettings.SphereSmoothShading == value) { return; } RealtimeCSG.CSGSettings.SphereSmoothShading = value; RealtimeCSG.CSGSettings.Save(); }
         }
         public bool isHemiSphere
         {
             get { return RealtimeCSG.CSGSettings.HemiSphereMode; }
-            set { if (RealtimeCSG.CSGSettings.HemiSphereMode == value) return; RealtimeCSG.CSGSettings.HemiSphereMode = value; RealtimeCSG.CSGSettings.Save(); }
+            set { if (RealtimeCSG.CSGSettings.HemiSphereMode == value) { return; } RealtimeCSG.CSGSettings.HemiSphereMode = value; RealtimeCSG.CSGSettings.Save(); }
         }
 
         public float sphereRadius = 0.0f;
@@ -50,24 +50,33 @@ namespace RealtimeCSG
             get
             {
                 if (vertices.Length <= 1)
+                {
                     return 0;
+                }
 
                 return (vertices[1] - vertices[0]).magnitude;
             }
             set
             {
                 if (vertices.Length <= 1)
+                {
                     return;
+                }
 
-                var delta = (vertices[1] - vertices[0]);
+                var delta = vertices[1] - vertices[0];
                 var radius = delta.magnitude;
                 if (radius == value)
+                {
                     return;
+                }
 
                 delta /= radius;
                 radius = value;
                 if (radius < MathConstants.MinimumScale)
+                {
                     radius = MathConstants.MinimumScale;
+                }
+
                 delta *= radius;
 
                 vertices[1] = vertices[0] + delta;
@@ -87,7 +96,9 @@ namespace RealtimeCSG
                 return vertices;
             }
             if (sphereSplits < 1)
+            {
                 sphereSplits = 1;
+            }
 
             var realSplits = (sphereSplits + 1) * 4;
 
@@ -96,7 +107,7 @@ namespace RealtimeCSG
 
             var vertex1 = (vertices.Length > 1) ? vertices[1] : worldPosition;
 
-            var delta = (vertex1 - vertices[0]);
+            var delta = vertex1 - vertices[0];
             sphereRadius = delta.magnitude;
 
             if (sphereRadius <= MathConstants.DistanceEpsilon)
@@ -118,10 +129,10 @@ namespace RealtimeCSG
             Vector3 p1 = MathConstants.zeroVector3;
             for (int i = 0; i < realSplits; i++)
             {
-                var angle = ((i * Mathf.PI * 2.0f) / (float)realSplits) + angle_offset;
+                var angle = (i * Mathf.PI * 2.0f / realSplits) + angle_offset;
 
-                p1.x = (Mathf.Sin(angle) * sphereRadius);
-                p1.z = (Mathf.Cos(angle) * sphereRadius);
+                p1.x = Mathf.Sin(angle) * sphereRadius;
+                p1.z = Mathf.Cos(angle) * sphereRadius;
 
                 realVertices[i] = p1;
             }
@@ -139,13 +150,17 @@ namespace RealtimeCSG
         public void ProjectShapeOnBuildPlane(CSGPlane plane)
         {
             for (int i = 0; i < vertices.Length; i++)
+            {
                 vertices[i] = plane.Project(vertices[i]);
+            }
         }
 
         public void MoveShape(Vector3 offset)
         {
             for (int i = 0; i < vertices.Length; i++)
+            {
                 vertices[i] = vertices[i] + offset;
+            }
         }
 
         public Vector3 GetCenter(CSGPlane plane)

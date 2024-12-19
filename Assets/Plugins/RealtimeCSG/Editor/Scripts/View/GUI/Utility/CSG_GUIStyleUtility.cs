@@ -304,14 +304,16 @@ namespace RealtimeCSG
         {
             get
             {
-                return (EditorGUIUtility.isProSkin) ? CSG_GUIStyleUtility.Pro : CSG_GUIStyleUtility.Personal;
+                return EditorGUIUtility.isProSkin ? CSG_GUIStyleUtility.Pro : CSG_GUIStyleUtility.Personal;
             }
         }
 
         public static void InitStyles()
         {
             if (stylesInitialized)
+            {
                 return;
+            }
 
             var oldSkin = GUI.skin;
             stylesInitialized = true;
@@ -456,7 +458,9 @@ namespace RealtimeCSG
             for (int i = 0; i < brushEditModeNames.Length; i++)
             {
                 if (brushEditModeContent[i].text != brushEditModeNames[i])
+                {
                     Debug.LogError("Fail!");
+                }
             }
 
             var pro_skin = CSG_GUIStyleUtility.Pro;
@@ -615,9 +619,13 @@ namespace RealtimeCSG
         public static void SetDefaultGUISkin()
         {
             if (EditorGUIUtility.isProSkin)
+            {
                 GUI.skin = EditorGUIUtility.GetBuiltinSkin(EditorSkin.Scene);
+            }
             else
+            {
                 GUI.skin = EditorGUIUtility.GetBuiltinSkin(EditorSkin.Inspector);
+            }
         }
 
 

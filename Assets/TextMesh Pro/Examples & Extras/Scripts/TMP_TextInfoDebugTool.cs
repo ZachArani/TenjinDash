@@ -38,7 +38,9 @@ namespace TMPro.Examples
                 m_TextComponent = GetComponent<TMP_Text>();
 
                 if (m_TextComponent == null)
+                {
                     return;
+                }
             }
 
             m_Transform = m_TextComponent.transform;
@@ -57,37 +59,49 @@ namespace TMPro.Examples
             // Draw line metrics
             #region Draw Lines
             if (ShowLines)
+            {
                 DrawLineBounds();
+            }
             #endregion
 
             // Draw word metrics
             #region Draw Words
             if (ShowWords)
+            {
                 DrawWordBounds();
+            }
             #endregion
 
             // Draw character metrics
             #region Draw Characters
             if (ShowCharacters)
+            {
                 DrawCharactersBounds();
+            }
             #endregion
 
             // Draw Quads around each of the words
             #region Draw Links
             if (ShowLinks)
+            {
                 DrawLinkBounds();
+            }
             #endregion
 
             // Draw Quad around the bounds of the text
             #region Draw Bounds
             if (ShowMeshBounds)
+            {
                 DrawBounds();
+            }
             #endregion
 
             // Draw Quad around the rendered region of the text.
             #region Draw Text Bounds
             if (ShowTextBounds)
+            {
                 DrawTextBounds();
+            }
             #endregion
         }
 
@@ -110,10 +124,14 @@ namespace TMPro.Examples
                                           i >= m_TextComponent.firstVisibleCharacter;
 
                 if (m_TextComponent.overflowMode == TextOverflowModes.Page)
+                {
                     isCharacterVisible = isCharacterVisible && characterInfo.pageNumber + 1 == m_TextComponent.pageToDisplay;
+                }
 
                 if (!isCharacterVisible)
+                {
                     continue;
+                }
 
                 float dottedLineSize = 6;
 
@@ -133,7 +151,7 @@ namespace TMPro.Examples
                 {
                     Color color = Color.grey;
 
-                    float whiteSpaceAdvance = Math.Abs(characterInfo.origin - characterInfo.xAdvance) > 0.01f ? characterInfo.xAdvance : characterInfo.origin + (characterInfo.ascender - characterInfo.descender) * 0.03f;
+                    float whiteSpaceAdvance = Math.Abs(characterInfo.origin - characterInfo.xAdvance) > 0.01f ? characterInfo.xAdvance : characterInfo.origin + ((characterInfo.ascender - characterInfo.descender) * 0.03f);
                     DrawDottedRectangle(m_Transform.TransformPoint(new Vector3(characterInfo.origin, characterInfo.descender, 0)), m_Transform.TransformPoint(new Vector3(whiteSpaceAdvance, characterInfo.ascender, 0)), color, 4);
                 }
 
@@ -151,11 +169,11 @@ namespace TMPro.Examples
                 Handles.DrawDottedLine(ascentlineStart, ascentlineEnd, dottedLineSize);
 
                 // Draw Cap Height & Mean line
-                float capline = characterInfo.fontAsset == null ? 0 : baseline + characterInfo.fontAsset.faceInfo.capLine * characterInfo.scale;
+                float capline = characterInfo.fontAsset == null ? 0 : baseline + (characterInfo.fontAsset.faceInfo.capLine * characterInfo.scale);
                 Vector3 capHeightStart = new Vector3(topLeft.x, m_Transform.TransformPoint(new Vector3(0, capline, 0)).y, 0);
                 Vector3 capHeightEnd = new Vector3(topRight.x, m_Transform.TransformPoint(new Vector3(0, capline, 0)).y, 0);
 
-                float meanline = characterInfo.fontAsset == null ? 0 : baseline + characterInfo.fontAsset.faceInfo.meanLine * characterInfo.scale;
+                float meanline = characterInfo.fontAsset == null ? 0 : baseline + (characterInfo.fontAsset.faceInfo.meanLine * characterInfo.scale);
                 Vector3 meanlineStart = new Vector3(topLeft.x, m_Transform.TransformPoint(new Vector3(0, meanline, 0)).y, 0);
                 Vector3 meanlineEnd = new Vector3(topRight.x, m_Transform.TransformPoint(new Vector3(0, meanline, 0)).y, 0);
 
@@ -285,9 +303,9 @@ namespace TMPro.Examples
                     TMP_CharacterInfo currentCharInfo = m_TextInfo.characterInfo[characterIndex];
                     int currentLine = currentCharInfo.lineNumber;
 
-                    bool isCharacterVisible = characterIndex > m_TextComponent.maxVisibleCharacters ||
-                                              currentCharInfo.lineNumber > m_TextComponent.maxVisibleLines ||
-                                             (m_TextComponent.overflowMode == TextOverflowModes.Page && currentCharInfo.pageNumber + 1 != m_TextComponent.pageToDisplay) ? false : true;
+                    bool isCharacterVisible = characterIndex <= m_TextComponent.maxVisibleCharacters &&
+                                              currentCharInfo.lineNumber <= m_TextComponent.maxVisibleLines &&
+                                             (m_TextComponent.overflowMode != TextOverflowModes.Page || currentCharInfo.pageNumber + 1 == m_TextComponent.pageToDisplay);
 
                     // Track Max Ascender and Min Descender
                     maxAscender = Mathf.Max(maxAscender, currentCharInfo.ascender);
@@ -391,9 +409,9 @@ namespace TMPro.Examples
                     TMP_CharacterInfo currentCharInfo = textInfo.characterInfo[characterIndex];
                     int currentLine = currentCharInfo.lineNumber;
 
-                    bool isCharacterVisible = characterIndex > m_TextComponent.maxVisibleCharacters ||
-                                              currentCharInfo.lineNumber > m_TextComponent.maxVisibleLines ||
-                                             (m_TextComponent.overflowMode == TextOverflowModes.Page && currentCharInfo.pageNumber + 1 != m_TextComponent.pageToDisplay) ? false : true;
+                    bool isCharacterVisible = characterIndex <= m_TextComponent.maxVisibleCharacters &&
+                                              currentCharInfo.lineNumber <= m_TextComponent.maxVisibleLines &&
+                                             (m_TextComponent.overflowMode != TextOverflowModes.Page || currentCharInfo.pageNumber + 1 == m_TextComponent.pageToDisplay);
 
                     // Track Max Ascender and Min Descender
                     maxAscender = Mathf.Max(maxAscender, currentCharInfo.ascender);
@@ -478,11 +496,14 @@ namespace TMPro.Examples
                 TMP_CharacterInfo firstCharacterInfo = m_TextInfo.characterInfo[lineInfo.firstCharacterIndex];
                 TMP_CharacterInfo lastCharacterInfo = m_TextInfo.characterInfo[lineInfo.lastCharacterIndex];
 
-                bool isLineVisible = (lineInfo.characterCount == 1 && (firstCharacterInfo.character == 10 || firstCharacterInfo.character == 11 || firstCharacterInfo.character == 0x2028 || firstCharacterInfo.character == 0x2029)) ||
-                                      i > m_TextComponent.maxVisibleLines ||
-                                     (m_TextComponent.overflowMode == TextOverflowModes.Page && firstCharacterInfo.pageNumber + 1 != m_TextComponent.pageToDisplay) ? false : true;
+                bool isLineVisible = (lineInfo.characterCount != 1 || (firstCharacterInfo.character != 10 && firstCharacterInfo.character != 11 && firstCharacterInfo.character != 0x2028 && firstCharacterInfo.character != 0x2029)) &&
+                                      i <= m_TextComponent.maxVisibleLines &&
+                                     (m_TextComponent.overflowMode != TextOverflowModes.Page || firstCharacterInfo.pageNumber + 1 == m_TextComponent.pageToDisplay);
 
-                if (!isLineVisible) continue;
+                if (!isLineVisible)
+                {
+                    continue;
+                }
 
                 float lineBottomLeft = firstCharacterInfo.bottomLeft.x;
                 float lineTopRight = lastCharacterInfo.topRight.x;

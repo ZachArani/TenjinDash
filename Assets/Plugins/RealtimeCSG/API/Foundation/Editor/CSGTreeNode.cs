@@ -113,17 +113,47 @@ namespace RealtimeCSG.Foundation
         /// <summary>Operator to allow a <see cref="RealtimeCSG.Foundation.CSGTreeNode"/> to be explicitly converted into a <see cref="RealtimeCSG.Foundation.CSGTree"/>.</summary>
         /// <param name="node">The <see cref="RealtimeCSG.Foundation.CSGTreeNode"/> to be convert into a <see cref="RealtimeCSG.Foundation.CSGTree"/></param>
         /// <returns>A valid <see cref="RealtimeCSG.Foundation.CSGTree"/> if <paramref name="node"/> actually was one, otherwise an invalid node.</returns>
-        public static explicit operator CSGTree(CSGTreeNode node) { if (node.Type != CSGNodeType.Tree) return new CSGTree { treeNodeID = InvalidNodeID }; else return new CSGTree { treeNodeID = node.nodeID }; }
+        public static explicit operator CSGTree(CSGTreeNode node)
+        {
+            if (node.Type != CSGNodeType.Tree)
+            {
+                return new CSGTree { treeNodeID = InvalidNodeID };
+            }
+            else
+            {
+                return new CSGTree { treeNodeID = node.nodeID };
+            }
+        }
 
         /// <summary>Operator to allow a <see cref="RealtimeCSG.Foundation.CSGTreeNode"/> to be explicitly converted into a <see cref="RealtimeCSG.Foundation.CSGTreeBranch"/>.</summary>
         /// <param name="node">The <see cref="RealtimeCSG.Foundation.CSGTreeNode"/> to be convert into a <see cref="RealtimeCSG.Foundation.CSGTreeBranch"/></param>
         /// <returns>A valid <see cref="RealtimeCSG.Foundation.CSGTreeBranch"/> if <paramref name="node"/> actually was one, otherwise an invalid node.</returns>
-        public static explicit operator CSGTreeBranch(CSGTreeNode node) { if (node.Type != CSGNodeType.Branch) return new CSGTreeBranch { branchNodeID = InvalidNodeID }; else return new CSGTreeBranch { branchNodeID = node.nodeID }; }
+        public static explicit operator CSGTreeBranch(CSGTreeNode node)
+        {
+            if (node.Type != CSGNodeType.Branch)
+            {
+                return new CSGTreeBranch { branchNodeID = InvalidNodeID };
+            }
+            else
+            {
+                return new CSGTreeBranch { branchNodeID = node.nodeID };
+            }
+        }
 
         /// <summary>Operator to allow a <see cref="RealtimeCSG.Foundation.CSGTreeNode"/> to be explicitly converted into a <see cref="RealtimeCSG.Foundation.CSGTreeBrush"/>.</summary>
         /// <param name="node">The <see cref="RealtimeCSG.Foundation.CSGTreeNode"/> to be convert into a <see cref="RealtimeCSG.Foundation.CSGTreeBrush"/></param>
         /// <returns>A valid <see cref="RealtimeCSG.Foundation.CSGTreeBrush"/> if <paramref name="node"/> actually was one, otherwise an invalid node.</returns>
-        public static explicit operator CSGTreeBrush(CSGTreeNode node) { if (node.Type != CSGNodeType.Brush) return new CSGTreeBrush { brushNodeID = InvalidNodeID }; else return new CSGTreeBrush { brushNodeID = node.nodeID }; }
+        public static explicit operator CSGTreeBrush(CSGTreeNode node)
+        {
+            if (node.Type != CSGNodeType.Brush)
+            {
+                return new CSGTreeBrush { brushNodeID = InvalidNodeID };
+            }
+            else
+            {
+                return new CSGTreeBrush { brushNodeID = node.nodeID };
+            }
+        }
 
         /// <value>An invalid node</value>
         public static readonly CSGTreeNode InvalidNode = new CSGTreeNode { nodeID = CSGTreeNode.InvalidNodeID };

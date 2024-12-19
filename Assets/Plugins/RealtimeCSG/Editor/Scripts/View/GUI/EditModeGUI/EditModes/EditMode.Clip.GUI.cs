@@ -11,7 +11,9 @@ namespace RealtimeCSG
         static void InitLocalStyles()
         {
             if (ContentClipLabel != null)
+            {
                 return;
+            }
 
             ContentClipLabel = new GUIContent(CSG_GUIStyleUtility.brushEditModeNames[(int)ToolEditMode.Clip]);
         }
@@ -57,7 +59,10 @@ namespace RealtimeCSG
                         buttonArea.height = 13;
                         buttonArea.width = 13;
                         if (GUI.Button(buttonArea, GUIContent.none, "WinBtnClose"))
+                        {
                             EditModeToolWindowSceneGUI.GetWindow();
+                        }
+
                         TooltipUtility.SetToolTip(CSG_GUIStyleUtility.PopOutTooltip, buttonArea);
 
                         int controlID = GUIUtility.GetControlID(SceneViewMeshOverlayHash, FocusType.Passive, currentArea);
@@ -79,8 +84,15 @@ namespace RealtimeCSG
 
             if (tool != null)
             {
-                if (doCommit) tool.Commit();    // unity bug workaround
-                if (doCancel) tool.Cancel();    // unity bug workaround
+                if (doCommit)
+                {
+                    tool.Commit();    // unity bug workaround
+                }
+
+                if (doCancel)
+                {
+                    tool.Cancel();    // unity bug workaround
+                }
             }
         }
 
@@ -95,9 +107,13 @@ namespace RealtimeCSG
             else
             {
                 if (tool.ClipBrushCount == 1)
+                {
                     GUILayout.Label(string.Format("{0} brush selected", tool.ClipBrushCount));
+                }
                 else
+                {
                     GUILayout.Label(string.Format("{0} brushes selected", tool.ClipBrushCount));
+                }
             }
             EditorGUILayout.Space();
             EditorGUI.BeginDisabledGroup(tool == null);
@@ -126,9 +142,11 @@ namespace RealtimeCSG
                 }
                 GUILayout.EndVertical();
                 if (!isSceneGUI)
+                {
                     GUILayout.Space(10);
+                }
 
-                bool disabled = (tool == null || tool.editMode != EditModeClip.EditMode.EditPoints);
+                bool disabled = tool == null || tool.editMode != EditModeClip.EditMode.EditPoints;
 
                 var defaultMaterial = CSGSettings.DefaultMaterial;
                 GUILayout.BeginVertical(isSceneGUI ? MaterialSceneWidth : CSG_GUIStyleUtility.ContentEmpty);
@@ -159,7 +177,9 @@ namespace RealtimeCSG
                             EditorGUI.EndDisabledGroup();
                         }
                         if (isSceneGUI)
+                        {
                             GUILayout.EndVertical();
+                        }
                     }
                     GUILayout.EndHorizontal();
                     if (isSceneGUI)
@@ -230,8 +250,15 @@ namespace RealtimeCSG
 
             if (tool != null)
             {
-                if (doCommit) tool.Commit();    // unity bug workaround
-                if (doCancel) tool.Cancel();    // unity bug workaround
+                if (doCommit)
+                {
+                    tool.Commit();    // unity bug workaround
+                }
+
+                if (doCancel)
+                {
+                    tool.Cancel();    // unity bug workaround
+                }
             }
         }
     }

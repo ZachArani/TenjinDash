@@ -32,7 +32,7 @@ namespace PathCreation.Utility
 
                 for (float t = increment; t <= 1; t += increment)
                 {
-                    bool isLastPointOnPath = (t + increment > 1 && segmentIndex == bezierPath.NumSegments - 1);
+                    bool isLastPointOnPath = t + increment > 1 && segmentIndex == bezierPath.NumSegments - 1;
                     if (isLastPointOnPath)
                     {
                         t = 1;
@@ -95,7 +95,7 @@ namespace PathCreation.Utility
 
                 for (float t = increment; t <= 1; t += increment)
                 {
-                    bool isLastPointOnPath = (t + increment > 1 && segmentIndex == bezierPath.NumSegments - 1);
+                    bool isLastPointOnPath = t + increment > 1 && segmentIndex == bezierPath.NumSegments - 1;
                     if (isLastPointOnPath)
                     {
                         t = 1;

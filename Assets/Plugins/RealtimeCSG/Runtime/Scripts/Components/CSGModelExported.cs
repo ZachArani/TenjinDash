@@ -44,7 +44,9 @@ namespace InternalRealtimeCSG
                     {
                         var behaviour = hiddenComponent.behaviour;
                         if (!behaviour)
+                        {
                             continue;
+                        }
 
                         DestroyImmediate(behaviour);
                     }

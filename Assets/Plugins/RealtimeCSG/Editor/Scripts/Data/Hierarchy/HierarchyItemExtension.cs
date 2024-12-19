@@ -23,9 +23,14 @@ namespace RealtimeCSG
             if (self.ChildNodes[last].LastLoopCount != currentLoopCount)
             {
                 if (self.ChildNodes[last].Transform != null && self.ChildNodes[last].Transform)
+                {
                     self.ChildNodes[last].CachedTransformSiblingIndex = self.ChildNodes[last].Transform.GetSiblingIndex();
+                }
                 else
+                {
                     self.ChildNodes[last].CachedTransformSiblingIndex = -1;
+                }
+
                 self.ChildNodes[last].LastLoopCount = currentLoopCount;
             }
             if (self.ChildNodes[last].CachedTransformSiblingIndex < checkIndex)
@@ -45,9 +50,14 @@ namespace RealtimeCSG
                 if (self.ChildNodes[imid].LastLoopCount != currentLoopCount)
                 {
                     if (self.ChildNodes[imid].Transform != null && self.ChildNodes[imid].Transform)
+                    {
                         self.ChildNodes[imid].CachedTransformSiblingIndex = self.ChildNodes[imid].Transform.GetSiblingIndex();
+                    }
                     else
+                    {
                         self.ChildNodes[imid].CachedTransformSiblingIndex = -1;
+                    }
+
                     self.ChildNodes[imid].LastLoopCount = currentLoopCount;
                 }
                 var midKey2 = self.ChildNodes[imid].CachedTransformSiblingIndex;
@@ -65,16 +75,21 @@ namespace RealtimeCSG
                         // key found at index imid
 
                         index = imid;
-                        return (searchTransformID == self.ChildNodes[imid].TransformID);
+                        return searchTransformID == self.ChildNodes[imid].TransformID;
                     }
                     if (imid > 0)
                     {
                         if (self.ChildNodes[imid - 1].LastLoopCount != currentLoopCount)
                         {
                             if (self.ChildNodes[imid - 1].Transform != null && self.ChildNodes[imid - 1].Transform)
+                            {
                                 self.ChildNodes[imid - 1].CachedTransformSiblingIndex = self.ChildNodes[imid - 1].Transform.GetSiblingIndex();
+                            }
                             else
+                            {
                                 self.ChildNodes[imid - 1].CachedTransformSiblingIndex = -1;
+                            }
+
                             self.ChildNodes[imid - 1].LastLoopCount = currentLoopCount;
                         }
                         var midKey1 = self.ChildNodes[imid - 1].CachedTransformSiblingIndex;
@@ -83,7 +98,7 @@ namespace RealtimeCSG
                         {
                             // key found at index imid
                             index = imid;
-                            return (searchTransformID == self.ChildNodes[imid].TransformID);
+                            return searchTransformID == self.ChildNodes[imid].TransformID;
                         }
                     }
                     // change max index to search lower subarray
@@ -107,7 +122,9 @@ namespace RealtimeCSG
             for (var i = 0; i < self.ChildNodes.Length; i++)
             {
                 if (item != self.ChildNodes[i])
+                {
                     continue;
+                }
 
                 index = i;
                 return true;
@@ -121,8 +138,10 @@ namespace RealtimeCSG
         {
             int index;
             if (self.FindSiblingIndex(item, out index))
+            {
                 // The transform is already in the array?
                 return false;
+            }
 
             var currentLoopCount = HierarchyItem.CurrentLoopCount;
             if (item.LastLoopCount != currentLoopCount)
@@ -153,7 +172,9 @@ namespace RealtimeCSG
             {
                 var parentData = self as ParentNodeData;
                 if (parentData != null)
+                {
                     parentData.ChildrenModified = true;
+                }
             }
 
             Debug.Assert(self.ChildNodes[index] == item);
@@ -164,8 +185,10 @@ namespace RealtimeCSG
         {
             int index;
             if (!self.FindSiblingIndex(item, out index))
+            {
                 // The transform is not in the array?
                 return false;
+            }
 
             // make sure item is removed from the array
             UnityEditor.ArrayUtility.RemoveAt(ref self.ChildNodes, index);
@@ -181,7 +204,9 @@ namespace RealtimeCSG
                 yield return childNode;
 
                 if (childNode.ChildNodes.Length == 0)
+                {
                     continue;
+                }
 
                 foreach (var item in childNode.IterateChildrenDeep())
                 {

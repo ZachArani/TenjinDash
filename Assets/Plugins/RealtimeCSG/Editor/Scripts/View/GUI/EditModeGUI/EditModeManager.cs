@@ -37,7 +37,9 @@ namespace RealtimeCSG
             set
             {
                 if (instance.editMode == value)
+                {
                     return;
+                }
 
                 Undo.RecordObject(instance, "Changed edit mode");
 
@@ -48,7 +50,9 @@ namespace RealtimeCSG
                 RealtimeCSG.CSGSettings.Save();
 
                 if (ActiveTool != null)
+                {
                     CSG_EditorGUIUtility.RepaintAll();
+                }
             }
         }
 
@@ -59,12 +63,16 @@ namespace RealtimeCSG
                 InitTools();
 
                 if (instance.generateMode)
+                {
                     return brushTools[(int)ToolEditMode.Generate] as EditModeGenerate;
+                }
 
                 var editMode = instance.editMode;
                 if (editMode < firstEditMode ||
                     editMode > lastEditModes)
+                {
                     return brushTools[0];
+                }
 
                 return brushTools[(int)editMode];
             }
@@ -79,8 +87,9 @@ namespace RealtimeCSG
         static void InitTools()
         {
             if (instance)
+            {
                 return;
-
+            }
 
             var values = Enum.GetValues(typeof(ToolEditMode)).Cast<ToolEditMode>().ToList();
             values.Sort();
@@ -96,7 +105,10 @@ namespace RealtimeCSG
 
             var managers = Resources.FindObjectsOfTypeAll<EditModeManager>().ToArray();
             for (int i = 0; i < managers.Length; i++)
+            {
                 DestroyImmediate(managers[i]);
+            }
+
             instance = ScriptableObject.CreateInstance<EditModeManager>();
             instance.hideFlags = scriptableObjectHideflags;
 
@@ -118,7 +130,9 @@ namespace RealtimeCSG
             {
                 var objects = Resources.FindObjectsOfTypeAll(types[j]).ToArray();
                 for (int i = 0; i < objects.Length; i++)
+                {
                     DestroyImmediate(objects[i]);
+                }
 
                 var obj = ScriptableObject.CreateInstance(types[j]);
                 brushTools[j] = obj as IEditMode;
@@ -172,7 +186,9 @@ namespace RealtimeCSG
             }
 
             foreach (var tool in brushTools)
+            {
                 tool.SetTargets(instance.filteredSelection);
+            }
         }
 
         public static void ResetMessage()
@@ -184,7 +200,9 @@ namespace RealtimeCSG
         public static void ShowMessage(string message)
         {
             if (string.IsNullOrEmpty(message))
+            {
                 return;
+            }
 
             if (SceneView.lastActiveSceneView != null) { SceneView.lastActiveSceneView.ShowNotification(new GUIContent(message)); return; }
             if (SceneView.currentDrawingSceneView != null) { SceneView.lastActiveSceneView.ShowNotification(new GUIContent(message)); return; }
@@ -194,27 +212,36 @@ namespace RealtimeCSG
         static void OnEnableTool(IEditMode tool)
         {
             if (tool != null)
+            {
                 tool.OnEnableTool();
+            }
         }
 
         static void OnDisableTool(IEditMode tool)
         {
             if (tool != null)
+            {
                 tool.OnDisableTool();
+            }
         }
 
         public static bool DeselectAll()
         {
             if (instance.activeTool != null &&
                 instance.activeTool.DeselectAll())
+            {
                 return true;
+            }
+
             return false;
         }
 
         static void UndoRedoPerformed()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             if (instance.activeTool != null)
             {
@@ -227,7 +254,9 @@ namespace RealtimeCSG
         static void OnModifierKeysChanged()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             CSG_EditorGUIUtility.RepaintAll();
         }
@@ -238,17 +267,26 @@ namespace RealtimeCSG
             selectedOthers.Clear();
 
             if (Selection.gameObjects == null)
+            {
                 return false;
+            }
 
             foreach (var gameObject in Selection.gameObjects)
             {
                 if (!gameObject)
+                {
                     continue;
+                }
+
                 var node = gameObject.GetComponent<CSGNode>();
                 if (node && node.enabled && (node.hideFlags & HideFlags.HideInInspector) == HideFlags.None)
+                {
                     nodes.Add(node);
+                }
                 else
+                {
                     others.Add(gameObject.transform);
+                }
             }
             return true;
         }
@@ -260,9 +298,13 @@ namespace RealtimeCSG
             {
                 if (instance.filteredSelection.NodeTargets != null &&
                     instance.filteredSelection.NodeTargets.Length > 0)
+                {
                     OnEnableTool(instance.activeTool);
+                }
                 else
+                {
                     OnDisableTool(instance.activeTool);
+                }
             }
             else
             {
@@ -279,7 +321,7 @@ namespace RealtimeCSG
             }
             else
             {
-                EditMode = (ToolEditMode)(instance.editMode + 1);
+                EditMode = instance.editMode + 1;
             }
         }
 
@@ -292,29 +334,40 @@ namespace RealtimeCSG
             }
             else
             {
-                EditMode = (ToolEditMode)(instance.editMode - 1);
+                EditMode = instance.editMode - 1;
             }
         }
 
         public static void UpdateTool()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             IEditMode newTool;
             if (!RealtimeCSG.CSGSettings.EnableRealtimeCSG)
+            {
                 newTool = null;
+            }
             else
+            {
                 newTool = CurrentTool;
+            }
+
             if (instance.activeTool != newTool)
             {
                 if (instance.activeTool != null)
+                {
                     OnDisableTool(instance.activeTool);
+                }
 
                 instance.activeTool = newTool;
 
                 if (newTool != null)
+                {
                     OnEnableTool(newTool);
+                }
             }
         }
 
@@ -343,7 +396,9 @@ namespace RealtimeCSG
                         snappedPoint = RealtimeCSG.CSGGrid.PointFromGridSpace(RealtimeCSG.CSGGrid.CubeProject(camera, RealtimeCSG.CSGGrid.PlaneToGridSpace(plane), RealtimeCSG.CSGGrid.PointToGridSpace(snappedPoint)));
 
                         if (!ignoreAllBrushes)
+                        {
                             return GridUtility.SnapToWorld(camera, plane, point, snappedPoint, ref snappingEdges, out snappedOnBrush, ignoreBrushes);
+                        }
 
                         return snappedPoint;
                     }
@@ -378,7 +433,10 @@ namespace RealtimeCSG
         static void OnShapeCancelledEvent()
         {
             if (!instance.generateMode)
+            {
                 return;
+            }
+
             instance.generateMode = false;
         }
 
@@ -499,13 +557,15 @@ namespace RealtimeCSG
         {
             currentEditorWindows = EditModeToolWindowSceneGUI.GetEditorWindows();
 
-            return (currentEditorWindows.Count == 0);
+            return currentEditorWindows.Count == 0;
         }
 
         public static void OnSceneGUI(SceneView sceneView)
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             CameraUtility.InitDistanceChecks(sceneView);
             SelectionUtility.HandleEvents();
@@ -521,11 +581,13 @@ namespace RealtimeCSG
                     {
                         // handle the tool
                         var sceneSize = sceneView.position.size;
-                        var sceneRect = new Rect(0, 0, sceneSize.x, sceneSize.y - ((CSG_GUIStyleUtility.BottomToolBarHeight + 4) + 17));
+                        var sceneRect = new Rect(0, 0, sceneSize.x, sceneSize.y - (CSG_GUIStyleUtility.BottomToolBarHeight + 4 + 17));
 
                         // This helps prevent weird issues with overlapping sceneviews + avoid some performance issues with multiple sceneviews open
                         if (EditorWindow.mouseOverWindow == sceneView || (Event.current.type != EventType.MouseMove && Event.current.type != EventType.Layout))
+                        {
                             instance.activeTool.HandleEvents(sceneView, sceneRect);
+                        }
                     }
                     else
                     {
@@ -538,11 +600,15 @@ namespace RealtimeCSG
                             {
                                 var brush = brushes[i];
                                 if (!brush)
+                                {
                                     continue;
+                                }
 
                                 if (brush.ChildData == null ||
                                     !brush.ChildData.Model)
+                                {
                                     continue;
+                                }
 
                                 var brushTransformation = brush.compareTransformation.localToWorldMatrix;
 
@@ -572,7 +638,10 @@ namespace RealtimeCSG
                 if (currentEditorWindows.Count > 0)
                 {
                     for (int i = 0; i < currentEditorWindows.Count; i++)
+                    {
                         currentEditorWindows[i].Repaint();
+                    }
+
                     return;
                 }
             }
@@ -618,7 +687,9 @@ namespace RealtimeCSG
         public static Transform[] CloneTargets(SetTransformation setTransform = null)
         {
             if (instance.filteredSelection.NodeTargets.Length == 0)
+            {
                 return new Transform[0];
+            }
 
             var groupId = Undo.GetCurrentGroup();
             //Undo.IncrementCurrentGroup();
@@ -645,7 +716,9 @@ namespace RealtimeCSG
                     newTransform.localRotation = originalTransform.localRotation;
                 }
                 else
+                {
                     setTransform(newTransform, originalTransform);
+                }
 
                 var childBrushes = newTargets[i].GetComponentsInChildren<CSGBrush>();
 
@@ -656,7 +729,9 @@ namespace RealtimeCSG
                     {
                         var smoothingGroup = childBrush.Shape.TexGens[g].SmoothingGroup;
                         if (smoothingGroup == 0)
+                        {
                             continue;
+                        }
 
                         uint newSmoothingGroup;
                         if (!uniqueSmoothingGroups.TryGetValue(smoothingGroup, out newSmoothingGroup))

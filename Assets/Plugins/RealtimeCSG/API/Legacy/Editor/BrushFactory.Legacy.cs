@@ -14,16 +14,28 @@ namespace RealtimeCSG.Legacy
         {
             var gameObject = OperationsUtility.CreateGameObject(parent, brushName, false);
             if (!gameObject)
+            {
                 return null;
+            }
+
             var brush = gameObject.AddComponent<CSGBrush>();
             if (!brush)
+            {
                 return null;
+            }
+
             brush.ControlMesh = controlMesh;
             brush.Shape = shape;
             if (brush.ControlMesh != null)
+            {
                 brush.ControlMesh.SetDirty();
+            }
+
             if (brush.Shape != null)
+            {
                 ShapeUtility.EnsureInitialized(brush.Shape);
+            }
+
             return brush;
         }
         #endregion
@@ -33,13 +45,22 @@ namespace RealtimeCSG.Legacy
         {
             var brush = gameObject.AddComponent<CSGBrush>();
             if (!brush)
+            {
                 return null;
+            }
+
             brush.ControlMesh = controlMesh;
             brush.Shape = shape;
             if (brush.ControlMesh != null)
+            {
                 brush.ControlMesh.SetDirty();
+            }
+
             if (brush.Shape != null)
+            {
                 ShapeUtility.EnsureInitialized(brush.Shape);
+            }
+
             return brush;
         }
         #endregion
@@ -51,7 +72,10 @@ namespace RealtimeCSG.Legacy
             ControlMesh controlMesh;
             Shape shape;
             if (!CreateControlMeshFromPlanes(out controlMesh, out shape, planes, tangents, binormals, materials, textureMatrices, textureMatrixSpace))
+            {
                 return null;
+            }
+
             return CreateBrush(parent, brushName, controlMesh, shape);
         }
 
@@ -88,7 +112,9 @@ namespace RealtimeCSG.Legacy
                                                           textureMatrixSpace,
                                                           smoothingGroups,
                                                           texGenFlags))
+            {
                 return null;
+            }
 
             return BrushFactory.CreateBrushComponent(gameObject, controlMesh, shape);
         }
@@ -96,19 +122,29 @@ namespace RealtimeCSG.Legacy
         public static bool SetBrushFromPlanes(CSGBrush brush, UnityEngine.Plane[] planes, UnityEngine.Vector3[] tangents = null, UnityEngine.Vector3[] binormals = null, UnityEngine.Material[] materials = null, UnityEngine.Matrix4x4[] textureMatrices = null, TextureMatrixSpace textureMatrixSpace = TextureMatrixSpace.WorldSpace)
         {
             if (!brush)
+            {
                 return false;
+            }
 
             ControlMesh controlMesh;
             Shape shape;
             if (!CreateControlMeshFromPlanes(out controlMesh, out shape, planes, tangents, binormals, materials, textureMatrices, textureMatrixSpace))
+            {
                 return false;
+            }
 
             brush.ControlMesh = controlMesh;
             brush.Shape = shape;
             if (brush.ControlMesh != null)
+            {
                 brush.ControlMesh.SetDirty();
+            }
+
             if (brush.Shape != null)
+            {
                 ShapeUtility.EnsureInitialized(brush.Shape);
+            }
+
             return true;
         }
 
@@ -213,7 +249,9 @@ namespace RealtimeCSG.Legacy
             GeometryUtility.CalculateTangents(shape.Surfaces[5].Plane.normal, out shape.Surfaces[5].Tangent, out shape.Surfaces[5].BiNormal);
 
             if (material == null)
+            {
                 material = CSGSettings.DefaultMaterial;
+            }
 
             shape.TexGens = new TexGen[6];
 
@@ -261,7 +299,9 @@ namespace RealtimeCSG.Legacy
         public static bool SetBrushCubeMesh(CSGBrush brush, UnityEngine.Vector3 size)
         {
             if (!brush)
+            {
                 return false;
+            }
 
             ControlMesh controlMesh;
             Shape shape;
@@ -270,9 +310,15 @@ namespace RealtimeCSG.Legacy
             brush.ControlMesh = controlMesh;
             brush.Shape = shape;
             if (brush.ControlMesh != null)
+            {
                 brush.ControlMesh.SetDirty();
+            }
+
             if (brush.Shape != null)
+            {
                 ShapeUtility.EnsureInitialized(brush.Shape);
+            }
+
             return true;
         }
 
@@ -310,10 +356,14 @@ namespace RealtimeCSG.Legacy
         {
             if (controlMesh == null ||
                 shape == null)
+            {
                 return null;
+            }
 
             if (!ControlMeshUtility.Validate(controlMesh, shape))
+            {
                 return null;
+            }
 
             var vertices = controlMesh.Vertices;
             var srcEdges = controlMesh.Edges;
@@ -321,7 +371,9 @@ namespace RealtimeCSG.Legacy
             if (vertices == null ||
                 srcEdges == null ||
                 srcPolygons == null)
+            {
                 return null;
+            }
 
             var surfaces = shape.Surfaces;
             var texgens = shape.TexGens;
@@ -329,14 +381,18 @@ namespace RealtimeCSG.Legacy
             if (surfaces == null ||
                 texgens == null ||
                 texgenFlags == null)
+            {
                 return null;
+            }
 
             var polygonCount = surfaces.Length;
             if (polygonCount != srcPolygons.Length ||
                 polygonCount != texgens.Length ||
                 polygonCount != texgenFlags.Length ||
                 polygonCount != surfaces.Length)
+            {
                 return null;
+            }
 
             var brushMesh = new BrushMesh
             {
@@ -353,7 +409,9 @@ namespace RealtimeCSG.Legacy
                 var flags = texgenFlags[texGenIndex];
 
                 if (!texGen.PhysicsMaterial)
+                {
                     texGen.PhysicsMaterial = defaultPhysicsMaterial;
+                }
 
                 brushMesh.polygons[i].polygonID = polygonIndex;
                 brushMesh.polygons[i].surface = CreateSurfaceDescription(surface, texGen, flags);
@@ -397,7 +455,9 @@ namespace RealtimeCSG.Legacy
                     }
 
                     if (!found)
+                    {
                         return null;
+                    }
 
                     brushMesh.halfEdges[counter + v].twinIndex = twinIndex;
                 }
@@ -446,7 +506,9 @@ namespace RealtimeCSG.Legacy
             {
                 materials = new Material[planes.Length];
                 for (int i = 0; i < materials.Length; i++)
+                {
                     materials[i] = CSGSettings.DefaultMaterial;
+                }
             }
             if (planes.Length != materials.Length ||
                 (textureMatrices != null && planes.Length != textureMatrices.Length) ||
@@ -482,19 +544,30 @@ namespace RealtimeCSG.Legacy
                 shape.Surfaces[i].TexGenIndex = i;
                 shape.TexGens[i] = new TexGen(materials[i]);
                 if (smoothingGroups != null)
+                {
                     shape.TexGens[i].SmoothingGroup = smoothingGroups[i];
+                }
+
                 if (texGenFlags != null)
+                {
                     shape.TexGenFlags[i] = texGenFlags[i];
+                }
                 else
+                {
                     shape.TexGenFlags[i] = RealtimeCSG.CSGSettings.DefaultTexGenFlags;
+                }
             }
 
             controlMesh = ControlMeshUtility.CreateFromShape(shape, MathConstants.DistanceEpsilon);
             if (controlMesh == null)
+            {
                 return false;
+            }
 
             if (!ControlMeshUtility.Validate(controlMesh, shape))
+            {
                 return false;
+            }
 
             if (textureMatrices != null)
             {
@@ -502,7 +575,10 @@ namespace RealtimeCSG.Legacy
                 for (var i = 0; i < planes.Length; i++)
                 {
                     if (shape.Surfaces[n].TexGenIndex != i)
+                    {
                         continue;
+                    }
+
                     shape.Surfaces[n].TexGenIndex = n;
                     SurfaceUtility.AlignTextureSpaces(textureMatrices[i], textureMatrixSpace == TextureMatrixSpace.PlaneSpace, ref shape.TexGens[n], ref shape.TexGenFlags[n], ref shape.Surfaces[n]);
                     n++;

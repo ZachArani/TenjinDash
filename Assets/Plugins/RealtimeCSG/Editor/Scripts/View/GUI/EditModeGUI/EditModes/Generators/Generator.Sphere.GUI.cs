@@ -8,9 +8,13 @@ namespace RealtimeCSG
         static bool SettingsToggle(bool value, GUIContent content, bool isSceneGUI)
         {
             if (isSceneGUI)
+            {
                 return EditorGUILayout.ToggleLeft(content, value, width120);
+            }
             else
+            {
                 return EditorGUILayout.Toggle(content, value);
+            }
         }
 
         static float SettingsSlider(float value, float minValue, float maxValue, GUIContent content, bool isSceneGUI)
@@ -97,7 +101,9 @@ namespace RealtimeCSG
                 EditorGUI.EndDisabledGroup();
                 */
                 if (isSceneGUI)
+                {
                     SphereSettingsGUI(generator, isSceneGUI);
+                }
             }
             GUILayout.EndHorizontal();
 
@@ -111,14 +117,21 @@ namespace RealtimeCSG
                     {
                         GUILayout.Label(RadiusContent, width65);
                         if (isSceneGUI)
+                        {
                             TooltipUtility.SetToolTip(RadiusTooltip);
+                        }
+
                         var radius = generator.SphereRadius;
                         EditorGUI.BeginChangeCheck();
                         {
                             if (!isSceneGUI)
+                            {
                                 radius = Units.DistanceUnitToUnity(distanceUnit, EditorGUILayout.DoubleField(Units.UnityToDistanceUnit(distanceUnit, radius)));
+                            }
                             else
+                            {
                                 radius = Units.DistanceUnitToUnity(distanceUnit, EditorGUILayout.DoubleField(Units.UnityToDistanceUnit(distanceUnit, radius), width65));
+                            }
                         }
                         if (EditorGUI.EndChangeCheck())
                         {
@@ -137,7 +150,9 @@ namespace RealtimeCSG
                 }
                 GUILayout.EndHorizontal();
                 if (!isSceneGUI)
+                {
                     TooltipUtility.SetToolTip(RadiusTooltip);
+                }
 
                 {
                     generator.SphereSplits = IntSettingsSlider(generator.SphereSplits, 1, RealtimeCSG.CSGSettings.MaxSphereSplits, SplitsContent, isSceneGUI);

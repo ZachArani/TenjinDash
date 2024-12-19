@@ -30,7 +30,10 @@ namespace RealtimeCSG.Foundation
         private static bool DestroyNodes(Int32 nodeCount, CSGTreeNode[] nodeIDs)
         {
             if (nodeIDs == null)
+            {
                 return false;
+            }
+
             GCHandle nodeIDsHandle = GCHandle.Alloc(nodeIDs, GCHandleType.Pinned);
             IntPtr nodeIDsPtr = nodeIDsHandle.AddrOfPinnedObject();
             var result = DestroyNodes(nodeCount, nodeIDsPtr);
@@ -43,7 +46,9 @@ namespace RealtimeCSG.Foundation
             var nodeCount = GetNodeCount();
             var allTreeNodeIDs = new CSGTreeNode[nodeCount];
             if (nodeCount == 0)
+            {
                 return allTreeNodeIDs;
+            }
 
             GCHandle allNodeIDsHandle = GCHandle.Alloc(allTreeNodeIDs, GCHandleType.Pinned);
             IntPtr allNodeIDsPtr = allNodeIDsHandle.AddrOfPinnedObject();
@@ -57,7 +62,9 @@ namespace RealtimeCSG.Foundation
             var nodeCount = GetTreeCount();
             var allTrees = new CSGTree[nodeCount];
             if (nodeCount == 0)
+            {
                 return allTrees;
+            }
 
             GCHandle allTreeIDsHandle = GCHandle.Alloc(allTrees, GCHandleType.Pinned);
             IntPtr allTreeIDsPtr = allTreeIDsHandle.AddrOfPinnedObject();
@@ -71,7 +78,9 @@ namespace RealtimeCSG.Foundation
             var nodeCount = GetBrushMeshCount();
             var allInstances = new BrushMeshInstance[nodeCount];
             if (nodeCount == 0)
+            {
                 return allInstances;
+            }
 
             GCHandle allInstancesIDsHandle = GCHandle.Alloc(allInstances, GCHandleType.Pinned);
             IntPtr allInstancesIDsPtr = allInstancesIDsHandle.AddrOfPinnedObject();

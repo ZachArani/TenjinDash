@@ -50,7 +50,9 @@ namespace InternalRealtimeCSG
             for (int m = 0; m < models.Length; m++)
             {
                 if (!models[m])
+                {
                     continue;
+                }
 
                 needLightmapUVUpdate = needLightmapUVUpdate || (MeshInstanceManager.NeedToGenerateLightmapUVsForModel(models[m]) && !models[m].AutoRebuildUVs);
                 //				needColliderUpdate   = needColliderUpdate   || (MeshInstanceManager.NeedToGenerateCollidersForModel(models[m])   && !models[m].AutoRebuildColliders);
@@ -107,10 +109,10 @@ namespace InternalRealtimeCSG
                         }
 
                         var texGenFlags = brush.Shape.TexGenFlags[texGenIndex];
-                        var surfaceNoRender = ((texGenFlags & TexGenFlags.NoRender) == TexGenFlags.NoRender);
-                        var surfaceNoCollision = ((texGenFlags & TexGenFlags.NoCollision) == TexGenFlags.NoCollision);
-                        var surfaceNoCastShadows = ((texGenFlags & TexGenFlags.NoCastShadows) == TexGenFlags.NoCastShadows);
-                        var surfaceNoReceiveShadows = ((texGenFlags & TexGenFlags.NoReceiveShadows) == TexGenFlags.NoReceiveShadows);
+                        var surfaceNoRender = (texGenFlags & TexGenFlags.NoRender) == TexGenFlags.NoRender;
+                        var surfaceNoCollision = (texGenFlags & TexGenFlags.NoCollision) == TexGenFlags.NoCollision;
+                        var surfaceNoCastShadows = (texGenFlags & TexGenFlags.NoCastShadows) == TexGenFlags.NoCastShadows;
+                        var surfaceNoReceiveShadows = (texGenFlags & TexGenFlags.NoReceiveShadows) == TexGenFlags.NoReceiveShadows;
 
                         if (i == 0)
                         {
@@ -121,10 +123,25 @@ namespace InternalRealtimeCSG
                         }
                         else
                         {
-                            if (noRender.HasValue && noRender.Value != surfaceNoRender) noRender = surfaceNoRender;
-                            if (noCollision.HasValue && noCollision.Value != surfaceNoCollision) noCollision = surfaceNoCollision;
-                            if (noCastShadows.HasValue && noCastShadows.Value != surfaceNoCastShadows) noCastShadows = surfaceNoCastShadows;
-                            if (noReceiveShadows.HasValue && noReceiveShadows.Value != surfaceNoReceiveShadows) noReceiveShadows = surfaceNoReceiveShadows;
+                            if (noRender.HasValue && noRender.Value != surfaceNoRender)
+                            {
+                                noRender = surfaceNoRender;
+                            }
+
+                            if (noCollision.HasValue && noCollision.Value != surfaceNoCollision)
+                            {
+                                noCollision = surfaceNoCollision;
+                            }
+
+                            if (noCastShadows.HasValue && noCastShadows.Value != surfaceNoCastShadows)
+                            {
+                                noCastShadows = surfaceNoCastShadows;
+                            }
+
+                            if (noReceiveShadows.HasValue && noReceiveShadows.Value != surfaceNoReceiveShadows)
+                            {
+                                noReceiveShadows = surfaceNoReceiveShadows;
+                            }
                         }
                     }
                 }
@@ -140,19 +157,26 @@ namespace InternalRealtimeCSG
             GUILayout.BeginHorizontal(CSG_GUIStyleUtility.ContentEmpty);
             {
                 if (!isSceneGUI)
+                {
                     GUILayout.Label(ContentShadows, EditModeSurfaceGUI.largeLabelWidth);
+                }
                 else
+                {
                     GUILayout.Label(ContentShadows, EditorStyles.miniLabel, EditModeSurfaceGUI.smallLabelWidth);
+                }
 
                 EditorGUI.BeginChangeCheck();
                 {
                     // TODO: implement support
                     EditorGUI.showMixedValue = !state.noReceiveShadows.HasValue;
-                    state.noReceiveShadows = !GUILayout.Toggle(!(state.noReceiveShadows ?? (state.noRender ?? true)), ContentReceiveShadowsSurfaces, leftStyle);
+                    state.noReceiveShadows = !GUILayout.Toggle(!(state.noReceiveShadows ?? state.noRender ?? true), ContentReceiveShadowsSurfaces, leftStyle);
                     TooltipUtility.SetToolTip(ToolTipReceiveShadowsSurfaces);
                 }
                 if (EditorGUI.EndChangeCheck())
+                {
                     SurfaceUtility.SetSurfaceTexGenFlags(selectedBrushSurfaces, TexGenFlags.NoReceiveShadows, state.noReceiveShadows.Value);
+                }
+
                 EditorGUI.BeginChangeCheck();
                 {
                     // TODO: implement support
@@ -161,7 +185,9 @@ namespace InternalRealtimeCSG
                     TooltipUtility.SetToolTip(ToolTipCastShadowsSurfaces);
                 }
                 if (EditorGUI.EndChangeCheck())
+                {
                     SurfaceUtility.SetSurfaceTexGenFlags(selectedBrushSurfaces, TexGenFlags.NoCastShadows, state.noCastShadows.Value);
+                }
             }
             GUILayout.EndHorizontal();
 
@@ -174,7 +200,10 @@ namespace InternalRealtimeCSG
                     TooltipUtility.SetToolTip(ToolTipVisibleSurfaces);
                 }
                 if (EditorGUI.EndChangeCheck())
+                {
                     SurfaceUtility.SetSurfaceTexGenFlags(selectedBrushSurfaces, TexGenFlags.NoRender, state.noRender.Value);
+                }
+
                 EditorGUI.BeginChangeCheck();
                 {
                     EditorGUI.showMixedValue = !state.noCollision.HasValue;
@@ -182,7 +211,9 @@ namespace InternalRealtimeCSG
                     TooltipUtility.SetToolTip(ToolTipCollisionSurfaces);
                 }
                 if (EditorGUI.EndChangeCheck())
+                {
                     SurfaceUtility.SetSurfaceTexGenFlags(selectedBrushSurfaces, TexGenFlags.NoCollision, state.noCollision.Value);
+                }
             }
             GUILayout.EndHorizontal();
             EditorGUI.showMixedValue = false;
@@ -202,14 +233,17 @@ namespace InternalRealtimeCSG
                 EditorGUI.BeginChangeCheck();
                 {
                     var mixed = !state.noReceiveShadows.HasValue;
-                    var enabled = !(state.noReceiveShadows ?? (state.noRender ?? true));
+                    var enabled = !(state.noReceiveShadows ?? state.noRender ?? true);
                     EditorGUI.showMixedValue = mixed;
                     tempRect.Set(rect.x + 53, rect.y + 1, 90 - 4, 15);
                     state.noReceiveShadows = !GUI.Toggle(tempRect, enabled, ContentReceiveShadowsSurfaces, leftStyle);
                     TooltipUtility.SetToolTip(ToolTipReceiveShadowsSurfaces, tempRect);
                 }
                 if (EditorGUI.EndChangeCheck())
+                {
                     SurfaceUtility.SetSurfaceTexGenFlags(selectedBrushSurfaces, TexGenFlags.NoReceiveShadows, state.noReceiveShadows.Value);
+                }
+
                 EditorGUI.BeginChangeCheck();
                 {
                     var mixed = !state.noCastShadows.HasValue;
@@ -220,7 +254,9 @@ namespace InternalRealtimeCSG
                     TooltipUtility.SetToolTip(ToolTipCastShadowsSurfaces, tempRect);
                 }
                 if (EditorGUI.EndChangeCheck())
+                {
                     SurfaceUtility.SetSurfaceTexGenFlags(selectedBrushSurfaces, TexGenFlags.NoCastShadows, state.noCastShadows.Value);
+                }
             }
             {
                 EditorGUI.BeginChangeCheck();
@@ -233,7 +269,10 @@ namespace InternalRealtimeCSG
                     TooltipUtility.SetToolTip(ToolTipVisibleSurfaces, tempRect);
                 }
                 if (EditorGUI.EndChangeCheck())
+                {
                     SurfaceUtility.SetSurfaceTexGenFlags(selectedBrushSurfaces, TexGenFlags.NoRender, state.noRender.Value);
+                }
+
                 EditorGUI.BeginChangeCheck();
                 {
                     var mixed = !state.noCollision.HasValue;
@@ -244,7 +283,9 @@ namespace InternalRealtimeCSG
                     TooltipUtility.SetToolTip(ToolTipCollisionSurfaces, tempRect);
                 }
                 if (EditorGUI.EndChangeCheck())
+                {
                     SurfaceUtility.SetSurfaceTexGenFlags(selectedBrushSurfaces, TexGenFlags.NoCollision, state.noCollision.Value);
+                }
             }
             EditorGUI.showMixedValue = false;
         }
@@ -274,8 +315,15 @@ namespace InternalRealtimeCSG
                     }
                     if (EditorGUI.EndChangeCheck())
                     {
-                        if (noReceiveShadows) texGenFlags |= TexGenFlags.NoReceiveShadows;
-                        else texGenFlags &= ~TexGenFlags.NoReceiveShadows;
+                        if (noReceiveShadows)
+                        {
+                            texGenFlags |= TexGenFlags.NoReceiveShadows;
+                        }
+                        else
+                        {
+                            texGenFlags &= ~TexGenFlags.NoReceiveShadows;
+                        }
+
                         GUI.changed = true;
                     }
                     EditorGUI.BeginChangeCheck();
@@ -286,8 +334,15 @@ namespace InternalRealtimeCSG
                     }
                     if (EditorGUI.EndChangeCheck())
                     {
-                        if (noCastShadows) texGenFlags |= TexGenFlags.NoCastShadows;
-                        else texGenFlags &= ~TexGenFlags.NoCastShadows;
+                        if (noCastShadows)
+                        {
+                            texGenFlags |= TexGenFlags.NoCastShadows;
+                        }
+                        else
+                        {
+                            texGenFlags &= ~TexGenFlags.NoCastShadows;
+                        }
+
                         GUI.changed = true;
                     }
                 }
@@ -302,8 +357,15 @@ namespace InternalRealtimeCSG
                     }
                     if (EditorGUI.EndChangeCheck())
                     {
-                        if (noRender) texGenFlags |= TexGenFlags.NoRender;
-                        else texGenFlags &= ~TexGenFlags.NoRender;
+                        if (noRender)
+                        {
+                            texGenFlags |= TexGenFlags.NoRender;
+                        }
+                        else
+                        {
+                            texGenFlags &= ~TexGenFlags.NoRender;
+                        }
+
                         GUI.changed = true;
                     }
                     EditorGUI.BeginChangeCheck();
@@ -313,8 +375,15 @@ namespace InternalRealtimeCSG
                     }
                     if (EditorGUI.EndChangeCheck())
                     {
-                        if (noCollision) texGenFlags |= TexGenFlags.NoCollision;
-                        else texGenFlags &= ~TexGenFlags.NoCollision;
+                        if (noCollision)
+                        {
+                            texGenFlags |= TexGenFlags.NoCollision;
+                        }
+                        else
+                        {
+                            texGenFlags &= ~TexGenFlags.NoCollision;
+                        }
+
                         GUI.changed = true;
                     }
                 }
@@ -328,7 +397,9 @@ namespace InternalRealtimeCSG
         public static void StartToolGUI()
         {
             if (UpdateButtons(InternalCSGModelManager.Models))
+            {
                 GUILayout.Space(10);
+            }
         }
 
 

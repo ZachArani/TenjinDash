@@ -33,7 +33,9 @@ namespace RealtimeCSG
             {
                 var material = obj as Material;
                 if (material != null)
+                {
                     dragMaterials.Add(material);
+                }
             }
             if (dragMaterials.Count != 1)
             {
@@ -53,10 +55,14 @@ namespace RealtimeCSG
 
             GameObject foundObject;
             if (!SceneQueryUtility.FindClickWorldIntersection(camera, Event.current.mousePosition, out foundObject))
+            {
                 return false;
+            }
 
             if (!foundObject.GetComponent<CSGBrush>())
+            {
                 return false;
+            }
 
             return true;
         }
@@ -89,7 +95,9 @@ namespace RealtimeCSG
                     foreach (var childBrush in top_node.GetComponentsInChildren<CSGBrush>())
                     {
                         if (highlight_brushes.Add(childBrush))
+                        {
                             highlight_surfaces.Add(new SelectedBrushSurface(childBrush, -1));
+                        }
                     }
                 }
             }
@@ -105,7 +113,9 @@ namespace RealtimeCSG
             if (hoverBrushes == null ||
                 hoverBrushes.Length == 0 ||
                 hoverBrushes[0] == null)
+            {
                 return null;
+            }
 
             var activetool = EditModeManager.ActiveTool as EditModeSurface;
             if (activetool != null)
@@ -315,7 +325,10 @@ namespace RealtimeCSG
             }
             if (previousMaterials == null ||
                 previousMaterials.Length != hoverBrushSurfaces.Length)
+            {
                 previousMaterials = new Material[hoverBrushSurfaces.Length][];
+            }
+
             for (int i = 0; i < hoverBrushSurfaces.Length; i++)
             {
                 var brush = hoverBrushSurfaces[i].brush;
@@ -323,7 +336,9 @@ namespace RealtimeCSG
 
                 if (previousMaterials[i] == null ||
                     previousMaterials[i].Length != shape.TexGens.Length)
+                {
                     previousMaterials[i] = new Material[shape.TexGens.Length];
+                }
 
                 for (int t = 0; t < shape.TexGens.Length; t++)
                 {
@@ -354,9 +369,15 @@ namespace RealtimeCSG
         static string MaterialToString(Material mat)
         {
             if (ReferenceEquals(mat, null))
+            {
                 return "null";
+            }
+
             if (!mat)
+            {
                 return "invalid";
+            }
+
             return mat.name + " " + mat.GetInstanceID().ToString();
         }
 
@@ -364,7 +385,9 @@ namespace RealtimeCSG
         void RestoreMaterials(SelectedBrushSurface[] hoverBrushSurfaces)
         {
             if (hoverBrushSurfaces == null)
+            {
                 return;
+            }
 
             var updateModels = new HashSet<CSGModel>();
             var updateBrushes = new HashSet<CSGBrush>();
@@ -373,7 +396,9 @@ namespace RealtimeCSG
                 var brush = hoverBrushSurfaces[i].brush;
                 if (brush.ChildData == null ||
                     brush.ChildData.Model == null)
+                {
                     continue;
+                }
 
                 try
                 {
@@ -403,7 +428,10 @@ namespace RealtimeCSG
         void ApplyMaterial(SelectedBrushSurface[] hoverBrushSurfaces)
         {
             if (hoverBrushSurfaces == null)
+            {
                 return;
+            }
+
             var updateModels = new HashSet<CSGModel>();
             var updateBrushes = new HashSet<CSGBrush>();
             for (int i = 0; i < hoverBrushSurfaces.Length; i++)
@@ -411,7 +439,10 @@ namespace RealtimeCSG
                 var brush = hoverBrushSurfaces[i].brush;
                 if (brush.ChildData == null ||
                     brush.ChildData.Model == null)
+                {
                     continue;
+                }
+
                 try
                 {
                     var model = brush.ChildData.Model;
@@ -465,9 +496,13 @@ namespace RealtimeCSG
 
                             Material dragMaterial;
                             if (dragMaterials.Count > 1)
+                            {
                                 dragMaterial = dragMaterials[Random.Range(0, dragMaterials.Count)];
+                            }
                             else
+                            {
                                 dragMaterial = dragMaterials[0];
+                            }
 
                             brush.Shape.TexGens[highlight_texGen].RenderMaterial = dragMaterial;
                         }
@@ -483,7 +518,9 @@ namespace RealtimeCSG
         public void DragPerform(SceneView sceneView)
         {
             if (hoverBrushSurfaces == null)
+            {
                 return;
+            }
 
             RestoreMaterials(hoverBrushSurfaces);
 
@@ -495,7 +532,9 @@ namespace RealtimeCSG
 
                     var gameObjects = new HashSet<GameObject>();
                     for (int i = 0; i < hoverBrushSurfaces.Length; i++)
+                    {
                         gameObjects.Add(hoverBrushSurfaces[i].brush.gameObject);
+                    }
 
                     var surfaceTool = EditModeManager.ActiveTool as EditModeSurface;
                     if (surfaceTool != null)
@@ -503,17 +542,22 @@ namespace RealtimeCSG
                         surfaceTool.SelectSurfaces(hoverBrushSurfaces, gameObjects, selectAllSurfaces);
                     }
                     else
+                    {
                         Selection.objects = gameObjects.ToArray();
-
+                    }
 
                     for (int i = 0; i < SceneView.sceneViews.Count; i++)
                     {
                         var sceneview = SceneView.sceneViews[i] as SceneView;
                         if (sceneview == null)
+                        {
                             continue;
+                        }
 
                         if (sceneview.camera.pixelRect.Contains(Event.current.mousePosition))
+                        {
                             sceneview.Focus();
+                        }
                     }
                 }
             }

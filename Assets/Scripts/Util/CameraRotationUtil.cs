@@ -11,7 +11,7 @@ public class CameraRotationUtil : MonoBehaviour, ITimeControl
     /// <summary>
     /// Target the camera points at
     /// </summary>
-    public GameObject pointTarget; 
+    public GameObject pointTarget;
 
     /// <summary>
     /// Radius from <see cref="pointTarget"/> the camera rotates at.

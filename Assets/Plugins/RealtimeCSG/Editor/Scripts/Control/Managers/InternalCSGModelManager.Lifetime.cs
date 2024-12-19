@@ -36,10 +36,14 @@ namespace RealtimeCSG
             }
 
             if (External == null)
+            {
                 return;
+            }
 
             if (RegisterAllComponents())
+            {
                 External.ResetCSG();
+            }
         }
         #endregion
 
@@ -69,10 +73,14 @@ namespace RealtimeCSG
         public static void CheckForChanges(bool forceHierarchyUpdate = false)
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             if (!forceHierarchyUpdate && skipCheckForChanges)
+            {
                 return;
+            }
 
             lock (_lockObj)
             {
@@ -121,8 +129,9 @@ namespace RealtimeCSG
             ClearMeshInstances();
 
             if (RegisterAllComponents())
+            {
                 External.ResetCSG();
-
+            }
         }
         #endregion
     }

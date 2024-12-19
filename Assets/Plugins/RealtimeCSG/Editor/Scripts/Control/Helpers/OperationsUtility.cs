@@ -18,11 +18,15 @@ namespace RealtimeCSG
             {
                 var brush = gameObject.GetComponentInChildren<CSGBrush>();
                 if (brush != null)
+                {
                     return true;
+                }
 
                 var operation = gameObject.GetComponentInChildren<CSGOperation>();
                 if (operation != null)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -35,10 +39,15 @@ namespace RealtimeCSG
             {
                 var obj = gameObject.GetComponent(CSGOperationType);
                 if (!obj)
+                {
                     continue;
+                }
+
                 var operation = obj as CSGOperation;
                 if (operation.PassThrough)
+                {
                     continue;
+                }
 
                 modified = true;
                 Undo.RecordObject(operation, "Modifying csg operation of operation component");
@@ -46,7 +55,9 @@ namespace RealtimeCSG
             }
 
             if (!modified)
+            {
                 return;
+            }
 
             InternalCSGModelManager.CheckForChanges();
             EditorApplication.RepaintHierarchyWindow();
@@ -74,7 +85,9 @@ namespace RealtimeCSG
                 {
                     var operation = obj as CSGOperation;
                     if (operation.OperationType == operationType)
+                    {
                         continue;
+                    }
 
                     modified = true;
                     Undo.RecordObject(operation, "Modifying csg operation of operation component");
@@ -93,13 +106,22 @@ namespace RealtimeCSG
         public static GameObject CreateGameObject(Transform parent, string name, bool worldPositionStays)
         {
             GameObject gameObject;
-            if (name == null) gameObject = new GameObject();
-            else gameObject = new GameObject(name);
+            if (name == null)
+            {
+                gameObject = new GameObject();
+            }
+            else
+            {
+                gameObject = new GameObject(name);
+            }
+
             if (parent != null && parent)
             {
                 gameObject.transform.SetParent(parent, worldPositionStays);
                 if (name != null)
+                {
                     gameObject.name = GameObjectUtility.GetUniqueNameForSibling(parent, name);
+                }
             }
             return gameObject;
         }
@@ -112,7 +134,9 @@ namespace RealtimeCSG
             {
                 var parentGameObject = command.context as GameObject;
                 if (parentGameObject)
+                {
                     parent = parentGameObject.transform;
+                }
             }
             return parent;
         }
@@ -132,7 +156,10 @@ namespace RealtimeCSG
             UnityEditor.Selection.activeGameObject = gameObject;
             SelectionUtility.LastUsedModel = model;
             if (parent)
+            {
                 gameObject.transform.SetParent(parent, false);
+            }
+
             Undo.RegisterCreatedObjectUndo(gameObject, "Created model");
             InternalCSGModelManager.CheckForChanges();
             return model;
@@ -177,7 +204,9 @@ namespace RealtimeCSG
             }
             else
             if (!parent)
+            {
                 parent = lastUsedModelTransform;
+            }
 
             var name = UnityEditor.GameObjectUtility.GetUniqueNameForSibling(parent, "Operation"); ;
             var gameObject = new GameObject(name);
@@ -216,7 +245,9 @@ namespace RealtimeCSG
             }
             else
             if (!parent)
+            {
                 parent = lastUsedModelTransform;
+            }
 
             var name = UnityEditor.GameObjectUtility.GetUniqueNameForSibling(parent, "Brush");
             var gameObject = new GameObject(name);
@@ -237,12 +268,16 @@ namespace RealtimeCSG
         public static void GroupSelectionInOperation()
         {
             if (Selection.activeObject == null)
+            {
                 return;
+            }
 
             var childTransforms = new List<Transform>(Selection.transforms);
             Selection.activeObject = null;
             if (childTransforms.Count == 0)
+            {
                 return;
+            }
 
             for (int i = childTransforms.Count - 1; i >= 0; i--)
             {
@@ -309,7 +344,10 @@ namespace RealtimeCSG
                 Undo.SetTransformParent(childTransforms[i], group, "Moved gameObject under operation");
                 Undo.RecordObject(childTransforms[i], "Set sibling index of operation");
                 if (prevGroup != group)
+                {
                     group.SetSiblingIndex(index);
+                }
+
                 prevGroup = group;
             }
 

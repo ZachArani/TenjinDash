@@ -32,11 +32,17 @@ namespace RealtimeCSG
                 {
                     var brush = brush_targets[i];
                     if ((brush.Flags & BrushFlags.InfiniteBrush) == BrushFlags.InfiniteBrush)
+                    {
                         continue;
+                    }
+
                     brush.EnsureInitialized();
                     if (brush.ControlMesh == null ||
                         brush.Shape == null)
+                    {
                         continue;
+                    }
+
                     brushes.Add(brush);
                 }
             }
@@ -52,11 +58,17 @@ namespace RealtimeCSG
                     {
                         var brush = operation_brushes[j];
                         if ((brush.Flags & BrushFlags.InfiniteBrush) == BrushFlags.InfiniteBrush)
+                        {
                             continue;
+                        }
+
                         brush.EnsureInitialized();
                         if (brush.ControlMesh == null ||
                             brush.Shape == null)
+                        {
                             continue;
+                        }
+
                         brushes.Add(brush);
                     }
                 }
@@ -73,11 +85,17 @@ namespace RealtimeCSG
                     {
                         var brush = model_brushes[j];
                         if ((brush.Flags & BrushFlags.InfiniteBrush) == BrushFlags.InfiniteBrush)
+                        {
                             continue;
+                        }
+
                         brush.EnsureInitialized();
                         if (brush.ControlMesh == null ||
                             brush.Shape == null)
+                        {
                             continue;
+                        }
+
                         brushes.Add(brush);
                     }
                 }
@@ -115,7 +133,9 @@ namespace RealtimeCSG
 
             if (this.OtherTargets != null &&
                 this.OtherTargets.Length > 0)
+            {
                 transforms.AddRange(this.OtherTargets);
+            }
 
             for (int i = transforms.Count - 1; i >= 0; i--)
             {
@@ -131,7 +151,9 @@ namespace RealtimeCSG
                     iterator = iterator.parent;
                 }
                 if (found)
+                {
                     transforms.RemoveAt(i);
+                }
             }
             return transforms;
         }
@@ -151,7 +173,9 @@ namespace RealtimeCSG
                     }
                 }
                 if (this.OtherTargets.Length == 0)
+                {
                     this.OtherTargets = new Transform[0];
+                }
             }
             if (this.NodeTargets != null &&
                 this.NodeTargets.Length > 0)
@@ -185,7 +209,9 @@ namespace RealtimeCSG
                             }
                         }
                         if (this.BrushTargets.Length == 0)
+                        {
                             this.BrushTargets = new CSGBrush[0];
+                        }
                     }
                     if (this.OperationTargets != null &&
                         this.OperationTargets.Length > 0)
@@ -199,7 +225,9 @@ namespace RealtimeCSG
                             }
                         }
                         if (this.OperationTargets.Length == 0)
+                        {
                             this.OperationTargets = new CSGOperation[0];
+                        }
                     }
                     if (this.ModelTargets != null &&
                         this.ModelTargets.Length > 0)
@@ -213,7 +241,9 @@ namespace RealtimeCSG
                             }
                         }
                         if (this.ModelTargets.Length == 0)
+                        {
                             this.ModelTargets = new CSGModel[0];
+                        }
                     }
                 }
             }
@@ -223,9 +253,14 @@ namespace RealtimeCSG
         public bool UpdateSelection(HashSet<CSGNode> newTargetNodes, HashSet<Transform> newTargetOthers)
         {
             if (newTargetNodes == null)
+            {
                 newTargetNodes = new HashSet<CSGNode>();
+            }
+
             if (newTargetOthers == null)
+            {
                 newTargetOthers = new HashSet<Transform>();
+            }
 
             this.RemovedNodes = null;
             this.RemovedOthers = null;
@@ -323,7 +358,9 @@ namespace RealtimeCSG
             {
                 if (this.NodeTargets != null &&
                     ArrayUtility.Contains(this.NodeTargets, node))
+                {
                     continue;
+                }
 
                 if (this.NodeTargets == null)
                 {
@@ -337,33 +374,50 @@ namespace RealtimeCSG
                 foundAddedNodes.Add(node);
 
                 if (CSGPrefabUtility.IsPrefabAsset(node.gameObject))
+                {
                     continue;
+                }
 
                 var brush = node as CSGBrush;
                 if (brush != null)
                 {
                     if (this.BrushTargets == null)
+                    {
                         this.BrushTargets = new CSGBrush[] { brush };
+                    }
                     else
+                    {
                         ArrayUtility.Add(ref this.BrushTargets, brush);
+                    }
+
                     continue;
                 }
                 var operation = node as CSGOperation;
                 if (node is CSGOperation)
                 {
                     if (this.OperationTargets == null)
+                    {
                         this.OperationTargets = new CSGOperation[] { operation };
+                    }
                     else
+                    {
                         ArrayUtility.Add(ref this.OperationTargets, operation);
+                    }
+
                     continue;
                 }
                 var model = node as CSGModel;
                 if (node is CSGModel)
                 {
                     if (this.ModelTargets == null)
+                    {
                         this.ModelTargets = new CSGModel[] { model };
+                    }
                     else
+                    {
                         ArrayUtility.Add(ref this.ModelTargets, model);
+                    }
+
                     continue;
                 }
             }
@@ -373,12 +427,19 @@ namespace RealtimeCSG
             {
                 if (this.OtherTargets != null &&
                     ArrayUtility.Contains(this.OtherTargets, other))
+                {
                     continue;
+                }
 
                 if (this.OtherTargets == null)
+                {
                     this.OtherTargets = new Transform[] { other };
+                }
                 else
+                {
                     ArrayUtility.Add(ref this.OtherTargets, other);
+                }
+
                 foundAddedOthers.Add(other);
             }
 
@@ -390,11 +451,16 @@ namespace RealtimeCSG
                 {
                     if (brush.ChildData == null ||
                         brush.ChildData.Model == null)
+                    {
                         continue;
+                    }
 
                     var childModel = brush.ChildData.Model;
                     if (ModelTraits.IsModelEditable(childModel))
+                    {
                         SelectionUtility.LastUsedModel = childModel;
+                    }
+
                     break;
                 }
                 var operation = node as CSGOperation;
@@ -402,7 +468,9 @@ namespace RealtimeCSG
                 {
                     if (operation.ChildData == null ||
                         operation.ChildData.Model == null)
+                    {
                         continue;
+                    }
 
                     SelectionUtility.LastUsedModel = operation.ChildData.Model;
                     break;
@@ -421,7 +489,7 @@ namespace RealtimeCSG
             this.AddedNodes = foundAddedNodes.ToArray();
             this.AddedOthers = foundAddedOthers.ToArray();
 
-            return (foundAddedNodes.Count > 0 || foundRemovedNodes.Count > 0 || foundAddedOthers.Count > 0 || foundRemovedOthers.Count > 0);
+            return foundAddedNodes.Count > 0 || foundRemovedNodes.Count > 0 || foundAddedOthers.Count > 0 || foundRemovedOthers.Count > 0;
         }
     }
 }

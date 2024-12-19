@@ -61,10 +61,10 @@ namespace PathCreation
             float controlHeight = .5f;
             float controlWidth = 1f;
             points = new List<Vector3> {
- centre + Vector3.left * width,
- centre + Vector3.left * controlWidth + dir * controlHeight,
- centre + Vector3.right * controlWidth - dir * controlHeight,
- centre + Vector3.right * width
+ centre + (Vector3.left * width),
+ centre + (Vector3.left * controlWidth) + (dir * controlHeight),
+ centre + (Vector3.right * controlWidth) - (dir * controlHeight),
+ centre + (Vector3.right * width)
  };
 
             perAnchorNormalsAngle = new List<float>() { 0, 0 };
@@ -169,7 +169,7 @@ namespace PathCreation
         {
             get
             {
-                return (IsClosed) ? points.Count / 3 : (points.Count + 2) / 3;
+                return IsClosed ? points.Count / 3 : (points.Count + 2) / 3;
             }
         }
 
@@ -273,7 +273,7 @@ namespace PathCreation
 
             int lastAnchorIndex = points.Count - 1;
             // Set position for new control to be mirror of its counterpart
-            Vector3 secondControlForOldLastAnchorOffset = (points[lastAnchorIndex] - points[lastAnchorIndex - 1]);
+            Vector3 secondControlForOldLastAnchorOffset = points[lastAnchorIndex] - points[lastAnchorIndex - 1];
             if (controlMode != ControlMode.Mirrored && controlMode != ControlMode.Automatic)
             {
                 // Set position for new control to be aligned with its counterpart, but with a length of half the distance from prev to new anchor
@@ -305,7 +305,7 @@ namespace PathCreation
             }
 
             // Set position for new control to be mirror of its counterpart
-            Vector3 secondControlForOldFirstAnchorOffset = (points[0] - points[1]);
+            Vector3 secondControlForOldFirstAnchorOffset = points[0] - points[1];
             if (controlMode != ControlMode.Mirrored && controlMode != ControlMode.Automatic)
             {
                 // Set position for new control to be aligned with its counterpart, but with a length of half the distance from prev to new anchor
@@ -334,16 +334,16 @@ namespace PathCreation
 
             if (controlMode == ControlMode.Automatic)
             {
-                points.InsertRange(segmentIndex * 3 + 2, new Vector3[] { Vector3.zero, anchorPos, Vector3.zero });
-                AutoSetAllAffectedControlPoints(segmentIndex * 3 + 3);
+                points.InsertRange((segmentIndex * 3) + 2, new Vector3[] { Vector3.zero, anchorPos, Vector3.zero });
+                AutoSetAllAffectedControlPoints((segmentIndex * 3) + 3);
             }
             else
             {
                 // Split the curve to find where control points can be inserted to least affect shape of curve
                 // Curve will probably be deformed slightly since splitTime is only an estimate (for performance reasons, and so doesn't correspond exactly with anchorPos)
                 Vector3[][] splitSegment = CubicBezierUtility.SplitCurve(GetPointsInSegment(segmentIndex), splitTime);
-                points.InsertRange(segmentIndex * 3 + 2, new Vector3[] { splitSegment[0][2], splitSegment[1][0], splitSegment[1][1] });
-                int newAnchorIndex = segmentIndex * 3 + 3;
+                points.InsertRange((segmentIndex * 3) + 2, new Vector3[] { splitSegment[0][2], splitSegment[1][0], splitSegment[1][1] });
+                int newAnchorIndex = (segmentIndex * 3) + 3;
                 MovePoint(newAnchorIndex - 2, splitSegment[0][1], true);
                 MovePoint(newAnchorIndex + 2, splitSegment[1][2], true);
                 MovePoint(newAnchorIndex, anchorPos, true);
@@ -351,7 +351,7 @@ namespace PathCreation
                 if (controlMode == ControlMode.Mirrored)
                 {
                     float avgDst = ((splitSegment[0][2] - anchorPos).magnitude + (splitSegment[1][1] - anchorPos).magnitude) / 2;
-                    MovePoint(newAnchorIndex + 1, anchorPos + (splitSegment[1][1] - anchorPos).normalized * avgDst, true);
+                    MovePoint(newAnchorIndex + 1, anchorPos + ((splitSegment[1][1] - anchorPos).normalized * avgDst), true);
                 }
             }
 
@@ -370,7 +370,7 @@ namespace PathCreation
         public void DeleteSegment(int anchorIndex)
         {
             // Don't delete segment if its the last one remaining (or if only two segments in a closed path)
-            if (NumSegments > 2 || !isClosed && NumSegments > 1)
+            if (NumSegments > 2 || (!isClosed && NumSegments > 1))
             {
                 if (anchorIndex == 0)
                 {
@@ -404,7 +404,7 @@ namespace PathCreation
         public Vector3[] GetPointsInSegment(int segmentIndex)
         {
             segmentIndex = Mathf.Clamp(segmentIndex, 0, NumSegments - 1);
-            return new Vector3[] { this[segmentIndex * 3], this[segmentIndex * 3 + 1], this[segmentIndex * 3 + 2], this[LoopIndex(segmentIndex * 3 + 3)] };
+            return new Vector3[] { this[segmentIndex * 3], this[(segmentIndex * 3) + 1], this[(segmentIndex * 3) + 2], this[LoopIndex((segmentIndex * 3) + 3)] };
         }
 
         /// Move an existing point to a new position
@@ -449,10 +449,10 @@ namespace PathCreation
                     else if (controlMode != ControlMode.Free)
                     {
                         bool nextPointIsAnchor = (i + 1) % 3 == 0;
-                        int attachedControlIndex = (nextPointIsAnchor) ? i + 2 : i - 2;
-                        int anchorIndex = (nextPointIsAnchor) ? i + 1 : i - 1;
+                        int attachedControlIndex = nextPointIsAnchor ? i + 2 : i - 2;
+                        int anchorIndex = nextPointIsAnchor ? i + 1 : i - 1;
 
-                        if (attachedControlIndex >= 0 && attachedControlIndex < points.Count || isClosed)
+                        if ((attachedControlIndex >= 0 && attachedControlIndex < points.Count) || isClosed)
                         {
                             float distanceFromAnchor = 0;
                             // If in aligned mode, then attached control's current distance from anchor point should be maintained
@@ -467,7 +467,7 @@ namespace PathCreation
 
                             }
                             Vector3 dir = (points[LoopIndex(anchorIndex)] - pointPos).normalized;
-                            points[LoopIndex(attachedControlIndex)] = points[LoopIndex(anchorIndex)] + dir * distanceFromAnchor;
+                            points[LoopIndex(attachedControlIndex)] = points[LoopIndex(anchorIndex)] + (dir * distanceFromAnchor);
                         }
                     }
                 }
@@ -618,7 +618,7 @@ namespace PathCreation
         {
             for (int i = updatedAnchorIndex - 3; i <= updatedAnchorIndex + 3; i += 3)
             {
-                if (i >= 0 && i < points.Count || isClosed)
+                if ((i >= 0 && i < points.Count) || isClosed)
                 {
                     AutoSetAnchorControlPoints(LoopIndex(i));
                 }
@@ -668,10 +668,10 @@ namespace PathCreation
             // Set the control points along the calculated direction, with a distance proportional to the distance to the neighbouring control point
             for (int i = 0; i < 2; i++)
             {
-                int controlIndex = anchorIndex + i * 2 - 1;
-                if (controlIndex >= 0 && controlIndex < points.Count || isClosed)
+                int controlIndex = anchorIndex + (i * 2) - 1;
+                if ((controlIndex >= 0 && controlIndex < points.Count) || isClosed)
                 {
-                    points[LoopIndex(controlIndex)] = anchorPos + dir * neighbourDistances[i] * autoControlLength;
+                    points[LoopIndex(controlIndex)] = anchorPos + (dir * neighbourDistances[i] * autoControlLength);
                 }
             }
         }
@@ -687,10 +687,10 @@ namespace PathCreation
                     Vector3 dirAnchorAToB = (points[3] - points[0]).normalized;
                     float dstBetweenAnchors = (points[0] - points[3]).magnitude;
                     Vector3 perp = Vector3.Cross(dirAnchorAToB, (space == PathSpace.xy) ? Vector3.forward : Vector3.up);
-                    points[1] = points[0] + perp * dstBetweenAnchors / 2f;
-                    points[5] = points[0] - perp * dstBetweenAnchors / 2f;
-                    points[2] = points[3] + perp * dstBetweenAnchors / 2f;
-                    points[4] = points[3] - perp * dstBetweenAnchors / 2f;
+                    points[1] = points[0] + (perp * dstBetweenAnchors / 2f);
+                    points[5] = points[0] - (perp * dstBetweenAnchors / 2f);
+                    points[2] = points[3] + (perp * dstBetweenAnchors / 2f);
+                    points[4] = points[3] - (perp * dstBetweenAnchors / 2f);
 
                 }
                 else
@@ -704,8 +704,8 @@ namespace PathCreation
                 // Handle case with 2 anchor points separately, as otherwise minor adjustments cause path to constantly flip
                 if (NumAnchorPoints == 2)
                 {
-                    points[1] = points[0] + (points[3] - points[0]) * .25f;
-                    points[2] = points[3] + (points[0] - points[3]) * .25f;
+                    points[1] = points[0] + ((points[3] - points[0]) * .25f);
+                    points[2] = points[3] + ((points[0] - points[3]) * .25f);
                 }
                 else
                 {
@@ -772,14 +772,14 @@ namespace PathCreation
             if (isClosed)
             {
                 // Set positions for new controls to mirror their counterparts
-                Vector3 lastAnchorSecondControl = points[points.Count - 1] * 2 - points[points.Count - 2];
-                Vector3 firstAnchorSecondControl = points[0] * 2 - points[1];
+                Vector3 lastAnchorSecondControl = (points[points.Count - 1] * 2) - points[points.Count - 2];
+                Vector3 firstAnchorSecondControl = (points[0] * 2) - points[1];
                 if (controlMode != ControlMode.Mirrored && controlMode != ControlMode.Automatic)
                 {
                     // Set positions for new controls to be aligned with their counterparts, but with a length of half the distance between start/end anchor
                     float dstBetweenStartAndEndAnchors = (points[points.Count - 1] - points[0]).magnitude;
-                    lastAnchorSecondControl = points[points.Count - 1] + (points[points.Count - 1] - points[points.Count - 2]).normalized * dstBetweenStartAndEndAnchors * .5f;
-                    firstAnchorSecondControl = points[0] + (points[0] - points[1]).normalized * dstBetweenStartAndEndAnchors * .5f;
+                    lastAnchorSecondControl = points[points.Count - 1] + ((points[points.Count - 1] - points[points.Count - 2]).normalized * dstBetweenStartAndEndAnchors * .5f);
+                    firstAnchorSecondControl = points[0] + ((points[0] - points[1]).normalized * dstBetweenStartAndEndAnchors * .5f);
                 }
                 points.Add(lastAnchorSecondControl);
                 points.Add(firstAnchorSecondControl);

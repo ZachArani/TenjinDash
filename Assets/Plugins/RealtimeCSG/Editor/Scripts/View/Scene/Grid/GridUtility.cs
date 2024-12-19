@@ -22,7 +22,9 @@ namespace RealtimeCSG
             SpaceMatrices spaceMatrices = new SpaceMatrices();
             if (transform == null ||
                 Tools.pivotRotation == PivotRotation.Global)
+            {
                 return spaceMatrices;
+            }
 
             spaceMatrices.activeLocalToWorld = transform.localToWorldMatrix;
             spaceMatrices.activeWorldToLocal = transform.worldToLocalMatrix;
@@ -50,17 +52,50 @@ namespace RealtimeCSG
 
         static public Vector3 CleanNormal(Vector3 normal)
         {
-            if (normal.x >= -MathConstants.EqualityEpsilon && normal.x < MathConstants.EqualityEpsilon) normal.x = 0;
-            if (normal.y >= -MathConstants.EqualityEpsilon && normal.y < MathConstants.EqualityEpsilon) normal.y = 0;
-            if (normal.z >= -MathConstants.EqualityEpsilon && normal.z < MathConstants.EqualityEpsilon) normal.z = 0;
+            if (normal.x >= -MathConstants.EqualityEpsilon && normal.x < MathConstants.EqualityEpsilon)
+            {
+                normal.x = 0;
+            }
 
-            if (normal.x >= 1 - MathConstants.EqualityEpsilon) normal.x = 1;
-            if (normal.y >= 1 - MathConstants.EqualityEpsilon) normal.y = 1;
-            if (normal.z >= 1 - MathConstants.EqualityEpsilon) normal.z = 1;
+            if (normal.y >= -MathConstants.EqualityEpsilon && normal.y < MathConstants.EqualityEpsilon)
+            {
+                normal.y = 0;
+            }
 
-            if (normal.x <= -1 + MathConstants.EqualityEpsilon) normal.x = -1;
-            if (normal.y <= -1 + MathConstants.EqualityEpsilon) normal.y = -1;
-            if (normal.z <= -1 + MathConstants.EqualityEpsilon) normal.z = -1;
+            if (normal.z >= -MathConstants.EqualityEpsilon && normal.z < MathConstants.EqualityEpsilon)
+            {
+                normal.z = 0;
+            }
+
+            if (normal.x >= 1 - MathConstants.EqualityEpsilon)
+            {
+                normal.x = 1;
+            }
+
+            if (normal.y >= 1 - MathConstants.EqualityEpsilon)
+            {
+                normal.y = 1;
+            }
+
+            if (normal.z >= 1 - MathConstants.EqualityEpsilon)
+            {
+                normal.z = 1;
+            }
+
+            if (normal.x <= -1 + MathConstants.EqualityEpsilon)
+            {
+                normal.x = -1;
+            }
+
+            if (normal.y <= -1 + MathConstants.EqualityEpsilon)
+            {
+                normal.y = -1;
+            }
+
+            if (normal.z <= -1 + MathConstants.EqualityEpsilon)
+            {
+                normal.z = -1;
+            }
 
             return normal.normalized;
         }
@@ -79,9 +114,9 @@ namespace RealtimeCSG
             int intPosY = Mathf.FloorToInt(absPosY);
             int intPosZ = Mathf.FloorToInt(absPosZ);
 
-            float fractPosX = (absPosX - intPosX);
-            float fractPosY = (absPosY - intPosY);
-            float fractPosZ = (absPosZ - intPosZ);
+            float fractPosX = absPosX - intPosX;
+            float fractPosY = absPosY - intPosY;
+            float fractPosZ = absPosZ - intPosZ;
 
             fractPosX = Mathf.Round(fractPosX * 1000.0f) / 1000.0f;
             fractPosY = Mathf.Round(fractPosY * 1000.0f) / 1000.0f;
@@ -89,17 +124,50 @@ namespace RealtimeCSG
 
             const float epsilon = MathConstants.EqualityEpsilon;
 
-            if (fractPosX < epsilon) fractPosX = 0;
-            if (fractPosY < epsilon) fractPosY = 0;
-            if (fractPosZ < epsilon) fractPosZ = 0;
+            if (fractPosX < epsilon)
+            {
+                fractPosX = 0;
+            }
 
-            if (fractPosX >= 1 - epsilon) fractPosX = 1;
-            if (fractPosY >= 1 - epsilon) fractPosY = 1;
-            if (fractPosZ >= 1 - epsilon) fractPosZ = 1;
+            if (fractPosY < epsilon)
+            {
+                fractPosY = 0;
+            }
 
-            if (!float.IsNaN(fractPosX) && !float.IsInfinity(fractPosX)) position.x = (intPosX + fractPosX) * signX;
-            if (!float.IsNaN(fractPosY) && !float.IsInfinity(fractPosY)) position.y = (intPosY + fractPosY) * signY;
-            if (!float.IsNaN(fractPosZ) && !float.IsInfinity(fractPosZ)) position.z = (intPosZ + fractPosZ) * signZ;
+            if (fractPosZ < epsilon)
+            {
+                fractPosZ = 0;
+            }
+
+            if (fractPosX >= 1 - epsilon)
+            {
+                fractPosX = 1;
+            }
+
+            if (fractPosY >= 1 - epsilon)
+            {
+                fractPosY = 1;
+            }
+
+            if (fractPosZ >= 1 - epsilon)
+            {
+                fractPosZ = 1;
+            }
+
+            if (!float.IsNaN(fractPosX) && !float.IsInfinity(fractPosX))
+            {
+                position.x = (intPosX + fractPosX) * signX;
+            }
+
+            if (!float.IsNaN(fractPosY) && !float.IsInfinity(fractPosY))
+            {
+                position.y = (intPosY + fractPosY) * signY;
+            }
+
+            if (!float.IsNaN(fractPosZ) && !float.IsInfinity(fractPosZ))
+            {
+                position.z = (intPosZ + fractPosZ) * signZ;
+            }
 
             return position;
         }
@@ -109,17 +177,26 @@ namespace RealtimeCSG
             float sign = Mathf.Sign(position);
             float absPos = position * sign;
             int intPos = Mathf.FloorToInt(absPos);
-            float fractPos = (absPos - intPos);
+            float fractPos = absPos - intPos;
 
             fractPos = Mathf.Round(fractPos * 1000.0f) / 1000.0f;
 
             const float epsilon = MathConstants.EqualityEpsilon;
-            if (fractPos < epsilon) fractPos = 0;
-            if (fractPos >= 1 - epsilon) fractPos = 1;
+            if (fractPos < epsilon)
+            {
+                fractPos = 0;
+            }
+
+            if (fractPos >= 1 - epsilon)
+            {
+                fractPos = 1;
+            }
 
             if (!float.IsNaN(fractPos) &&
                 !float.IsInfinity(fractPos))
+            {
                 position = (intPos + fractPos) * sign;
+            }
 
             return position;
         }
@@ -127,7 +204,9 @@ namespace RealtimeCSG
         static public Vector3 FixPosition(Vector3 currentPosition, Matrix4x4 worldToLocalMatrix, Matrix4x4 localToWorldMatrix, Vector3 previousPosition, bool ignoreAxisLocking = false)
         {
             if (currentPosition == previousPosition)
+            {
                 return currentPosition;
+            }
 
             var pivotRotation = UnityEditor.Tools.pivotRotation;
             if (pivotRotation == UnityEditor.PivotRotation.Local)
@@ -137,21 +216,54 @@ namespace RealtimeCSG
 
                 if (!ignoreAxisLocking)
                 {
-                    if (RealtimeCSG.CSGSettings.LockAxisX) currentPosition.x = previousPosition.x;
-                    if (RealtimeCSG.CSGSettings.LockAxisY) currentPosition.y = previousPosition.y;
-                    if (RealtimeCSG.CSGSettings.LockAxisZ) currentPosition.z = previousPosition.z;
+                    if (RealtimeCSG.CSGSettings.LockAxisX)
+                    {
+                        currentPosition.x = previousPosition.x;
+                    }
+
+                    if (RealtimeCSG.CSGSettings.LockAxisY)
+                    {
+                        currentPosition.y = previousPosition.y;
+                    }
+
+                    if (RealtimeCSG.CSGSettings.LockAxisZ)
+                    {
+                        currentPosition.z = previousPosition.z;
+                    }
                 }
 
                 var doGridSnapping = RealtimeCSG.CSGSettings.GridSnapping;
                 if (doGridSnapping)
                 {
-                    if (Mathf.Abs(currentPosition.x - previousPosition.x) < MathConstants.EqualityEpsilon) currentPosition.x = previousPosition.x;
-                    if (Mathf.Abs(currentPosition.y - previousPosition.y) < MathConstants.EqualityEpsilon) currentPosition.y = previousPosition.y;
-                    if (Mathf.Abs(currentPosition.z - previousPosition.z) < MathConstants.EqualityEpsilon) currentPosition.z = previousPosition.z;
+                    if (Mathf.Abs(currentPosition.x - previousPosition.x) < MathConstants.EqualityEpsilon)
+                    {
+                        currentPosition.x = previousPosition.x;
+                    }
 
-                    if (currentPosition.x != previousPosition.x) currentPosition.x = Mathf.Round(currentPosition.x / RealtimeCSG.CSGSettings.SnapVector.x) * RealtimeCSG.CSGSettings.SnapVector.x;
-                    if (currentPosition.y != previousPosition.y) currentPosition.y = Mathf.Round(currentPosition.y / RealtimeCSG.CSGSettings.SnapVector.y) * RealtimeCSG.CSGSettings.SnapVector.y;
-                    if (currentPosition.z != previousPosition.z) currentPosition.z = Mathf.Round(currentPosition.z / RealtimeCSG.CSGSettings.SnapVector.z) * RealtimeCSG.CSGSettings.SnapVector.z;
+                    if (Mathf.Abs(currentPosition.y - previousPosition.y) < MathConstants.EqualityEpsilon)
+                    {
+                        currentPosition.y = previousPosition.y;
+                    }
+
+                    if (Mathf.Abs(currentPosition.z - previousPosition.z) < MathConstants.EqualityEpsilon)
+                    {
+                        currentPosition.z = previousPosition.z;
+                    }
+
+                    if (currentPosition.x != previousPosition.x)
+                    {
+                        currentPosition.x = Mathf.Round(currentPosition.x / RealtimeCSG.CSGSettings.SnapVector.x) * RealtimeCSG.CSGSettings.SnapVector.x;
+                    }
+
+                    if (currentPosition.y != previousPosition.y)
+                    {
+                        currentPosition.y = Mathf.Round(currentPosition.y / RealtimeCSG.CSGSettings.SnapVector.y) * RealtimeCSG.CSGSettings.SnapVector.y;
+                    }
+
+                    if (currentPosition.z != previousPosition.z)
+                    {
+                        currentPosition.z = Mathf.Round(currentPosition.z / RealtimeCSG.CSGSettings.SnapVector.z) * RealtimeCSG.CSGSettings.SnapVector.z;
+                    }
                 }
 
                 currentPosition = localToWorldMatrix.MultiplyPoint(currentPosition);
@@ -160,16 +272,38 @@ namespace RealtimeCSG
             {
                 if (!ignoreAxisLocking)
                 {
-                    if (RealtimeCSG.CSGSettings.LockAxisX) currentPosition.x = previousPosition.x;
-                    if (RealtimeCSG.CSGSettings.LockAxisY) currentPosition.y = previousPosition.y;
-                    if (RealtimeCSG.CSGSettings.LockAxisZ) currentPosition.z = previousPosition.z;
+                    if (RealtimeCSG.CSGSettings.LockAxisX)
+                    {
+                        currentPosition.x = previousPosition.x;
+                    }
+
+                    if (RealtimeCSG.CSGSettings.LockAxisY)
+                    {
+                        currentPosition.y = previousPosition.y;
+                    }
+
+                    if (RealtimeCSG.CSGSettings.LockAxisZ)
+                    {
+                        currentPosition.z = previousPosition.z;
+                    }
                 }
 
                 if (RealtimeCSG.CSGSettings.GridSnapping)
                 {
-                    if (currentPosition.x != previousPosition.x) currentPosition.x = Mathf.Round(currentPosition.x / RealtimeCSG.CSGSettings.SnapVector.x) * RealtimeCSG.CSGSettings.SnapVector.x;
-                    if (currentPosition.y != previousPosition.y) currentPosition.y = Mathf.Round(currentPosition.y / RealtimeCSG.CSGSettings.SnapVector.y) * RealtimeCSG.CSGSettings.SnapVector.y;
-                    if (currentPosition.z != previousPosition.z) currentPosition.z = Mathf.Round(currentPosition.z / RealtimeCSG.CSGSettings.SnapVector.z) * RealtimeCSG.CSGSettings.SnapVector.z;
+                    if (currentPosition.x != previousPosition.x)
+                    {
+                        currentPosition.x = Mathf.Round(currentPosition.x / RealtimeCSG.CSGSettings.SnapVector.x) * RealtimeCSG.CSGSettings.SnapVector.x;
+                    }
+
+                    if (currentPosition.y != previousPosition.y)
+                    {
+                        currentPosition.y = Mathf.Round(currentPosition.y / RealtimeCSG.CSGSettings.SnapVector.y) * RealtimeCSG.CSGSettings.SnapVector.y;
+                    }
+
+                    if (currentPosition.z != previousPosition.z)
+                    {
+                        currentPosition.z = Mathf.Round(currentPosition.z / RealtimeCSG.CSGSettings.SnapVector.z) * RealtimeCSG.CSGSettings.SnapVector.z;
+                    }
                 }
             }
 
@@ -180,7 +314,10 @@ namespace RealtimeCSG
         static public Vector3 FixPosition(Vector3 currentPosition, Transform spaceTransform, Vector3 previousPosition, bool ignoreAxisLocking = false)
         {
             if (spaceTransform == null)
+            {
                 return FixPosition(currentPosition, MathConstants.identityMatrix, MathConstants.identityMatrix, previousPosition, ignoreAxisLocking);
+            }
+
             return FixPosition(currentPosition, spaceTransform.worldToLocalMatrix, spaceTransform.localToWorldMatrix, previousPosition, ignoreAxisLocking);
         }
 
@@ -188,7 +325,10 @@ namespace RealtimeCSG
         {
             var doRotationSnapping = RealtimeCSG.CSGSettings.RotationSnapping;
             if (doRotationSnapping)
+            {
                 currentAngle = Mathf.RoundToInt(currentAngle / RealtimeCSG.CSGSettings.SnapRotation) * RealtimeCSG.CSGSettings.SnapRotation;
+            }
+
             return currentAngle;
         }
 
@@ -227,15 +367,21 @@ namespace RealtimeCSG
         {
             var lines = new List<Vector3>();
             if (!brush)
+            {
                 return lines;
+            }
 
             var outline = BrushOutlineManager.GetBrushOutline(brush.brushNodeID);
             if (outline == null)
+            {
                 return lines;
+            }
 
             var controlMesh = brush.ControlMesh;
             if (controlMesh == null)
+            {
                 return lines;
+            }
 
             var localToWorld = brush.transform.localToWorldMatrix;
 
@@ -341,7 +487,9 @@ namespace RealtimeCSG
             {
                 if (ignoreBrushes != null &&
                     ArrayUtility.Contains(ignoreBrushes, worldIntersections[i].brush))
+                {
                     continue;
+                }
 
                 List<Vector3> outEdgePoints;
                 Vector3 outPosition;
@@ -411,9 +559,9 @@ namespace RealtimeCSG
             float minz = Mathf.Min(localVertex1.z, localVertex2.z);
             float maxz = Mathf.Max(localVertex1.z, localVertex2.z);
 
-            var localLengthX = (maxx - minx);
-            var localLengthY = (maxy - miny);
-            var localLengthZ = (maxz - minz);
+            var localLengthX = maxx - minx;
+            var localLengthY = maxy - miny;
+            var localLengthZ = maxz - minz;
             if (localLengthX < MathConstants.AlignmentTestEpsilon &&
                 localLengthY < MathConstants.AlignmentTestEpsilon &&
                 localLengthZ < MathConstants.AlignmentTestEpsilon)
@@ -439,7 +587,11 @@ namespace RealtimeCSG
                         var ypos = localVertex1.y + (t * (localVertex2.y - localVertex1.y));
                         var zpos = localVertex1.z + (t * (localVertex2.z - localVertex1.z));
                         var worldIntersection = RealtimeCSG.CSGGrid.PointFromGridSpace(new Vector3(xpos, ypos, zpos));
-                        if (snapPlane.HasValue) worldIntersection = snapPlane.Value.Project(worldIntersection);
+                        if (snapPlane.HasValue)
+                        {
+                            worldIntersection = snapPlane.Value.Project(worldIntersection);
+                        }
+
                         var dist = CameraUtility.DistancePointLine(worldIntersection, worldVertex1, worldVertex2);
                         if (dist < MathConstants.DistanceEpsilon) { found_points[point_count] = worldIntersection; point_count++; }
                     }
@@ -455,7 +607,11 @@ namespace RealtimeCSG
                         var ypos = localVertex1.y + (t * (localVertex2.y - localVertex1.y));
                         var zpos = localVertex1.z + (t * (localVertex2.z - localVertex1.z));
                         var worldIntersection = RealtimeCSG.CSGGrid.PointFromGridSpace(new Vector3(xpos, ypos, zpos));
-                        if (snapPlane.HasValue) worldIntersection = snapPlane.Value.Project(worldIntersection);
+                        if (snapPlane.HasValue)
+                        {
+                            worldIntersection = snapPlane.Value.Project(worldIntersection);
+                        }
+
                         var dist = CameraUtility.DistancePointLine(worldIntersection, worldVertex1, worldVertex2);
                         if (dist < MathConstants.DistanceEpsilon) { found_points[point_count] = worldIntersection; point_count++; }
                     }
@@ -476,7 +632,11 @@ namespace RealtimeCSG
                         var zpos = localVertex1.z + (t * localLengthZ);
                         var xpos = localVertex1.x + (t * localLengthX);
                         var worldIntersection = RealtimeCSG.CSGGrid.PointFromGridSpace(new Vector3(xpos, ypos, zpos));
-                        if (snapPlane.HasValue) worldIntersection = snapPlane.Value.Project(worldIntersection);
+                        if (snapPlane.HasValue)
+                        {
+                            worldIntersection = snapPlane.Value.Project(worldIntersection);
+                        }
+
                         var dist = CameraUtility.DistancePointLine(worldIntersection, worldVertex1, worldVertex2);
                         if (dist < MathConstants.DistanceEpsilon) { found_points[point_count] = worldIntersection; point_count++; }
                     }
@@ -492,7 +652,11 @@ namespace RealtimeCSG
                         var zpos = localVertex1.z + (t * localLengthZ);
                         var xpos = localVertex1.x + (t * localLengthX);
                         var worldIntersection = RealtimeCSG.CSGGrid.PointFromGridSpace(new Vector3(xpos, ypos, zpos));
-                        if (snapPlane.HasValue) worldIntersection = snapPlane.Value.Project(worldIntersection);
+                        if (snapPlane.HasValue)
+                        {
+                            worldIntersection = snapPlane.Value.Project(worldIntersection);
+                        }
+
                         var dist = CameraUtility.DistancePointLine(worldIntersection, worldVertex1, worldVertex2);
                         if (dist < MathConstants.DistanceEpsilon) { found_points[point_count] = worldIntersection; point_count++; }
                     }
@@ -513,7 +677,11 @@ namespace RealtimeCSG
                         var xpos = localVertex1.x + (t * (localVertex2.x - localVertex1.x));
                         var ypos = localVertex1.y + (t * (localVertex2.y - localVertex1.y));
                         var worldIntersection = RealtimeCSG.CSGGrid.PointFromGridSpace(new Vector3(xpos, ypos, zpos));
-                        if (snapPlane.HasValue) worldIntersection = snapPlane.Value.Project(worldIntersection);
+                        if (snapPlane.HasValue)
+                        {
+                            worldIntersection = snapPlane.Value.Project(worldIntersection);
+                        }
+
                         var dist = CameraUtility.DistancePointLine(worldIntersection, worldVertex1, worldVertex2);
                         if (dist < MathConstants.DistanceEpsilon) { found_points[point_count] = worldIntersection; point_count++; }
                     }
@@ -529,7 +697,11 @@ namespace RealtimeCSG
                         var xpos = localVertex1.x + (t * (localVertex2.x - localVertex1.x));
                         var ypos = localVertex1.y + (t * (localVertex2.y - localVertex1.y));
                         var worldIntersection = RealtimeCSG.CSGGrid.PointFromGridSpace(new Vector3(xpos, ypos, zpos));
-                        if (snapPlane.HasValue) worldIntersection = snapPlane.Value.Project(worldIntersection);
+                        if (snapPlane.HasValue)
+                        {
+                            worldIntersection = snapPlane.Value.Project(worldIntersection);
+                        }
+
                         var dist = CameraUtility.DistancePointLine(worldIntersection, worldVertex1, worldVertex2);
                         if (dist < MathConstants.DistanceEpsilon) { found_points[point_count] = worldIntersection; point_count++; }
                     }
@@ -567,7 +739,9 @@ namespace RealtimeCSG
         static void SnapToLines(int[] indices, Vector3[] localVertices, Matrix4x4 localToWorld, ref SnapData snapData)
         {
             if (indices == null || localVertices == null)
+            {
                 return;
+            }
 
             var worldVertex3 = MathConstants.zeroVector3;
             for (int i = 0; i < indices.Length; i += 2)
@@ -578,16 +752,22 @@ namespace RealtimeCSG
                 var worldVertex2 = localToWorld.MultiplyPoint(localVertices[index2]);
 
                 if (!SnapToLine(snapData.worldPoint, worldVertex1, worldVertex2, snapData.snapPlane, out worldVertex3))
+                {
                     continue;
+                }
 
                 if (snapData.snapPlane.HasValue &&
                     Mathf.Abs(snapData.snapPlane.Value.Distance(worldVertex3)) >= MathConstants.DistanceEpsilon)
+                {
                     continue;
+                }
 
                 var guiVertex2 = CameraUtility.WorldToGUIPoint(worldVertex3);
                 var guiDistance = (guiVertex2 - snapData.guiPoint).sqrMagnitude * EdgeFudgeFactor;
                 if (guiDistance + MathConstants.DistanceEpsilon >= snapData.closestDistanceSqr)
+                {
                     continue;
+                }
 
                 snapData.closestDistanceSqr = guiDistance;
                 snapData.outEdge = new List<Vector3>() { worldVertex1, worldVertex2 };
@@ -599,7 +779,9 @@ namespace RealtimeCSG
         static void SnapToLines(Vector3[] worldVertices, int vertexCount, ref SnapData snapData)
         {
             if (worldVertices == null)
+            {
                 return;
+            }
 
             var worldVertex3 = MathConstants.zeroVector3;
             for (int i = 0; i < vertexCount; i += 2)
@@ -608,16 +790,22 @@ namespace RealtimeCSG
                 var worldVertex2 = worldVertices[i + 1];
 
                 if (!SnapToLine(snapData.worldPoint, worldVertex1, worldVertex2, snapData.snapPlane, out worldVertex3))
+                {
                     continue;
+                }
 
                 if (snapData.snapPlane.HasValue &&
                     Mathf.Abs(snapData.snapPlane.Value.Distance(worldVertex3)) >= MathConstants.DistanceEpsilon)
+                {
                     continue;
+                }
 
                 var guiVertex2 = CameraUtility.WorldToGUIPoint(worldVertex3);
                 var guiDistance = (guiVertex2 - snapData.guiPoint).sqrMagnitude * EdgeFudgeFactor;
                 if (guiDistance + MathConstants.DistanceEpsilon >= snapData.closestDistanceSqr)
+                {
                     continue;
+                }
 
                 snapData.closestDistanceSqr = guiDistance;
                 snapData.outEdge = new List<Vector3>() { worldVertex1, worldVertex2 };
@@ -636,11 +824,15 @@ namespace RealtimeCSG
             outEdgePoints = null;
 
             if (!brush)
+            {
                 return false;
+            }
 
             var controlMesh = brush.ControlMesh;
             if (controlMesh == null || camera == null)
+            {
                 return false;
+            }
 
             var snapData = new SnapData
             {
@@ -676,10 +868,14 @@ namespace RealtimeCSG
                 {
                     var edgeIndex = edgeIndices[e];
                     if (!edges[edgeIndex].HardEdge)
+                    {
                         continue;
+                    }
 
                     if (_internal_snapEdgesUsed[edgeIndex])
+                    {
                         continue;
+                    }
 
                     var twin = controlMesh.GetTwinEdgeIndex(edgeIndex);
                     _internal_snapEdgesUsed[edgeIndex] = true;
@@ -698,7 +894,9 @@ namespace RealtimeCSG
             }
 
             if (_internal_snapVertexCount > 0)
+            {
                 SnapToLines(_internal_snapVertices, _internal_snapVertexCount, ref snapData);
+            }
 
             var outline = BrushOutlineManager.GetBrushOutline(brush.brushNodeID);
             if (outline != null)
@@ -717,7 +915,9 @@ namespace RealtimeCSG
 
             if (snapData.outEdge == null ||
                 float.IsInfinity(snapData.closestDistanceSqr))
+            {
                 return false;
+            }
 
             snapData.closestDistance = Mathf.Sqrt(snapData.closestDistanceSqr);
             outEdgePoints = snapData.outEdge;
@@ -732,11 +932,15 @@ namespace RealtimeCSG
             outEdgePoints = null;
 
             if (!brush)
+            {
                 return false;
+            }
 
             var controlMesh = brush.ControlMesh;
             if (controlMesh == null)
+            {
                 return false;
+            }
 
             Vector3? outPoint = null;
 
@@ -876,7 +1080,9 @@ namespace RealtimeCSG
             }
 
             if (!outPoint.HasValue || float.IsInfinity(closestDistance))
+            {
                 return false;
+            }
 
             closestDistance = Mathf.Sqrt(closestDistanceSqr);
             outPosition = outPoint.Value;

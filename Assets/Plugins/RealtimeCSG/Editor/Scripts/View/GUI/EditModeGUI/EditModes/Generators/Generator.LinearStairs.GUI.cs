@@ -17,12 +17,18 @@ namespace RealtimeCSG
                 {
                     GUILayout.Label(content, width80);
                     if (isSceneGUI)
+                    {
                         TooltipUtility.SetToolTip(tooltip);
+                    }
 
                     if (!isSceneGUI)
+                    {
                         newValue = Units.DistanceUnitToUnity(distanceUnit, EditorGUILayout.DoubleField(Units.UnityToDistanceUnit(distanceUnit, value)));
+                    }
                     else
+                    {
                         newValue = Units.DistanceUnitToUnity(distanceUnit, EditorGUILayout.DoubleField(Units.UnityToDistanceUnit(distanceUnit, value), width65));
+                    }
 
                     if (GUILayout.Button(unitText, EditorStyles.miniLabel, width25))
                     {
@@ -35,10 +41,15 @@ namespace RealtimeCSG
                 }
                 GUILayout.EndHorizontal();
                 if (!isSceneGUI)
+                {
                     TooltipUtility.SetToolTip(tooltip);
+                }
             }
             if (EditorGUI.EndChangeCheck())
+            {
                 return newValue;
+            }
+
             return value;
         }
 
@@ -51,19 +62,30 @@ namespace RealtimeCSG
                 {
                     GUILayout.Label(content, width80);
                     if (isSceneGUI)
+                    {
                         TooltipUtility.SetToolTip(tooltip);
+                    }
 
                     if (!isSceneGUI)
+                    {
                         newValue = EditorGUILayout.IntField(value);
+                    }
                     else
+                    {
                         newValue = EditorGUILayout.IntField(value, width65);
+                    }
                 }
                 GUILayout.EndHorizontal();
                 if (!isSceneGUI)
+                {
                     TooltipUtility.SetToolTip(tooltip);
+                }
             }
             if (EditorGUI.EndChangeCheck())
+            {
                 return newValue;
+            }
+
             return value;
         }
 
@@ -77,19 +99,30 @@ namespace RealtimeCSG
                 {
                     GUILayout.Label(content, width80);
                     if (isSceneGUI)
+                    {
                         TooltipUtility.SetToolTip(tooltip);
+                    }
 
                     if (!isSceneGUI)
+                    {
                         newValue = (StairsBottom)EditorGUILayout.EnumPopup(value);
+                    }
                     else
+                    {
                         newValue = (StairsBottom)EditorGUILayout.EnumPopup(value, width65);
+                    }
                 }
                 GUILayout.EndHorizontal();
                 if (!isSceneGUI)
+                {
                     TooltipUtility.SetToolTip(tooltip);
+                }
             }
             if (EditorGUI.EndChangeCheck())
+            {
                 return newValue;
+            }
+
             return value;
         }
 

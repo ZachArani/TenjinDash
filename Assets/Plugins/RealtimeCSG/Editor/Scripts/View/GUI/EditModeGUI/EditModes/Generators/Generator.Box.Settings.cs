@@ -107,13 +107,17 @@ namespace RealtimeCSG
         public void ProjectShapeOnBuildPlane(CSGPlane plane)
         {
             for (int i = 0; i < vertices.Length; i++)
+            {
                 vertices[i] = plane.Project(vertices[i]);
+            }
         }
 
         public void MoveShape(Vector3 offset)
         {
             for (int i = 0; i < vertices.Length; i++)
+            {
                 vertices[i] = backupVertices[i] + offset;
+            }
         }
     }
 }

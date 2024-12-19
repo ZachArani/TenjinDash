@@ -118,8 +118,8 @@ namespace RealtimeCSG.Legacy
                 m23 = 0.0f,
                 m33 = 1.0f
             };
-            return (translationMatrix
-                    * scaleMatrix)
+            return translationMatrix
+                    * scaleMatrix
                     * rotationMatrix;
             /*/
             return new Matrix4x4()

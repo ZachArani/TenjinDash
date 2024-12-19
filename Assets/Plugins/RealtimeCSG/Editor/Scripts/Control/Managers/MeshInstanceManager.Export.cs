@@ -26,7 +26,9 @@ namespace InternalRealtimeCSG
             {
                 newPath = UnityFBXExporter.ExporterMenu.GetNewPath(model.gameObject, typeName, extension, model.exportPath);
                 if (string.IsNullOrEmpty(newPath))
+                {
                     return;
+                }
             }
 
             model.ShowGeneratedMeshes = false;
@@ -34,7 +36,10 @@ namespace InternalRealtimeCSG
             for (var index = 0; index < foundModels.Length; index++)
             {
                 if (!foundModels[index].ShowGeneratedMeshes)
+                {
                     continue;
+                }
+
                 foundModels[index].ShowGeneratedMeshes = false;
                 UpdateGeneratedMeshesVisibility(foundModels[index]);
             }
@@ -45,10 +50,14 @@ namespace InternalRealtimeCSG
             {
                 tempExportObject = new GameObject(System.IO.Path.GetFileNameWithoutExtension(model.exportPath));
                 if (string.IsNullOrEmpty(tempExportObject.name))
+                {
                     tempExportObject.name = model.name;
+                }
             }
             else
+            {
                 tempExportObject = new GameObject(model.name);
+            }
 
             tempExportObject.transform.position = MathConstants.zeroVector3;
             tempExportObject.transform.rotation = MathConstants.identityQuaternion;
@@ -68,15 +77,21 @@ namespace InternalRealtimeCSG
             {
                 var owner = meshContainer.owner;
                 if (!owner || !ArrayUtility.Contains(foundModels, owner))
+                {
                     continue;
+                }
 
                 if (!meshContainer || !meshContainer.HasMeshInstances)
+                {
                     continue;
+                }
 
                 foreach (var instance in meshContainer.MeshInstances)
                 {
                     if (!instance)
+                    {
                         continue;
+                    }
 
                     Refresh(instance, model, postProcessScene: true, skipAssetDatabaseUpdate: true);
 
@@ -84,7 +99,9 @@ namespace InternalRealtimeCSG
                     if (surfaceType != RenderSurfaceType.Normal &&
                         surfaceType != RenderSurfaceType.ShadowOnly &&
                         surfaceType != RenderSurfaceType.Collider)
+                    {
                         continue;
+                    }
 
                     int counter = 0;
                     if (instance.RenderMaterial)
@@ -94,7 +111,9 @@ namespace InternalRealtimeCSG
                             counter = 1;
                         }
                         else
+                        {
                             counter++;
+                        }
                     }
 
                     var mesh = instance.SharedMesh;
@@ -107,11 +126,13 @@ namespace InternalRealtimeCSG
                     {
                         var vertices = mesh.vertices;
                         for (int v = 0; v < vertices.Length; v++)
+                        {
                             bounds.Extend(vertices[v]);
+                        }
                     }
 
 
-                    var subObj = UnityEngine.Object.Instantiate(instance.gameObject, MathConstants.zeroVector3, MathConstants.identityQuaternion) as GameObject;
+                    var subObj = UnityEngine.Object.Instantiate(instance.gameObject, MathConstants.zeroVector3, MathConstants.identityQuaternion);
                     subObj.hideFlags = HideFlags.None;
                     subObj.transform.position = owner.transform.position;
                     subObj.transform.rotation = owner.transform.rotation;
@@ -133,7 +154,9 @@ namespace InternalRealtimeCSG
                             subObj.name = "shadow-only Mesh (" + shadowOnlyCounter + ")"; shadowOnlyCounter++;
                             var meshRenderer = subObj.GetComponent<MeshRenderer>();
                             if (meshRenderer)
+                            {
                                 meshRenderer.sharedMaterial = MaterialUtility.DefaultMaterial;
+                            }
                         }
                         else
                         {
@@ -144,18 +167,26 @@ namespace InternalRealtimeCSG
                                 subObj.name = "missing-material Mesh (" + counter + ")"; counter++;
                             }
                             else
-                                subObj.name = renderMaterial.name + " Mesh (" + counter + ")"; counter++;
+                            {
+                                subObj.name = renderMaterial.name + " Mesh (" + counter + ")";
+                            }
+
+                            counter++;
                             materialMeshCounters[instance.RenderMaterial] = counter;
                         }
 
                         var meshFilter = subObj.GetComponent<MeshFilter>();
                         if (meshFilter)
+                        {
                             foundMeshFilters.Add(meshFilter);
+                        }
                     }
 
                     var meshCollider = subObj.GetComponent<MeshCollider>();
                     if (meshCollider)
+                    {
                         foundMeshColliders.Add(meshCollider);
+                    }
                 }
             }
 
@@ -165,9 +196,20 @@ namespace InternalRealtimeCSG
             try
             {
                 Vector3 position = model.transform.position;
-                if (float.IsInfinity(position.x) || float.IsNaN(position.x)) position.x = 0;
-                if (float.IsInfinity(position.y) || float.IsNaN(position.y)) position.y = 0;
-                if (float.IsInfinity(position.z) || float.IsNaN(position.z)) position.z = 0;
+                if (float.IsInfinity(position.x) || float.IsNaN(position.x))
+                {
+                    position.x = 0;
+                }
+
+                if (float.IsInfinity(position.y) || float.IsNaN(position.y))
+                {
+                    position.y = 0;
+                }
+
+                if (float.IsInfinity(position.z) || float.IsNaN(position.z))
+                {
+                    position.z = 0;
+                }
 
                 Vector3 center = bounds.Center;
                 switch (model.originType)
@@ -177,9 +219,20 @@ namespace InternalRealtimeCSG
                     case OriginType.ModelPivot: center = position; break;
                     case OriginType.WorldSpace: center = Vector3.zero; break;
                 }
-                if (float.IsInfinity(center.x) || float.IsNaN(center.x)) center.x = 0;
-                if (float.IsInfinity(center.y) || float.IsNaN(center.y)) center.y = 0;
-                if (float.IsInfinity(center.z) || float.IsNaN(center.z)) center.z = 0;
+                if (float.IsInfinity(center.x) || float.IsNaN(center.x))
+                {
+                    center.x = 0;
+                }
+
+                if (float.IsInfinity(center.y) || float.IsNaN(center.y))
+                {
+                    center.y = 0;
+                }
+
+                if (float.IsInfinity(center.z) || float.IsNaN(center.z))
+                {
+                    center.z = 0;
+                }
 
                 var modifiedMeshes = new Dictionary<Mesh, Mesh>();
                 foreach (var meshFilter in foundMeshFilters)
@@ -193,7 +246,7 @@ namespace InternalRealtimeCSG
                     Mesh newMesh;
                     if (!modifiedMeshes.TryGetValue(mesh, out newMesh))
                     {
-                        newMesh = (Mesh)UnityEngine.Object.Instantiate(mesh);
+                        newMesh = UnityEngine.Object.Instantiate(mesh);
                         var vertices = mesh.vertices;
                         for (int v = 0; v < vertices.Length; v++)
                         {
@@ -219,7 +272,7 @@ namespace InternalRealtimeCSG
                     Mesh newMesh;
                     if (!modifiedMeshes.TryGetValue(mesh, out newMesh))
                     {
-                        newMesh = (Mesh)UnityEngine.Object.Instantiate(mesh);
+                        newMesh = UnityEngine.Object.Instantiate(mesh);
                         var vertices = mesh.vertices;
                         for (int v = 0; v < vertices.Length; v++)
                         {
@@ -289,20 +342,28 @@ namespace InternalRealtimeCSG
                     foreach (var meshRenderer in prefabObj.GetComponentsInChildren<MeshRenderer>())
                     {
                         if (meshRenderer.sharedMaterials.Length != 1)
+                        {
                             continue;
+                        }
 
                         var gameObject = meshRenderer.gameObject;
                         var nameSplit = gameObject.name.Split('|');
                         if (nameSplit.Length == 1)
+                        {
                             continue;
+                        }
 
                         int instanceId;
                         if (!int.TryParse(nameSplit[1], out instanceId))
+                        {
                             continue;
+                        }
 
                         var realMaterial = EditorUtility.InstanceIDToObject(instanceId) as Material;
                         if (!realMaterial)
+                        {
                             continue;
+                        }
 
                         meshRenderer.sharedMaterial = realMaterial;
                         gameObject.name = nameSplit[0];
@@ -343,11 +404,25 @@ namespace InternalRealtimeCSG
 
                 var foundBehaviours = new HashSet<MonoBehaviour>();
 
-                foreach (var foundBrush in foundBrushes) foundBehaviours.Add(foundBrush);
-                foreach (var foundOperation in foundOperations) foundBehaviours.Add(foundOperation);
-                foreach (var foundModel in foundModels) foundBehaviours.Add(foundModel);
-                foreach (var foundContainer in foundContainers) foundBehaviours.Add(foundContainer);
+                foreach (var foundBrush in foundBrushes)
+                {
+                    foundBehaviours.Add(foundBrush);
+                }
 
+                foreach (var foundOperation in foundOperations)
+                {
+                    foundBehaviours.Add(foundOperation);
+                }
+
+                foreach (var foundModel in foundModels)
+                {
+                    foundBehaviours.Add(foundModel);
+                }
+
+                foreach (var foundContainer in foundContainers)
+                {
+                    foundBehaviours.Add(foundContainer);
+                }
 
                 exported.hiddenComponents = new HiddenComponentData[foundBehaviours.Count];
                 var index = 0;
@@ -386,7 +461,9 @@ namespace InternalRealtimeCSG
                         }
                 }
                 if (groupIndex != 0)
+                {
                     Undo.CollapseUndoOperations(groupIndex);
+                }
             }
         }
 
@@ -397,7 +474,9 @@ namespace InternalRealtimeCSG
                 for (var i = exported.hiddenComponents.Length - 1; i >= 0; i--)
                 {
                     if (!exported.hiddenComponents[i].behaviour)
+                    {
                         continue;
+                    }
 
                     Undo.RegisterCompleteObjectUndo(exported.hiddenComponents[i].behaviour, "Show hidden component");
                     exported.hiddenComponents[i].behaviour.enabled = exported.hiddenComponents[i].enabled;

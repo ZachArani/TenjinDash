@@ -17,7 +17,7 @@ namespace AYellowpaper.SerializedCollections.Editor
 
         public static float CalculateHeight(SerializedProperty property, DisplayType displayType)
         {
-            return CalculateHeight(property, displayType == DisplayType.List ? true : false);
+            return CalculateHeight(property, displayType == DisplayType.List);
         }
 
         public static float CalculateHeight(SerializedProperty property, bool drawAsList)
@@ -26,7 +26,10 @@ namespace AYellowpaper.SerializedCollections.Editor
             {
                 float height = 0;
                 foreach (SerializedProperty child in GetChildren(property))
+                {
                     height += EditorGUI.GetPropertyHeight(child, true);
+                }
+
                 return height;
             }
 
@@ -54,7 +57,10 @@ namespace AYellowpaper.SerializedCollections.Editor
             var data = new PropertyData();
             var json = EditorPrefs.GetString(EditorPrefsPrefix + property.propertyPath, null);
             if (json != null)
+            {
                 EditorJsonUtility.FromJsonOverwrite(json, data);
+            }
+
             return data;
         }
 
@@ -67,34 +73,48 @@ namespace AYellowpaper.SerializedCollections.Editor
         public static bool ShouldShowSearch(int pages)
         {
             var settings = EditorUserSettings.Get();
-            return settings.AlwaysShowSearch ? true : pages >= settings.PageCountForSearch;
+            return settings.AlwaysShowSearch || pages >= settings.PageCountForSearch;
         }
 
         public static bool HasDrawerForProperty(SerializedProperty property, Type type)
         {
             Type attributeUtilityType = typeof(SerializedProperty).Assembly.GetType("UnityEditor.ScriptAttributeUtility");
             if (attributeUtilityType == null)
+            {
                 return false;
+            }
+
             var getDrawerMethod = attributeUtilityType.GetMethod("GetDrawerTypeForPropertyAndType", BindingFlags.Static | BindingFlags.NonPublic);
             if (getDrawerMethod == null)
+            {
                 return false;
+            }
+
             return getDrawerMethod.Invoke(null, new object[] { property, type }) != null;
         }
 
         internal static void AddGenericMenuItem(GenericMenu genericMenu, bool isOn, bool isEnabled, GUIContent content, GenericMenu.MenuFunction action)
         {
             if (isEnabled)
+            {
                 genericMenu.AddItem(content, isOn, action);
+            }
             else
+            {
                 genericMenu.AddDisabledItem(content);
+            }
         }
 
         internal static void AddGenericMenuItem(GenericMenu genericMenu, bool isOn, bool isEnabled, GUIContent content, GenericMenu.MenuFunction2 action, object userData)
         {
             if (isEnabled)
+            {
                 genericMenu.AddItem(content, isOn, action, userData);
+            }
             else
+            {
                 genericMenu.AddDisabledItem(content);
+            }
         }
 
         internal static bool TryGetTypeFromProperty(SerializedProperty property, out Type type)
@@ -204,14 +224,20 @@ namespace AYellowpaper.SerializedCollections.Editor
         public static object GetValue(object source, string name)
         {
             if (source == null)
+            {
                 return null;
+            }
+
             var type = source.GetType();
             var f = type.GetFieldRecursive(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             if (f == null)
             {
                 var p = type.GetPropertyRecursive(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
                 if (p == null)
+                {
                     return null;
+                }
+
                 return p.GetValue(source, null);
             }
             return f.GetValue(source);
@@ -222,7 +248,10 @@ namespace AYellowpaper.SerializedCollections.Editor
             var enumerable = GetValue(source, name) as IEnumerable;
             var enm = enumerable.GetEnumerator();
             while (index-- >= 0)
+            {
                 enm.MoveNext();
+            }
+
             return enm.Current;
         }
 
@@ -230,7 +259,10 @@ namespace AYellowpaper.SerializedCollections.Editor
         {
             var fieldInfo = type.GetField(name, bindingFlags);
             if (fieldInfo == null && type.BaseType != null)
+            {
                 return type.BaseType.GetFieldRecursive(name, bindingFlags);
+            }
+
             return fieldInfo;
         }
 
@@ -238,7 +270,10 @@ namespace AYellowpaper.SerializedCollections.Editor
         {
             var propertyInfo = type.GetProperty(name, bindingFlags);
             if (propertyInfo == null && type.BaseType != null)
+            {
                 return type.BaseType.GetPropertyRecursive(name, bindingFlags);
+            }
+
             return propertyInfo;
         }
     }

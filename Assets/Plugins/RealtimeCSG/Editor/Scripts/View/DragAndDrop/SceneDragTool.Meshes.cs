@@ -27,7 +27,9 @@ namespace RealtimeCSG
         public bool ValidateDrop(SceneView sceneView)
         {
             if (!sceneView)
+            {
                 return false;
+            }
 
             Reset();
             if (DragAndDrop.objectReferences == null ||
@@ -43,15 +45,21 @@ namespace RealtimeCSG
             {
                 var gameObject = obj as GameObject;
                 if (gameObject == null)
+                {
                     continue;
+                }
 
                 if (!CSGPrefabUtility.IsPrefabAsset(gameObject))
+                {
                     continue;
+                }
 
                 dragGameObjects.Add(gameObject);
 
                 if (gameObject.GetComponentInChildren<Renderer>() != null)
+                {
                     found = true;
+                }
             }
             if (!found || dragGameObjects.Count != 1)
             {
@@ -65,7 +73,10 @@ namespace RealtimeCSG
             {
                 var renderers = gameObject.GetComponentsInChildren<Renderer>();
                 if (renderers.Length == 0)
+                {
                     continue;
+                }
+
                 foreach (var renderer in renderers)
                 {
                     var bounds = renderer.bounds;
@@ -75,7 +86,9 @@ namespace RealtimeCSG
             }
 
             if (!dragGameObjectBounds.Valid)
+            {
                 dragGameObjectBounds.Extend(MathConstants.zeroVector3);
+            }
 
             projectedBounds = new Vector3[8];
             BoundsUtilities.GetBoundsCornerPoints(dragGameObjectBounds, projectedBounds);
@@ -127,7 +140,10 @@ namespace RealtimeCSG
                 for (int i = visualDragGameObject.Count - 1; i >= 0; i--)
                 {
                     if (!visualDragGameObject[i])
+                    {
                         continue;
+                    }
+
                     GameObject.DestroyImmediate(visualDragGameObject[i]);
                 }
             }
@@ -142,7 +158,10 @@ namespace RealtimeCSG
                 {
                     var obj = visualDragGameObject[i];
                     if (obj == null || !obj)
+                    {
                         continue;
+                    }
+
                     if (obj.activeSelf)
                     {
                         obj.SetActive(false);
@@ -163,7 +182,10 @@ namespace RealtimeCSG
                 for (int i = 0; i < dragGameObjects.Count; i++)
                 {
                     if (visualDragGameObject[i] == null || !visualDragGameObject[i])
+                    {
                         continue;
+                    }
+
                     visualDragGameObject[i].SetActive(dragGameObjects[i].activeSelf);
                 }
             }
@@ -172,7 +194,10 @@ namespace RealtimeCSG
             foreach (var obj in visualDragGameObject)
             {
                 if (obj == null || !obj)
+                {
                     continue;
+                }
+
                 obj.transform.rotation = hoverRotation;
                 obj.transform.position = hoverPosition;
                 //	if (hoverParent != null && !CSGPrefabUtility.IsPrefabAsset(hoverParent.gameObject))
@@ -199,7 +224,9 @@ namespace RealtimeCSG
             {
                 var copy = CSGPrefabUtility.Instantiate(obj);
                 if (!copy)
+                {
                     continue;
+                }
 
                 copy.name = obj.name;
                 visualDragGameObject.Add(copy);
@@ -219,7 +246,9 @@ namespace RealtimeCSG
 
                 float middle = (selectionRect.yMax + selectionRect.yMin) * 0.5f;
                 if (Event.current.mousePosition.y > middle)
+                {
                     hoverSiblingIndex++;
+                }
 
                 hoverRotation = MathConstants.identityQuaternion;
                 hoverPosition = MathConstants.zeroVector3;
@@ -229,7 +258,9 @@ namespace RealtimeCSG
             finally
             {
                 if (!UpdateLoop.IsActive())
+                {
                     UpdateLoop.ResetUpdateRoutine();
+                }
             }
         }
 
@@ -248,7 +279,7 @@ namespace RealtimeCSG
                 hoverParent = SelectionUtility.FindParentToAssignTo(intersection);
                 hoverBrushSurface = intersection.brush != null ? new SelectedBrushSurface(intersection.brush, intersection.surfaceIndex, intersection.worldPlane) : null;
                 hoverRotation = SelectionUtility.FindDragOrientation(sceneView, normal, sourceSurfaceAlignment, destinationSurfaceAlignment);
-                haveNoParent = (hoverParent == null);
+                haveNoParent = hoverParent == null;
                 hoverSiblingIndex = int.MaxValue;
 
                 RealtimeCSG.CSGGrid.SetForcedGrid(camera, intersection.worldPlane);
@@ -260,7 +291,9 @@ namespace RealtimeCSG
                     var localPoints = new Vector3[8];
                     var localPlane = intersection.worldPlane;
                     for (var i = 0; i < localPoints.Length; i++)
+                    {
                         localPoints[i] = GeometryUtility.ProjectPointOnPlane(localPlane, (hoverRotation * projectedBounds[i]) + hoverPosition);
+                    }
 
                     hoverPosition += RealtimeCSG.CSGGrid.SnapDeltaToGrid(camera, MathConstants.zeroVector3, localPoints);
                 }
@@ -272,7 +305,9 @@ namespace RealtimeCSG
             finally
             {
                 if (!UpdateLoop.IsActive())
+                {
                     UpdateLoop.ResetUpdateRoutine();
+                }
             }
         }
         #endregion
@@ -296,7 +331,10 @@ namespace RealtimeCSG
                     for (int i = visualDragGameObject.Count - 1; i >= 0; i--)
                     {
                         if (!visualDragGameObject[i])
+                        {
                             continue;
+                        }
+
                         if (visualDragGameObject[i].activeSelf)
                         {
                             Undo.RegisterCreatedObjectUndo(visualDragGameObject[i], "Instantiated prefab");
@@ -319,10 +357,14 @@ namespace RealtimeCSG
                 {
                     var sceneview = SceneView.sceneViews[i] as SceneView;
                     if (sceneview == null)
+                    {
                         continue;
+                    }
 
                     if (sceneview.camera.pixelRect.Contains(Event.current.mousePosition))
+                    {
                         sceneview.Focus();
+                    }
                 }
                 visualDragGameObject = null;
             }
@@ -357,12 +399,16 @@ namespace RealtimeCSG
         {
             RealtimeCSG.CSGGrid.RenderGrid(camera);
             if (hoverBrushSurface == null)
+            {
                 return;
+            }
 
             var brush = hoverBrushSurface.brush;
             if (brush.ChildData == null ||
                 !brush.ChildData.ModelTransform)
+            {
                 return;
+            }
 
             var highlight_surface = hoverBrushSurface.surfaceIndex;
             var brush_transformation = brush.compareTransformation.localToWorldMatrix;

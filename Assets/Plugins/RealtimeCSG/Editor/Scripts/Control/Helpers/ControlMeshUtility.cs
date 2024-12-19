@@ -53,16 +53,32 @@ namespace RealtimeCSG
             PrevOutput.Clear();
             if (controlMesh.Edges == null)
             {
-                if (!_outputToLog) return false;
-                const string text = ("no edges found in polygon");
-                if (PrevOutput.Add(text)) Debug.Log(text);
+                if (!_outputToLog)
+                {
+                    return false;
+                }
+
+                const string text = "no edges found in polygon";
+                if (PrevOutput.Add(text))
+                {
+                    Debug.Log(text);
+                }
+
                 return false;
             }
             if (shape == null || shape.Surfaces.Length < 4)
             {
-                if (!_outputToLog) return false;
-                const string text = ("shape == null || shape.Surfaces.Length < 4");
-                if (PrevOutput.Add(text)) Debug.Log(text);
+                if (!_outputToLog)
+                {
+                    return false;
+                }
+
+                const string text = "shape == null || shape.Surfaces.Length < 4";
+                if (PrevOutput.Add(text))
+                {
+                    Debug.Log(text);
+                }
+
                 return false;
             }
             var fail = false;
@@ -73,34 +89,66 @@ namespace RealtimeCSG
                 if (polygonIndex < 0 ||
                     polygonIndex >= controlMesh.Polygons.Length)
                 {
-                    if (!_outputToLog) return false;
-                    var text = (i + ": no valid polygon-index found (" + polygonIndex + ")");
-                    if (PrevOutput.Add(text)) Debug.Log(text);
+                    if (!_outputToLog)
+                    {
+                        return false;
+                    }
+
+                    var text = i + ": no valid polygon-index found (" + polygonIndex + ")";
+                    if (PrevOutput.Add(text))
+                    {
+                        Debug.Log(text);
+                    }
+
                     fail = true;
                     continue;
                 }
                 var edgeIndices = controlMesh.Polygons[polygonIndex].EdgeIndices;
                 if (edgeIndices == null)
                 {
-                    if (!_outputToLog) return false;
+                    if (!_outputToLog)
+                    {
+                        return false;
+                    }
+
                     var text = polygonIndex + ": polygon has no edges";
-                    if (PrevOutput.Add(text)) Debug.Log(text);
+                    if (PrevOutput.Add(text))
+                    {
+                        Debug.Log(text);
+                    }
+
                     fail = true; continue;
                 }
                 var edgeIndex = Array.IndexOf(edgeIndices, i);
                 if (edgeIndex == -1)
                 {
-                    if (!_outputToLog) return false;
-                    var text = (i + ": edge not found in polygon");
-                    if (PrevOutput.Add(text)) Debug.Log(text);
+                    if (!_outputToLog)
+                    {
+                        return false;
+                    }
+
+                    var text = i + ": edge not found in polygon";
+                    if (PrevOutput.Add(text))
+                    {
+                        Debug.Log(text);
+                    }
+
                     fail = true; continue;
                 }
                 else
                 if (edgeIndices[edgeIndex] != i)
                 {
-                    if (!_outputToLog) return false;
-                    var text = (i + ": polygon.edges[edgeIndex] != i");
-                    if (PrevOutput.Add(text)) Debug.Log(text);
+                    if (!_outputToLog)
+                    {
+                        return false;
+                    }
+
+                    var text = i + ": polygon.edges[edgeIndex] != i";
+                    if (PrevOutput.Add(text))
+                    {
+                        Debug.Log(text);
+                    }
+
                     fail = true;
                     continue;
                 }
@@ -108,9 +156,17 @@ namespace RealtimeCSG
                 var prev = controlMesh.GetPrevEdgeIndex(i);
                 if (prev < 0 || prev >= controlMesh.Edges.Length)
                 {
-                    if (!_outputToLog) return false;
-                    var text = (i + ": prev < 0 || prev >= controlMesh.edges.Length");
-                    if (PrevOutput.Add(text)) Debug.Log(text);
+                    if (!_outputToLog)
+                    {
+                        return false;
+                    }
+
+                    var text = i + ": prev < 0 || prev >= controlMesh.edges.Length";
+                    if (PrevOutput.Add(text))
+                    {
+                        Debug.Log(text);
+                    }
+
                     fail = true;
                     continue;
                 }
@@ -118,9 +174,17 @@ namespace RealtimeCSG
                 var prevPolygonIndex = prevEdge.PolygonIndex;
                 if (prevPolygonIndex < 0 || prevPolygonIndex >= controlMesh.Polygons.Length)
                 {
-                    if (!_outputToLog) return false;
-                    var text = (i + ": prev_polygon_index < 0 || prev_polygon_index >= controlMesh.polygons.Length");
-                    if (PrevOutput.Add(text)) Debug.Log(text);
+                    if (!_outputToLog)
+                    {
+                        return false;
+                    }
+
+                    var text = i + ": prev_polygon_index < 0 || prev_polygon_index >= controlMesh.polygons.Length";
+                    if (PrevOutput.Add(text))
+                    {
+                        Debug.Log(text);
+                    }
+
                     fail = true;
                     continue;
                 }
@@ -128,25 +192,49 @@ namespace RealtimeCSG
                 var curr = controlMesh.GetNextEdgeIndex(prev);
                 if (curr != i)
                 {
-                    if (!_outputToLog) return false;
-                    var text = (i + ": prev->next != i");
-                    if (PrevOutput.Add(text)) Debug.Log(text);
+                    if (!_outputToLog)
+                    {
+                        return false;
+                    }
+
+                    var text = i + ": prev->next != i";
+                    if (PrevOutput.Add(text))
+                    {
+                        Debug.Log(text);
+                    }
+
                     fail = true;
                 }
                 var twin = edge.TwinIndex;
                 if (twin < 0)
                 {
-                    if (!_outputToLog) return false;
-                    var text = (i + ": twin (" + twin + ") < 0");
-                    if (PrevOutput.Add(text)) Debug.Log(text);
+                    if (!_outputToLog)
+                    {
+                        return false;
+                    }
+
+                    var text = i + ": twin (" + twin + ") < 0";
+                    if (PrevOutput.Add(text))
+                    {
+                        Debug.Log(text);
+                    }
+
                     fail = true;
                 }
                 else
                 if (twin >= controlMesh.Edges.Length)
                 {
-                    if (!_outputToLog) return false;
-                    var text = (i + ": twin (" + twin + ") >= edges.Length (" + controlMesh.Edges.Length + ")");
-                    if (PrevOutput.Add(text)) Debug.Log(text);
+                    if (!_outputToLog)
+                    {
+                        return false;
+                    }
+
+                    var text = i + ": twin (" + twin + ") >= edges.Length (" + controlMesh.Edges.Length + ")";
+                    if (PrevOutput.Add(text))
+                    {
+                        Debug.Log(text);
+                    }
+
                     fail = true;
                 }
                 else
@@ -155,16 +243,32 @@ namespace RealtimeCSG
                     var prevVertexIndex = controlMesh.Edges[prev].VertexIndex;
                     if (twinVertexIndex != prevVertexIndex)
                     {
-                        if (!_outputToLog) return false;
-                        var text = ("edges[twin(" + twin + ")].vertexIndex (" + controlMesh.Edges[twin].VertexIndex + ") != edges[prev(" + prev + ")].vertexIndex (" + controlMesh.Edges[prev].VertexIndex + ")");
-                        if (PrevOutput.Add(text)) Debug.Log(text);
+                        if (!_outputToLog)
+                        {
+                            return false;
+                        }
+
+                        var text = "edges[twin(" + twin + ")].vertexIndex (" + controlMesh.Edges[twin].VertexIndex + ") != edges[prev(" + prev + ")].vertexIndex (" + controlMesh.Edges[prev].VertexIndex + ")";
+                        if (PrevOutput.Add(text))
+                        {
+                            Debug.Log(text);
+                        }
+
                         fail = true;
                     }
                     if (controlMesh.Edges[twin].TwinIndex != i)
                     {
-                        if (!_outputToLog) return false;
-                        var text = (i + ": edges[twin].twinIndex (" + controlMesh.Edges[twin].TwinIndex + ") != i (" + i + ")");
-                        if (PrevOutput.Add(text)) Debug.Log(text);
+                        if (!_outputToLog)
+                        {
+                            return false;
+                        }
+
+                        var text = i + ": edges[twin].twinIndex (" + controlMesh.Edges[twin].TwinIndex + ") != i (" + i + ")";
+                        if (PrevOutput.Add(text))
+                        {
+                            Debug.Log(text);
+                        }
+
                         fail = true;
                     }
                 }
@@ -184,9 +288,17 @@ namespace RealtimeCSG
                 var texGenIndex = controlMesh.Polygons[p].TexGenIndex;
                 if (texGenIndex < 0)
                 {
-                    if (!_outputToLog) return false;
-                    var text = (p + ": texGenIndex < 0");
-                    if (PrevOutput.Add(text)) Debug.Log(text);
+                    if (!_outputToLog)
+                    {
+                        return false;
+                    }
+
+                    var text = p + ": texGenIndex < 0";
+                    if (PrevOutput.Add(text))
+                    {
+                        Debug.Log(text);
+                    }
+
                     fail = true;
                     continue;
                 }
@@ -196,20 +308,38 @@ namespace RealtimeCSG
             for (var t = 0; t < shape.TexGens.Length; t++)
             {
                 if (__usedTexGens[t])
+                {
                     continue;
+                }
 
-                if (!_outputToLog) return false;
-                var text = ("texGenIndex " + t + " is not used");
-                if (PrevOutput.Add(text)) Debug.Log(text);
+                if (!_outputToLog)
+                {
+                    return false;
+                }
+
+                var text = "texGenIndex " + t + " is not used";
+                if (PrevOutput.Add(text))
+                {
+                    Debug.Log(text);
+                }
+
                 fail = true;
             }
 
             var polygons = controlMesh.Polygons;
             if (shape.Surfaces.Length != polygons.Length)
             {
-                if (!_outputToLog) return false;
-                var text = ("this.Shape.Surfaces.Length (" + shape.Surfaces.Length + ") != this.polygons.Length (" + polygons.Length + ")");
-                if (PrevOutput.Add(text)) Debug.Log(text);
+                if (!_outputToLog)
+                {
+                    return false;
+                }
+
+                var text = "this.Shape.Surfaces.Length (" + shape.Surfaces.Length + ") != this.polygons.Length (" + polygons.Length + ")";
+                if (PrevOutput.Add(text))
+                {
+                    Debug.Log(text);
+                }
+
                 fail = true;
             }
 
@@ -223,9 +353,17 @@ namespace RealtimeCSG
                     var foundPolygonIndex = controlMesh.GetEdgePolygonIndex(polyEdgeIndex1);
                     if (foundPolygonIndex != p)
                     {
-                        if (!_outputToLog) return false;
-                        var text = (p + ": this.GetEdgePolygonIndex(edge_index{" + polyEdgeIndex1 + "}){" + foundPolygonIndex + "} != polygon_index{" + p + "}");
-                        if (PrevOutput.Add(text)) Debug.Log(text);
+                        if (!_outputToLog)
+                        {
+                            return false;
+                        }
+
+                        var text = p + ": this.GetEdgePolygonIndex(edge_index{" + polyEdgeIndex1 + "}){" + foundPolygonIndex + "} != polygon_index{" + p + "}";
+                        if (PrevOutput.Add(text))
+                        {
+                            Debug.Log(text);
+                        }
+
                         fail = true;
                     }
                     else
@@ -233,9 +371,17 @@ namespace RealtimeCSG
                         var twinPolygonIndex = controlMesh.GetEdgePolygonIndex(controlMesh.GetTwinEdgeIndex(polyEdgeIndex1));
                         if (twinPolygonIndex == foundPolygonIndex)
                         {
-                            if (!_outputToLog) return false;
-                            var text = (p + ": twin_polygon_index{" + twinPolygonIndex + "} == found_polygon_index{" + foundPolygonIndex + "}");
-                            if (PrevOutput.Add(text)) Debug.Log(text);
+                            if (!_outputToLog)
+                            {
+                                return false;
+                            }
+
+                            var text = p + ": twin_polygon_index{" + twinPolygonIndex + "} == found_polygon_index{" + foundPolygonIndex + "}";
+                            if (PrevOutput.Add(text))
+                            {
+                                Debug.Log(text);
+                            }
+
                             fail = true;
                         }
                     }
@@ -243,11 +389,21 @@ namespace RealtimeCSG
                     var twinVertexIndex = controlMesh.GetTwinEdgeVertexIndex(polyEdgeIndex2);
                     var vertexIndex = controlMesh.GetVertexIndex(polyEdgeIndex1);
                     if (twinVertexIndex == vertexIndex)
+                    {
                         continue;
+                    }
 
-                    if (!_outputToLog) return false;
-                    var text2 = (p + ": this.GetTwinEdgeVertexIndex(" + polyEdgeIndex2 + ") (" + twinVertexIndex + ") != this.GetVertexIndex(" + polyEdgeIndex1 + ") (" + vertexIndex + ")");
-                    if (PrevOutput.Add(text2)) Debug.Log(text2);
+                    if (!_outputToLog)
+                    {
+                        return false;
+                    }
+
+                    var text2 = p + ": this.GetTwinEdgeVertexIndex(" + polyEdgeIndex2 + ") (" + twinVertexIndex + ") != this.GetVertexIndex(" + polyEdgeIndex1 + ") (" + vertexIndex + ")";
+                    if (PrevOutput.Add(text2))
+                    {
+                        Debug.Log(text2);
+                    }
+
                     fail = true;
                 }
             }
@@ -260,7 +416,10 @@ namespace RealtimeCSG
         public static void MergeVertices(ControlMesh controlMesh, List<MergePoint> mergePoints)
         {
             if (controlMesh == null)
+            {
                 return;
+            }
+
             for (var i = mergePoints.Count - 1; i >= 0; i--)
             {
                 MergeVertices(controlMesh, mergePoints[i].Index1, mergePoints[i].Index2);
@@ -270,7 +429,9 @@ namespace RealtimeCSG
         public static void MergeVerticesOnEdges(ControlMesh controlMesh, short[] pointIndices, SortedList<short, MergePoint> mergePoints)
         {
             if (controlMesh == null)
+            {
                 return;
+            }
 
             for (var i = 0; i < pointIndices.Length; i++)
             {
@@ -278,7 +439,9 @@ namespace RealtimeCSG
                 var point = controlMesh.Vertices[pointIndex];
 
                 if (mergePoints.ContainsKey(pointIndex))
+                {
                     continue;
+                }
 
                 var closestEdge = -1;
                 var closestDistance = MathConstants.SnapDistanceSqr;
@@ -290,7 +453,10 @@ namespace RealtimeCSG
                     var vertexIndex2 = controlMesh.GetTwinEdgeVertexIndex(edgeIndex);
                     if (vertexIndex1 == pointIndex ||
                         vertexIndex2 == pointIndex)
+                    {
                         continue;
+                    }
+
                     var vertex1 = controlMesh.Vertices[vertexIndex1];
                     var vertex2 = controlMesh.Vertices[vertexIndex2];
                     var pointOnLine = ProjectPointLine(point, vertex1, vertex2);
@@ -319,23 +485,31 @@ namespace RealtimeCSG
             var length = lineDirection.magnitude;
             var normalizedLineDirection = lineDirection;
             if (length > 0.000001f)
+            {
                 normalizedLineDirection /= length;
+            }
 
             var dot = Vector3.Dot(normalizedLineDirection, relativePoint);
             dot = Mathf.Clamp(dot, 0.0F, length);
 
-            return lineStart + normalizedLineDirection * dot;
+            return lineStart + (normalizedLineDirection * dot);
         }
 
         public static void MergeVertices(ControlMesh controlMesh, short oldVertexIndex, short newVertexIndex)
         {
             if (newVertexIndex > oldVertexIndex)
+            {
                 return;
+            }
+
             var currentEdges = controlMesh.Edges;
             for (var e = 0; e < currentEdges.Length; e++)
             {
                 if (currentEdges[e].VertexIndex < oldVertexIndex)
+                {
                     continue;
+                }
+
                 if (currentEdges[e].VertexIndex > oldVertexIndex)
                 {
                     currentEdges[e].VertexIndex--;
@@ -363,7 +537,9 @@ namespace RealtimeCSG
                 for (var e = 0; e < currentEdges.Length; e++)
                 {
                     if (currentEdges[e].TwinIndex <= edgeIndex)
+                    {
                         continue;
+                    }
 
                     currentEdges[e].TwinIndex--;
                 }
@@ -374,7 +550,10 @@ namespace RealtimeCSG
                     for (var e = edgeIndices.Count - 1; e >= 0; e--)
                     {
                         if (edgeIndices[e] < edgeIndex)
+                        {
                             continue;
+                        }
+
                         if (edgeIndices[e] > edgeIndex)
                         {
                             edgeIndices[e]--;
@@ -394,7 +573,9 @@ namespace RealtimeCSG
             var checkPolygons = new List<short>();
 
             for (var p = (short)(controlMesh.Polygons.Length - 1); p >= 0; p--)
+            {
                 checkPolygons.Add(p);
+            }
 
             for (var c = 0; c < checkPolygons.Count; c++)
             {
@@ -412,7 +593,9 @@ namespace RealtimeCSG
                             var edgeIndex1 = edgeIndices[e1];
                             var vertexIndex1 = controlMesh.GetVertexIndex(edgeIndex1);
                             if (vertexIndex0 != vertexIndex1)
+                            {
                                 continue;
+                            }
 
                             if ((e1 - e0) == 1)
                             {
@@ -473,7 +656,9 @@ namespace RealtimeCSG
                     for (var c2 = c + 1; c2 < checkPolygons.Count; c2++)
                     {
                         if (checkPolygons[c2] > polygonIndex)
+                        {
                             checkPolygons[c2]--;
+                        }
                     }
                     RemovePolygon(controlMesh, shape, polygonIndex);
                     RemoveEdges(controlMesh, edgeIndex1, edgeIndex2);
@@ -490,7 +675,9 @@ namespace RealtimeCSG
                     for (var c2 = c + 1; c2 < checkPolygons.Count; c2++)
                     {
                         if (checkPolygons[c2] > polygonIndex)
+                        {
                             checkPolygons[c2]--;
+                        }
                     }
                     RemovePolygon(controlMesh, shape, polygonIndex);
                 }
@@ -501,11 +688,25 @@ namespace RealtimeCSG
             if (controlMesh.Polygons.Length != 0 &&
                 controlMesh.Edges.Length != 0 &&
                 controlMesh.Vertices.Length != 0)
+            {
                 return;
+            }
 
-            if (controlMesh.Polygons.Length != 0) controlMesh.Polygons = new Polygon[0];
-            if (controlMesh.Edges.Length != 0) controlMesh.Edges = new HalfEdge[0];
-            if (controlMesh.Vertices.Length != 0) controlMesh.Vertices = new Vector3[0];
+            if (controlMesh.Polygons.Length != 0)
+            {
+                controlMesh.Polygons = new Polygon[0];
+            }
+
+            if (controlMesh.Edges.Length != 0)
+            {
+                controlMesh.Edges = new HalfEdge[0];
+            }
+
+            if (controlMesh.Vertices.Length != 0)
+            {
+                controlMesh.Vertices = new Vector3[0];
+            }
+
             shape.Reset();
         }
 
@@ -543,19 +744,21 @@ namespace RealtimeCSG
             var toEdgeIndex = ArrayUtility.IndexOf(edges, toValue);
             if (fromEdgeIndex == -1 ||
                 toEdgeIndex == -1)
+            {
                 return null;
+            }
 
             if (fromEdgeIndex < toEdgeIndex)
             {
-                var length = (toEdgeIndex - fromEdgeIndex) + 1;
+                var length = toEdgeIndex - fromEdgeIndex + 1;
                 var result = new int[length + additionalStorage];
                 Array.Copy(edges, fromEdgeIndex, result, 0, length);
                 return result;
             }
             else
             {
-                var offsetA = (edges.Length - fromEdgeIndex);
-                var offsetB = (toEdgeIndex + 1);
+                var offsetA = edges.Length - fromEdgeIndex;
+                var offsetB = toEdgeIndex + 1;
                 var length = offsetA + offsetB;
                 var result = new int[length + additionalStorage];
                 if (offsetA > 0)
@@ -579,12 +782,20 @@ namespace RealtimeCSG
                 {
                     var edgeIndex = edgeIndices[e];
                     var vertexIndex = controlMesh.GetVertexIndex(edgeIndex);
-                    if (vertexIndex1 == vertexIndex) edgeIndex1 = edgeIndex;
-                    else if (vertexIndex2 == vertexIndex) edgeIndex2 = edgeIndex;
+                    if (vertexIndex1 == vertexIndex)
+                    {
+                        edgeIndex1 = edgeIndex;
+                    }
+                    else if (vertexIndex2 == vertexIndex)
+                    {
+                        edgeIndex2 = edgeIndex;
+                    }
                 }
 
                 if (edgeIndex1 == -1 || edgeIndex2 == -1)
+                {
                     continue;
+                }
 
                 var nextIndex1 = controlMesh.GetNextEdgeIndex(edgeIndex1);
                 var nextIndex2 = controlMesh.GetNextEdgeIndex(edgeIndex2);
@@ -792,7 +1003,9 @@ namespace RealtimeCSG
             for (var i = 0; i < controlMesh.Edges.Length; i++)
             {
                 if (controlMesh.Edges[i].VertexIndex == vertexIndex)
+                {
                     return i;
+                }
             }
             return -1;//edgeIndex
         }
@@ -800,7 +1013,9 @@ namespace RealtimeCSG
         private static void RemoveEdges(ControlMesh controlMesh, HashSet<int> removeEdges)
         {
             if (removeEdges.Count == 0)
+            {
                 return;
+            }
 
             var sortedRemoveEdges = new List<int>(removeEdges);
             sortedRemoveEdges.Sort();
@@ -820,9 +1035,11 @@ namespace RealtimeCSG
                     {
                         var value = sortedRemoveEdges[s];
                         if (original < value)
+                        {
                             continue;
+                        }
 
-                        original -= (s + 1);
+                        original -= s + 1;
                         break;
                     }
                     edgeIndices[i] = original;
@@ -835,9 +1052,11 @@ namespace RealtimeCSG
                 {
                     var value = sortedRemoveEdges[s];
                     if (original < value)
+                    {
                         continue;
+                    }
 
-                    original -= (s + 1);
+                    original -= s + 1;
                     break;
                 }
                 controlMesh.Edges[i].TwinIndex = original;
@@ -864,9 +1083,11 @@ namespace RealtimeCSG
                     {
                         var value = sortedRemoveEdges[s];
                         if (original < value)
+                        {
                             continue;
+                        }
 
-                        original -= (s + 1);
+                        original -= s + 1;
                         break;
                     }
                     edgeIndices[i] = original;
@@ -879,9 +1100,11 @@ namespace RealtimeCSG
                 {
                     var value = sortedRemoveEdges[s];
                     if (original < value)
+                    {
                         continue;
+                    }
 
-                    original -= (s + 1);
+                    original -= s + 1;
                     break;
                 }
                 controlMesh.Edges[i].TwinIndex = original;
@@ -902,14 +1125,19 @@ namespace RealtimeCSG
 
             for (var i = 0; i < controlMesh.Edges.Length; i++)
             {
-                if (controlMesh.Edges[i].VertexIndex >= vertexIndex) controlMesh.Edges[i].VertexIndex--;
+                if (controlMesh.Edges[i].VertexIndex >= vertexIndex)
+                {
+                    controlMesh.Edges[i].VertexIndex--;
+                }
             }
         }
 
         private static void RemoveEdgeFromPolygon(ControlMesh controlMesh, int edgeIndex, ref HashSet<int> removeEdges)
         {
             if (!removeEdges.Add(edgeIndex))
+            {
                 return;
+            }
 
             var polyIndex = controlMesh.Edges[edgeIndex].PolygonIndex;
             ArrayUtility.Remove(ref controlMesh.Polygons[polyIndex].EdgeIndices, edgeIndex);
@@ -963,7 +1191,9 @@ namespace RealtimeCSG
         {
             var firstEdgeIndex = FirstEdgeWithVertex(controlMesh, indexOfVertexToRemove);
             if (firstEdgeIndex == -1)
+            {
                 return;
+            }
 
             var edgeIndices = new List<int>();
             var tested = new HashSet<int>();
@@ -972,7 +1202,10 @@ namespace RealtimeCSG
             do
             {
                 if (!tested.Add(iterator))
+                {
                     break;
+                }
+
                 edgeIndices.Add(iterator);
                 iterator = controlMesh.GetNextEdgeIndexAroundVertex(iterator);
 
@@ -1058,7 +1291,9 @@ namespace RealtimeCSG
                     foreach (var polygonIndex in removePolygons)
                     {
                         if (controlMesh.Polygons[polygonIndex].TexGenIndex >= 0)
+                        {
                             smallestTexGen = Math.Min(controlMesh.Polygons[polygonIndex].TexGenIndex, smallestTexGen);
+                        }
                     }
                     if (smallestTexGen != int.MaxValue)
                     {
@@ -1091,9 +1326,21 @@ namespace RealtimeCSG
                     controlMesh.Edges.Length == 0 ||
                     controlMesh.Vertices.Length == 0)
                 {
-                    if (controlMesh.Polygons.Length != 0) controlMesh.Polygons = new Polygon[0];
-                    if (controlMesh.Edges.Length != 0) controlMesh.Edges = new HalfEdge[0];
-                    if (controlMesh.Vertices.Length != 0) controlMesh.Vertices = new Vector3[0];
+                    if (controlMesh.Polygons.Length != 0)
+                    {
+                        controlMesh.Polygons = new Polygon[0];
+                    }
+
+                    if (controlMesh.Edges.Length != 0)
+                    {
+                        controlMesh.Edges = new HalfEdge[0];
+                    }
+
+                    if (controlMesh.Vertices.Length != 0)
+                    {
+                        controlMesh.Vertices = new Vector3[0];
+                    }
+
                     shape.Reset();
                 }
 
@@ -1157,14 +1404,18 @@ namespace RealtimeCSG
                 for (var j = materialCount - 1; j > i; j--)
                 {
                     if (!__usedTexGens[j])
+                    {
                         continue;
+                    }
 
                     found = j;
                     break;
                 }
 
                 if (found == -1)//texgen
+                {
                     break;
+                }
 
                 __indexConversion[found] = i;
 
@@ -1177,7 +1428,9 @@ namespace RealtimeCSG
             }
 
             if (materialCount == texGenCount)
+            {
                 return;
+            }
 
             for (var i = 0; i < controlMesh.Polygons.Length; i++)
             {
@@ -1188,7 +1441,9 @@ namespace RealtimeCSG
             for (var i = texGenCount - 1; i >= 0; i--)
             {
                 if (__usedTexGens[i])
+                {
                     break;
+                }
 
                 ArrayUtility.RemoveAt(ref shape.TexGenFlags, i);
                 ArrayUtility.RemoveAt(ref shape.TexGens, i);
@@ -1245,7 +1500,9 @@ namespace RealtimeCSG
             for (var t = shape.TexGens.Length - 1; t >= 0; t--)
             {
                 if (__usedTexGens[t])
+                {
                     continue;
+                }
 
                 ArrayUtility.RemoveAt(ref shape.TexGens, t);
                 ArrayUtility.RemoveAt(ref shape.TexGenFlags, t);
@@ -1254,12 +1511,16 @@ namespace RealtimeCSG
                 for (var p = 0; p < controlMesh.Polygons.Length; p++)
                 {
                     if (controlMesh.Polygons[p].TexGenIndex > t)
+                    {
                         controlMesh.Polygons[p].TexGenIndex--;
+                    }
                 }
                 for (var s = 0; s < shape.Surfaces.Length; s++)
                 {
                     if (shape.Surfaces[s].TexGenIndex > t)
+                    {
                         shape.Surfaces[s].TexGenIndex--;
+                    }
                 }
             }
         }
@@ -1268,7 +1529,7 @@ namespace RealtimeCSG
         {
             var polygon1Edges = new int[edgeLoop.Count];
             var polygon2Edges = new int[edgeLoop.Count];
-            var polygon1Index = (short)(controlMesh.Polygons.Length);
+            var polygon1Index = (short)controlMesh.Polygons.Length;
             var polygon2Index = (short)(controlMesh.Polygons.Length + 1);
             for (var i = 0; i < edgeLoop.Count; i++)
             {
@@ -1287,7 +1548,7 @@ namespace RealtimeCSG
                 controlMesh.Edges[currEdgeIndex].TwinIndex = newEdgeIndex1;
                 controlMesh.Edges[twinEdgeIndex].TwinIndex = newEdgeIndex2;
 
-                polygon1Edges[(edgeLoop.Count - 1) - i] = newEdgeIndex1;
+                polygon1Edges[edgeLoop.Count - 1 - i] = newEdgeIndex1;
                 polygon2Edges[i] = newEdgeIndex2;
             }
 
@@ -1364,7 +1625,9 @@ namespace RealtimeCSG
             }
 
             if (intersectedEdges != null)
+            {
                 intersectedEdges.Clear();
+            }
 
             //float time2 = Time.realtimeSinceStartup;
             //float timeA = 0, timeB = 0, timeC = 0, timeD = 0, timeE = 0;
@@ -1405,7 +1668,10 @@ namespace RealtimeCSG
                             //float timeT = Time.realtimeSinceStartup;
                             var newIntersections = new PlaneTraversals[Mathf.Min(intersections.Length, 8) * 2];
                             if (intersections.Length > 0)
+                            {
                                 Array.Copy(intersections, newIntersections, intersections.Length);
+                            }
+
                             intersections = newIntersections;
                             //timeA += Time.realtimeSinceStartup - timeT;
                         }
@@ -1469,12 +1735,16 @@ namespace RealtimeCSG
                     {
                         if (intersections[i0].Traversal1.Side.Halfspace != intersections[i1].Traversal0.Side.Halfspace ||
                             intersections[i0].Traversal1.Side.Halfspace != 0)
+                        {
                             continue;
+                        }
 
                         // Note: we know traversal0.side.halfspace and traversal1.side.halfspace are always different from each other.
 
                         if (intersections[i0].Traversal0.Side.Halfspace != intersections[i1].Traversal1.Side.Halfspace)
+                        {
                             continue;
+                        }
 
                         // possibilities: (can have multiple vertices on the plane between intersections)
                         //
@@ -1489,13 +1759,27 @@ namespace RealtimeCSG
                         //float timeT = Time.realtimeSinceStartup;
                         if (i0 > i1)
                         {
-                            intersectionCount--; if ((intersectionCount - i0) > 0) Array.Copy(intersections, i0 + 1, intersections, i0, intersectionCount - i0);
-                            intersectionCount--; if ((intersectionCount - i1) > 0) Array.Copy(intersections, i1 + 1, intersections, i1, intersectionCount - i1);
+                            intersectionCount--; if ((intersectionCount - i0) > 0)
+                            {
+                                Array.Copy(intersections, i0 + 1, intersections, i0, intersectionCount - i0);
+                            }
+
+                            intersectionCount--; if ((intersectionCount - i1) > 0)
+                            {
+                                Array.Copy(intersections, i1 + 1, intersections, i1, intersectionCount - i1);
+                            }
                         }
                         else
                         {
-                            intersectionCount--; if ((intersectionCount - i1) > 0) Array.Copy(intersections, i1 + 1, intersections, i1, intersectionCount - i1);
-                            intersectionCount--; if ((intersectionCount - i0) > 0) Array.Copy(intersections, i0 + 1, intersections, i0, intersectionCount - i0);
+                            intersectionCount--; if ((intersectionCount - i1) > 0)
+                            {
+                                Array.Copy(intersections, i1 + 1, intersections, i1, intersectionCount - i1);
+                            }
+
+                            intersectionCount--; if ((intersectionCount - i0) > 0)
+                            {
+                                Array.Copy(intersections, i0 + 1, intersections, i0, intersectionCount - i0);
+                            }
                         }
                         //timeC += Time.realtimeSinceStartup - timeT;
                     }
@@ -1513,7 +1797,9 @@ namespace RealtimeCSG
                         //float timeT = Time.realtimeSinceStartup;
                         if (intersections[i0].Traversal0.Side.Halfspace == 0 ||
                             intersections[i0].Traversal1.Side.Halfspace == 0)
+                        {
                             continue;
+                        }
 
                         // possibilities:
                         //    
@@ -1578,9 +1864,14 @@ namespace RealtimeCSG
                         for (var i1 = i0 + 1; i1 < intersectionCount; i1++)
                         {
                             if (intersections[i1].Traversal0.EdgeIndex == edgeIndex1)
+                            {
                                 intersections[i1].Traversal0.EdgeIndex = replacedEdgeIndex;
+                            }
+
                             if (intersections[i1].Traversal1.EdgeIndex == edgeIndex1)
+                            {
                                 intersections[i1].Traversal1.EdgeIndex = replacedEdgeIndex;
+                            }
                         }
 
                         var newIntersection = new PlaneTraversals
@@ -1609,7 +1900,9 @@ namespace RealtimeCSG
                 // NOTE: from this point on traversal.Index may no longer be valid!
 
                 if (intersectionCount <= 1)
+                {
                     goto skip_to_next_polygon;
+                }
 
 
                 // check if intersection_count is even
@@ -1646,7 +1939,9 @@ namespace RealtimeCSG
                 var newEdge = InsertEdgeBetweenEdges(controlMesh, shape, indexOut, indexIn);
                 //timeE += Time.realtimeSinceStartup - timeT2;
                 if (newEdge == -1)
+                {
                     return false;
+                }
 
                 if (intersectedEdges != null)
                 {
@@ -1672,13 +1967,20 @@ namespace RealtimeCSG
                 var vertexIndex = edges[edgeIndex].VertexIndex;
                 var vertex = vertices[vertexIndex];
                 if (cuttingPlane.Distance(vertex) >= MathConstants.DistanceEpsilon)
+                {
                     return false;
+                }
+
                 if (cuttingPlane.Distance(vertex) < -MathConstants.DistanceEpsilon)
+                {
                     onPlane = false;
+                }
             }
 
             if (!onPlane)
+            {
                 return true;
+            }
 
             for (var e0 = 0; e0 < edgeIndices.Length; e0++)
             {
@@ -1691,9 +1993,14 @@ namespace RealtimeCSG
                     var vertexIndex = edges[twinEdgeIndices[e1]].VertexIndex;
                     var vertex = vertices[vertexIndex];
                     if (cuttingPlane.Distance(vertex) >= MathConstants.DistanceEpsilon)
+                    {
                         return false;
+                    }
+
                     if (cuttingPlane.Distance(vertex) < -MathConstants.DistanceEpsilon)
+                    {
                         break;
+                    }
                 }
             }
             return true;
@@ -1711,7 +2018,9 @@ namespace RealtimeCSG
             for (var i = controlMesh.Polygons.Length - 1; i >= 0; i--)
             {
                 if (!IsPolygonInsideHalfSpace(cuttingPlane, controlMesh, i))
+                {
                     continue;
+                }
 
                 startPolygon = (short)i;
                 break;
@@ -1742,7 +2051,9 @@ namespace RealtimeCSG
 
                 var checkEdgePolygon = controlMesh.GetEdgePolygonIndex(checkEdge);
                 if (foundPolygons.Contains(checkEdgePolygon))
+                {
                     continue;
+                }
 
                 foundPolygons.Add(checkEdgePolygon);
                 if (foundPolygons.Count == controlMesh.Polygons.Length)
@@ -1988,7 +2299,9 @@ namespace RealtimeCSG
             {
                 var newEdgeIndex = polygonEdges[e];
                 if (vertexIndex == controlMesh.Edges[newEdgeIndex].VertexIndex)
+                {
                     return newEdgeIndex;
+                }
             }
             return -1;//edgeIndex
         }
@@ -1998,7 +2311,9 @@ namespace RealtimeCSG
             var edgeIndices = controlMesh.Polygons[polygonIndex].EdgeIndices;
 
             if (edgeIndices.Length == 3)
+            {
                 return;
+            }
 
             var edges = new[] {
                 SafeEdge(controlMesh, edgeIndices, vertexIndices[0]),
@@ -2021,7 +2336,9 @@ namespace RealtimeCSG
                 for (var j = i + 1; j < indices.Length; j++)
                 {
                     if (indices[i] <= indices[j])
+                    {
                         continue;
+                    }
 
                     var t = edges[i];
                     edges[i] = edges[j];
@@ -2137,7 +2454,9 @@ namespace RealtimeCSG
         private static Triangle FindTriangleWithEdge(short[] triangles, DataCache cache, short vertexIndex0, short vertexIndex1)
         {
             if (triangles == null)
+            {
                 return null;
+            }
 
             for (var i = 0; i < triangles.Length; i++)
             {
@@ -2153,7 +2472,9 @@ namespace RealtimeCSG
                     (edge1VertexIndex != vertexIndex0 || edge2VertexIndex != vertexIndex1) &&
                     (edge2VertexIndex != vertexIndex0 || edge0VertexIndex != vertexIndex1) &&
                     (edge2VertexIndex != vertexIndex0 || edge1VertexIndex != vertexIndex1))
+                {
                     continue;
+                }
 
                 return triangle;
             }
@@ -2181,14 +2502,30 @@ namespace RealtimeCSG
                 var c32 = (ulong)c;
                 if (a < b)
                 {
-                    if (c > b) return a32 | (b32 << 16) | (c32 << 32);
-                    if (c > a) return a32 | (c32 << 16) | (b32 << 32);
+                    if (c > b)
+                    {
+                        return a32 | (b32 << 16) | (c32 << 32);
+                    }
+
+                    if (c > a)
+                    {
+                        return a32 | (c32 << 16) | (b32 << 32);
+                    }
+
                     return c32 | (a32 << 16) | (b32 << 32);
                 }
                 else
                 {
-                    if (c > a) return b32 | (a32 << 16) | (c32 << 32);
-                    if (c > b) return b32 | (c32 << 16) | (a32 << 32);
+                    if (c > a)
+                    {
+                        return b32 | (a32 << 16) | (c32 << 32);
+                    }
+
+                    if (c > b)
+                    {
+                        return b32 | (c32 << 16) | (a32 << 32);
+                    }
+
                     return c32 | (b32 << 16) | (a32 << 32);
                 }
             }
@@ -2245,26 +2582,35 @@ namespace RealtimeCSG
                 if (hardEdges.TryGetValue(pair0, out polygonIndex))
                 {
                     if (polygonIndex < 0 || polygonIndex >= shape.Surfaces.Length)
+                    {
                         return float.PositiveInfinity;
+                    }
+
                     var normal = shape.Surfaces[polygonIndex].Plane.normal;
                     var error = Vector3.Dot(normal, trianglePlaneNormal) - 1;
-                    triangleHeuristic += (error * error);
+                    triangleHeuristic += error * error;
                 }
                 if (hardEdges.TryGetValue(pair1, out polygonIndex))
                 {
                     if (polygonIndex < 0 || polygonIndex >= shape.Surfaces.Length)
+                    {
                         return float.PositiveInfinity;
+                    }
+
                     var normal = shape.Surfaces[polygonIndex].Plane.normal;
                     var error = Vector3.Dot(normal, trianglePlaneNormal) - 1;
-                    triangleHeuristic += (error * error);
+                    triangleHeuristic += error * error;
                 }
                 if (hardEdges.TryGetValue(pair2, out polygonIndex))
                 {
                     if (polygonIndex < 0 || polygonIndex >= shape.Surfaces.Length)
+                    {
                         return float.PositiveInfinity;
+                    }
+
                     var normal = shape.Surfaces[polygonIndex].Plane.normal;
                     var error = Vector3.Dot(normal, trianglePlaneNormal) - 1;
-                    triangleHeuristic += (error * error);
+                    triangleHeuristic += error * error;
                 }
 
                 return triangleHeuristic;
@@ -2296,14 +2642,18 @@ namespace RealtimeCSG
                         for (var j = 0; j < leftPath.SubPaths.Length; j++)
                         {
                             if (leftPath.SubPaths[j].VertexIndex != index)
+                            {
                                 continue;
+                            }
 
                             found = true;
                             leftPath = leftPath.SubPaths[j];
                             break;
                         }
                         if (found)
+                        {
                             continue;
+                        }
 
                         startIndex = i;
                         break;
@@ -2314,12 +2664,14 @@ namespace RealtimeCSG
                     if (startIndex != -1 ||
                         leftPath.Triangles == null)
                     {
-                        var length0 = (t1 - t0) + 1;
+                        var length0 = t1 - t0 + 1;
                         if (tempEdges == null ||
                             tempEdges.Length < length0)
+                        {
                             tempEdges = new short[length0];
+                        }
 
-                        Array.Copy(vertexIndices, t0, tempEdges, 0, (t1 - t0) + 1);
+                        Array.Copy(vertexIndices, t0, tempEdges, 0, t1 - t0 + 1);
 
                         // triangulate for the given vertices
                         leftHeuristic = SplitAtEdge(controlMesh, shape, out leftTriangles, cache, tempEdges, length0);
@@ -2347,17 +2699,20 @@ namespace RealtimeCSG
 
                     var newHeuristic = leftHeuristic;
                     if (newHeuristic >= curHeuristic + MathConstants.EqualityEpsilon)
+                    {
                         continue;
+                    }
 
-
-                    var offsetB = (vertexIndicesLength - t1);
-                    var length1 = (t0 + 1) + offsetB;
+                    var offsetB = vertexIndicesLength - t1;
+                    var length1 = t0 + 1 + offsetB;
                     if (tempEdges == null ||
                         tempEdges.Length < length1)
+                    {
                         tempEdges = new short[length1];
+                    }
 
                     Array.Copy(vertexIndices, t1, tempEdges, 0, offsetB);
-                    Array.Copy(vertexIndices, 0, tempEdges, offsetB, (t0 + 1));
+                    Array.Copy(vertexIndices, 0, tempEdges, offsetB, t0 + 1);
 
                     var rightPath = cache.Path;
                     startIndex = -1;
@@ -2405,22 +2760,28 @@ namespace RealtimeCSG
 
                     newHeuristic += rightHeuristic;
                     if (newHeuristic >= curHeuristic + MathConstants.EqualityEpsilon)
+                    {
                         continue;
+                    }
 
                     var leftTriangle = FindTriangleWithEdge(leftTriangles, cache, vertexIndex0, vertexIndex1);
                     var rightTriangle = FindTriangleWithEdge(rightTriangles, cache, vertexIndex0, vertexIndex1);
 
                     if (leftTriangle == null ||
                         rightTriangle == null)
+                    {
                         continue;
+                    }
 
                     var leftPlane = leftTriangle.Plane;
                     var rightPlane = rightTriangle.Plane;
                     var error = Vector3.Dot(leftPlane.normal, rightPlane.normal) - 1;
-                    newHeuristic += (error * error);
+                    newHeuristic += error * error;
 
                     if (!(newHeuristic < curHeuristic - MathConstants.EqualityEpsilon))
+                    {
                         continue;
+                    }
 
                     curLeftPath = leftPath;
                     curRightPath = rightPath;
@@ -2455,7 +2816,9 @@ namespace RealtimeCSG
         {
             if (controlMesh == null ||
                 controlMesh.Polygons == null)
+            {
                 return false;
+            }
 
             //float time0 = Time.realtimeSinceStartup;
 
@@ -2476,7 +2839,9 @@ namespace RealtimeCSG
                 var edgeIndices = controlMesh.Polygons[p].EdgeIndices;
 
                 if (edgeIndices.Length > 16)
+                {
                     continue;
+                }
 
                 /*
                 if (edge_indices.Length <= 3)
@@ -2490,14 +2855,18 @@ namespace RealtimeCSG
                 {
                     var vertex = controlMesh.GetVertex(edgeIndices[e]);
                     if (!(polygonPlane.Distance(vertex) > MathConstants.DistanceEpsilon))
+                    {
                         continue;
+                    }
 
                     isPlanar = false;
                     break;
                 }
 
                 if (isPlanar)
+                {
                     continue;
+                }
 
                 // TODO: only update the 'polygons' that have been modified
 
@@ -2512,10 +2881,14 @@ namespace RealtimeCSG
                 }
 
                 if (__polyVerts.Length < edgeIndices.Length)
+                {
                     __polyVerts = new short[edgeIndices.Length];
+                }
 
                 for (var i = 0; i < edgeIndices.Length; i++)
+                {
                     __polyVerts[i] = controlMesh.Edges[edgeIndices[i]].VertexIndex;
+                }
 
                 short[] foundTriangles;
                 SplitAtEdge(controlMesh, shape, out foundTriangles, __dataCache, __polyVerts, edgeIndices.Length);
@@ -2539,12 +2912,25 @@ namespace RealtimeCSG
                         var vertPair3 = VertPair.Create(triangle.VertexIndices[2], triangle.VertexIndices[0]);
 
                         var hardEdgeCount = 0;
-                        if (__dataCache.HardEdges.ContainsKey(vertPair1)) hardEdgeCount++;
-                        if (__dataCache.HardEdges.ContainsKey(vertPair2)) hardEdgeCount++;
-                        if (__dataCache.HardEdges.ContainsKey(vertPair3)) hardEdgeCount++;
+                        if (__dataCache.HardEdges.ContainsKey(vertPair1))
+                        {
+                            hardEdgeCount++;
+                        }
+
+                        if (__dataCache.HardEdges.ContainsKey(vertPair2))
+                        {
+                            hardEdgeCount++;
+                        }
+
+                        if (__dataCache.HardEdges.ContainsKey(vertPair3))
+                        {
+                            hardEdgeCount++;
+                        }
 
                         if (hardEdgeCount <= foundEdgeCount)
+                        {
                             continue;
+                        }
 
                         foundEdgeCount = hardEdgeCount;
                         found = t;
@@ -2564,9 +2950,20 @@ namespace RealtimeCSG
                         __newTriangles.Add(triangle);
                         ArrayUtility.RemoveAt(ref foundTriangles, found);
                         //found_triangles.RemoveAt(found);
-                        if (!__dataCache.HardEdges.ContainsKey(vertPair1)) __dataCache.HardEdges.Add(vertPair1, -1);
-                        if (!__dataCache.HardEdges.ContainsKey(vertPair2)) __dataCache.HardEdges.Add(vertPair2, -1);
-                        if (!__dataCache.HardEdges.ContainsKey(vertPair3)) __dataCache.HardEdges.Add(vertPair3, -1);
+                        if (!__dataCache.HardEdges.ContainsKey(vertPair1))
+                        {
+                            __dataCache.HardEdges.Add(vertPair1, -1);
+                        }
+
+                        if (!__dataCache.HardEdges.ContainsKey(vertPair2))
+                        {
+                            __dataCache.HardEdges.Add(vertPair2, -1);
+                        }
+
+                        if (!__dataCache.HardEdges.ContainsKey(vertPair3))
+                        {
+                            __dataCache.HardEdges.Add(vertPair3, -1);
+                        }
                     }
                 }
 
@@ -2581,7 +2978,9 @@ namespace RealtimeCSG
                 var polygonIndex = (short)pair.Key;
                 var triangles = pair.Value;
                 if (triangles == null)
+                {
                     continue;
+                }
 
                 __ownedPolygons.Clear();
                 __ownedPolygons.Add(polygonIndex);
@@ -2657,7 +3056,9 @@ namespace RealtimeCSG
 
                     if (controlMesh.Edges[currIndex].HardEdge ||
                         controlMesh.Edges[twinIndex].HardEdge)
+                    {
                         continue;
+                    }
 
                     var twinPolygonIndex = controlMesh.GetEdgePolygonIndex(twinIndex);
                     var twinPlaneIndex = twinPolygonIndex;//plane_indices[twin_polygon_index];
@@ -2694,7 +3095,9 @@ namespace RealtimeCSG
                     }
 
                     if (currPlaneIndex != twinPlaneIndex)
+                    {
                         continue;
+                    }
 
                     var srcIndex = ArrayUtility.IndexOf(currEdges, currIndex);
                     var dstIndex = ArrayUtility.IndexOf(controlMesh.Polygons[twinPolygonIndex].EdgeIndices, twinIndex);
@@ -2739,7 +3142,9 @@ namespace RealtimeCSG
                 for (int i = 0; i < controlMesh.Edges.Length; i++)
                 {
                     if (controlMesh.Edges[i].PolygonIndex >= polygonIndex)
+                    {
                         controlMesh.Edges[i].PolygonIndex--;
+                    }
                 }
             }
 
@@ -2766,7 +3171,10 @@ namespace RealtimeCSG
             public bool ContainsPlanes(int[] planeIndex)
             {
                 if (PlaneIndices.Count < 3)
+                {
                     return false;
+                }
+
                 var i = 0;
                 for (var n = 0; n < 3; n++)
                 {
@@ -2774,9 +3182,15 @@ namespace RealtimeCSG
                     {
                         if (i == PlaneIndices.Count ||
                             PlaneIndices[i] > planeIndex[n])
+                        {
                             return false;
+                        }
+
                         if (PlaneIndices[i] == planeIndex[n])
+                        {
                             break;
+                        }
+
                         i++;
                     }
                     i++;
@@ -2825,21 +3239,28 @@ namespace RealtimeCSG
                 shape.TexGens = new TexGen[shape.Surfaces.Length];
             }
             else
+            {
                 while (shape.TexGens.Length < shape.Surfaces.Length)
                 {
                     ArrayUtility.Add(ref shape.TexGens, shape.TexGens[shape.TexGens.Length - 1]);
                 }
+            }
+
             if (shape.TexGenFlags == null)
             {
                 shape.TexGenFlags = new TexGenFlags[shape.Surfaces.Length];
                 for (int i = 0; i < shape.TexGenFlags.Length; i++)
+                {
                     shape.TexGenFlags[i] = RealtimeCSG.CSGSettings.DefaultTexGenFlags;
+                }
             }
             else
+            {
                 while (shape.TexGenFlags.Length < shape.Surfaces.Length)
                 {
                     ArrayUtility.Add(ref shape.TexGenFlags, shape.TexGenFlags[shape.TexGenFlags.Length - 1]);
                 }
+            }
 
             for (var s = 0; s < shape.Surfaces.Length; s++)
             {
@@ -2849,8 +3270,15 @@ namespace RealtimeCSG
 
                 var scaleX = shape.Surfaces[s].Tangent.magnitude;
                 var scaleY = shape.Surfaces[s].BiNormal.magnitude;
-                if (Mathf.Abs(scaleX) < MathConstants.EqualityEpsilon) scaleX = 1;
-                if (Mathf.Abs(scaleY) < MathConstants.EqualityEpsilon) scaleY = 1;
+                if (Mathf.Abs(scaleX) < MathConstants.EqualityEpsilon)
+                {
+                    scaleX = 1;
+                }
+
+                if (Mathf.Abs(scaleY) < MathConstants.EqualityEpsilon)
+                {
+                    scaleY = 1;
+                }
 
                 shape.Surfaces[s].Tangent /= scaleX;
                 shape.Surfaces[s].BiNormal /= scaleY;
@@ -2870,13 +3298,16 @@ namespace RealtimeCSG
 
             var planeVertices = new List<int>[surfaceCount];
             for (int i = 0; i < surfaceCount; i++)
+            {
                 planeVertices[i] = new List<int>();
+            }
 
             // rotate/scale the planes into object space
             var planes = new CSGPlane[surfaceCount];
             for (var i = 0; i < surfaceCount; i++)
+            {
                 planes[i] = shape.Surfaces[i].Plane;
-
+            }
 
             {
                 var intersectingPlanes = new List<int>(3 * surfaceCount);
@@ -2904,13 +3335,17 @@ namespace RealtimeCSG
                             for (var i = pointIntersections.Count - 1; i >= 0; i--)
                             {
                                 if (!pointIntersections[i].ContainsPlanes(curPlaneIndex))
+                                {
                                     continue;
+                                }
 
                                 found = true;
                                 break;
                             }
                             if (found)
+                            {
                                 continue;
+                            }
 
                             // Calculate the intersection
                             var vertex = CSGPlane.Intersection(curPlane[0],
@@ -2936,22 +3371,30 @@ namespace RealtimeCSG
                                 if (planeIndex4 == curPlaneIndex[0] ||
                                     planeIndex4 == curPlaneIndex[1] ||
                                     planeIndex4 == curPlaneIndex[2])
+                                {
                                     continue;
+                                }
 
                                 var plane4 = planes[planeIndex4];
                                 var side = plane4.Distance(vertex);
 
                                 if (side < -distanceEpsilon) // inside
+                                {
                                     continue;
+                                }
 
-                                if (side > distanceEpsilon)	// outside
+                                if (side > distanceEpsilon) // outside
+                                {
                                     // Intersection is outside of other planes
                                     goto SkipIntersection;
+                                }
 
                                 // intersects
                                 if (planeIndex4 < curPlaneIndex[2])
+                                {
                                     // Already found this vertex
                                     goto SkipIntersection;
+                                }
 
                                 // We've found another plane which goes trough our found intersection point
                                 intersectingPlanes.Add(planeIndex4);
@@ -2981,20 +3424,24 @@ namespace RealtimeCSG
                                         for (int n = 0; n < intersectingPlanes.Count; n++)
                                         {
                                             if (!pointIntersection.PlaneIndices.Contains(intersectingPlanes[n]))
+                                            {
                                                 pointIntersection.PlaneIndices.Add(intersectingPlanes[n]);
+                                            }
                                         }
                                         goto SkipIntersection;
                                     }
                                 }
                                 //*/
 
-                                var vertexIndex = (short)(vertices.Count);
+                                var vertexIndex = (short)vertices.Count;
                                 vertices.Add(vertex);
 
 
                                 //*
                                 for (int i = 0; i < intersectingPlanes.Count; i++)
+                                {
                                     planeVertices[intersectingPlanes[i]].Add(pointIntersections.Count);
+                                }
                                 //*/
 
                                 // Add intersection point to our list
@@ -3030,7 +3477,10 @@ namespace RealtimeCSG
                     for (var p2 = 0; p2 < p; p2++)
                     {
                         if (planeVertices[p].Count != planeVertices[p2].Count)
+                        {
                             continue;
+                        }
+
                         haveDuplicatePlane = true;
                         for (int j = 0; j < planeVertices[p].Count; j++)
                         {
@@ -3043,7 +3493,9 @@ namespace RealtimeCSG
                         }
                     }
                     if (!haveDuplicatePlane)
+                    {
                         continue;
+                    }
 #if DEBUG
                     Debug.LogWarning("Found duplicate plane in brush");
 #endif
@@ -3067,11 +3519,18 @@ namespace RealtimeCSG
                     for (int j = planeIndices.Count - 1; j >= 0; j--)
                     {
                         if (planeIndices[j] < p)
+                        {
                             continue;
+                        }
+
                         if (planeIndices[j] == p)
+                        {
                             planeIndices.RemoveAt(j);
+                        }
                         else
+                        {
                             planeIndices[j]--;
+                        }
                     }
                 }
             }
@@ -3082,7 +3541,9 @@ namespace RealtimeCSG
                 var intersection = pointIntersections[i];
                 var planeIndices = intersection.PlaneIndices;
                 if (planeIndices.Count >= 3)
+                {
                     continue;
+                }
 
                 for (int p = planeVertices.Length - 1; p >= 0; p--)
                 {
@@ -3090,14 +3551,19 @@ namespace RealtimeCSG
                     for (int v = verticesForPlane.Count - 1; v >= 0; v--)
                     {
                         if (verticesForPlane[v] < i)
+                        {
                             continue;
+                        }
+
                         if (verticesForPlane[v] == i)
                         {
                             verticesForPlane.RemoveAt(v);
                             needToCleanUpPlanesAgain = true;
                         }
                         else
+                        {
                             verticesForPlane[v]--;
+                        }
                     }
                 }
             }
@@ -3128,7 +3594,9 @@ namespace RealtimeCSG
                     vertexPlanes[p][v] = planes[p].Distance(vertices[v]);
                     if (vertexPlanes[p][v] > -MathConstants.DistanceEpsilon &&
                         vertexPlanes[p][v] < MathConstants.DistanceEpsilon)
+                    {
                         vertexPlanes[p][v] = 0;
+                    }
                 }
             }
 #endif
@@ -3140,7 +3608,9 @@ namespace RealtimeCSG
             //*
             var planeEdges = new List<EdgeIntersection>[surfaceCount];
             for (int i = 0; i < surfaceCount; i++)
+            {
                 planeEdges[i] = new List<EdgeIntersection>();
+            }
 
             for (int p = 0; p < planeVertices.Length; p++)
             {
@@ -3153,7 +3623,9 @@ namespace RealtimeCSG
                     {
                         var planeIndex0 = planesIndices0[i0];
                         if (planeIndex0 <= p)
+                        {
                             continue;
+                        }
 
                         for (int v1 = v0 + 1; v1 < verticesForPlane.Count; v1++)
                         {
@@ -3164,7 +3636,9 @@ namespace RealtimeCSG
                             {
                                 var planeIndex1 = planesIndices1[i1];
                                 if (planeIndex0 != planeIndex1)
+                                {
                                     continue;
+                                }
 
                                 // Create our found intersection edge
                                 var edgeIndex0 = edgeCount; edgeCount++;
@@ -3286,7 +3760,9 @@ namespace RealtimeCSG
                     for (int p = 0; p < pointIntersections.Count; p++)
                     {
                         if (pointIntersections[p].VertexIndex > vertexIndex1)
+                        {
                             pointIntersections[p].VertexIndex--;
+                        }
                     }
 
                     pointIntersections.RemoveAt(i);
@@ -3312,8 +3788,9 @@ namespace RealtimeCSG
                         else if (edgeIntersections[edge1Index].PlaneIndices[1] == edgeIntersections[edge2Index].PlaneIndices[0]) { planeOrder1 = 1; planeOrder2 = 0; }
                         else if (edgeIntersections[edge1Index].PlaneIndices[1] == edgeIntersections[edge2Index].PlaneIndices[1]) { planeOrder1 = 1; planeOrder2 = 1; }
                         else
+                        {
                             continue;
-
+                        }
 
                         int ingoingEdgeIndex;
                         int outgoingEdgeIndex;
@@ -3371,7 +3848,9 @@ namespace RealtimeCSG
 
             var edgeLookup = new int[edgeCount];
             for (var i = 0; i < edgeCount; i++)
+            {
                 edgeLookup[i] = -1;
+            }
 
             var polygonEdgeIndices = new List<int>(edgeCount);
 
@@ -3383,7 +3862,9 @@ namespace RealtimeCSG
             var polygons = new List<Polygon>();
             var edges = new List<HalfEdge>(edgeCount);
             for (var i = 0; i < edgeCount; i++)
+            {
                 edges.Add(new HalfEdge());
+            }
 
             for (var i = 0; i < edgeIntersections.Count; i++)
             {
@@ -3434,7 +3915,9 @@ namespace RealtimeCSG
                         }
                         polygonCount++;
                         if (polygonCount <= 10000)
+                        {
                             continue;
+                        }
 
 #if DEBUG
                         Debug.LogError("loop_counter > 10000");
@@ -3531,7 +4014,9 @@ namespace RealtimeCSG
         public static List<int> FindEdgeLoop(ControlMesh controlMesh, ref List<int> selectedEdges)
         {
             if (selectedEdges.Count == 0)
+            {
                 return null;
+            }
 
             var edgeLoop = new List<int>();
             var startEdgeIndex = selectedEdges.Count - 1;
@@ -3543,7 +4028,9 @@ namespace RealtimeCSG
             edgeLoop.Add(selectedEdge);
             selectedEdges.RemoveAt(startEdgeIndex);
             if (startTwinIndex != -1)
+            {
                 selectedEdges.RemoveAt(startTwinIndex);
+            }
 
             while (true)
             {
@@ -3554,14 +4041,18 @@ namespace RealtimeCSG
                     var currentVertexCurr = controlMesh.GetVertexIndex(currentEdge);
                     var currentVertexPrev = controlMesh.GetTwinEdgeVertexIndex(currentEdge);
                     if (currentVertexPrev != prevVertex)
+                    {
                         continue;
+                    }
 
                     edgeLoop.Add(currentEdge);
                     selectedEdges.RemoveAt(currentEdgeIndex);
 
                     var currentTwinIndex = selectedEdges.IndexOf(controlMesh.GetTwinEdgeIndex(currentEdge));
                     if (currentTwinIndex != -1)
+                    {
                         selectedEdges.RemoveAt(currentTwinIndex);
+                    }
 
                     found = true;
                     if (currentVertexCurr == startVertexPrev)
@@ -3573,7 +4064,9 @@ namespace RealtimeCSG
                     break;
                 }
                 if (!found)
+                {
                     return null;
+                }
             }
         }
 
@@ -3581,7 +4074,9 @@ namespace RealtimeCSG
         public static ControlMesh EnsureValidControlMesh(CSGBrush brush)
         {
             if (brush == null)
+            {
                 return null;
+            }
 
             var controlMesh = brush.ControlMesh;
             if (controlMesh == null ||
@@ -3611,8 +4106,15 @@ namespace RealtimeCSG
             var polygonIndex1 = controlMesh.GetEdgePolygonIndex(centerEdge);
             var polygonIndex2 = controlMesh.GetEdgePolygonIndex(centerTwinEdge);
 
-            if (polygonIndex1 >= 0) acceptableTopology.AcceptablePolygons.Add(polygonIndex1);
-            if (polygonIndex2 >= 0) acceptableTopology.AcceptablePolygons.Add(polygonIndex2);
+            if (polygonIndex1 >= 0)
+            {
+                acceptableTopology.AcceptablePolygons.Add(polygonIndex1);
+            }
+
+            if (polygonIndex2 >= 0)
+            {
+                acceptableTopology.AcceptablePolygons.Add(polygonIndex2);
+            }
 
             foreach (var polygonIndex in acceptableTopology.AcceptablePolygons)
             {
@@ -3621,7 +4123,9 @@ namespace RealtimeCSG
                 {
                     var edgeIndex = edgeIndices[e];
                     if (controlMesh.GetTwinEdgeVertexIndex(edgeIndex) == currentOverPoint)
+                    {
                         continue;
+                    }
 
                     acceptableTopology.AcceptableEdges.Add(edgeIndex);
                     acceptableTopology.AcceptablePoints.Add(controlMesh.GetVertexIndex(edgeIndex));
@@ -3650,7 +4154,9 @@ namespace RealtimeCSG
                         var edgeIndex = edgeIndices[e];
                         if (edgeIndex == iterator ||
                             controlMesh.GetTwinEdgeVertexIndex(edgeIndex) == currentOverPoint)
+                        {
                             continue;
+                        }
 
                         acceptableTopology.AcceptableEdges.Add(edgeIndex);
                         acceptableTopology.AcceptablePoints.Add(controlMesh.GetVertexIndex(edgeIndex));
@@ -3677,7 +4183,10 @@ namespace RealtimeCSG
         {
             var result = true;
             for (var i = 0; i < brushes.Length; i++)
+            {
                 result = RebuildShape(brushes[i]) && result;
+            }
+
             return result;
         }
 
@@ -3686,7 +4195,9 @@ namespace RealtimeCSG
             if (brush == null ||
                 srcControlMesh == null ||
                 srcShape == null)
+            {
                 return false;
+            }
 
             var triangulatedControlMesh = srcControlMesh;
             var triangulatedShape = srcShape;
@@ -3723,7 +4234,10 @@ namespace RealtimeCSG
         public static bool RebuildShape(CSGBrush brush)
         {
             if (brush == null || brush.ControlMesh == null || brush.Shape == null)
+            {
                 return false;
+            }
+
             return RebuildShapeFrom(brush, brush.ControlMesh.Clone(), brush.Shape.Clone());
         }
 
@@ -3731,7 +4245,9 @@ namespace RealtimeCSG
         {
             var isConvex = true;
             if (srcShape == null || controlMesh == null)
+            {
                 return false;
+            }
 
             for (var j = 0; isConvex && j < controlMesh.Vertices.Length; j++)
             {
@@ -3753,10 +4269,14 @@ namespace RealtimeCSG
         public static bool BuildMesh(CSGBrush brush, ControlMesh controlMesh, Shape srcShape)
         {
             if (srcShape == null || controlMesh == null)
+            {
                 return false;
+            }
 
             if (IsConvex(controlMesh, srcShape))
+            {
                 return UpdateBrushMesh(brush, controlMesh, srcShape);
+            }
 
             controlMesh.Valid = false;
             return false;
@@ -3869,7 +4389,9 @@ namespace RealtimeCSG
 
             var vertexIndices = new short[controlMesh.Edges.Length];
             for (var e = 0; e < controlMesh.Edges.Length; e++)
+            {
                 vertexIndices[e] = controlMesh.Edges[e].VertexIndex;
+            }
 
             for (var e = 0; e < controlMesh.Edges.Length; e++)
             {
@@ -3901,7 +4423,9 @@ namespace RealtimeCSG
                 {
                     var vertex2 = vertices[index2];
                     if (!((vertex1 - vertex2).sqrMagnitude < MathConstants.EqualityEpsilon))
+                    {
                         continue;
+                    }
 
                     //if ((pointSelectState[index1] & SelectState.Selected) != SelectState.Selected &&
                     //	(pointSelectState[index2] & SelectState.Selected) != SelectState.Selected)
@@ -3920,18 +4444,24 @@ namespace RealtimeCSG
                         }
 
                         if (vertexIndex1 != index2 || vertexIndex2 != index1)
+                        {
                             continue;
+                        }
 
                         found = true;
                         break;
                     }
 
                     if (found)
+                    {
                         foundVerticesToRemove.Add((short)index1);
+                    }
                 }
             }
             if (foundVerticesToRemove.Count == 0)
+            {
                 return null;
+            }
 
             var foundVerticesToRemoveArray = foundVerticesToRemove.ToArray();
             Array.Sort(foundVerticesToRemoveArray);
@@ -3951,7 +4481,9 @@ namespace RealtimeCSG
                 {
                     var vertex2 = vertices[index2];
                     if (!((vertex1 - vertex2).sqrMagnitude < MathConstants.EqualityEpsilon))
+                    {
                         continue;
+                    }
 
                     var found = false;
                     for (var e = 0; e < edges.Length; e++)
@@ -3966,18 +4498,24 @@ namespace RealtimeCSG
                         }
 
                         if (vertexIndex1 != index2 || vertexIndex2 != index1)
+                        {
                             continue;
+                        }
 
                         found = true;
                         break;
                     }
 
                     if (found)
+                    {
                         foundVerticesToRemove.Add((short)index1);
+                    }
                 }
             }
             if (foundVerticesToRemove.Count == 0)
+            {
                 return null;
+            }
 
             var foundVerticesToRemoveArray = foundVerticesToRemove.ToArray();
             Array.Sort(foundVerticesToRemoveArray);
@@ -3988,24 +4526,34 @@ namespace RealtimeCSG
         {
             if (brushes == null ||
                 controlMeshStates == null)
+            {
                 return;
+            }
 
             for (var b = 0; b < brushes.Length; b++)
             {
                 var brush = brushes[b];
                 if (!brush)
+                {
                     continue;
+                }
 
                 if (b >= controlMeshStates.Length)
+                {
                     continue;
+                }
 
                 var meshState = controlMeshStates[b];
                 if (meshState == null)
+                {
                     continue;
+                }
 
                 var deletePoints = FindDuplicateVerticesToRemove(brush, meshState);
                 if (deletePoints == null)
+                {
                     continue;
+                }
 
                 var controlMesh = brush.ControlMesh.Clone();
                 var shape = brush.Shape.Clone();
@@ -4023,11 +4571,15 @@ namespace RealtimeCSG
         {
             if (!brush ||
                 controlMesh == null)
+            {
                 return false;
+            }
 
             var deletePoints = FindDuplicateVerticesToRemove(brush);
             if (deletePoints == null)
+            {
                 return false;
+            }
 
             controlMesh = controlMesh.Clone();
             shape = shape.Clone();
@@ -4038,7 +4590,9 @@ namespace RealtimeCSG
         public static void MergeHoverPolygonPoints(CSGBrush brush, int polygonIndex)
         {
             if (brush == null)
+            {
                 return;
+            }
 
             var controlMesh = brush.ControlMesh;
             var shape = brush.Shape;
@@ -4107,18 +4661,24 @@ namespace RealtimeCSG
         {
             if (brushes == null ||
                 controlMeshStates == null)
+            {
                 return;
+            }
 
             for (var b = 0; b < brushes.Length; b++)
             {
                 var brush = brushes[b];
                 if (!brush ||
                     b >= controlMeshStates.Length)
+                {
                     continue;
+                }
 
                 var meshState = controlMeshStates[b];
                 if (meshState == null)
+                {
                     continue;
+                }
 
                 var controlMesh = brush.ControlMesh;
                 var shape = brush.Shape;
@@ -4127,7 +4687,9 @@ namespace RealtimeCSG
                 for (var e = meshState.Selection.Edges.Length - 1; e >= 0; e--)
                 {
                     if ((meshState.Selection.Edges[e] & SelectState.Selected) != SelectState.Selected)
+                    {
                         continue;
+                    }
 
                     var halfEdgeIndex = meshState.EdgeStateToHalfEdge[e];
                     var twinEdgeIndex = controlMesh.GetTwinEdgeIndex(halfEdgeIndex);
@@ -4170,7 +4732,9 @@ namespace RealtimeCSG
                 var controlPoints = meshState.GetSelectedPointIndices();
 
                 if (controlPoints == null)
+                {
                     continue;
+                }
 
                 var controlPointArray = controlPoints.ToArray();
                 Array.Sort(controlPointArray);

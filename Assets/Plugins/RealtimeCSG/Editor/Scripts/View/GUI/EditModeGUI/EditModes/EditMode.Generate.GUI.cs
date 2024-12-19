@@ -45,7 +45,10 @@ namespace RealtimeCSG
                         buttonArea.height = 13;
                         buttonArea.width = 13;
                         if (GUI.Button(buttonArea, GUIContent.none, "WinBtnClose"))
+                        {
                             EditModeToolWindowSceneGUI.GetWindow();
+                        }
+
                         TooltipUtility.SetToolTip(CSG_GUIStyleUtility.PopOutTooltip, buttonArea);
 
                         int controlID = GUIUtility.GetControlID(SceneViewMeshOverlayHash, FocusType.Keyboard, currentArea);
@@ -75,9 +78,14 @@ namespace RealtimeCSG
             EditorGUI.BeginDisabledGroup(!enabled);
             {
                 if (isSceneGUI)
+                {
                     GUILayout.BeginVertical(GUI.skin.box, Width100);
+                }
                 else
+                {
                     GUILayout.BeginVertical(GUIStyle.none);
+                }
+
                 {
                     bool mixedValues = !enabled;
                     CSGOperationType operation = generator.CurrentCSGOperationType;
@@ -130,7 +138,9 @@ namespace RealtimeCSG
                     EditorGUI.EndDisabledGroup();
                 }
                 if (isSceneGUI)
+                {
                     GUILayout.EndVertical();
+                }
             }
             GUILayout.EndHorizontal();
             if (isSceneGUI)

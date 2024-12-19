@@ -27,7 +27,9 @@ namespace RealtimeCSG
             get
             {
                 if (m_InfoGUIBGTex == null)
+                {
                     m_InfoGUIBGTex = Resources.Load<Texture2D>("GUI/infobg_blk");
+                }
 
                 return m_InfoGUIBGTex;
             }

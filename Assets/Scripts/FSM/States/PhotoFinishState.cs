@@ -33,7 +33,7 @@ namespace Assets.Scripts.FSM.States
             {
                 //Enable our various components (in case we skipped here via debug statements)
                 var raceManager = StateManager.instance.stateDictionary[GAME_STATE.RACE].GetComponent<RaceState>();
-                StateManager.instance.EnableRaceComponents(true); 
+                StateManager.instance.EnableRaceComponents(true);
                 StateManager.instance.players.ForEach(p =>
                 {
                     p.isPhotoFinish = true;

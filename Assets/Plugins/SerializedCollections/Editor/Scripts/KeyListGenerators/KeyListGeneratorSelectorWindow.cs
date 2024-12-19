@@ -93,14 +93,19 @@ namespace AYellowpaper.SerializedCollections.KeysGenerators
         private void InitializeModificationToggle(RadioButton obj)
         {
             if ((ModificationType)obj.userData == _modificationType)
+            {
                 obj.value = true;
+            }
+
             obj.RegisterValueChangedCallback(OnModificationToggleClicked);
         }
 
         private void OnModificationToggleClicked(ChangeEvent<bool> evt)
         {
             if (!evt.newValue)
+            {
                 return;
+            }
 
             var modificationType = (ModificationType)((VisualElement)evt.target).userData;
             _modificationType = modificationType;
@@ -130,13 +135,17 @@ namespace AYellowpaper.SerializedCollections.KeysGenerators
             Undo.undoRedoPerformed -= HandleUndoCallback;
             Undo.RevertAllDownToGroup(_undoStart);
             foreach (var keyGenerator in _keysGenerators)
+            {
                 DestroyImmediate(keyGenerator.Value);
+            }
         }
 
         private void OnGeneratorClicked(ChangeEvent<bool> evt)
         {
             if (!evt.newValue)
+            {
                 return;
+            }
 
             SetGeneratorIndex((int)(evt.target as VisualElement).userData);
         }
@@ -158,11 +167,16 @@ namespace AYellowpaper.SerializedCollections.KeysGenerators
         {
             var targetType = _generatorsData[_selectedIndex].GeneratorType;
             if (_generator != null && _generator.GetType() == targetType)
+            {
                 return;
+            }
 
             _generator = GetOrCreateKeysGenerator(targetType);
             if (_editor != null)
+            {
                 DestroyImmediate(_editor);
+            }
+
             _editor = UnityEditor.Editor.CreateEditor(_generator);
 
             UpdateDetailsText();

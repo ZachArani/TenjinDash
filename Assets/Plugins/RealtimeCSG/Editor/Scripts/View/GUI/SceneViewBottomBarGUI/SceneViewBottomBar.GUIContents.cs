@@ -69,7 +69,9 @@ namespace RealtimeCSG
         static void InitStyles()
         {
             if (localStyles)
+            {
                 return;
+            }
 
             miniTextStyle = new GUIStyle(EditorStyles.miniLabel);
             miniTextStyle.contentOffset = new Vector2(0, -1);

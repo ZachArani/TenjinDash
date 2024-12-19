@@ -19,18 +19,29 @@ namespace UnityFBXExporter
         public void OnPreprocessModel()
         {
             if (!modify)
+            {
                 return;
+            }
+
             var modelImporter = assetImporter as ModelImporter;
             modelImporter.materialName = ModelImporterMaterialName.BasedOnMaterialName;
             if (hasNormals)
+            {
                 modelImporter.importNormals = ModelImporterNormals.Import;
+            }
             else
+            {
                 modelImporter.importNormals = ModelImporterNormals.None;
+            }
 
             if (hasTangents)
+            {
                 modelImporter.importTangents = ModelImporterTangents.Import;
+            }
             else
+            {
                 modelImporter.importTangents = ModelImporterTangents.None;
+            }
 
             modelImporter.generateSecondaryUV = true;
             modelImporter.addCollider = false;
@@ -40,7 +51,9 @@ namespace UnityFBXExporter
             modelImporter.importMaterials = hasMaterials;
 #endif
             if (hasMaterials && !copyMaterials)
+            {
                 modelImporter.materialSearch = ModelImporterMaterialSearch.Everywhere;
+            }
         }
     }
 #endif

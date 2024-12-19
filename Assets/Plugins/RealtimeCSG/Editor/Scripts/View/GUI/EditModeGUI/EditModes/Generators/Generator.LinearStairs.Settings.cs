@@ -29,63 +29,63 @@ namespace RealtimeCSG
         public float StepDepth
         {
             get { return stepDepth; }
-            private set { if (stepDepth == value) return; stepDepth = value; RealtimeCSG.CSGSettings.LinearStairsStepLength = value; RealtimeCSG.CSGSettings.Save(); }
+            private set { if (stepDepth == value) { return; } stepDepth = value; RealtimeCSG.CSGSettings.LinearStairsStepLength = value; RealtimeCSG.CSGSettings.Save(); }
         }
 
         [SerializeField] float stepHeight;
         public float StepHeight
         {
             get { return stepHeight; }
-            private set { if (stepHeight == value) return; stepHeight = value; RealtimeCSG.CSGSettings.LinearStairsStepHeight = value; RealtimeCSG.CSGSettings.Save(); }
+            private set { if (stepHeight == value) { return; } stepHeight = value; RealtimeCSG.CSGSettings.LinearStairsStepHeight = value; RealtimeCSG.CSGSettings.Save(); }
         }
 
         [SerializeField] float stairsWidth;
         public float StairsWidth
         {
             get { return stairsWidth; }
-            private set { if (stairsWidth == value) return; stairsWidth = value; RealtimeCSG.CSGSettings.LinearStairsStepWidth = value; RealtimeCSG.CSGSettings.Save(); }
+            private set { if (stairsWidth == value) { return; } stairsWidth = value; RealtimeCSG.CSGSettings.LinearStairsStepWidth = value; RealtimeCSG.CSGSettings.Save(); }
         }
 
         [SerializeField] int totalSteps;
         public int TotalSteps
         {
             get { return Mathf.Clamp(totalSteps, 1, kMaxSteps); }
-            private set { if (totalSteps == value) return; totalSteps = Mathf.Clamp(value, 1, kMaxSteps); RealtimeCSG.CSGSettings.LinearStairsTotalSteps = value; RealtimeCSG.CSGSettings.Save(); }
+            private set { if (totalSteps == value) { return; } totalSteps = Mathf.Clamp(value, 1, kMaxSteps); RealtimeCSG.CSGSettings.LinearStairsTotalSteps = value; RealtimeCSG.CSGSettings.Save(); }
         }
 
         [SerializeField] float stairsDepth;
         public float StairsDepth
         {
             get { return stairsDepth; }
-            private set { if (stairsDepth == value) return; stairsDepth = value; RealtimeCSG.CSGSettings.LinearStairsLength = value; RealtimeCSG.CSGSettings.Save(); }
+            private set { if (stairsDepth == value) { return; } stairsDepth = value; RealtimeCSG.CSGSettings.LinearStairsLength = value; RealtimeCSG.CSGSettings.Save(); }
         }
 
         [SerializeField] float stairsHeight;
         public float StairsHeight
         {
             get { return stairsHeight; }
-            private set { if (stairsHeight == value) return; stairsHeight = value; RealtimeCSG.CSGSettings.LinearStairsHeight = value; RealtimeCSG.CSGSettings.Save(); }
+            private set { if (stairsHeight == value) { return; } stairsHeight = value; RealtimeCSG.CSGSettings.LinearStairsHeight = value; RealtimeCSG.CSGSettings.Save(); }
         }
 
         [SerializeField] float extraDepth;
         public float ExtraDepth
         {
             get { return extraDepth; }
-            private set { if (extraDepth == value) return; extraDepth = value; RealtimeCSG.CSGSettings.LinearStairsLengthOffset = value; RealtimeCSG.CSGSettings.Save(); }
+            private set { if (extraDepth == value) { return; } extraDepth = value; RealtimeCSG.CSGSettings.LinearStairsLengthOffset = value; RealtimeCSG.CSGSettings.Save(); }
         }
 
         [SerializeField] float extraHeight;
         public float ExtraHeight
         {
             get { return extraHeight; }
-            private set { if (extraHeight == value) return; extraHeight = value; RealtimeCSG.CSGSettings.LinearStairsHeightOffset = value; RealtimeCSG.CSGSettings.Save(); }
+            private set { if (extraHeight == value) { return; } extraHeight = value; RealtimeCSG.CSGSettings.LinearStairsHeightOffset = value; RealtimeCSG.CSGSettings.Save(); }
         }
 
         [SerializeField] StairsBottom stairsBottom;
         public StairsBottom StairsBottom
         {
             get { return stairsBottom; }
-            set { if (stairsBottom == value) return; stairsBottom = value; RealtimeCSG.CSGSettings.LinearStairsBottom = value; RealtimeCSG.CSGSettings.Save(); }
+            set { if (stairsBottom == value) { return; } stairsBottom = value; RealtimeCSG.CSGSettings.LinearStairsBottom = value; RealtimeCSG.CSGSettings.Save(); }
         }
 
 
@@ -98,9 +98,14 @@ namespace RealtimeCSG
         {
             var newBounds = bounds;
             if (newWidth >= 0)
+            {
                 newBounds.MaxX = newBounds.MinX + newWidth;
+            }
             else
+            {
                 newBounds.MinX = newBounds.MaxX - newWidth;
+            }
+
             SetBounds(newBounds);
         }
 
@@ -108,9 +113,14 @@ namespace RealtimeCSG
         {
             var newBounds = bounds;
             if (newHeight >= 0)
+            {
                 newBounds.MaxY = newBounds.MinY + newHeight;
+            }
             else
+            {
                 newBounds.MinY = newBounds.MaxY - newHeight;
+            }
+
             SetBounds(newBounds);
         }
 
@@ -118,9 +128,14 @@ namespace RealtimeCSG
         {
             var newBounds = bounds;
             if (newDepth >= 0)
+            {
                 newBounds.MaxZ = newBounds.MinZ + newDepth;
+            }
             else
+            {
                 newBounds.MinZ = newBounds.MaxZ - newDepth;
+            }
+
             SetBounds(newBounds);
         }
 
@@ -131,9 +146,21 @@ namespace RealtimeCSG
             stairsHeight = GeometryUtility.CleanLength(boundsSize.y);
             stairsDepth = GeometryUtility.CleanLength(boundsSize.z);
 
-            if (float.IsInfinity(stairsWidth) || float.IsNaN(stairsWidth)) stairsWidth = 1.0f;
-            if (float.IsInfinity(stairsDepth) || float.IsNaN(stairsDepth)) stairsDepth = stepDepth;
-            if (float.IsInfinity(stairsHeight) || float.IsNaN(stairsHeight)) stairsHeight = stepHeight;
+            if (float.IsInfinity(stairsWidth) || float.IsNaN(stairsWidth))
+            {
+                stairsWidth = 1.0f;
+            }
+
+            if (float.IsInfinity(stairsDepth) || float.IsNaN(stairsDepth))
+            {
+                stairsDepth = stepDepth;
+            }
+
+            if (float.IsInfinity(stairsHeight) || float.IsNaN(stairsHeight))
+            {
+                stairsHeight = stepHeight;
+            }
+
             stairsWidth = Mathf.Max(0, stairsWidth);
             stairsDepth = Mathf.Max(0, stairsDepth);
             stairsHeight = Mathf.Max(0, stairsHeight);
@@ -142,8 +169,8 @@ namespace RealtimeCSG
             {
                 if (!bounds.IsEmpty())
                 {
-                    float offsetY = (newBounds.MaxY - bounds.MaxY) + (bounds.MinY - newBounds.MinY);
-                    float offsetZ = (newBounds.MaxZ - bounds.MaxZ) + (bounds.MinZ - newBounds.MinZ);
+                    float offsetY = newBounds.MaxY - bounds.MaxY + (bounds.MinY - newBounds.MinY);
+                    float offsetZ = newBounds.MaxZ - bounds.MaxZ + (bounds.MinZ - newBounds.MinZ);
 
                     if (offsetY != 0) // scaling in height direction
                     {
@@ -151,7 +178,7 @@ namespace RealtimeCSG
                         {
                             if (extraDepth > 0)
                             {
-                                extraDepth = stairsDepth - ((Mathf.Max(0, stairsHeight - extraHeight) / stepHeight) * stepDepth);
+                                extraDepth = stairsDepth - (Mathf.Max(0, stairsHeight - extraHeight) / stepHeight * stepDepth);
                             }
                             else
                             {
@@ -162,7 +189,7 @@ namespace RealtimeCSG
                         else // shrinking
                         {
                             extraHeight += offsetY;
-                            extraDepth = stairsDepth - ((Mathf.Max(0, stairsHeight - extraHeight) / stepHeight) * stepDepth);
+                            extraDepth = stairsDepth - (Mathf.Max(0, stairsHeight - extraHeight) / stepHeight * stepDepth);
                         }
                     }
 
@@ -172,24 +199,39 @@ namespace RealtimeCSG
                         {
                             if (extraHeight > 0)
                             {
-                                extraHeight = stairsHeight - ((Mathf.Max(0, stairsDepth - extraDepth) / stepDepth) * stepHeight);
+                                extraHeight = stairsHeight - (Mathf.Max(0, stairsDepth - extraDepth) / stepDepth * stepHeight);
                             }
                             else
                             {
-                                extraDepth += offsetZ; if (extraDepth < 0) extraDepth = 0;
+                                extraDepth += offsetZ; if (extraDepth < 0)
+                                {
+                                    extraDepth = 0;
+                                }
+
                                 extraHeight -= offsetZ;
                             }
                         }
                         else // shrinking
                         {
-                            if (extraDepth > 0) extraDepth = Mathf.Max(0, extraDepth + offsetZ);
-                            extraHeight = stairsHeight - ((Mathf.Max(0, stairsDepth - extraDepth) / stepDepth) * stepHeight);
+                            if (extraDepth > 0)
+                            {
+                                extraDepth = Mathf.Max(0, extraDepth + offsetZ);
+                            }
+
+                            extraHeight = stairsHeight - (Mathf.Max(0, stairsDepth - extraDepth) / stepDepth * stepHeight);
                         }
-                        extraDepth = stairsDepth - ((Mathf.Max(0, stairsHeight - extraHeight) / stepHeight) * stepDepth);
+                        extraDepth = stairsDepth - (Mathf.Max(0, stairsHeight - extraHeight) / stepHeight * stepDepth);
                     }
 
-                    if (extraDepth < 0) extraDepth = 0;
-                    if (extraHeight < 0) extraHeight = 0;
+                    if (extraDepth < 0)
+                    {
+                        extraDepth = 0;
+                    }
+
+                    if (extraHeight < 0)
+                    {
+                        extraHeight = 0;
+                    }
                 }
                 else
                 {
@@ -213,8 +255,8 @@ namespace RealtimeCSG
         public void SetExtraHeight(float newHeightOffset)
         {
             extraHeight = Mathf.Min(stairsHeight, Mathf.Max(0, newHeightOffset));
-            var totalStepHeight = (stairsHeight - extraHeight);
-            var totalStepLength = (stairsDepth - extraDepth);
+            var totalStepHeight = stairsHeight - extraHeight;
+            var totalStepLength = stairsDepth - extraDepth;
             var totalHeightSteps = Mathf.Max(1, totalStepHeight / stepHeight);
             stepDepth = Mathf.Max(kMinStepDepth, totalStepLength / totalHeightSteps);
             CalcTotalSteps();
@@ -225,8 +267,8 @@ namespace RealtimeCSG
             CalcTotalSteps();
             var minTotalStepLength = totalSteps * kMinStepDepth;
             extraDepth = Mathf.Min(stairsDepth - minTotalStepLength, Mathf.Max(0, newLengthOffset));
-            var totalStepHeight = (stairsHeight - extraHeight);
-            var totalStepLength = (stairsDepth - extraDepth);
+            var totalStepHeight = stairsHeight - extraHeight;
+            var totalStepLength = stairsDepth - extraDepth;
             var totalHeightSteps = Mathf.Max(1, totalStepHeight / stepHeight);
             stepDepth = Mathf.Max(kMinStepDepth, totalStepLength / totalHeightSteps);
         }
@@ -237,8 +279,15 @@ namespace RealtimeCSG
             stepDepth = Mathf.Max(kMinStepDepth, newStepDepth);
             var totalDepth = (stepDepth * totalSteps) + extraDepth;
             var newBounds = bounds;
-            if (totalDepth >= 0) newBounds.MaxZ = newBounds.MinZ + totalDepth;
-            else newBounds.MinZ = newBounds.MaxZ - totalDepth;
+            if (totalDepth >= 0)
+            {
+                newBounds.MaxZ = newBounds.MinZ + totalDepth;
+            }
+            else
+            {
+                newBounds.MinZ = newBounds.MaxZ - totalDepth;
+            }
+
             SetBounds(newBounds, autoAdjust: false);
             CalcTotalSteps();
         }
@@ -251,17 +300,31 @@ namespace RealtimeCSG
 
         public void SetTotalSteps(int newTotalSteps)
         {
-            extraDepth = stairsDepth - ((Mathf.Max(0, stairsHeight - extraHeight) / stepHeight) * stepDepth);
+            extraDepth = stairsDepth - (Mathf.Max(0, stairsHeight - extraHeight) / stepHeight * stepDepth);
             var totalDepth = (stepDepth * newTotalSteps) + extraDepth;
             var totalHeight = (stepHeight * newTotalSteps) + extraHeight;
 
             totalSteps = newTotalSteps;
 
             var newBounds = bounds;
-            if (totalHeight >= 0) newBounds.MaxY = newBounds.MinY + totalHeight;
-            else newBounds.MinY = newBounds.MaxY - totalHeight;
-            if (totalDepth >= 0) newBounds.MaxZ = newBounds.MinZ + totalDepth;
-            else newBounds.MinZ = newBounds.MaxZ - totalDepth;
+            if (totalHeight >= 0)
+            {
+                newBounds.MaxY = newBounds.MinY + totalHeight;
+            }
+            else
+            {
+                newBounds.MinY = newBounds.MaxY - totalHeight;
+            }
+
+            if (totalDepth >= 0)
+            {
+                newBounds.MaxZ = newBounds.MinZ + totalDepth;
+            }
+            else
+            {
+                newBounds.MinZ = newBounds.MaxZ - totalDepth;
+            }
+
             SetBounds(newBounds, autoAdjust: false);
         }
 
@@ -276,7 +339,9 @@ namespace RealtimeCSG
         public void SetPoint(int index, Vector3 position)
         {
             if (vertices.Length < index)
+            {
                 return;
+            }
 
             if (vertices.Length == index)
             {
@@ -318,13 +383,17 @@ namespace RealtimeCSG
         public void ProjectShapeOnBuildPlane(CSGPlane plane)
         {
             for (int i = 0; i < vertices.Length; i++)
+            {
                 vertices[i] = plane.Project(vertices[i]);
+            }
         }
 
         public void MoveShape(Vector3 offset)
         {
             for (int i = 0; i < vertices.Length; i++)
+            {
                 vertices[i] = vertices[i] + offset;
+            }
         }
 
         public Vector3 GetCenter(CSGPlane plane)
@@ -338,7 +407,9 @@ namespace RealtimeCSG
             bounds.Reset();
 
             for (int i = 0; i < vertices.Length; i++)
+            {
                 bounds.Extend(rotation * vertices[i]);
+            }
 
             return bounds;
         }

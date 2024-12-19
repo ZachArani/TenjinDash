@@ -19,7 +19,7 @@ namespace PathCreation.Utility
         public static Vector3 EvaluateCurve(Vector3 a1, Vector3 c1, Vector3 c2, Vector3 a2, float t)
         {
             t = Mathf.Clamp01(t);
-            return (1 - t) * (1 - t) * (1 - t) * a1 + 3 * (1 - t) * (1 - t) * t * c1 + 3 * (1 - t) * t * t * c2 + t * t * t * a2;
+            return ((1 - t) * (1 - t) * (1 - t) * a1) + (3 * (1 - t) * (1 - t) * t * c1) + (3 * (1 - t) * t * t * c2) + (t * t * t * a2);
         }
 
         /// Returns a vector tangent to the point at time 't'
@@ -34,7 +34,7 @@ namespace PathCreation.Utility
         public static Vector3 EvaluateCurveDerivative(Vector3 a1, Vector3 c1, Vector3 c2, Vector3 a2, float t)
         {
             t = Mathf.Clamp01(t);
-            return 3 * (1 - t) * (1 - t) * (c1 - a1) + 6 * (1 - t) * t * (c2 - c1) + 3 * t * t * (a2 - c2);
+            return (3 * (1 - t) * (1 - t) * (c1 - a1)) + (6 * (1 - t) * t * (c2 - c1)) + (3 * t * t * (a2 - c2));
         }
 
         /// Returns the second derivative of the curve at time 't'
@@ -47,7 +47,7 @@ namespace PathCreation.Utility
         public static Vector3 EvaluateCurveSecondDerivative(Vector3 a1, Vector3 c1, Vector3 c2, Vector3 a2, float t)
         {
             t = Mathf.Clamp01(t);
-            return 6 * (1 - t) * (c2 - 2 * c1 + a1) + 6 * t * (a2 - 2 * c2 + c1);
+            return (6 * (1 - t) * (c2 - (2 * c1) + a1)) + (6 * t * (a2 - (2 * c2) + c1));
         }
 
         /// Calculates the normal vector (vector perpendicular to the curve) at specified time
@@ -100,7 +100,7 @@ namespace PathCreation.Utility
         public static float EstimateCurveLength(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
         {
             float controlNetLength = (p0 - p1).magnitude + (p1 - p2).magnitude + (p2 - p3).magnitude;
-            float estimatedCurveLength = (p0 - p3).magnitude + controlNetLength / 2f;
+            float estimatedCurveLength = (p0 - p3).magnitude + (controlNetLength / 2f);
             return estimatedCurveLength;
         }
 
@@ -108,8 +108,8 @@ namespace PathCreation.Utility
         public static List<float> ExtremePointTimes(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
         {
             // coefficients of derivative function
-            Vector3 a = 3 * (-p0 + 3 * p1 - 3 * p2 + p3);
-            Vector3 b = 6 * (p0 - 2 * p1 + p2);
+            Vector3 a = 3 * (-p0 + (3 * p1) - (3 * p2) + p3);
+            Vector3 b = 6 * (p0 - (2 * p1) + p2);
             Vector3 c = 3 * (p1 - p0);
 
             List<float> times = new List<float>();
@@ -128,7 +128,7 @@ namespace PathCreation.Utility
             // from quadratic equation: y = [-b +- sqrt(b^2 - 4ac)]/2a
             if (a != 0)
             {
-                float discriminant = b * b - 4 * a * c;
+                float discriminant = (b * b) - (4 * a * c);
                 if (discriminant >= 0)
                 {
                     float s = Mathf.Sqrt(discriminant);

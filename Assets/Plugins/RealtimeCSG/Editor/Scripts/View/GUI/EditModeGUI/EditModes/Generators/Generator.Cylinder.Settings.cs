@@ -17,32 +17,32 @@ namespace RealtimeCSG
         public int circleSides
         {
             get { return Mathf.Max(3, RealtimeCSG.CSGSettings.CircleSides); }
-            set { if (RealtimeCSG.CSGSettings.CircleSides == value) return; RealtimeCSG.CSGSettings.CircleSides = value; RealtimeCSG.CSGSettings.Save(); }
+            set { if (RealtimeCSG.CSGSettings.CircleSides == value) { return; } RealtimeCSG.CSGSettings.CircleSides = value; RealtimeCSG.CSGSettings.Save(); }
         }
         public float circleOffset
         {
             get { return RealtimeCSG.CSGSettings.CircleOffset; }
-            set { if (RealtimeCSG.CSGSettings.CircleOffset == value) return; RealtimeCSG.CSGSettings.CircleOffset = value; RealtimeCSG.CSGSettings.Save(); }
+            set { if (RealtimeCSG.CSGSettings.CircleOffset == value) { return; } RealtimeCSG.CSGSettings.CircleOffset = value; RealtimeCSG.CSGSettings.Save(); }
         }
         public bool circleSmoothShading
         {
             get { return RealtimeCSG.CSGSettings.CircleSmoothShading; }
-            set { if (RealtimeCSG.CSGSettings.CircleSmoothShading == value) return; RealtimeCSG.CSGSettings.CircleSmoothShading = value; RealtimeCSG.CSGSettings.Save(); }
+            set { if (RealtimeCSG.CSGSettings.CircleSmoothShading == value) { return; } RealtimeCSG.CSGSettings.CircleSmoothShading = value; RealtimeCSG.CSGSettings.Save(); }
         }
         public bool circleSingleSurfaceEnds
         {
             get { return RealtimeCSG.CSGSettings.CircleSingleSurfaceEnds; }
-            set { if (RealtimeCSG.CSGSettings.CircleSingleSurfaceEnds == value) return; RealtimeCSG.CSGSettings.CircleSingleSurfaceEnds = value; RealtimeCSG.CSGSettings.Save(); }
+            set { if (RealtimeCSG.CSGSettings.CircleSingleSurfaceEnds == value) { return; } RealtimeCSG.CSGSettings.CircleSingleSurfaceEnds = value; RealtimeCSG.CSGSettings.Save(); }
         }
         public bool circleDistanceToSide
         {
             get { return RealtimeCSG.CSGSettings.CircleDistanceToSide; }
-            set { if (RealtimeCSG.CSGSettings.CircleDistanceToSide == value) return; RealtimeCSG.CSGSettings.CircleDistanceToSide = value; RealtimeCSG.CSGSettings.Save(); }
+            set { if (RealtimeCSG.CSGSettings.CircleDistanceToSide == value) { return; } RealtimeCSG.CSGSettings.CircleDistanceToSide = value; RealtimeCSG.CSGSettings.Save(); }
         }
         public bool circleRecenter
         {
             get { return RealtimeCSG.CSGSettings.CircleRecenter; }
-            set { if (RealtimeCSG.CSGSettings.CircleRecenter == value) return; RealtimeCSG.CSGSettings.CircleRecenter = value; RealtimeCSG.CSGSettings.Save(); }
+            set { if (RealtimeCSG.CSGSettings.CircleRecenter == value) { return; } RealtimeCSG.CSGSettings.CircleRecenter = value; RealtimeCSG.CSGSettings.Save(); }
         }
         public float radiusA = 0.0f;
         public float radiusB = 0.0f;
@@ -61,24 +61,33 @@ namespace RealtimeCSG
             get
             {
                 if (vertices.Length <= 1)
+                {
                     return 0;
+                }
 
                 return (vertices[1] - vertices[0]).magnitude;
             }
             set
             {
                 if (vertices.Length <= 1)
+                {
                     return;
+                }
 
-                var delta = (vertices[1] - vertices[0]);
+                var delta = vertices[1] - vertices[0];
                 var radius = delta.magnitude;
                 if (radius == value)
+                {
                     return;
+                }
 
                 delta /= radius;
                 radius = value;
                 if (radius < MathConstants.MinimumScale)
+                {
                     radius = MathConstants.MinimumScale;
+                }
+
                 delta *= radius;
 
                 vertices[1] = vertices[0] + delta;
@@ -119,13 +128,15 @@ namespace RealtimeCSG
             }
 
             if (circleSides < 3)
+            {
                 circleSides = 3;
+            }
 
             //var tangent = GeometryUtility.CalculateTangent(buildPlane.normal);
 
             var vertex1 = (vertices.Length > 1) ? vertices[1] : worldPosition;
 
-            var delta = (vertex1 - vertices[0]);
+            var delta = vertex1 - vertices[0];
             radiusA = delta.magnitude;
 
             if (radiusA <= MathConstants.DistanceEpsilon)
@@ -143,10 +154,14 @@ namespace RealtimeCSG
             {
                 angle_offset += 90;
                 if ((circleSides & 1) != 1)
-                    angle_offset += (180.0f / circleSides);
+                {
+                    angle_offset += 180.0f / circleSides;
+                }
             }
             else
+            {
                 angle_offset -= 90;
+            }
 
             angle_offset += circleOffset;
             angle_offset *= Mathf.Deg2Rad;
@@ -154,10 +169,10 @@ namespace RealtimeCSG
             Vector3 p1 = MathConstants.zeroVector3;
             for (int i = 0; i < circleSides; i++)
             {
-                var angle = ((i * Mathf.PI * 2.0f) / (float)circleSides) + angle_offset;
+                var angle = (i * Mathf.PI * 2.0f / circleSides) + angle_offset;
 
-                p1.x = (Mathf.Sin(angle) * radiusA);
-                p1.z = (Mathf.Cos(angle) * radiusA);
+                p1.x = Mathf.Sin(angle) * radiusA;
+                p1.z = Mathf.Cos(angle) * radiusA;
 
                 realVertices[i] = p1;
             }
@@ -184,10 +199,10 @@ namespace RealtimeCSG
                     maxz = Mathf.Max(z, maxz);
                 }
 
-                var scalex = (radiusA * 2) / (maxx - minx);
-                var scalez = (radiusA * 2) / (maxz - minz);
-                var centerx = ((maxx + minx) * -0.5f) * dirx;
-                var centerz = ((maxz + minz) * -0.5f) * dirz;
+                var scalex = radiusA * 2 / (maxx - minx);
+                var scalez = radiusA * 2 / (maxz - minz);
+                var centerx = (maxx + minx) * -0.5f * dirx;
+                var centerz = (maxz + minz) * -0.5f * dirz;
 
                 for (int i = 0; i < circleSides; i++)
                 {
@@ -220,13 +235,17 @@ namespace RealtimeCSG
         public void ProjectShapeOnBuildPlane(CSGPlane plane)
         {
             for (int i = 0; i < vertices.Length; i++)
+            {
                 vertices[i] = plane.Project(vertices[i]);
+            }
         }
 
         public void MoveShape(Vector3 offset)
         {
             for (int i = 0; i < vertices.Length; i++)
+            {
                 vertices[i] = backupVertices[i] + offset;
+            }
         }
 
         public Vector3 GetCenter(CSGPlane plane)

@@ -15,7 +15,9 @@ namespace InternalRealtimeCSG
             // apparently only way to determine current scene while post processing a scene
             var randomObject = UnityEngine.Object.FindObjectOfType<Transform>();
             if (!randomObject)
+            {
                 return;
+            }
 
             var currentScene = randomObject.gameObject.scene;
 
@@ -30,7 +32,9 @@ namespace InternalRealtimeCSG
                 }
 
                 if (model.NeedAutoUpdateRigidBody)
+                {
                     AutoUpdateRigidBody(meshContainer);
+                }
 
                 model.gameObject.hideFlags = HideFlags.None;
                 meshContainer.transform.hideFlags = HideFlags.None;
@@ -41,7 +45,9 @@ namespace InternalRealtimeCSG
                 foreach (var instance in instances)
                 {
                     if (!instance)
+                    {
                         continue;
+                    }
 
                     instance.gameObject.hideFlags = HideFlags.None;// HideFlags.NotEditable;
                     instance.gameObject.SetActive(true);
@@ -85,11 +91,15 @@ namespace InternalRealtimeCSG
                     {
                         var meshRenderer = instance.gameObject.GetComponent<MeshRenderer>();
                         if (meshRenderer)
+                        {
                             UnityEngine.Object.DestroyImmediate(meshRenderer);
+                        }
 
                         var meshFilter = instance.gameObject.GetComponent<MeshFilter>();
                         if (meshFilter)
+                        {
                             UnityEngine.Object.DestroyImmediate(meshFilter);
+                        }
 
                         if (surfaceType == RenderSurfaceType.Trigger)
                         {
@@ -108,7 +118,9 @@ namespace InternalRealtimeCSG
                 }
 
                 if (!meshContainer)
+                {
                     continue;
+                }
 
                 var children = meshContainer.GetComponentsInChildren<GeneratedMeshInstance>();
                 foreach (var child in children)
@@ -148,19 +160,21 @@ namespace InternalRealtimeCSG
             foreach (var csgnode in csgnodes)
             {
                 if (!csgnode)
+                {
                     continue;
+                }
 
                 var gameObject = csgnode.gameObject;
                 var model = csgnode as CSGModel;
 
                 if (
-                        (model && model.name == InternalCSGModelManager.DefaultModelName &&
+                        model && model.name == InternalCSGModelManager.DefaultModelName &&
                             (model.transform.childCount == 0 ||
                                 (model.transform.childCount == 1 &&
                                 model.transform.GetChild(0).name == MeshContainerName &&
                                 model.transform.GetChild(0).childCount == 0)
                             )
-                        )
+
                     )
                 {
                     UnityEngine.Object.DestroyImmediate(gameObject);
@@ -174,9 +188,14 @@ namespace InternalRealtimeCSG
                 }
                 else
                 if (gameObject.CompareTag("Untagged"))
+                {
                     removableGameObjects.Add(gameObject);
+                }
+
                 if (csgnode)
+                {
                     UnityEngine.Object.DestroyImmediate(csgnode);
+                }
             }
 
             var removableTransforms = new HashSet<Transform>();
@@ -185,7 +204,10 @@ namespace InternalRealtimeCSG
                 var gameObject = removableGameObjects[i];
                 var transform = gameObject.transform;
                 if (removableTransforms.Contains(transform))
+                {
                     continue;
+                }
+
                 RemoveWithChildrenIfPossible(transform, removableTransforms);
             }
         }
@@ -215,27 +237,39 @@ namespace InternalRealtimeCSG
         internal static void DestroyAllMeshInstances()
         {
             if (UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             for (var sceneIndex = 0; sceneIndex < SceneManager.sceneCount; sceneIndex++)
             {
                 var scene = SceneManager.GetSceneAt(sceneIndex);
                 if (!scene.isLoaded)
+                {
                     continue;
+                }
+
                 var sceneModels = SceneQueryUtility.GetAllComponentsInScene<CSGModel>(scene);
                 for (int i = 0; i < sceneModels.Count; i++)
                 {
                     if (!ModelTraits.IsModelEditable(sceneModels[i]))
+                    {
                         continue;
+                    }
+
                     var selfTransform = sceneModels[i].transform;
                     var transforms = selfTransform.GetComponentsInChildren<Transform>();
                     foreach (var generateMeshesTransform in transforms)
                     {
                         if (!generateMeshesTransform || generateMeshesTransform.parent != selfTransform)
+                        {
                             continue;
+                        }
 
                         if (generateMeshesTransform.name != MeshInstanceManager.MeshContainerName)
+                        {
                             continue;
+                        }
 
                         var childTransforms = generateMeshesTransform;
                         foreach (Transform childTransform in childTransforms)

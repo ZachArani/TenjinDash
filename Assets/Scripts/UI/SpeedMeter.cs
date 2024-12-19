@@ -45,22 +45,22 @@ public class SpeedMeter : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float ratio = player.currentSpeed / (0.3f * raceManager.maxSpeed) - 2.33f; //Mathematically derived value. Basically a shortcutted percent diff. 
+        float ratio = (player.currentSpeed / (0.3f * raceManager.maxSpeed)) - 2.33f; //Mathematically derived value. Basically a shortcutted percent diff. 
         ratio = ratio > 0 ? ratio : 0;
-        
-        if(player.isOpening)
+
+        if (player.isOpening)
         {
-            ratio = (player.CalcTargetSpeed()) / (raceManager.maxSpeed); //Standard ratio since we haven't established a 'min' speed during the opening
+            ratio = player.CalcTargetSpeed() / raceManager.maxSpeed; //Standard ratio since we haven't established a 'min' speed during the opening
         }
-        else if(!player.isStopping)
+        else if (!player.isStopping)
         {
-            ratio = (1 - baseSpeed) * ratio + baseSpeed; //Adjust ratio to fit baseSpeed value (to make players "feel" faster)
+            ratio = ((1 - baseSpeed) * ratio) + baseSpeed; //Adjust ratio to fit baseSpeed value (to make players "feel" faster)
         }
 
         ratio = Mathf.Clamp(ratio, 0f, 1f); //Clamp value
 
         //Lerp to new rotationSpeed based on smoothing factor
-        float newMeterValue = Mathf.Lerp(meterUI.offsetMax.y, -300 + 300f * ratio, smoothFactor);
+        float newMeterValue = Mathf.Lerp(meterUI.offsetMax.y, -300 + (300f * ratio), smoothFactor);
         meterUI.offsetMax = new Vector2(meterUI.offsetMax.x, newMeterValue); //Update UI
     }
 

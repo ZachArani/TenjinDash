@@ -18,7 +18,7 @@ namespace RealtimeCSG
     {
         public static bool HasFrameBounds(FilteredSelection filteredSelection)
         {
-            return (filteredSelection.NodeTargets.Length > 0);
+            return filteredSelection.NodeTargets.Length > 0;
         }
 
         public static Bounds OnGetFrameBounds(FilteredSelection filteredSelection)
@@ -41,7 +41,9 @@ namespace RealtimeCSG
                     bounds.center = transform.TransformPoint(controlMesh.Vertices[0]);
                     bounds.size = MathConstants.zeroVector3;
                     for (int i = 1; i < controlMesh.Vertices.Length; i++)
+                    {
                         bounds.Encapsulate(transform.TransformPoint(controlMesh.Vertices[i]));
+                    }
                 }
             }
             // TODO: how to get bounds of random selected objects??
@@ -59,7 +61,9 @@ namespace RealtimeCSG
 
             var controlMesh = brush.ControlMesh;
             if (controlMesh == null)
+            {
                 return new AABB();
+            }
 
             var matrix = brush.transform.localToWorldMatrix;
             for (int p = 0; p < controlMesh.Vertices.Length; p++)
@@ -90,12 +94,16 @@ namespace RealtimeCSG
             for (int b = 0; b < brushes.Length; b++)
             {
                 if (!brushes[b])
+                {
                     continue;
+                }
 
                 var controlMesh = brushes[b].ControlMesh;
                 if (controlMesh == null ||
                     controlMesh.Vertices == null)
+                {
                     continue;
+                }
 
                 var matrix = brushes[b].transform.localToWorldMatrix;
                 for (int p = 0; p < controlMesh.Vertices.Length; p++)
@@ -149,7 +157,9 @@ namespace RealtimeCSG
         static public AABB GetBounds(Vector3[] worldPoints, Quaternion rotation, Vector3 scale, Vector3 center)
         {
             if (worldPoints == null || worldPoints.Length == 0)
+            {
                 return new AABB();
+            }
 
             var min = MathConstants.PositiveInfinityVector3;
             var max = MathConstants.NegativeInfinityVector3;
@@ -198,11 +208,15 @@ namespace RealtimeCSG
             var max = MathConstants.NegativeInfinityVector3;
 
             if (!brush)
+            {
                 return min;
+            }
 
             var controlMesh = brush.ControlMesh;
             if (controlMesh == null)
+            {
                 return min;
+            }
 
             var matrix = brush.transform.localToWorldMatrix;
             for (int p = 0; p < controlMesh.Vertices.Length; p++)
@@ -225,12 +239,16 @@ namespace RealtimeCSG
             var max = MathConstants.NegativeInfinityVector3;
 
             if (!brush)
+            {
                 return min;
+            }
 
             var controlMesh = brush.ControlMesh;
             if (controlMesh == null ||
                 controlMesh.Vertices == null)
+            {
                 return min;
+            }
 
             for (int p = 0; p < controlMesh.Vertices.Length; p++)
             {
@@ -254,11 +272,15 @@ namespace RealtimeCSG
             for (int b = 0; b < brushes.Length; b++)
             {
                 if (!brushes[b])
+                {
                     continue;
+                }
 
                 var controlMesh = brushes[b].ControlMesh;
                 if (controlMesh == null)
+                {
                     continue;
+                }
 
                 var matrix = brushes[b].transform.localToWorldMatrix;
                 for (int p = 0; p < controlMesh.Vertices.Length; p++)
@@ -274,7 +296,10 @@ namespace RealtimeCSG
                 }
             }
             if (float.IsInfinity(min.x))
+            {
                 return min;
+            }
+
             return new Vector3((min.x * 0.5f) + (max.x * 0.5f), (min.y * 0.5f) + (max.y * 0.5f), (min.z * 0.5f) + (max.z * 0.5f));
         }
 
@@ -289,7 +314,9 @@ namespace RealtimeCSG
                 var controlMesh = brushes[b].ControlMesh;
                 if (controlMesh == null ||
                     controlMesh.Vertices == null)
+                {
                     continue;
+                }
 
                 var matrix1 = matrix2 * brushes[b].transform.localToWorldMatrix;
                 for (int p = 0; p < controlMesh.Vertices.Length; p++)
@@ -324,7 +351,9 @@ namespace RealtimeCSG
                 var controlMesh = brushes[b].ControlMesh;
                 if (controlMesh == null ||
                     controlMesh.Vertices == null)
+                {
                     continue;
+                }
 
                 var brushToGridspace = worldToLocal * brushes[b].transform.localToWorldMatrix;
                 for (int p = 0; p < controlMesh.Vertices.Length; p++)
@@ -352,7 +381,9 @@ namespace RealtimeCSG
         static public void GetBoundsCornerPoints(AABB inputBounds, Vector3[] outputPoints)
         {
             if (outputPoints.Length != 8)
+            {
                 return;
+            }
 
             outputPoints[0] = new Vector3(inputBounds.MinX, inputBounds.MinY, inputBounds.MinZ);
             outputPoints[1] = new Vector3(inputBounds.MaxX, inputBounds.MinY, inputBounds.MinZ);
@@ -368,7 +399,9 @@ namespace RealtimeCSG
         static public void GetBoundsSidePoints(AABB inputBounds, Vector3[] outputPoints)
         {
             if (outputPoints.Length != 6)
+            {
                 return;
+            }
 
             var center = inputBounds.Center;
 
@@ -398,7 +431,9 @@ namespace RealtimeCSG
         static public void GetBoundsEdgePoints(AABB inputBounds, Vector3[] outputPoints)
         {
             if (outputPoints.Length != 12)
+            {
                 return;
+            }
 
             var center = inputBounds.Center;
 

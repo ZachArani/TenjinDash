@@ -64,7 +64,9 @@ namespace RealtimeCSG
             var shape = brush.Shape;
             int surfaceCount = shape.Surfaces.Length;
             if (surfaceControlID.Length != surfaceCount)
+            {
                 AllocateSurfaces(surfaceCount);
+            }
         }
         /*
 		public void UpdateColors(CSGBrush brush)
@@ -85,7 +87,9 @@ namespace RealtimeCSG
                 for (int p = 0; p < surfaceSelectState.Length; p++)
                 {
                     if ((surfaceSelectState[p] & SelectState.Selected) == SelectState.Selected)
+                    {
                         return true;
+                    }
                 }
                 return false;
             }
@@ -94,38 +98,60 @@ namespace RealtimeCSG
         public void DeselectAll()
         {
             for (int p = 0; p < surfaceSelectState.Length; p++)
+            {
                 surfaceSelectState[p] &= ~SelectState.Selected;
+            }
         }
 
         public void SelectAll()
         {
             for (int p = 0; p < surfaceSelectState.Length; p++)
+            {
                 surfaceSelectState[p] |= SelectState.Selected;
+            }
         }
 
         public void UnHoverAll()
         {
             for (int p = 0; p < surfaceSelectState.Length; p++)
+            {
                 surfaceSelectState[p] &= ~SelectState.Hovering;
+            }
         }
 
         public bool IsSurfaceSelected(int surfaceIndex)
         {
             var new_state = surfaceSelectState[surfaceIndex];
-            return ((new_state & SelectState.Selected) == SelectState.Selected);
+            return (new_state & SelectState.Selected) == SelectState.Selected;
         }
 
         public bool SelectSurface(int surfaceIndex, SelectionType selectionType)
         {
             var old_state = surfaceSelectState[surfaceIndex];
             if ((old_state & SelectState.Hovering) != SelectState.Hovering)
+            {
                 return false;
+            }
+
             var new_state = old_state;
-            if (selectionType == SelectionType.Subtractive) new_state &= ~SelectState.Selected;
-            else if (selectionType == SelectionType.Toggle) new_state ^= SelectState.Selected;
-            else new_state |= SelectState.Selected;
+            if (selectionType == SelectionType.Subtractive)
+            {
+                new_state &= ~SelectState.Selected;
+            }
+            else if (selectionType == SelectionType.Toggle)
+            {
+                new_state ^= SelectState.Selected;
+            }
+            else
+            {
+                new_state |= SelectState.Selected;
+            }
+
             if (old_state == new_state)
+            {
                 return false;
+            }
+
             surfaceSelectState[surfaceIndex] = new_state;
             return true;
         }

@@ -29,7 +29,9 @@ namespace InternalRealtimeCSG
                 for (var t = 0; t < Brushes.Length; t++)
                 {
                     if (States[t].HaveSelection)
+                    {
                         return true;
+                    }
                 }
                 return false;
             }
@@ -40,8 +42,13 @@ namespace InternalRealtimeCSG
             get
             {
                 for (var t = 0; t < Brushes.Length; t++)
+                {
                     if (States[t].HaveEdgeSelection)
+                    {
                         return true;
+                    }
+                }
+
                 return false;
             }
         }
@@ -57,9 +64,13 @@ namespace InternalRealtimeCSG
                     for (int j = 0; j < polygons.Length; j++)
                     {
                         if (j == polygonIndex)
+                        {
                             polygons[j] = SelectState.Selected;
+                        }
                         else
+                        {
                             polygons[j] = SelectState.None;
+                        }
                     }
                 }
             }
@@ -79,7 +90,9 @@ namespace InternalRealtimeCSG
                 ModelTransforms = new Transform[Brushes.Length];
 
                 for (var i = 0; i < foundBrushes.Count; i++)
+                {
                     LocalToWorld[i] = MathConstants.identityMatrix;
+                }
             }
             else
             {
@@ -87,7 +100,9 @@ namespace InternalRealtimeCSG
                 for (var i = Brushes.Length - 1; i >= 0; i--)
                 {
                     if (foundBrushes.Contains(Brushes[i]))
+                    {
                         continue;
+                    }
 
                     ArrayUtility.RemoveAt(ref Brushes, i);
                     ArrayUtility.RemoveAt(ref Shapes, i);
@@ -103,7 +118,9 @@ namespace InternalRealtimeCSG
                 foreach (var newBrush in foundBrushes)
                 {
                     if (Brushes.Contains(newBrush))
+                    {
                         continue;
+                    }
 
                     ArrayUtility.Add(ref Brushes, newBrush);
                     ArrayUtility.Add(ref Shapes, null);
@@ -134,15 +151,21 @@ namespace InternalRealtimeCSG
             {
                 if (!Brushes[i] ||
                     Brushes[i].ControlMesh == null)
+                {
                     continue;
+                }
 
                 if (!Brushes[i].ControlMesh.Valid)
+                {
                     Brushes[i].ControlMesh.Valid = ControlMeshUtility.Validate(Brushes[i].ControlMesh, Brushes[i].Shape);
+                }
 
                 LocalToWorld[i] = Brushes[i].transform.localToWorldMatrix;
 
                 if (States[i] != null)
+                {
                     continue;
+                }
 
                 States[i] = new ControlMeshState(Brushes[i]);
                 BackupControlMeshes[i] = (Brushes[i].ControlMesh != null) ? Brushes[i].ControlMesh.Clone() : null;
@@ -159,11 +182,15 @@ namespace InternalRealtimeCSG
             for (var i = 0; i < Brushes.Length; i++)
             {
                 if (ModelTransforms[i] != null)
+                {
                     continue;
+                }
 
                 if (Brushes[i].ChildData == null ||
                     Brushes[i].ChildData.ModelTransform == null)
+                {
                     continue;
+                }
 
                 ModelTransforms[i] = Brushes[i].ChildData.ModelTransform;
             }
@@ -175,7 +202,9 @@ namespace InternalRealtimeCSG
             for (var t = 0; t < States.Length; t++)
             {
                 if (States[t] == null)
+                {
                     continue;
+                }
 
                 States[t].BackupSelection();
             }
@@ -186,7 +215,9 @@ namespace InternalRealtimeCSG
             for (var t = 0; t < States.Length; t++)
             {
                 if (States[t] == null)
+                {
                     continue;
+                }
 
                 States[t].RevertSelection();
             }
@@ -197,7 +228,9 @@ namespace InternalRealtimeCSG
             for (var t = 0; t < States.Length; t++)
             {
                 if (States[t] == null)
+                {
                     continue;
+                }
 
                 States[t].DestroySelectionBackup();
             }
@@ -208,10 +241,14 @@ namespace InternalRealtimeCSG
             for (var t = 0; t < States.Length; t++)
             {
                 if (States[t] == null)
+                {
                     continue;
+                }
 
                 if (States[t].HasSelectionChanged())
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -221,7 +258,9 @@ namespace InternalRealtimeCSG
             for (var t = 0; t < States.Length; t++)
             {
                 if (States[t] == null)
+                {
                     continue;
+                }
 
                 States[t].UnHoverAll();
             }
@@ -234,7 +273,9 @@ namespace InternalRealtimeCSG
                 if (t >= Brushes.Length ||
                     States[t] == null ||
                     !Brushes[t])
+                {
                     continue;
+                }
 
                 var controlMesh = Brushes[t].ControlMesh;
                 var state = States[t];
@@ -255,7 +296,9 @@ namespace InternalRealtimeCSG
                 if (!forceUpdate &&
                     ControlMeshes[t] != null &&
                     !ControlMeshes[t].Valid)
+                {
                     continue;
+                }
 
                 Shapes[t] = Brushes[t].Shape.Clone();
                 ControlMeshes[t] = Brushes[t].ControlMesh.Clone();
@@ -274,7 +317,7 @@ namespace InternalRealtimeCSG
         {
             var mouseWorldRay = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
             var rayStart = mouseWorldRay.origin;
-            var rayVector = (mouseWorldRay.direction * (sceneView.camera.farClipPlane - sceneView.camera.nearClipPlane));
+            var rayVector = mouseWorldRay.direction * (sceneView.camera.farClipPlane - sceneView.camera.nearClipPlane);
             var rayEnd = rayStart + rayVector;
 
             var minDistance = float.PositiveInfinity;
@@ -284,21 +327,29 @@ namespace InternalRealtimeCSG
             {
                 var brush = Brushes[t];
                 if (!Brushes[t] || !Brushes[t].isActiveAndEnabled)
+                {
                     continue;
+                }
 
                 var parentModelTransform = ModelTransforms[t];
                 if (parentModelTransform == null)
+                {
                     continue;
+                }
 
                 var modelTransformation = parentModelTransform.localToWorldMatrix;
 
                 LegacyBrushIntersection intersection;
                 if (!SceneQueryUtility.FindBrushIntersection(brush, modelTransformation, rayStart, rayEnd, out intersection))
+                {
                     continue;
+                }
 
                 var distance = (intersection.worldIntersection - rayStart).magnitude;
                 if (distance > minDistance)
+                {
                     continue;
+                }
 
                 minDistance = distance;
                 closestBrushNodeIndex = t;
@@ -318,7 +369,9 @@ namespace InternalRealtimeCSG
                 if (useBackupPoints)
                 {
                     if (meshState.BackupPoints == null)
+                    {
                         continue;
+                    }
 
                     foreach (var index in meshState.GetSelectedPointIndices())
                     {
@@ -343,14 +396,19 @@ namespace InternalRealtimeCSG
             {
                 var meshState = States[t];
                 if (meshState == null)
+                {
                     continue;
+                }
 
                 if (meshState.Selection.Points != null)
                 {
                     for (var p = 0; p < meshState.Selection.Points.Length; p++)
                     {
                         if ((meshState.Selection.Points[p] & SelectState.Selected) != SelectState.Selected)
+                        {
                             continue;
+                        }
+
                         newBounds.Extend(meshState.WorldPoints[p]);
                     }
                 }
@@ -360,7 +418,9 @@ namespace InternalRealtimeCSG
                     for (var e = 0; e < meshState.Selection.Edges.Length; e++)
                     {
                         if ((meshState.Selection.Edges[e] & SelectState.Selected) != SelectState.Selected)
+                        {
                             continue;
+                        }
 
                         var index0 = meshState.Edges[(e * 2) + 0];
                         var index1 = meshState.Edges[(e * 2) + 1];
@@ -375,7 +435,9 @@ namespace InternalRealtimeCSG
                     for (var p = 0; p < meshState.Selection.Polygons.Length; p++)
                     {
                         if ((meshState.Selection.Polygons[p] & SelectState.Selected) != SelectState.Selected)
+                        {
                             continue;
+                        }
 
                         var indices = meshState.PolygonPointIndices[p];
                         for (var i = 0; i < indices.Length; i++)
@@ -403,17 +465,23 @@ namespace InternalRealtimeCSG
                 for (var p = 0; p < selection.Points.Length; p++)
                 {
                     if ((selection.Points[p] & SelectState.Selected) == SelectState.Selected)
+                    {
                         pointCount++;
+                    }
                 }
                 for (var e = 0; e < selection.Edges.Length; e++)
                 {
                     if ((selection.Edges[e] & SelectState.Selected) == SelectState.Selected)
+                    {
                         edgeCount++;
+                    }
                 }
                 for (var e = 0; e < selection.Polygons.Length; e++)
                 {
                     if ((selection.Polygons[e] & SelectState.Selected) == SelectState.Selected)
+                    {
                         polygonCount++;
+                    }
                 }
             }
             Debug.Log(pointCount + " " + edgeCount + " " + polygonCount);

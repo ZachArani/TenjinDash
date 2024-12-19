@@ -112,7 +112,9 @@ namespace AYellowpaper.SerializedCollections.Editor
         public float GetPropertyHeight(GUIContent label)
         {
             if (!ListProperty.isExpanded)
+            {
                 return SerializedDictionaryDrawer.TopHeaderClipHeight;
+            }
 
             return ReorderableList.GetHeight();
         }
@@ -120,7 +122,9 @@ namespace AYellowpaper.SerializedCollections.Editor
         private void DoList(Rect position)
         {
             if (ListProperty.isExpanded)
+            {
                 ReorderableList.DoList(position);
+            }
             else
             {
                 using (new GUI.ClipScope(new Rect(0, position.y, position.width + position.x, SerializedDictionaryDrawer.TopHeaderClipHeight)))
@@ -161,7 +165,7 @@ namespace AYellowpaper.SerializedCollections.Editor
             CheckPaging();
             var elementsPerPage = EditorUserSettings.Get().ElementsPerPage;
             int pageCount = Mathf.Max(1, Mathf.CeilToInt((float)DefaultState.ListSize / elementsPerPage));
-            ToggleSearchBar(_propertyData.AlwaysShowSearch ? true : SCEditorUtility.ShouldShowSearch(pageCount));
+            ToggleSearchBar(_propertyData.AlwaysShowSearch || SCEditorUtility.ShouldShowSearch(pageCount));
         }
 
         // TODO: This works for now, but isn't perfect. This checks if the serialized dictionary was reassigned with new(), simply by comparing the count. Should be instead done by reference equality in the future
@@ -230,7 +234,9 @@ namespace AYellowpaper.SerializedCollections.Editor
         private void UpdateSingleEditing()
         {
             if (ListProperty.serializedObject.isEditingMultipleObjects && _singleEditingData.IsValid)
+            {
                 _singleEditingData.Invalidate();
+            }
             else if (!ListProperty.serializedObject.isEditingMultipleObjects && !_singleEditingData.IsValid)
             {
                 var dictionary = SCEditorUtility.GetPropertyValue(ListProperty, ListProperty.serializedObject.targetObject);
@@ -255,9 +261,11 @@ namespace AYellowpaper.SerializedCollections.Editor
             int startIndex = (_pagingElement.Page - 1) * elementsPerPage;
             int endIndex = Mathf.Min(startIndex + elementsPerPage, _activeState.ListSize);
             for (int i = startIndex; i < endIndex; i++)
+            {
                 _pagedIndices.Add(i);
+            }
 
-            string shortDetailsString = (_activeState.ListSize + " " + (_pagedIndices.Count == 1 ? "Element" : "Elements"));
+            string shortDetailsString = _activeState.ListSize + " " + (_pagedIndices.Count == 1 ? "Element" : "Elements");
             string detailsString = _pagingElement.PageCount > 1
                 ? $"{_pagedIndices[0] + 1}..{_pagedIndices.Last() + 1} / {_activeState.ListSize} Elements"
                 : shortDetailsString;
@@ -292,7 +300,10 @@ namespace AYellowpaper.SerializedCollections.Editor
             if (!_showSearchBar)
             {
                 if (_searchField.HasFocus())
+                {
                     GUI.FocusControl(null);
+                }
+
                 SearchText = string.Empty;
             }
         }
@@ -310,9 +321,14 @@ namespace AYellowpaper.SerializedCollections.Editor
             bool canToggleListDrawer = isArray || (isGenericWithChildren && hasCustomEditor);
             DisplayType displayType = DisplayType.PropertyNoLabel;
             if (canToggleListDrawer)
+            {
                 displayType = DisplayType.Property;
+            }
             else if (!isArray && isGenericWithChildren && !hasCustomEditor)
+            {
                 displayType = DisplayType.List;
+            }
+
             return (displayType, canToggleListDrawer);
         }
 
@@ -503,11 +519,17 @@ namespace AYellowpaper.SerializedCollections.Editor
                 var lookupTable = GetLookupTable(dictionary);
 
                 if (modificationType == ModificationType.Add)
+                {
                     AddElements(lookupTable, elements);
+                }
                 else if (modificationType == ModificationType.Remove)
+                {
                     RemoveElements(lookupTable, elements);
+                }
                 else if (modificationType == ModificationType.Confine)
+                {
                     ConfineElements(lookupTable, elements);
+                }
 
                 lookupTable.RecalculateOccurences();
                 PrefabUtility.RecordPrefabInstancePropertyModifications(targetObject);
@@ -523,7 +545,10 @@ namespace AYellowpaper.SerializedCollections.Editor
             {
                 var occurences = lookupTable.GetOccurences(key);
                 if (occurences.Count > 0)
+                {
                     continue;
+                }
+
                 lookupTable.AddKey(key);
             }
         }
@@ -532,7 +557,9 @@ namespace AYellowpaper.SerializedCollections.Editor
         {
             var keysToRemove = lookupTable.Keys.OfType<object>().ToHashSet();
             foreach (var key in elements)
+            {
                 keysToRemove.Remove(key);
+            }
 
             RemoveElements(lookupTable, keysToRemove);
         }
@@ -566,7 +593,9 @@ namespace AYellowpaper.SerializedCollections.Editor
                 {
                     var occurences = lookupTable.GetOccurences(key);
                     for (int i = 1; i < occurences.Count; i++)
+                    {
                         duplicateIndices.Add(occurences[i]);
+                    }
                 }
 
                 foreach (var indexToRemove in duplicateIndices.OrderByDescending(x => x))

@@ -13,7 +13,10 @@ namespace RealtimeCSG
         public override void OnInspectorGUI()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
+
             GUILayout.BeginVertical(GUI.skin.box);
             {
                 GUILayout.Label("A hidden CSG model, and all it's brushes and operations, is contained by this object. This will automatically be removed at build time.", CSG_GUIStyleUtility.wrapLabel);
@@ -31,7 +34,9 @@ namespace RealtimeCSG
                         {
                             var exportedModel = target as CSGModelExported;
                             if (!exportedModel)
+                            {
                                 continue;
+                            }
 
                             exportedModel.disarm = true;
                             exportedModel.hideFlags = HideFlags.DontSaveInBuild;
@@ -63,7 +68,9 @@ namespace RealtimeCSG
                         //CSGModelManager.Refresh(forceHierarchyUpdate: true);
                         InternalCSGModelManager.ForceRebuildAll();
                         foreach (var scene in updateScenes)
+                        {
                             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(scene);
+                        }
                     }
                     finally
                     {
@@ -83,7 +90,10 @@ namespace RealtimeCSG
                 {
                     var exportedModel = target as CSGModelExported;
                     if (!exportedModel)
+                    {
                         continue;
+                    }
+
                     exportedModel.DestroyModel(undoable: true);
                     Undo.DestroyObjectImmediate(exportedModel);
                 }

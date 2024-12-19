@@ -32,7 +32,9 @@ namespace RealtimeCSG
         private static void InitReflection() // le *sigh*
         {
             if (_haveReflected)
+            {
                 return;
+            }
 
             _haveReflected = true;
             var assemblies = System.AppDomain.CurrentDomain.GetAssemblies();
@@ -56,14 +58,18 @@ namespace RealtimeCSG
                 if (methods[i].Name == "Initialize")
                 {
                     if (methods[i].GetParameters().Length == 1)
+                    {
                         _probesInitializeMethod = methods[i];
+                    }
                 }
                 else
                 //internal void OnGUI(UnityEngine.Object[] selection, Renderer renderer, bool useMiniStyle)
                 if (methods[i].Name == "OnGUI")
                 {
                     if (methods[i].GetParameters().Length == 3)
+                    {
                         _probesOnGUIMethod = methods[i];
+                    }
                 }
             }
 
@@ -84,12 +90,16 @@ namespace RealtimeCSG
             // main camera, if we have any
             var mainCamera = Camera.main;
             if (mainCamera != null)
+            {
                 return mainCamera;
+            }
 
             // if we have one camera, return it
             Camera[] allCameras = Camera.allCameras;
             if (allCameras != null && allCameras.Length == 1)
+            {
                 return allCameras[0];
+            }
 
             // otherwise no "main" camera
             return null;
@@ -99,7 +109,10 @@ namespace RealtimeCSG
         {
             var mainCamera = GetMainCamera();
             if (mainCamera != null)
+            {
                 return mainCamera.renderingPath;
+            }
+
             return RenderingPath.UsePlayerSettings;
         }
 
@@ -111,7 +124,9 @@ namespace RealtimeCSG
                 return (bool)ret;
             }
             else
+            {
                 return false;
+            }
         }
         #endregion
 
@@ -125,11 +140,15 @@ namespace RealtimeCSG
             _probesTargets = null;
             _probesSerializedObject = null;
             if (models.Length == 0)
+            {
                 return;
+            }
 
             _probesTargets = MeshInstanceManager.FindRenderers(models);
             if (_probesTargets.Length == 0 || _probesTargets == null)
+            {
                 return;
+            }
 
             _probesSerializedObject = new SerializedObject(_probesTargets);
 
@@ -177,8 +196,9 @@ namespace RealtimeCSG
             }
 
             if (models.Length == 0)
+            {
                 return;
-
+            }
 
             float? AngleError = models[0].angleError;
             float? AreaError = models[0].areaError;
@@ -285,52 +305,163 @@ namespace RealtimeCSG
                 //				ShadowCastingMode currShadowCastingMode = (ShadowCastingMode)(settings & ModelSettingsFlags.ShadowCastingModeFlags);
 
                 //				if (VertexChannelColor		.HasValue && VertexChannelColor		.Value != currVertexChannelColor	) VertexChannelColor = null;
-                if (VertexChannelTangent.HasValue && VertexChannelTangent.Value != currVertexChannelTangent) VertexChannelTangent = null;
-                if (VertexChannelNormal.HasValue && VertexChannelNormal.Value != currVertexChannelNormal) VertexChannelNormal = null;
-                if (VertexChannelUV0.HasValue && VertexChannelUV0.Value != currVertexChannelUV0) VertexChannelUV0 = null;
+                if (VertexChannelTangent.HasValue && VertexChannelTangent.Value != currVertexChannelTangent)
+                {
+                    VertexChannelTangent = null;
+                }
 
-                if (ExportType.HasValue && ExportType.Value != currExportType) ExportType = null;
-                if (OriginType.HasValue && OriginType.Value != currOriginType) OriginType = null;
+                if (VertexChannelNormal.HasValue && VertexChannelNormal.Value != currVertexChannelNormal)
+                {
+                    VertexChannelNormal = null;
+                }
+
+                if (VertexChannelUV0.HasValue && VertexChannelUV0.Value != currVertexChannelUV0)
+                {
+                    VertexChannelUV0 = null;
+                }
+
+                if (ExportType.HasValue && ExportType.Value != currExportType)
+                {
+                    ExportType = null;
+                }
+
+                if (OriginType.HasValue && OriginType.Value != currOriginType)
+                {
+                    OriginType = null;
+                }
 #if UNITY_2019_2_OR_NEWER
-                if (MeshReceiveGI.HasValue && MeshReceiveGI.Value != currReceiveGI) MeshReceiveGI = null;
+                if (MeshReceiveGI.HasValue && MeshReceiveGI.Value != currReceiveGI)
+                {
+                    MeshReceiveGI = null;
+                }
 #endif
-                if (ExportColliders.HasValue && ExportColliders.Value != currExportColliders) ExportColliders = null;
+                if (ExportColliders.HasValue && ExportColliders.Value != currExportColliders)
+                {
+                    ExportColliders = null;
+                }
 
-                if (InvertedWorld.HasValue && InvertedWorld.Value != currInvertedWorld) InvertedWorld = null;
-                if (NoCollider.HasValue && NoCollider.Value != currNoCollider) NoCollider = null;
-                if (IsTrigger.HasValue && IsTrigger.Value != currIsTrigger) IsTrigger = null;
-                if (SetToConvex.HasValue && SetToConvex.Value != currSetToConvex) SetToConvex = null;
-                if (AutoGenerateRigidBody.HasValue && AutoGenerateRigidBody.Value != currAutoGenerateRigidBody) AutoGenerateRigidBody = null;
-                if (DoNotRender.HasValue && DoNotRender.Value != currDoNotRender) DoNotRender = null;
-                if (TwoSidedShadows.HasValue && TwoSidedShadows.Value != currTwoSidedShadows) TwoSidedShadows = null;
+                if (InvertedWorld.HasValue && InvertedWorld.Value != currInvertedWorld)
+                {
+                    InvertedWorld = null;
+                }
+
+                if (NoCollider.HasValue && NoCollider.Value != currNoCollider)
+                {
+                    NoCollider = null;
+                }
+
+                if (IsTrigger.HasValue && IsTrigger.Value != currIsTrigger)
+                {
+                    IsTrigger = null;
+                }
+
+                if (SetToConvex.HasValue && SetToConvex.Value != currSetToConvex)
+                {
+                    SetToConvex = null;
+                }
+
+                if (AutoGenerateRigidBody.HasValue && AutoGenerateRigidBody.Value != currAutoGenerateRigidBody)
+                {
+                    AutoGenerateRigidBody = null;
+                }
+
+                if (DoNotRender.HasValue && DoNotRender.Value != currDoNotRender)
+                {
+                    DoNotRender = null;
+                }
+
+                if (TwoSidedShadows.HasValue && TwoSidedShadows.Value != currTwoSidedShadows)
+                {
+                    TwoSidedShadows = null;
+                }
                 //				if (ReceiveShadows			.HasValue && ReceiveShadows			.Value != currReceiveShadows		) ReceiveShadows = null;
                 //				if (ShadowCastingMode		.HasValue && ShadowCastingMode		.Value != currShadowCastingMode		) ShadowCastingMode = null;
-                if (AutoRebuildUVs.HasValue && AutoRebuildUVs.Value != currAutoRebuildUVs) AutoRebuildUVs = null;
-                if (PreserveUVs.HasValue && PreserveUVs.Value != currPreserveUVs) PreserveUVs = null;
-                if (StitchLightmapSeams.HasValue && StitchLightmapSeams.Value != currStitchLightmapSeams) StitchLightmapSeams = null;
+                if (AutoRebuildUVs.HasValue && AutoRebuildUVs.Value != currAutoRebuildUVs)
+                {
+                    AutoRebuildUVs = null;
+                }
+
+                if (PreserveUVs.HasValue && PreserveUVs.Value != currPreserveUVs)
+                {
+                    PreserveUVs = null;
+                }
+
+                if (StitchLightmapSeams.HasValue && StitchLightmapSeams.Value != currStitchLightmapSeams)
+                {
+                    StitchLightmapSeams = null;
+                }
 
 #if UNITY_2017_3_OR_NEWER
-                if (CookForFasterSimulation.HasValue && CookForFasterSimulation.Value != currCookForFasterSimulation) CookForFasterSimulation = null;
-                if (EnableMeshCleaning.HasValue && EnableMeshCleaning.Value != currEnableMeshCleaning) EnableMeshCleaning = null;
-                if (WeldColocatedVertices.HasValue && WeldColocatedVertices.Value != currWeldColocatedVertices) WeldColocatedVertices = null;
+                if (CookForFasterSimulation.HasValue && CookForFasterSimulation.Value != currCookForFasterSimulation)
+                {
+                    CookForFasterSimulation = null;
+                }
+
+                if (EnableMeshCleaning.HasValue && EnableMeshCleaning.Value != currEnableMeshCleaning)
+                {
+                    EnableMeshCleaning = null;
+                }
+
+                if (WeldColocatedVertices.HasValue && WeldColocatedVertices.Value != currWeldColocatedVertices)
+                {
+                    WeldColocatedVertices = null;
+                }
 #endif
 
-                if (ScaleInLightmap.HasValue && ScaleInLightmap.Value != currScaleInLightmap) ScaleInLightmap = null;
-                if (ShowGeneratedMeshes.HasValue && ShowGeneratedMeshes.Value != currShowGeneratedMeshes) ShowGeneratedMeshes = null;
+                if (ScaleInLightmap.HasValue && ScaleInLightmap.Value != currScaleInLightmap)
+                {
+                    ScaleInLightmap = null;
+                }
 
-                if (MinimumChartSize.HasValue && MinimumChartSize.Value != currMinimumChartSize) MinimumChartSize = null;
-                if (AutoUVMaxDistance.HasValue && AutoUVMaxDistance.Value != currAutoUVMaxDistance) AutoUVMaxDistance = null;
-                if (AutoUVMaxAngle.HasValue && AutoUVMaxAngle.Value != currAutoUVMaxAngle) AutoUVMaxAngle = null;
+                if (ShowGeneratedMeshes.HasValue && ShowGeneratedMeshes.Value != currShowGeneratedMeshes)
+                {
+                    ShowGeneratedMeshes = null;
+                }
 
-                if (AngleError.HasValue && AngleError.Value != currAngleError) AngleError = null;
-                if (AreaError.HasValue && AreaError.Value != currAreaError) AreaError = null;
-                if (HardAngle.HasValue && HardAngle.Value != currHardAngle) HardAngle = null;
-                if (PackMargin.HasValue && PackMargin.Value != currPackMargin) PackMargin = null;
-                if (GenerateLightMaps.HasValue && GenerateLightMaps.Value != currGenerateLightMaps) GenerateLightMaps = null;
+                if (MinimumChartSize.HasValue && MinimumChartSize.Value != currMinimumChartSize)
+                {
+                    MinimumChartSize = null;
+                }
 
+                if (AutoUVMaxDistance.HasValue && AutoUVMaxDistance.Value != currAutoUVMaxDistance)
+                {
+                    AutoUVMaxDistance = null;
+                }
 
+                if (AutoUVMaxAngle.HasValue && AutoUVMaxAngle.Value != currAutoUVMaxAngle)
+                {
+                    AutoUVMaxAngle = null;
+                }
 
-                if (defaultPhysicsMaterial != currdefaultPhysicsMaterial) defaultPhysicsMaterialMixed = true;
+                if (AngleError.HasValue && AngleError.Value != currAngleError)
+                {
+                    AngleError = null;
+                }
+
+                if (AreaError.HasValue && AreaError.Value != currAreaError)
+                {
+                    AreaError = null;
+                }
+
+                if (HardAngle.HasValue && HardAngle.Value != currHardAngle)
+                {
+                    HardAngle = null;
+                }
+
+                if (PackMargin.HasValue && PackMargin.Value != currPackMargin)
+                {
+                    PackMargin = null;
+                }
+
+                if (GenerateLightMaps.HasValue && GenerateLightMaps.Value != currGenerateLightMaps)
+                {
+                    GenerateLightMaps = null;
+                }
+
+                if (defaultPhysicsMaterial != currdefaultPhysicsMaterial)
+                {
+                    defaultPhysicsMaterialMixed = true;
+                }
             }
 
             var behaviourVisible = SessionState.GetBool("CSGModel.Behaviour", true);
@@ -346,12 +477,15 @@ namespace RealtimeCSG
                 EditorGUI.BeginChangeCheck();
                 behaviourVisible = EditorGUILayout.Foldout(behaviourVisible, "Behaviour");
                 if (EditorGUI.EndChangeCheck())
+                {
                     SessionState.SetBool("CSGModel.Behaviour", behaviourVisible);
+                }
+
                 if (behaviourVisible)
                 {
                     EditorGUI.indentLevel++;
                     {
-                        bool inverted_world = InvertedWorld.HasValue ? InvertedWorld.Value : false;
+                        bool inverted_world = InvertedWorld.HasValue && InvertedWorld.Value;
                         EditorGUI.BeginChangeCheck();
                         {
                             EditorGUI.showMixedValue = !InvertedWorld.HasValue;
@@ -362,8 +496,14 @@ namespace RealtimeCSG
                             for (int i = 0; i < models.Length; i++)
                             {
                                 var model = models[i];
-                                if (inverted_world) model.Settings |= ModelSettingsFlags.InvertedWorld;
-                                else model.Settings &= ~ModelSettingsFlags.InvertedWorld;
+                                if (inverted_world)
+                                {
+                                    model.Settings |= ModelSettingsFlags.InvertedWorld;
+                                }
+                                else
+                                {
+                                    model.Settings &= ~ModelSettingsFlags.InvertedWorld;
+                                }
                             }
 
                             GUI.changed = true;
@@ -375,7 +515,10 @@ namespace RealtimeCSG
             }
             GUILayout.EndVertical();
             if (behaviourVisible)
+            {
                 GUILayout.Space(10);
+            }
+
             if (models != null && models.Length == 1)
             {
                 GUILayout.BeginVertical(GUI.skin.box);
@@ -383,7 +526,10 @@ namespace RealtimeCSG
                     EditorGUI.BeginChangeCheck();
                     exportVisible = EditorGUILayout.Foldout(exportVisible, ExportLabel);
                     if (EditorGUI.EndChangeCheck())
+                    {
                         SessionState.SetBool("CSGModel.Export", exportVisible);
+                    }
+
                     if (exportVisible)
                     {
                         {
@@ -456,19 +602,24 @@ namespace RealtimeCSG
                 }
                 GUILayout.EndVertical();
                 if (exportVisible)
+                {
                     GUILayout.Space(10);
+                }
             }
             GUILayout.BeginVertical(GUI.skin.box);
             {
                 EditorGUI.BeginChangeCheck();
                 physicsVisible = EditorGUILayout.Foldout(physicsVisible, "Physics");
                 if (EditorGUI.EndChangeCheck())
+                {
                     SessionState.SetBool("CSGModel.Physics", physicsVisible);
+                }
+
                 if (physicsVisible)
                 {
                     EditorGUI.indentLevel++;
                     {
-                        bool collider_value = NoCollider.HasValue ? NoCollider.Value : false;
+                        bool collider_value = NoCollider.HasValue && NoCollider.Value;
                         EditorGUI.BeginChangeCheck();
                         {
                             EditorGUI.showMixedValue = !NoCollider.HasValue;
@@ -479,8 +630,14 @@ namespace RealtimeCSG
                             for (int i = 0; i < models.Length; i++)
                             {
                                 var model = models[i];
-                                if (collider_value) model.Settings |= ModelSettingsFlags.NoCollider;
-                                else model.Settings &= ~ModelSettingsFlags.NoCollider;
+                                if (collider_value)
+                                {
+                                    model.Settings |= ModelSettingsFlags.NoCollider;
+                                }
+                                else
+                                {
+                                    model.Settings &= ~ModelSettingsFlags.NoCollider;
+                                }
                             }
                             GUI.changed = true;
                             NoCollider = collider_value;
@@ -490,8 +647,8 @@ namespace RealtimeCSG
                     var have_no_collider = NoCollider.HasValue && NoCollider.Value;
                     EditorGUI.BeginDisabledGroup(have_no_collider);
                     {
-                        bool trigger_value_mixed = have_no_collider ? true : !IsTrigger.HasValue;
-                        bool trigger_value = IsTrigger.HasValue ? IsTrigger.Value : false;
+                        bool trigger_value_mixed = have_no_collider || !IsTrigger.HasValue;
+                        bool trigger_value = IsTrigger.HasValue && IsTrigger.Value;
                         {
                             EditorGUI.BeginChangeCheck();
                             {
@@ -503,16 +660,22 @@ namespace RealtimeCSG
                                 for (int i = 0; i < models.Length; i++)
                                 {
                                     var model = models[i];
-                                    if (trigger_value) model.Settings |= ModelSettingsFlags.IsTrigger;
-                                    else model.Settings &= ~ModelSettingsFlags.IsTrigger;
+                                    if (trigger_value)
+                                    {
+                                        model.Settings |= ModelSettingsFlags.IsTrigger;
+                                    }
+                                    else
+                                    {
+                                        model.Settings &= ~ModelSettingsFlags.IsTrigger;
+                                    }
                                 }
                                 GUI.changed = true;
                                 IsTrigger = trigger_value;
                                 updateMeshes = true;
                             }
                         }
-                        bool set_convex_value_mixed = have_no_collider ? true : !SetToConvex.HasValue;
-                        bool set_convex_value = have_no_collider ? false : (SetToConvex.HasValue ? SetToConvex.Value : false);
+                        bool set_convex_value_mixed = have_no_collider || !SetToConvex.HasValue;
+                        bool set_convex_value = !have_no_collider && SetToConvex.HasValue && SetToConvex.Value;
                         {
                             EditorGUI.BeginChangeCheck();
                             {
@@ -530,8 +693,14 @@ namespace RealtimeCSG
                             {
                                 for (int i = 0; i < models.Length; i++)
                                 {
-                                    if (set_convex_value) models[i].Settings |= ModelSettingsFlags.SetColliderConvex;
-                                    else models[i].Settings &= ~ModelSettingsFlags.SetColliderConvex;
+                                    if (set_convex_value)
+                                    {
+                                        models[i].Settings |= ModelSettingsFlags.SetColliderConvex;
+                                    }
+                                    else
+                                    {
+                                        models[i].Settings &= ~ModelSettingsFlags.SetColliderConvex;
+                                    }
                                 }
                                 GUI.changed = true;
                                 SetToConvex = set_convex_value;
@@ -550,7 +719,10 @@ namespace RealtimeCSG
                             if (EditorGUI.EndChangeCheck())
                             {
                                 if (!defaultPhysicsMaterial)
+                                {
                                     defaultPhysicsMaterial = MaterialUtility.DefaultPhysicsMaterial;
+                                }
+
                                 for (int i = 0; i < models.Length; i++)
                                 {
                                     models[i].DefaultPhysicsMaterial = defaultPhysicsMaterial;
@@ -572,7 +744,7 @@ namespace RealtimeCSG
                     }
                     EditorGUI.EndDisabledGroup();
                     {
-                        bool autoRigidbody = (AutoGenerateRigidBody.HasValue ? AutoGenerateRigidBody.Value : false);
+                        bool autoRigidbody = AutoGenerateRigidBody.HasValue && AutoGenerateRigidBody.Value;
                         EditorGUI.BeginChangeCheck();
                         {
                             EditorGUI.showMixedValue = !AutoGenerateRigidBody.HasValue;
@@ -582,8 +754,14 @@ namespace RealtimeCSG
                         {
                             for (int i = 0; i < models.Length; i++)
                             {
-                                if (autoRigidbody) models[i].Settings |= ModelSettingsFlags.AutoUpdateRigidBody;
-                                else models[i].Settings &= ~ModelSettingsFlags.AutoUpdateRigidBody;
+                                if (autoRigidbody)
+                                {
+                                    models[i].Settings |= ModelSettingsFlags.AutoUpdateRigidBody;
+                                }
+                                else
+                                {
+                                    models[i].Settings &= ~ModelSettingsFlags.AutoUpdateRigidBody;
+                                }
                             }
                             GUI.changed = true;
                             AutoGenerateRigidBody = autoRigidbody;
@@ -594,13 +772,19 @@ namespace RealtimeCSG
             }
             GUILayout.EndVertical();
             if (physicsVisible)
+            {
                 GUILayout.Space(10);
+            }
+
             GUILayout.BeginVertical(GUI.skin.box);
             {
                 EditorGUI.BeginChangeCheck();
                 renderingVisible = EditorGUILayout.Foldout(renderingVisible, "Rendering");
                 if (EditorGUI.EndChangeCheck())
+                {
                     SessionState.SetBool("CSGModel.Rendering", renderingVisible);
+                }
+
                 if (renderingVisible)
                 {
                     //ShadowCastingMode shadowcastingValue = ShadowCastingMode.HasValue ? ShadowCastingMode.Value : UnityEngine.Rendering.ShadowCastingMode.On;
@@ -609,7 +793,7 @@ namespace RealtimeCSG
                     //EditorGUI.BeginDisabledGroup(castOnlyShadow);
                     {
                         bool donotrender_value = //castOnlyShadow ? true : 
-                                                    (DoNotRender.HasValue ? DoNotRender.Value : false);
+                                                    DoNotRender.HasValue && DoNotRender.Value;
                         EditorGUI.BeginChangeCheck();
                         {
                             EditorGUI.showMixedValue = //castOnlyShadow ? true : 
@@ -621,8 +805,14 @@ namespace RealtimeCSG
                             for (int i = 0; i < models.Length; i++)
                             {
                                 var model = models[i];
-                                if (donotrender_value) model.Settings |= ModelSettingsFlags.DoNotRender;
-                                else model.Settings &= ~ModelSettingsFlags.DoNotRender;
+                                if (donotrender_value)
+                                {
+                                    model.Settings |= ModelSettingsFlags.DoNotRender;
+                                }
+                                else
+                                {
+                                    model.Settings &= ~ModelSettingsFlags.DoNotRender;
+                                }
                             }
                             GUI.changed = true;
                             DoNotRender = donotrender_value;
@@ -632,7 +822,7 @@ namespace RealtimeCSG
                     //EditorGUI.EndDisabledGroup();
                     {
                         bool two_sided_shadows_value = //castOnlyShadow ? true : 
-                                                        (TwoSidedShadows.HasValue ? TwoSidedShadows.Value : false);
+                                                        TwoSidedShadows.HasValue && TwoSidedShadows.Value;
                         EditorGUI.BeginChangeCheck();
                         {
                             EditorGUI.showMixedValue = //castOnlyShadow ? true : 
@@ -644,8 +834,14 @@ namespace RealtimeCSG
                             for (int i = 0; i < models.Length; i++)
                             {
                                 var model = models[i];
-                                if (two_sided_shadows_value) model.Settings |= ModelSettingsFlags.TwoSidedShadows;
-                                else model.Settings &= ~ModelSettingsFlags.TwoSidedShadows;
+                                if (two_sided_shadows_value)
+                                {
+                                    model.Settings |= ModelSettingsFlags.TwoSidedShadows;
+                                }
+                                else
+                                {
+                                    model.Settings &= ~ModelSettingsFlags.TwoSidedShadows;
+                                }
                             }
                             GUI.changed = true;
                             TwoSidedShadows = two_sided_shadows_value;
@@ -728,13 +924,19 @@ namespace RealtimeCSG
             }
             GUILayout.EndVertical();
             if (renderingVisible)
+            {
                 GUILayout.Space(10);
+            }
+
             GUILayout.BeginVertical(GUI.skin.box);
             {
                 EditorGUI.BeginChangeCheck();
                 UVSettingsVisible = EditorGUILayout.Foldout(UVSettingsVisible, "Lighting");
                 if (EditorGUI.EndChangeCheck())
+                {
                     SessionState.SetBool("CSGModel.UVSettings", UVSettingsVisible);
+                }
+
                 if (UVSettingsVisible)
                 {
                     EditorGUI.indentLevel++;
@@ -780,9 +982,13 @@ namespace RealtimeCSG
                                     StaticEditorFlags newStaticFlags;
 #if UNITY_2019_2_OR_NEWER
                                     if (enable)
+                                    {
                                         newStaticFlags = oldStaticFlags | StaticEditorFlags.ContributeGI;
+                                    }
                                     else
+                                    {
                                         newStaticFlags = oldStaticFlags & ~StaticEditorFlags.ContributeGI;
+                                    }
 #else
                                     if (enable)
                                         newStaticFlags = oldStaticFlags | StaticEditorFlags.LightmapStatic;
@@ -918,9 +1124,14 @@ namespace RealtimeCSG
                                         for (int i = 0; i < models.Length; i++)
                                         {
                                             if (autoRebuildUvs)
+                                            {
                                                 models[i].Settings |= ModelSettingsFlags.AutoRebuildUVs;
+                                            }
                                             else
+                                            {
                                                 models[i].Settings &= ~ModelSettingsFlags.AutoRebuildUVs;
+                                            }
+
                                             MeshInstanceManager.Refresh(models[i], onlyFastRefreshes: false);
                                         }
                                         GUI.changed = true;
@@ -945,9 +1156,14 @@ namespace RealtimeCSG
                                             for (int i = 0; i < models.Length; i++)
                                             {
                                                 if (preserveUVs)
+                                                {
                                                     models[i].Settings |= ModelSettingsFlags.PreserveUVs;
+                                                }
                                                 else
+                                                {
                                                     models[i].Settings &= ~ModelSettingsFlags.PreserveUVs;
+                                                }
+
                                                 MeshInstanceManager.Refresh(models[i], onlyFastRefreshes: false);
                                             }
                                             GUI.changed = true;
@@ -957,7 +1173,7 @@ namespace RealtimeCSG
                                     }
                                     EditorGUI.indentLevel++;
 
-                                    bool disabledAutoUVs = (PreserveUVs ?? false);
+                                    bool disabledAutoUVs = PreserveUVs ?? false;
                                     using (new EditorGUI.DisabledScope(disabledAutoUVs))
                                     {
                                         {
@@ -967,7 +1183,9 @@ namespace RealtimeCSG
                                                 EditorGUI.showMixedValue = !AutoUVMaxDistance.HasValue;
                                                 autoUVMaxDistance = EditorGUILayout.FloatField(AutoUVMaxDistanceContent, autoUVMaxDistance);
                                                 if (autoUVMaxDistance < 0.0f)
+                                                {
                                                     autoUVMaxDistance = 0.0f;
+                                                }
                                             }
                                             if (EditorGUI.EndChangeCheck())
                                             {
@@ -1013,9 +1231,14 @@ namespace RealtimeCSG
                                             for (int i = 0; i < models.Length; i++)
                                             {
                                                 if (ignoreNormals)
+                                                {
                                                     models[i].Settings |= ModelSettingsFlags.IgnoreNormals;
+                                                }
                                                 else
+                                                {
                                                     models[i].Settings &= ~ModelSettingsFlags.IgnoreNormals;
+                                                }
+
                                                 MeshInstanceManager.Refresh(models[i], onlyFastRefreshes: false);
                                             }
                                             GUI.changed = true;
@@ -1079,9 +1302,14 @@ namespace RealtimeCSG
                                             for (int i = 0; i < models.Length; i++)
                                             {
                                                 if (stitchLightmapSeams)
+                                                {
                                                     models[i].Settings |= ModelSettingsFlags.StitchLightmapSeams;
+                                                }
                                                 else
+                                                {
                                                     models[i].Settings &= ~ModelSettingsFlags.StitchLightmapSeams;
+                                                }
+
                                                 MeshInstanceManager.Refresh(models[i], onlyFastRefreshes: false);
                                             }
                                             GUI.changed = true;
@@ -1104,13 +1332,19 @@ namespace RealtimeCSG
             }
             GUILayout.EndVertical();
             if (UVSettingsVisible)
+            {
                 GUILayout.Space(10);
+            }
+
             GUILayout.BeginVertical(GUI.skin.box);
             {
                 EditorGUI.BeginChangeCheck();
                 meshAdvancedVisible = EditorGUILayout.Foldout(meshAdvancedVisible, "Mesh (advanced)");
                 if (EditorGUI.EndChangeCheck())
+                {
                     SessionState.SetBool("CSGModel.MeshAdvanced", meshAdvancedVisible);
+                }
+
                 if (meshAdvancedVisible)
                 {
                     EditorGUI.indentLevel++;
@@ -1165,9 +1399,21 @@ namespace RealtimeCSG
                                                                     MeshColliderCookingOptions.EnableMeshCleaning |
                                                                     MeshColliderCookingOptions.WeldColocatedVertices);
 
-                                    if (cookForFasterSimulation) meshColliderCookingOptions |= MeshColliderCookingOptions.CookForFasterSimulation;
-                                    if (enableMeshCleaning) meshColliderCookingOptions |= MeshColliderCookingOptions.EnableMeshCleaning;
-                                    if (weldColocatedVertices) meshColliderCookingOptions |= MeshColliderCookingOptions.WeldColocatedVertices;
+                                    if (cookForFasterSimulation)
+                                    {
+                                        meshColliderCookingOptions |= MeshColliderCookingOptions.CookForFasterSimulation;
+                                    }
+
+                                    if (enableMeshCleaning)
+                                    {
+                                        meshColliderCookingOptions |= MeshColliderCookingOptions.EnableMeshCleaning;
+                                    }
+
+                                    if (weldColocatedVertices)
+                                    {
+                                        meshColliderCookingOptions |= MeshColliderCookingOptions.WeldColocatedVertices;
+                                    }
+
                                     models[i].MeshColliderCookingOptions = meshColliderCookingOptions;
                                 }
                                 GUI.changed = true;
@@ -1228,9 +1474,21 @@ namespace RealtimeCSG
                                                            VertexChannelFlags.UV0);
 
                                         //if (vertex_channel_color)	vertexChannel |= VertexChannelFlags.Color;
-                                        if (vertex_channel_tangent) vertexChannel |= VertexChannelFlags.Tangent;
-                                        if (vertex_channel_normal) vertexChannel |= VertexChannelFlags.Normal;
-                                        if (vertex_channel_UV0) vertexChannel |= VertexChannelFlags.UV0;
+                                        if (vertex_channel_tangent)
+                                        {
+                                            vertexChannel |= VertexChannelFlags.Tangent;
+                                        }
+
+                                        if (vertex_channel_normal)
+                                        {
+                                            vertexChannel |= VertexChannelFlags.Normal;
+                                        }
+
+                                        if (vertex_channel_UV0)
+                                        {
+                                            vertexChannel |= VertexChannelFlags.UV0;
+                                        }
+
                                         models[i].VertexChannels = vertexChannel;
                                     }
                                     GUI.changed = true;
@@ -1245,13 +1503,18 @@ namespace RealtimeCSG
                 if (models != null && models.Length == 1)
                 {
                     if (meshAdvancedVisible)
+                    {
                         GUILayout.Space(10);
+                    }
 
                     GUILayout.BeginVertical(GUI.skin.box);
                     EditorGUI.BeginChangeCheck();
                     statisticsVisible = EditorGUILayout.Foldout(statisticsVisible, "Statistics");
                     if (EditorGUI.EndChangeCheck())
+                    {
                         SessionState.SetBool("CSGModel.Statistics", statisticsVisible);
+                    }
+
                     if (statisticsVisible)
                     {
                         if (models[0].generatedMeshes == null ||
@@ -1274,7 +1537,9 @@ namespace RealtimeCSG
                             {
                                 var mesh = instance.SharedMesh;
                                 if (!mesh || !MeshInstanceManager.HasVisibleMeshRenderer(instance))
+                                {
                                     continue;
+                                }
 
                                 if (!instance.RenderMaterial)
                                 {
@@ -1296,7 +1561,9 @@ namespace RealtimeCSG
                                     if (!instance.RenderMaterial)
                                     {
                                         if (!dummyMaterial)
+                                        {
                                             dummyMaterial = new Material(MaterialUtility.FloorMaterial);
+                                        }
 
                                         instance.RenderMaterial = dummyMaterial;
                                     }
@@ -1333,7 +1600,9 @@ namespace RealtimeCSG
                                 var meshes = item.Value;
 
                                 if (material == dummyMaterial)
+                                {
                                     material = null;
+                                }
 
                                 GUILayout.BeginHorizontal();
                                 {
@@ -1373,7 +1642,7 @@ namespace RealtimeCSG
                 for (int i = 0; i < models.Length; i++)
                 {
                     MeshInstanceManager.ClearUVs(models[i]);
-                    (CSGTreeNode.Encapsulate(models[i].modelNodeID)).SetDirty();
+                    CSGTreeNode.Encapsulate(models[i].modelNodeID).SetDirty();
                 }
             }
         }

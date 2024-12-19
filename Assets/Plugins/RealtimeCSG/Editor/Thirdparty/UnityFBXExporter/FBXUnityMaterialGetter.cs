@@ -78,7 +78,9 @@ namespace UnityFBXExporter
                 {
                     var meshCollider = meshColliders[i];
                     if (meshCollider.GetComponent<Renderer>())
+                    {
                         continue;
+                    }
 
                     var mat = colliderMaterial;
                     if (uniqueMaterials.Contains(mat) == false && mat != null)
@@ -96,13 +98,17 @@ namespace UnityFBXExporter
                 // We rename the material if it is being copied
                 string materialName = mat.name;
                 if (copyMaterials)
+                {
                     materialName = gameObj.name + "_" + mat.name;
+                }
 
                 int referenceId = Mathf.Abs(mat.GetInstanceID());
 
                 var color = Color.white;
                 if (mat.HasProperty("_Color"))
+                {
                     color = mat.GetColor("_Color");
+                }
 
                 tempObjectSb.AppendLine();
                 tempObjectSb.AppendLine("\tMaterial: " + referenceId + ", \"Material::" + materialName + "\", \"\" {");
@@ -326,7 +332,9 @@ namespace UnityFBXExporter
             // Sets the relative path for the copied texture
             // TODO: If we don't copy the textures to a relative path, we must find a relative path to write down here
             if (copyTextures)
+            {
                 objectsSb.AppendLine("\t\tRelativeFilename: \"/Textures/" + textureName + textureExtension + "\"");
+            }
 
             objectsSb.AppendLine("\t\tModelUVTranslation: 0,0"); // TODO: Figure out how to get the UV translation into here
             objectsSb.AppendLine("\t\tModelUVScaling: 1,1"); // TODO: Figure out how to get the UV scaling into here

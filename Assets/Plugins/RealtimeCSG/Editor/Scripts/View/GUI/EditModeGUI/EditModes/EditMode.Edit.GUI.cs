@@ -44,7 +44,10 @@ namespace RealtimeCSG
                         buttonArea.height = 13;
                         buttonArea.width = 13;
                         if (GUI.Button(buttonArea, GUIContent.none, "WinBtnClose"))
+                        {
                             EditModeToolWindowSceneGUI.GetWindow();
+                        }
+
                         TooltipUtility.SetToolTip(CSG_GUIStyleUtility.PopOutTooltip, buttonArea);
 
                         int controlID = GUIUtility.GetControlID(SceneViewMeshOverlayHash, FocusType.Keyboard, currentArea);
@@ -77,7 +80,7 @@ namespace RealtimeCSG
         static void ShowCSGOperations(bool isSceneGUI, EditModeMeshEdit tool, FilteredSelection filteredSelection)
         {
             bool operations_enabled = tool != null &&
-                                    (filteredSelection.NodeTargets.Length > 0 && filteredSelection.ModelTargets.Length == 0);
+                                    filteredSelection.NodeTargets.Length > 0 && filteredSelection.ModelTargets.Length == 0;
 
             EditorGUI.BeginDisabledGroup(!operations_enabled);
             {
@@ -135,7 +138,7 @@ namespace RealtimeCSG
                         mixedValues = !passThrough.HasValue || passThrough.Value;
 
                         var ptMixedValues = !passThrough.HasValue;
-                        passThroughValue = passThrough.HasValue ? passThrough.Value : false;
+                        passThroughValue = passThrough.HasValue && passThrough.Value;
                         if (CSG_EditorGUIUtility.PassThroughButton(passThroughValue, ptMixedValues))
                         {
                             Undo.RecordObjects(filteredSelection.OperationTargets, "Changed CSG operation of nodes");
@@ -148,7 +151,9 @@ namespace RealtimeCSG
                         }
 
                         if (passThroughValue)
+                        {
                             operationType = (CSGOperationType)255;
+                        }
                     }
                     EditorGUI.BeginChangeCheck();
                     {
@@ -291,9 +296,13 @@ namespace RealtimeCSG
                             GUILayout.BeginHorizontal(CSG_GUIStyleUtility.ContentEmpty);
                             {
                                 if (isSceneGUI)
+                                {
                                     EditorGUILayout.LabelField(ContentFlip, labelWidth);
+                                }
                                 else
+                                {
                                     EditorGUILayout.LabelField(ContentFlip, largeLabelWidth);
+                                }
 
                                 if (GUILayout.Button(ContentFlipX, left)) { tool.FlipX(); }
                                 TooltipUtility.SetToolTip(TooltipFlipX);

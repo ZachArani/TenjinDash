@@ -38,9 +38,15 @@ namespace RealtimeCSG.Components
             set
             {
                 if (passThrough == value)
+                {
                     return;
+                }
+
                 OnDisable(); passThrough = value; OnEnable();
-                if (CSGSceneManagerRedirector.Interface != null) CSGSceneManagerRedirector.Interface.OnPassthroughChanged(this);
+                if (CSGSceneManagerRedirector.Interface != null)
+                {
+                    CSGSceneManagerRedirector.Interface.OnPassthroughChanged(this);
+                }
             }
         }
 #endif
@@ -82,24 +88,63 @@ namespace RealtimeCSG.Components
             // cannot change visibility since this might have an effect on exporter
             this.hideFlags |= HideFlags.DontSaveInBuild;
             ComponentUpgrader.UpgradeWhenNecessary(this); ;
-            if (CSGSceneManagerRedirector.Interface != null) CSGSceneManagerRedirector.Interface.OnCreated(this);
+            if (CSGSceneManagerRedirector.Interface != null)
+            {
+                CSGSceneManagerRedirector.Interface.OnCreated(this);
+            }
         }
-        internal void OnEnable() { if (CSGSceneManagerRedirector.Interface != null && !passThrough) CSGSceneManagerRedirector.Interface.OnEnabled(this); }
+        internal void OnEnable()
+        {
+            if (CSGSceneManagerRedirector.Interface != null && !passThrough)
+            {
+                CSGSceneManagerRedirector.Interface.OnEnabled(this);
+            }
+        }
 
         // unregister ourselves from our scene manager
-        internal void OnDisable() { if (CSGSceneManagerRedirector.Interface != null && !passThrough) CSGSceneManagerRedirector.Interface.OnDisabled(this); }
-        internal void OnDestroy() { if (CSGSceneManagerRedirector.Interface != null) CSGSceneManagerRedirector.Interface.OnDestroyed(this); }
+        internal void OnDisable()
+        {
+            if (CSGSceneManagerRedirector.Interface != null && !passThrough)
+            {
+                CSGSceneManagerRedirector.Interface.OnDisabled(this);
+            }
+        }
+        internal void OnDestroy()
+        {
+            if (CSGSceneManagerRedirector.Interface != null)
+            {
+                CSGSceneManagerRedirector.Interface.OnDestroyed(this);
+            }
+        }
 
         // detect if this node has been moved within the hierarchy
-        internal void OnTransformParentChanged() { if (CSGSceneManagerRedirector.Interface != null && !passThrough) CSGSceneManagerRedirector.Interface.OnTransformParentChanged(this); }
+        internal void OnTransformParentChanged()
+        {
+            if (CSGSceneManagerRedirector.Interface != null && !passThrough)
+            {
+                CSGSceneManagerRedirector.Interface.OnTransformParentChanged(this);
+            }
+        }
 
         // called when any value of this brush has been modified from within the inspector / or recompile
-        internal void OnValidate() { if (CSGSceneManagerRedirector.Interface != null && !passThrough) CSGSceneManagerRedirector.Interface.OnValidate(this); }
+        internal void OnValidate()
+        {
+            if (CSGSceneManagerRedirector.Interface != null && !passThrough)
+            {
+                CSGSceneManagerRedirector.Interface.OnValidate(this);
+            }
+        }
 #endif
         #endregion
 
 #if UNITY_EDITOR
-        public void EnsureInitialized() { if (CSGSceneManagerRedirector.Interface != null && !passThrough) CSGSceneManagerRedirector.Interface.EnsureInitialized(this); }
+        public void EnsureInitialized()
+        {
+            if (CSGSceneManagerRedirector.Interface != null && !passThrough)
+            {
+                CSGSceneManagerRedirector.Interface.EnsureInitialized(this);
+            }
+        }
 #endif
     }
 }

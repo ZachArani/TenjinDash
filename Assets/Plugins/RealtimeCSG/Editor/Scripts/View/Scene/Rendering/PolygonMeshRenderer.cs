@@ -34,7 +34,9 @@ namespace RealtimeCSG
             {
                 if (triangleIndices.Length < 3 ||
                     triangleIndices.Length % 3 != 0)
+                {
                     return;
+                }
 
                 int startIndex = vertexCount;
                 if (matrix.isIdentity)
@@ -68,7 +70,9 @@ namespace RealtimeCSG
             public void AddPolygon(Matrix4x4 matrix, Vector3[] polyVertices, int[] polyIndices, Color color)
             {
                 if (polyIndices.Length < 3)
+                {
                     return;
+                }
 
                 int startIndex = vertexCount;
                 if (matrix.isIdentity)
@@ -101,7 +105,9 @@ namespace RealtimeCSG
             public void AddPolygon(Vector3[] polyVertices, int[] polyIndices, Color color)
             {
                 if (polyIndices.Length < 3)
+                {
                     return;
+                }
 
                 int startIndex = vertexCount;
                 for (int i = 0; i < polyIndices.Length; i++)
@@ -157,8 +163,14 @@ namespace RealtimeCSG
                     newColors = colors.Take(vertexCount).ToArray();
                 }
 
-                if (indexCount == MaxIndexCount) newIndices = indices;
-                else newIndices = indices.Take(indexCount).ToArray();
+                if (indexCount == MaxIndexCount)
+                {
+                    newIndices = indices;
+                }
+                else
+                {
+                    newIndices = indices.Take(indexCount).ToArray();
+                }
 
                 mesh.vertices = newVertices;
                 mesh.colors = newColors;
@@ -170,13 +182,20 @@ namespace RealtimeCSG
             public void Draw()
             {
                 if (vertexCount == 0 || mesh == null)
+                {
                     return;
+                }
+
                 Graphics.DrawMeshNow(mesh, MathConstants.identityMatrix);
             }
 
             internal void Destroy()
             {
-                if (mesh) UnityEngine.Object.DestroyImmediate(mesh);
+                if (mesh)
+                {
+                    UnityEngine.Object.DestroyImmediate(mesh);
+                }
+
                 mesh = null;
                 vertices = null;
                 colors = null;
@@ -189,32 +208,46 @@ namespace RealtimeCSG
         public void Begin()
         {
             if (triangleMeshes == null || triangleMeshes.Count == 0)
+            {
                 return;
+            }
 
             currentTriangleMesh = 0;
-            for (int i = 0; i < triangleMeshes.Count; i++) triangleMeshes[i].Clear();
+            for (int i = 0; i < triangleMeshes.Count; i++)
+            {
+                triangleMeshes[i].Clear();
+            }
         }
 
         public void End()
         {
             if (triangleMeshes == null || triangleMeshes.Count == 0)
+            {
                 return;
+            }
 
             var max = Mathf.Min(currentTriangleMesh, triangleMeshes.Count);
             for (int i = 0; i <= max; i++)
+            {
                 triangleMeshes[i].CommitMesh();
+            }
         }
 
         public void Render(Material genericMaterial)
         {
             if (triangleMeshes == null || triangleMeshes.Count == 0)
+            {
                 return;
+            }
+
             if (genericMaterial &&
                 genericMaterial.SetPass(0))
             {
                 var max = Mathf.Min(currentTriangleMesh, triangleMeshes.Count - 1);
                 for (int i = 0; i <= max; i++)
+                {
                     triangleMeshes[i].Draw();
+                }
             }
         }
 
@@ -235,7 +268,10 @@ namespace RealtimeCSG
             {
                 currentTriangleMesh++;
                 if (currentTriangleMesh >= triangleMeshes.Count)
+                {
                     triangleMeshes.Add(new TriangleMesh());
+                }
+
                 triangleMesh = triangleMeshes[currentTriangleMesh];
                 triangleMesh.Clear();
             }
@@ -254,7 +290,10 @@ namespace RealtimeCSG
             {
                 currentTriangleMesh++;
                 if (currentTriangleMesh >= triangleMeshes.Count)
+                {
                     triangleMeshes.Add(new TriangleMesh());
+                }
+
                 triangleMesh = triangleMeshes[currentTriangleMesh];
                 triangleMesh.Clear();
             }
@@ -273,7 +312,10 @@ namespace RealtimeCSG
             {
                 currentTriangleMesh++;
                 if (currentTriangleMesh >= triangleMeshes.Count)
+                {
                     triangleMeshes.Add(new TriangleMesh());
+                }
+
                 triangleMesh = triangleMeshes[currentTriangleMesh];
             }
 
@@ -295,7 +337,10 @@ namespace RealtimeCSG
         internal void Clear()
         {
             currentTriangleMesh = 0;
-            for (int i = 0; i < triangleMeshes.Count; i++) triangleMeshes[i].Clear();
+            for (int i = 0; i < triangleMeshes.Count; i++)
+            {
+                triangleMeshes[i].Clear();
+            }
         }
     }
 }

@@ -31,10 +31,14 @@ namespace RealtimeCSG.Foundation
                                                                       VertexChannelFlags vertexChannelMask)
         {
             if (meshTypes == null)
+            {
                 throw new ArgumentNullException("meshTypes");
+            }
 
             if (meshTypes.Length == 0)
+            {
                 return null;
+            }
 
             Int32 meshDescriptionCount;
 
@@ -45,7 +49,9 @@ namespace RealtimeCSG.Foundation
 
             nativeMeshTypeHandle.Free();
             if (!result || meshDescriptionCount == 0)
+            {
                 return null;
+            }
 
             var meshDescriptions = new GeneratedMeshDescription[meshDescriptionCount];
             var meshDescriptionsHandle = GCHandle.Alloc(meshDescriptions, GCHandleType.Pinned);
@@ -58,7 +64,9 @@ namespace RealtimeCSG.Foundation
             if (!result ||
                 meshDescriptions[0].vertexCount <= 0 ||
                 meshDescriptions[0].indexCount <= 0)
+            {
                 return null;
+            }
 
             return meshDescriptions;
         }
@@ -122,14 +130,14 @@ namespace RealtimeCSG.Foundation
 
             var boundsCenter = Vector3.zero;
             var boundsSize = Vector3.zero;
-            var result = GetGeneratedMesh((Int32)treeNodeID,
-                                          (Int32)meshIndex,
-                                          (Int32)subMeshIndex,
+            var result = GetGeneratedMesh(treeNodeID,
+                                          meshIndex,
+                                          subMeshIndex,
 
-                                          (Int32)indexCount,
+                                          indexCount,
                                           indicesPtr,
 
-                                          (Int32)vertexCount,
+                                          vertexCount,
                                           positionPtr,
                                           tangentPtr,
                                           normalPtr,
@@ -144,7 +152,9 @@ namespace RealtimeCSG.Foundation
             indicesHandle.Free();
 
             if (!result)
+            {
                 return null;
+            }
 
             generatedMesh.bounds = new Bounds(boundsCenter, boundsSize);
             return generatedMesh;

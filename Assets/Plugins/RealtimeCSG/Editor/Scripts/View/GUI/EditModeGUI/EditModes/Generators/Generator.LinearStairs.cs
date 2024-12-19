@@ -64,7 +64,9 @@ namespace RealtimeCSG
             set
             {
                 if (settings.StepDepth == value)
+                {
                     return;
+                }
 
                 Undo.RecordObject(this, "Modified Linear Stairs Step Depth");
                 settings.SetStepDepth(value);
@@ -78,7 +80,10 @@ namespace RealtimeCSG
             set
             {
                 if (settings.StepHeight == value)
+                {
                     return;
+                }
+
                 Undo.RecordObject(this, "Modified Linear Stairs Step Height");
                 settings.SetStepHeight(value);
                 UpdateBaseShape(true);
@@ -91,7 +96,10 @@ namespace RealtimeCSG
             set
             {
                 if (settings.TotalSteps == value)
+                {
                     return;
+                }
+
                 Undo.RecordObject(this, "Modified Linear Stairs Total Steps");
                 settings.SetTotalSteps(value);
                 UpdateBaseShape(true);
@@ -104,7 +112,9 @@ namespace RealtimeCSG
             set
             {
                 if (settings.StairsWidth == value)
+                {
                     return;
+                }
 
                 Undo.RecordObject(this, "Modified Linear Stairs Width");
                 settings.SetStairsWidth(value);
@@ -123,7 +133,9 @@ namespace RealtimeCSG
             set
             {
                 if (settings.StairsDepth == value)
+                {
                     return;
+                }
 
                 Undo.RecordObject(this, "Modified Linear Stairs Depth");
                 settings.SetStairsDepth(value);
@@ -143,7 +155,9 @@ namespace RealtimeCSG
             set
             {
                 if (settings.StairsDepth == value)
+                {
                     return;
+                }
 
                 Undo.RecordObject(this, "Modified Linear Stairs Height");
                 settings.SetStairsHeight(value);
@@ -160,20 +174,24 @@ namespace RealtimeCSG
         {
             get
             {
-                var floatTotalSteps = (Mathf.Max(0, settings.StairsHeight - settings.ExtraHeight) / settings.StepHeight);
+                var floatTotalSteps = Mathf.Max(0, settings.StairsHeight - settings.ExtraHeight) / settings.StepHeight;
                 return Mathf.Max(0, settings.StairsDepth - (floatTotalSteps * settings.StepDepth));
             }
             set
             {
                 if (settings.ExtraDepth == value)
+                {
                     return;
+                }
 
                 Undo.RecordObject(this, "Modified Linear Stairs Extra Depth");
                 settings.SetExtraDepth(value);
 
                 if (editMode != EditMode.CreatePlane &&
                     settings.vertices.Length > 1)
+                {
                     UpdateBaseShape(true);
+                }
             }
         }
 
@@ -183,14 +201,18 @@ namespace RealtimeCSG
             set
             {
                 if (settings.ExtraHeight == value)
+                {
                     return;
+                }
 
                 Undo.RecordObject(this, "Modified Linear Stairs Extra Height");
                 settings.SetExtraHeight(value);
 
                 if (editMode != EditMode.CreatePlane &&
                     settings.vertices.Length > 1)
+                {
                     UpdateBaseShape(true);
+                }
             }
         }
 
@@ -200,14 +222,18 @@ namespace RealtimeCSG
             set
             {
                 if (settings.StairsBottom == value)
+                {
                     return;
+                }
 
                 Undo.RecordObject(this, "Modified Stairs Bottom");
                 settings.StairsBottom = value;
 
                 if (editMode != EditMode.CreatePlane &&
                     settings.vertices.Length > 1)
+                {
                     UpdateBaseShape(true);
+                }
             }
         }
         #endregion
@@ -276,21 +302,29 @@ namespace RealtimeCSG
         void IGenerator.OnDefaultMaterialModified()
         {
             if (generatedBrushes == null)
+            {
                 return;
+            }
 
             var defaultMaterial = CSGSettings.DefaultMaterial;
             for (int i = 0; i < generatedBrushes.Length; i++)
             {
                 var brush = generatedBrushes[i];
                 if (!brush)
+                {
                     continue;
+                }
 
                 var shape = brush.Shape;
                 for (var m = 0; m < shape.TexGens.Length; m++)
+                {
                     shape.TexGens[m].RenderMaterial = defaultMaterial;
+                }
 
                 if (brush.ControlMesh != null)
+                {
                     brush.ControlMesh.SetDirty();
+                }
             }
         }
         #endregion
@@ -337,11 +371,16 @@ namespace RealtimeCSG
         {
             if (editMode == EditMode.ExtrudeShape ||
                  editMode == EditMode.EditShape)
+            {
                 return settings.bounds;
+            }
 
             var bounds = ShapeSettings.CalculateBounds(rotation, gridTangent, gridBinormal);
             if (settings.vertices.Length < 3)
+            {
                 bounds.Extend(rotation * worldPosition);
+            }
+
             return bounds;
         }
         #endregion
@@ -379,9 +418,13 @@ namespace RealtimeCSG
                     }
                 }
                 if (planeIsInversed)
+                {
                     firstSnappedPlanes[i / 2] = worldPlane.Negated();
+                }
                 else
+                {
                     firstSnappedPlanes[i / 2] = worldPlane;
+                }
             }
         }
 
@@ -391,7 +434,9 @@ namespace RealtimeCSG
         void PaintSquare()
         {
             if (settings.vertices.Length < 1)
+            {
                 return;
+            }
 
             Vector3 corner1 = settings.vertices[0];
             Vector3 corner2 = settings.vertices.Length >= 2 ? settings.vertices[1] : worldPosition;
@@ -497,7 +542,10 @@ namespace RealtimeCSG
                 {
                     if (settings.vertexIDs == null ||
                         settings.vertexIDs.Length != settings.vertices.Length)
+                    {
                         settings.vertexIDs = new int[settings.vertices.Length];
+                    }
+
                     for (int i = 0; i < settings.vertices.Length; i++)
                     {
                         settings.vertexIDs[i] = GUIUtility.GetControlID(ShapeBuilderPointHash, FocusType.Passive);
@@ -536,7 +584,9 @@ namespace RealtimeCSG
             {
                 if (editMode == EditMode.ExtrudeShape ||
                     editMode == EditMode.EditShape)
+                {
                     editMode = EditMode.CreatePlane;
+                }
             }
             EditorGUI.BeginChangeCheck();
             {
@@ -669,7 +719,9 @@ namespace RealtimeCSG
         void UpdateSizes()
         {
             if (settings.vertices.Length == 0)
+            {
                 return;
+            }
 
             var worldToLocalRotation = GetWorldToLocalRotation();
             var localToWorldRotation = Quaternion.Inverse(worldToLocalRotation);
@@ -743,8 +795,8 @@ namespace RealtimeCSG
                         worldPosition = snapFunction(camera, worldPosition, hoverBuildPlane, ref visualSnappedEdges, out snappedOnBrush, generatedBrushes, ignoreAllBrushes: true);
                         if (snappedOnBrush != null)
                         {
-                            pointOnEdge = (visualSnappedEdges != null &&
-                                      visualSnappedEdges.Count > 0);
+                            pointOnEdge = visualSnappedEdges != null &&
+                                      visualSnappedEdges.Count > 0;
                             vertexOnBrush = snappedOnBrush;
                             vertexOnGeometry = true;
                         }
@@ -768,9 +820,14 @@ namespace RealtimeCSG
 
                         var forward = camera.transform.forward;
                         if (Vector3.Dot(forward, gridBinormal) < Vector3.Dot(forward, gridTangent))
+                        {
                             hoverBuildPlane = new CSGPlane(gridBinormal, startPoint);
+                        }
                         else
+                        {
                             hoverBuildPlane = new CSGPlane(gridTangent, startPoint);
+                        }
+
                         worldPosition = hoverBuildPlane.RayIntersection(mouseRay);
 
                         // the third point is always straight up from the second point
@@ -785,8 +842,8 @@ namespace RealtimeCSG
                             worldPosition = raySnapFunction(camera, worldPosition, ray, ref visualSnappedEdges, out snappedOnBrush);
                             if (snappedOnBrush != null)
                             {
-                                pointOnEdge = (visualSnappedEdges != null &&
-                                                visualSnappedEdges.Count > 0);
+                                pointOnEdge = visualSnappedEdges != null &&
+                                                visualSnappedEdges.Count > 0;
                                 vertexOnBrush = snappedOnBrush;
                             }
                         }
@@ -805,8 +862,8 @@ namespace RealtimeCSG
                             worldPosition = snapFunction(camera, worldPosition, hoverBuildPlane, ref visualSnappedEdges, out snappedOnBrush, generatedBrushes, ignoreAllBrushes: true);
                             if (snappedOnBrush != null)
                             {
-                                pointOnEdge = (visualSnappedEdges != null &&
-                                                visualSnappedEdges.Count > 0);
+                                pointOnEdge = visualSnappedEdges != null &&
+                                                visualSnappedEdges.Count > 0;
                                 vertexOnBrush = snappedOnBrush;
                             }
                         }
@@ -816,7 +873,9 @@ namespace RealtimeCSG
                 if (geometryModel == null && vertexOnBrush != null)
                 {
                     if (vertexOnBrush.ChildData != null && vertexOnBrush.ChildData.Model)
+                    {
                         geometryModel = vertexOnBrush.ChildData.Model;
+                    }
                 }
 
                 if (worldPosition != prevWorldPosition)
@@ -831,7 +890,9 @@ namespace RealtimeCSG
                         }
                     }
                     if (Event.current.type != EventType.Repaint)
+                    {
                         CSG_EditorGUIUtility.RepaintAll();
+                    }
                 }
 
                 visualSnappedGrid = RealtimeCSG.CSGGrid.FindAllGridEdgesThatTouchPoint(camera, worldPosition);
@@ -896,12 +957,20 @@ namespace RealtimeCSG
                 case EventType.MouseDown:
                     {
                         if (!sceneRect.Contains(Event.current.mousePosition))
+                        {
                             break;
+                        }
+
                         if (Tools.viewTool != ViewTool.None && Tools.viewTool != ViewTool.Pan)
+                        {
                             return;
+                        }
+
                         if ((GUIUtility.hotControl != 0 && GUIUtility.hotControl != shapeEditId && GUIUtility.hotControl != base.shapeId) ||
                             Event.current.button != 0)
+                        {
                             return;
+                        }
 
                         Event.current.Use();
                         if (settings.vertices.Length == 0)
@@ -925,7 +994,10 @@ namespace RealtimeCSG
                             {
                                 if (settings.vertices.Length < 2 &&
                                     hoverBuildPlane.normal.sqrMagnitude != 0)
+                                {
                                     buildPlane = hoverBuildPlane;
+                                }
+
                                 CalculateWorldSpaceTangents(camera);
 
                                 if (settings.vertices.Length == 0)
@@ -949,7 +1021,9 @@ namespace RealtimeCSG
                                     if (firstSnappedEdges != null)
                                     {
                                         if (firstSnappedPlanes == null)
+                                        {
                                             CreateSnappedPlanes();
+                                        }
 
                                         bool outside = true;
                                         for (int i = 0; i < firstSnappedPlanes.Length; i++)
@@ -997,7 +1071,10 @@ namespace RealtimeCSG
                 case EventType.MouseDrag:
                     {
                         if (Tools.viewTool != ViewTool.None && Tools.viewTool != ViewTool.Pan)
+                        {
                             break;
+                        }
+
                         if (GUIUtility.hotControl == base.shapeId && Event.current.button == 0)
                         {
                             Event.current.Use();
@@ -1007,9 +1084,15 @@ namespace RealtimeCSG
                 case EventType.MouseUp:
                     {
                         if (GUIUtility.hotControl != base.shapeId)
+                        {
                             return;
+                        }
+
                         if (Tools.viewTool != ViewTool.None && Tools.viewTool != ViewTool.Pan)
+                        {
                             return;
+                        }
+
                         if (Event.current.button == 0)
                         {
                             Event.current.Use();
@@ -1036,7 +1119,9 @@ namespace RealtimeCSG
         internal override bool UpdateBaseShape(bool registerUndo = true)
         {
             if (editMode == EditMode.CreatePlane)
+            {
                 return false;
+            }
 
             var length = StairsDepth;
             if (length <= 0)
@@ -1059,7 +1144,9 @@ namespace RealtimeCSG
             }
 
             if (registerUndo)
+            {
                 Undo.RecordObjects(generatedBrushes, "Created Linear Stairs");
+            }
 
             if (!GenerateStairs(generatedBrushes, totalSteps, StepDepth, StepHeight, StepDepth, StairsDepth, StairsWidth, StairsHeight, ExtraDepth, ExtraHeight, StairsBottom))
             {
@@ -1069,14 +1156,18 @@ namespace RealtimeCSG
             }
 
             if (registerUndo)
+            {
                 MarkAllBrushesDirty();
-
+            }
 
             try
             {
                 InternalCSGModelManager.skipCheckForChanges = true;
                 if (registerUndo)
+                {
                     EditorUtility.SetDirty(this);
+                }
+
                 InternalCSGModelManager.External.SetDirty(parentModel.modelNodeID);
                 InternalCSGModelManager.CheckForChanges(forceHierarchyUpdate: true);
                 //DebugEditorWindow.PrintDebugInfo();
@@ -1136,9 +1227,9 @@ namespace RealtimeCSG
 
                 var heightPos = heightDirection * curStepY;
 
-                var widthSize = (widthDirection * stairsWidth);
+                var widthSize = widthDirection * stairsWidth;
                 var lengthSize = (lengthDirection * curStepDepth) - extraLength;
-                var heightSize = (heightDirection * curStepHeight);
+                var heightSize = heightDirection * curStepHeight;
 
                 var size = widthSize + heightSize + lengthSize;
                 var position = (totalSteps == 1) ? (heightPos + lengthPos + brushPosition) : (heightPos + lengthPos);
@@ -1150,19 +1241,26 @@ namespace RealtimeCSG
                 {
                     success = false;
                     if (brush.gameObject.activeSelf)
+                    {
                         brush.gameObject.SetActive(false);
+                    }
+
                     continue;
                 }
 
                 if (!brush.gameObject.activeSelf)
+                {
                     brush.gameObject.SetActive(true);
+                }
 
                 brush.Shape = newShape;
                 newControlMesh.Generation = brush.ControlMesh.Generation + 1;
                 brush.ControlMesh = newControlMesh;
 
                 if (totalSteps != 1)
+                {
                     brush.transform.localPosition = position;
+                }
                 //brush.transform.localRotation = Quaternion.identity;
                 SurfaceUtility.TranslateSurfacesInWorldSpace(brush, -position);
             }

@@ -41,10 +41,14 @@ namespace RealtimeCSG
             {
                 var isNotRenderable = (texGenFlags[texGenIndex] & TexGenFlags.NoRender) == TexGenFlags.NoRender;
                 if (!isNotRenderable)
+                {
                     return false;
+                }
 
                 if (isNotRenderable && CSGSettings.ShowHiddenSurfaces)
+                {
                     return false;
+                }
 
                 var isCollidable = (texGenFlags[texGenIndex] & TexGenFlags.NoCollision) != TexGenFlags.NoCollision;
                 if (isCollidable)
@@ -52,12 +56,16 @@ namespace RealtimeCSG
                     if (isTrigger)
                     {
                         if (CSGSettings.ShowTriggerSurfaces)
+                        {
                             return false;
+                        }
                     }
                     else
                     {
                         if (CSGSettings.ShowColliderSurfaces)
+                        {
                             return false;
+                        }
                     }
                 }
                 return true;

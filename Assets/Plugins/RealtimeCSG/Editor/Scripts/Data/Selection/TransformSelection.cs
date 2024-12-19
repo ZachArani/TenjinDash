@@ -27,7 +27,9 @@ namespace InternalRealtimeCSG
             for (var t = 0; t < Transforms.Length; t++)
             {
                 if (!Transforms[t])
+                {
                     continue;
+                }
 
                 BackupPositions[t] = Transforms[t].position;
                 BackupRotations[t] = Transforms[t].rotation;

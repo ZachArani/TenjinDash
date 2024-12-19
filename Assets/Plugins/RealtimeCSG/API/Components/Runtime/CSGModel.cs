@@ -52,17 +52,17 @@ namespace RealtimeCSG.Components
         /// <value>The version number of this instance of a <see cref="CSGModel" /></value>
         [HideInInspector] public float Version = CurrentVersion;
 
-        public bool IsRenderable { get { return (Settings & ModelSettingsFlags.DoNotRender) == (ModelSettingsFlags)0; } }
-        public bool IsTwoSidedShadows { get { return (Settings & ModelSettingsFlags.TwoSidedShadows) != (ModelSettingsFlags)0; } }
-        public bool HaveCollider { get { return (Settings & ModelSettingsFlags.NoCollider) == (ModelSettingsFlags)0; } }
-        public bool IsTrigger { get { return (Settings & ModelSettingsFlags.IsTrigger) != (ModelSettingsFlags)0; } }
-        public bool InvertedWorld { get { return (Settings & ModelSettingsFlags.InvertedWorld) != (ModelSettingsFlags)0; } }
-        public bool SetColliderConvex { get { return (Settings & ModelSettingsFlags.SetColliderConvex) != (ModelSettingsFlags)0; } }
-        public bool NeedAutoUpdateRigidBody { get { return (Settings & ModelSettingsFlags.AutoUpdateRigidBody) == (ModelSettingsFlags)0; } }
-        public bool PreserveUVs { get { return (Settings & ModelSettingsFlags.PreserveUVs) != (ModelSettingsFlags)0; } }
-        public bool StitchLightmapSeams { get { return (Settings & ModelSettingsFlags.StitchLightmapSeams) != (ModelSettingsFlags)0; } }
-        public bool AutoRebuildUVs { get { return (Settings & ModelSettingsFlags.AutoRebuildUVs) != (ModelSettingsFlags)0; } }
-        public bool IgnoreNormals { get { return (Settings & ModelSettingsFlags.IgnoreNormals) != (ModelSettingsFlags)0; } }
+        public bool IsRenderable { get { return (Settings & ModelSettingsFlags.DoNotRender) == 0; } }
+        public bool IsTwoSidedShadows { get { return (Settings & ModelSettingsFlags.TwoSidedShadows) != 0; } }
+        public bool HaveCollider { get { return (Settings & ModelSettingsFlags.NoCollider) == 0; } }
+        public bool IsTrigger { get { return (Settings & ModelSettingsFlags.IsTrigger) != 0; } }
+        public bool InvertedWorld { get { return (Settings & ModelSettingsFlags.InvertedWorld) != 0; } }
+        public bool SetColliderConvex { get { return (Settings & ModelSettingsFlags.SetColliderConvex) != 0; } }
+        public bool NeedAutoUpdateRigidBody { get { return (Settings & ModelSettingsFlags.AutoUpdateRigidBody) == 0; } }
+        public bool PreserveUVs { get { return (Settings & ModelSettingsFlags.PreserveUVs) != 0; } }
+        public bool StitchLightmapSeams { get { return (Settings & ModelSettingsFlags.StitchLightmapSeams) != 0; } }
+        public bool AutoRebuildUVs { get { return (Settings & ModelSettingsFlags.AutoRebuildUVs) != 0; } }
+        public bool IgnoreNormals { get { return (Settings & ModelSettingsFlags.IgnoreNormals) != 0; } }
 
 #if UNITY_EDITOR
         public bool IsRegistered { get { return modelNodeID != CSGNode.InvalidNodeID; } }
@@ -151,20 +151,59 @@ namespace RealtimeCSG.Components
             // cannot change visibility since this might have an effect on exporter
             this.hideFlags |= HideFlags.DontSaveInBuild;
             ComponentUpgrader.UpgradeWhenNecessary(this);
-            if (CSGSceneManagerRedirector.Interface != null) CSGSceneManagerRedirector.Interface.OnCreated(this);
+            if (CSGSceneManagerRedirector.Interface != null)
+            {
+                CSGSceneManagerRedirector.Interface.OnCreated(this);
+            }
         }
 
-        internal void OnEnable() { if (CSGSceneManagerRedirector.Interface != null) CSGSceneManagerRedirector.Interface.OnEnabled(this); }
-        internal void OnDisable() { if (CSGSceneManagerRedirector.Interface != null) CSGSceneManagerRedirector.Interface.OnDisabled(this); }
-        internal void OnDestroy() { if (CSGSceneManagerRedirector.Interface != null) CSGSceneManagerRedirector.Interface.OnDestroyed(this); }
-        internal void OnTransformChildrenChanged() { if (CSGSceneManagerRedirector.Interface != null) CSGSceneManagerRedirector.Interface.OnTransformChildrenChanged(this); }
+        internal void OnEnable()
+        {
+            if (CSGSceneManagerRedirector.Interface != null)
+            {
+                CSGSceneManagerRedirector.Interface.OnEnabled(this);
+            }
+        }
+        internal void OnDisable()
+        {
+            if (CSGSceneManagerRedirector.Interface != null)
+            {
+                CSGSceneManagerRedirector.Interface.OnDisabled(this);
+            }
+        }
+        internal void OnDestroy()
+        {
+            if (CSGSceneManagerRedirector.Interface != null)
+            {
+                CSGSceneManagerRedirector.Interface.OnDestroyed(this);
+            }
+        }
+        internal void OnTransformChildrenChanged()
+        {
+            if (CSGSceneManagerRedirector.Interface != null)
+            {
+                CSGSceneManagerRedirector.Interface.OnTransformChildrenChanged(this);
+            }
+        }
 
 
         // called when any value of this brush has been modified from within the inspector / or recompile
         // on recompile causes our data to be forgotten, yet awake isn't called
-        internal void OnValidate() { if (CSGSceneManagerRedirector.Interface != null) CSGSceneManagerRedirector.Interface.OnValidate(this); }
+        internal void OnValidate()
+        {
+            if (CSGSceneManagerRedirector.Interface != null)
+            {
+                CSGSceneManagerRedirector.Interface.OnValidate(this);
+            }
+        }
 
-        internal void Update() { if (CSGSceneManagerRedirector.Interface != null && !IsRegistered) CSGSceneManagerRedirector.Interface.OnUpdate(this); }
+        internal void Update()
+        {
+            if (CSGSceneManagerRedirector.Interface != null && !IsRegistered)
+            {
+                CSGSceneManagerRedirector.Interface.OnUpdate(this);
+            }
+        }
 #endif
         #endregion
 

@@ -304,11 +304,16 @@ namespace RealtimeCSG
             get
             {
                 if (curveEdgeHandles == null)
+                {
                     return false;
+                }
+
                 for (int i = 0; i < curveEdgeHandles.Length; i++)
                 {
                     if ((curveEdgeHandles[i].State & SelectState.Selected) != 0)
+                    {
                         return true;
+                    }
                 }
                 return false;
             }
@@ -318,11 +323,16 @@ namespace RealtimeCSG
             get
             {
                 if (curvePointHandles == null)
+                {
                     return false;
+                }
+
                 for (int i = 0; i < curvePointHandles.Length; i++)
                 {
                     if ((curvePointHandles[i].State & SelectState.Selected) != 0)
+                    {
                         return true;
+                    }
                 }
                 return false;
             }
@@ -333,14 +343,18 @@ namespace RealtimeCSG
             for (int p = curvePointHandles.Length - 1; p >= 0; p--)
             {
                 if ((curvePointHandles[p].State & SelectState.Selected) != SelectState.Selected)
+                {
                     continue;
+                }
 
                 ArrayUtility.RemoveAt(ref curve.Points, p);
                 ArrayUtility.RemoveAt(ref curvePointHandles, p);
                 ArrayUtility.RemoveAt(ref curveEdgeHandles, p);
 
                 if (backupCurve != null && backupCurve.Points != null && p < backupCurve.Points.Length)
+                {
                     ArrayUtility.RemoveAt(ref backupCurve.Points, p);
+                }
 
                 int t = p * 2;
                 ArrayUtility.RemoveAt(ref curve.Tangents, t + 1);
@@ -350,9 +364,14 @@ namespace RealtimeCSG
                 ArrayUtility.RemoveAt(ref curveTangentHandles, t + 0);
 
                 if (backupCurve != null && backupCurve.Tangents != null && (t + 1) < backupCurve.Tangents.Length)
+                {
                     ArrayUtility.RemoveAt(ref backupCurve.Tangents, t + 1);
+                }
+
                 if (backupCurve != null && backupCurve.Tangents != null && (t + 0) < backupCurve.Tangents.Length)
+                {
                     ArrayUtility.RemoveAt(ref backupCurve.Tangents, t + 0);
+                }
 
                 ArrayUtility.RemoveAt(ref onGeometryVertices, p);
                 //				ArrayUtility.RemoveAt(ref onPlaneVertices, p);
@@ -363,14 +382,18 @@ namespace RealtimeCSG
         public void DeleteVertex(int v)
         {
             if (v >= curve.Points.Length)
+            {
                 return;
+            }
 
             ArrayUtility.RemoveAt(ref curve.Points, v);
             ArrayUtility.RemoveAt(ref curvePointHandles, v);
             ArrayUtility.RemoveAt(ref curveEdgeHandles, v);
 
             if (backupCurve != null && backupCurve.Points != null && v < backupCurve.Points.Length)
+            {
                 ArrayUtility.RemoveAt(ref backupCurve.Points, v);
+            }
 
             int t = v * 2;
             ArrayUtility.RemoveAt(ref curve.Tangents, t + 1);
@@ -380,10 +403,14 @@ namespace RealtimeCSG
             ArrayUtility.RemoveAt(ref curveTangentHandles, t + 0);
 
             if (backupCurve != null && backupCurve.Tangents != null && (t + 1) < backupCurve.Tangents.Length)
+            {
                 ArrayUtility.RemoveAt(ref backupCurve.Tangents, t + 1);
+            }
 
             if (backupCurve != null && backupCurve.Tangents != null && (t + 0) < backupCurve.Tangents.Length)
+            {
                 ArrayUtility.RemoveAt(ref backupCurve.Tangents, t + 0);
+            }
 
             ArrayUtility.RemoveAt(ref onGeometryVertices, v);
             //			ArrayUtility.RemoveAt(ref onPlaneVertices, v);
@@ -396,13 +423,29 @@ namespace RealtimeCSG
         {
             var old_state = state;
             if (onlyOnHover && (old_state & SelectState.Hovering) != SelectState.Hovering)
+            {
                 return false;
+            }
+
             var new_state = old_state;
-            if (selectionType == SelectionType.Subtractive) new_state &= ~SelectState.Selected;
-            else if (selectionType == SelectionType.Toggle) new_state ^= SelectState.Selected;
-            else new_state |= SelectState.Selected;
+            if (selectionType == SelectionType.Subtractive)
+            {
+                new_state &= ~SelectState.Selected;
+            }
+            else if (selectionType == SelectionType.Toggle)
+            {
+                new_state ^= SelectState.Selected;
+            }
+            else
+            {
+                new_state |= SelectState.Selected;
+            }
+
             if (old_state == new_state)
+            {
                 return false;
+            }
+
             state = new_state;
             return true;
         }
@@ -437,14 +480,20 @@ namespace RealtimeCSG
             changed = Select(ref curvePointHandles[index].State, selectionType, onlyOnHover: false) || changed;
             index = (index + 1) % curvePointHandles.Length;
             if (selectionType == SelectionType.Toggle)
+            {
                 selectionType = SelectionType.Additive;
+            }
+
             return Select(ref curvePointHandles[index].State, selectionType, onlyOnHover: false) || changed;
         }
 
         bool HoverOn(ref SelectState state)
         {
             if ((state & SelectState.Hovering) == SelectState.Hovering)
+            {
                 return false;
+            }
+
             state |= SelectState.Hovering;
             return true;
         }
@@ -467,11 +516,19 @@ namespace RealtimeCSG
         public void UnHoverAll()
         {
             for (int p = 0; p < curvePointHandles.Length; p++)
+            {
                 curvePointHandles[p].State &= ~SelectState.Hovering;
+            }
+
             for (int p = 0; p < curveTangentHandles.Length; p++)
+            {
                 curveTangentHandles[p].State &= ~SelectState.Hovering;
+            }
+
             for (int e = 0; e < curveEdgeHandles.Length; e++)
+            {
                 curveEdgeHandles[e].State &= ~SelectState.Hovering;
+            }
         }
 
         public bool DeselectAll()
@@ -523,12 +580,14 @@ namespace RealtimeCSG
         public void UpdateEdgeMaterials(Vector3 extrusionDirection)
         {
             for (int i = 0; i < curve.Points.Length; i++)
+            {
                 UpdateEdgeMaterial(i, extrusionDirection);
+            }
         }
 
         public void UpdateEdgeMaterial(int edgeIndex, Vector3 extrusionDirection)
         {
-            var vertexIndex0 = ((edgeIndex + curve.Points.Length - 1) % curve.Points.Length);
+            var vertexIndex0 = (edgeIndex + curve.Points.Length - 1) % curve.Points.Length;
             var vertexIndex1 = edgeIndex;
 
             var vertex0 = curve.Points[vertexIndex0];
@@ -538,7 +597,9 @@ namespace RealtimeCSG
             foreach (var brush in onBrushVertices)
             {
                 if (brush)
+                {
                     uniqueBrushes.Add(brush);
+                }
             }
 
             var planeIndices = new int[2];
@@ -559,10 +620,16 @@ namespace RealtimeCSG
                     var surface = surfaces[surfaceIndex];
                     var dist1 = Mathf.Abs(surface.Plane.Distance(localVertex0));
                     if (dist1 > MathConstants.DistanceEpsilon)
+                    {
                         continue;
+                    }
+
                     var dist2 = Mathf.Abs(surface.Plane.Distance(localVertex1));
                     if (dist2 > MathConstants.DistanceEpsilon)
+                    {
                         continue;
+                    }
+
                     planeIndices[planeIndex] = surfaceIndex;
                     planeIndex++;
                     if (planeIndex == 2)
@@ -571,9 +638,13 @@ namespace RealtimeCSG
                         float alignment2 = Mathf.Abs(Vector3.Dot(surfaces[planeIndices[1]].Plane.normal, localDirection));
                         int texGenIndex;
                         if (alignment1 < alignment2)
+                        {
                             texGenIndex = surfaces[planeIndices[0]].TexGenIndex;
+                        }
                         else
+                        {
                             texGenIndex = surfaces[planeIndices[1]].TexGenIndex;
+                        }
 
                         curveEdgeHandles[vertexIndex0].Texgen = texgens[texGenIndex];
                         break;
@@ -588,7 +659,9 @@ namespace RealtimeCSG
             foreach (var brush in onBrushVertices)
             {
                 if (brush)
+                {
                     uniqueBrushes.Add(brush);
+                }
             }
 
             foreach (var brush in uniqueBrushes)
@@ -606,10 +679,15 @@ namespace RealtimeCSG
                     var surface = surfaces[surfaceIndex];
                     var dist = Mathf.Abs(surface.Plane.Distance(localPosition));
                     if (dist > MathConstants.DistanceEpsilon)
+                    {
                         continue;
+                    }
+
                     var alignment = Mathf.Abs(Vector3.Dot(surface.Plane.normal, localDirection));
                     if (alignment < 1 - MathConstants.NormalEpsilon)
+                    {
                         continue;
+                    }
 
                     var texGenIndex = surface.TexGenIndex;
                     planeTexgen = texgens[texGenIndex];
@@ -632,7 +710,7 @@ namespace RealtimeCSG
                 currentVertex = vertices[j];
                 nextVertex = vertices[i];
 
-                partialSignedArea = currentVertex.x * nextVertex.y - nextVertex.x * currentVertex.y;
+                partialSignedArea = (currentVertex.x * nextVertex.y) - (nextVertex.x * currentVertex.y);
 
                 signedArea += partialSignedArea;
                 centroid.x += (currentVertex.x + nextVertex.x) * partialSignedArea;
@@ -640,8 +718,8 @@ namespace RealtimeCSG
             }
 
             signedArea *= 0.5f;
-            centroid.x /= (6.0f * signedArea);
-            centroid.y /= (6.0f * signedArea);
+            centroid.x /= 6.0f * signedArea;
+            centroid.y /= 6.0f * signedArea;
 
             return centroid;
         }
@@ -688,7 +766,9 @@ namespace RealtimeCSG
         public void SetPointConstaintSide(CSGPlane buildPlane, int pointIndex, int side, HandleConstraints state)
         {
             if (curveTangentHandles[(pointIndex * 2) + side].Constraint == state)
+            {
                 return;
+            }
 
             curveTangentHandles[(pointIndex * 2) + side].Constraint = state;
             if (state != HandleConstraints.Straight &&
@@ -696,7 +776,9 @@ namespace RealtimeCSG
             {
                 if (state == HandleConstraints.Broken &&
                     curveTangentHandles[(pointIndex * 2) + (1 - side)].Constraint == HandleConstraints.Mirrored)
+                {
                     curveTangentHandles[(pointIndex * 2) + (1 - side)].Constraint = HandleConstraints.Broken;
+                }
 
                 curvePointHandles[pointIndex].Tangent = true;
                 curve.Tangents[(pointIndex * 2) + side].Tangent = -curve.Tangents[(pointIndex * 2) + (1 - side)].Tangent;
@@ -709,7 +791,10 @@ namespace RealtimeCSG
                 case HandleConstraints.Mirrored:
                     {
                         if (curvePointHandles[pointIndex].Tangent)
+                        {
                             break;
+                        }
+
                         var count = curve.Points.Length;
                         var prev = (pointIndex + count - 1) % count;
                         var curr = pointIndex;
@@ -720,11 +805,13 @@ namespace RealtimeCSG
 
                         var centerA = (vertex0 + vertex1 + vertex2) / 3;
 
-                        var deltaA = (centerA - vertex1);
+                        var deltaA = centerA - vertex1;
 
                         var tangentA = Vector3.Cross(buildPlane.normal, deltaA);
                         if (side == 0)
+                        {
                             tangentA = -tangentA;
+                        }
 
                         curvePointHandles[pointIndex].Tangent = true;
                         curve.Tangents[(pointIndex * 2) + side].Tangent = tangentA;
@@ -735,7 +822,7 @@ namespace RealtimeCSG
 
         static Vector3 PointOnBezier(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
         {
-            return (1 - t) * (1 - t) * (1 - t) * p0 + 3 * t * (1 - t) * (1 - t) * p1 + 3 * t * t * (1 - t) * p2 + t * t * t * p3;
+            return ((1 - t) * (1 - t) * (1 - t) * p0) + (3 * t * (1 - t) * (1 - t) * p1) + (3 * t * t * (1 - t) * p2) + (t * t * t * p3);
         }
 
         Vector3[] CurvedEdges(uint curveSides, out int[][] curvedEdges)
@@ -768,13 +855,22 @@ namespace RealtimeCSG
                 Vector3 p0, p3;
 
                 if (curveTangentHandles[tangentIndex1].Constraint != HandleConstraints.Straight)
+                {
                     p0 = p1 - tangents[tangentIndex1].Tangent;
+                }
                 else
+                {
                     p0 = p1;
+                }
+
                 if (curveTangentHandles[tangentIndex2].Constraint != HandleConstraints.Straight)
+                {
                     p3 = p2 - tangents[tangentIndex2].Tangent;
+                }
                 else
+                {
                     p3 = p2;
+                }
 
                 int first_index = newPoints.Count;
                 newPoints.Add(p1);
@@ -792,7 +888,10 @@ namespace RealtimeCSG
             }
             var last_indices = curvedEdges[curvedEdges.Length - 1];
             if (last_indices.Length > 0)
+            {
                 last_indices[last_indices.Length - 1] = 0;
+            }
+
             return newPoints.ToArray();
         }
 
@@ -857,14 +956,16 @@ namespace RealtimeCSG
             for (int i = 0; i < curveEdgeHandles.Length; i++)
             {
                 if (curveEdgeHandles[i].Texgen.SmoothingGroup != 0)
+                {
                     continue;
+                }
 
                 var smoothingGroup = SurfaceUtility.FindUnusedSmoothingGroupIndex(usedSmoothingGroupIndices);
                 usedSmoothingGroupIndices.Add(smoothingGroup);
                 curveEdgeHandles[i].Texgen.SmoothingGroup = smoothingGroup;
 
-                if (i == 0 &&
-                    curveTangentHandles[(i * 2) + 0].Constraint == HandleConstraints.Mirrored ||
+                if ((i == 0 &&
+                    curveTangentHandles[(i * 2) + 0].Constraint == HandleConstraints.Mirrored) ||
                     curveTangentHandles[(i * 2) + 1].Constraint == HandleConstraints.Mirrored)
                 {
                     var last = curveEdgeHandles.Length - 1;

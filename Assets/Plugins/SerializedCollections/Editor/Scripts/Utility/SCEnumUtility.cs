@@ -13,7 +13,9 @@ namespace AYellowpaper.SerializedCollections.Editor
         internal static EnumCache GetEnumCache(Type enumType)
         {
             if (_cache.TryGetValue(enumType, out var val))
+            {
                 return val;
+            }
 
             try
             {
@@ -56,7 +58,9 @@ namespace AYellowpaper.SerializedCollections.Editor
         internal string[] GetNamesForValue(int value)
         {
             if (_namesByValue.TryGetValue(value, out var list))
+            {
                 return list;
+            }
 
             string[] array = IsFlag ? GetFlagValues(value).ToArray() : new[] { GetEnumValue(value) };
 
@@ -69,7 +73,9 @@ namespace AYellowpaper.SerializedCollections.Editor
             for (int i = 0; i < Length; i++)
             {
                 if (FlagValues[i] == value)
+                {
                     return Names[i];
+                }
             }
             return null;
         }
@@ -86,11 +92,15 @@ namespace AYellowpaper.SerializedCollections.Editor
             {
                 int fv = FlagValues[i];
                 if ((fv & flagValue) == fv && fv != 0)
+                {
                     yield return Names[i];
+                }
             }
 
             if (FlagValues[Length - 1] != -1 && flagValue == -1)
+            {
                 yield return "Everything";
+            }
         }
     }
 }

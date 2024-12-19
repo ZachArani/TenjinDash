@@ -9,10 +9,14 @@ namespace RealtimeCSG.Components
         public static void UpgradeWhenNecessary(CSGModel model)
         {
             if (model.Version >= CSGModel.CurrentVersion)
+            {
                 return;
+            }
 
             if (model.Version < 1.0f)
+            {
                 model.Version = 1.0f;
+            }
 
             if (model.Version == 1.0f)
             {
@@ -37,10 +41,14 @@ namespace RealtimeCSG.Components
         public static void UpgradeWhenNecessary(CSGBrush brush)
         {
             if (brush.Version >= CSGBrush.CurrentVersion)
+            {
                 return;
+            }
 
             if (brush.Version < 1.0f)
+            {
                 brush.Version = 1.0f;
+            }
 
             if (brush.Version == 1.0f)
             {
@@ -71,11 +79,26 @@ namespace RealtimeCSG.Components
                             var isNoCollision = isNotVisible;
                             var isNotCastingShadows = ((oldFlags & 4) == 0) && !isNotVisible;
 
-                            TexGenFlags newFlags = (TexGenFlags)0;
-                            if (isNotVisible) newFlags |= TexGenFlags.NoRender;
-                            if (isNoCollision) newFlags |= TexGenFlags.NoCollision;
-                            if (isNotCastingShadows) newFlags |= TexGenFlags.NoCastShadows;
-                            if (isWorldSpaceTexture) newFlags |= TexGenFlags.WorldSpaceTexture;
+                            TexGenFlags newFlags = 0;
+                            if (isNotVisible)
+                            {
+                                newFlags |= TexGenFlags.NoRender;
+                            }
+
+                            if (isNoCollision)
+                            {
+                                newFlags |= TexGenFlags.NoCollision;
+                            }
+
+                            if (isNotCastingShadows)
+                            {
+                                newFlags |= TexGenFlags.NoCastShadows;
+                            }
+
+                            if (isWorldSpaceTexture)
+                            {
+                                newFlags |= TexGenFlags.WorldSpaceTexture;
+                            }
                         }
                     }
                 }
@@ -84,7 +107,9 @@ namespace RealtimeCSG.Components
             if (brush.Version == 2.0f)
             {
                 if (brush.CompareTag("EditorOnly"))
+                {
                     brush.tag = "Untagged";
+                }
             }
 
             brush.Version = CSGBrush.CurrentVersion;
@@ -93,15 +118,21 @@ namespace RealtimeCSG.Components
         public static void UpgradeWhenNecessary(CSGOperation operation)
         {
             if (operation.Version >= CSGOperation.CurrentVersion)
+            {
                 return;
+            }
 
             if (operation.Version < 1.0f)
+            {
                 operation.Version = 1.0f;
+            }
 
             if (operation.Version == 1.0f)
             {
                 if (operation.CompareTag("EditorOnly"))
+                {
                     operation.tag = "Untagged";
+                }
             }
 
             operation.Version = CSGOperation.CurrentVersion;

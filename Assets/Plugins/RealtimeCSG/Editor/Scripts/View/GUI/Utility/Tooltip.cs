@@ -21,7 +21,9 @@
         public string KeyString()
         {
             if (key == null || key.IsEmpty())
+            {
                 return string.Empty;
+            }
 
             return string.Format("<color=white><size=11><b>hotkey:</b> <i>{0}</i></size></color>", key.ToString());
         }

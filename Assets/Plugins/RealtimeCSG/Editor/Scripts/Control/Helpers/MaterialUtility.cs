@@ -73,12 +73,15 @@ namespace RealtimeCSG
                     EditorMaterials.Remove(name);
                 }
                 else
+                {
                     return material;
+                }
             }
 
             if (materialName == null)
+            {
                 materialName = name.Replace(':', '_');
-
+            }
 
             var shader = Shader.Find(ShaderNameRoot + shaderName);
             if (!shader)
@@ -97,7 +100,9 @@ namespace RealtimeCSG
                 string filename = "Assets/Plugins/RealtimeCSG/Editor/Resources/Textures/" + textureName + ".png";
                 material.mainTexture = AssetDatabase.LoadAssetAtPath<Texture2D>(filename);
                 if (!material.mainTexture)
+                {
                     Debug.LogWarning("Could not find internal texture: " + filename);
+                }
             }
             EditorMaterials.Add(name, material);
             return material;
@@ -116,12 +121,16 @@ namespace RealtimeCSG
                     EditorMaterials.Remove(name);
                 }
                 else
+                {
                     return material;
+                }
             }
 
             var shader = Shader.Find("Unlit/Color");
             if (!shader)
+            {
                 return null;
+            }
 
             material = new Material(shader)
             {
@@ -151,21 +160,27 @@ namespace RealtimeCSG
         internal static void CreateRenderPipelineVersionOfDefaultMaterial(Material defaultMaterial, string materialName)
         {
             if (!defaultMaterial)
+            {
                 return;
+            }
 
             var materialPath = string.Format("{0}{1}/", DefaultMaterialPath, defaultMaterial.shader.name);
             var materialFilename = string.Format("{0}{1}.mat", materialPath, materialName);
 
             var material = AssetDatabase.LoadAssetAtPath<Material>(materialFilename);
             if (material)
+            {
                 return;
+            }
 
             material = new Material(defaultMaterial);
 
             try
             {
                 if (!System.IO.Directory.Exists(materialPath))
+                {
                     System.IO.Directory.CreateDirectory(materialPath);
+                }
                 // HDRenderPipeline will generate errors when creating it's own type of materials
                 AssetDatabase.CreateAsset(material, materialFilename);
                 material = AssetDatabase.LoadAssetAtPath<Material>(materialFilename);
@@ -178,10 +193,23 @@ namespace RealtimeCSG
             try
             {
                 string destTexture = null;
-                if (material.HasProperty("_Diffuse")) destTexture = "_Diffuse";
-                else if (material.HasProperty("_Albedo")) destTexture = "_Albedo";
-                else if (material.HasProperty("_BaseColorMap")) destTexture = "_BaseColorMap";
-                else if (material.HasProperty("_MainTex")) destTexture = "_MainTex";
+                if (material.HasProperty("_Diffuse"))
+                {
+                    destTexture = "_Diffuse";
+                }
+                else if (material.HasProperty("_Albedo"))
+                {
+                    destTexture = "_Albedo";
+                }
+                else if (material.HasProperty("_BaseColorMap"))
+                {
+                    destTexture = "_BaseColorMap";
+                }
+                else if (material.HasProperty("_MainTex"))
+                {
+                    destTexture = "_MainTex";
+                }
+
                 if (destTexture != null)
                 {
                     var texturePath = string.Format("{0}{1}.png", DefaultTexturePath, materialName);
@@ -201,7 +229,9 @@ namespace RealtimeCSG
                             material.mainTexture = regularMaterial.mainTexture;
                         }
                         else
+                        {
                             Debug.LogWarning("couldn't find source texture for " + materialName);
+                        }
                     }
                 }
             }
@@ -215,7 +245,9 @@ namespace RealtimeCSG
         internal static void CreateRenderPipelineVersionOfDefaultMaterials(Material defaultMaterial)
         {
             if (!defaultMaterial)
+            {
                 return;
+            }
 
             CreateRenderPipelineVersionOfDefaultMaterial(defaultMaterial, WallMaterialName);
             CreateRenderPipelineVersionOfDefaultMaterial(defaultMaterial, FloorMaterialName);
@@ -225,20 +257,29 @@ namespace RealtimeCSG
             CSGSettings.Reload();
             var currentMaterial = CSGSettings.DefaultMaterial;
             if (!currentMaterial)
+            {
                 return;
+            }
 
             var currentMaterialPath = AssetDatabase.GetAssetPath(currentMaterial);
             if (!currentMaterialPath.StartsWith(DefaultMaterialPath))
+            {
                 return;
+            }
 
             var materialPath = string.Format("{0}{1}/", DefaultMaterialPath, defaultMaterial.shader.name);
             if (currentMaterialPath.StartsWith(materialPath))
+            {
                 return;
+            }
 
             var newMaterialPath = currentMaterialPath.Replace(DefaultMaterialPath, materialPath);
             currentMaterial = AssetDatabase.LoadAssetAtPath<Material>(newMaterialPath);
             if (currentMaterial)
+            {
                 CSGSettings.DefaultMaterial = currentMaterial;
+            }
+
             CSGSettings.Save();
         }
 
@@ -247,7 +288,9 @@ namespace RealtimeCSG
             Material defaultMaterial = null;
             var renderPipelineAsset = UnityEngine.Rendering.GraphicsSettings.renderPipelineAsset;
             if (renderPipelineAsset)
+            {
                 defaultMaterial = DefaultMaterial;
+            }
 
             if (!defaultMaterial)
             {
@@ -260,7 +303,9 @@ namespace RealtimeCSG
 
             var material = AssetDatabase.LoadAssetAtPath<Material>(materialFilename);
             if (material)
+            {
                 return material;
+            }
 
             CreateRenderPipelineVersionOfDefaultMaterials(defaultMaterial);
 
@@ -295,7 +340,9 @@ namespace RealtimeCSG
                             _defaultMaterial = GetColorMaterial(Color.magenta);
                     }
                     else
+                    {
                         _defaultMaterial = AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
+                    }
                 }
                 return _defaultMaterial;
             }
@@ -310,7 +357,9 @@ namespace RealtimeCSG
                 {
                     _defaultPhysicsMaterial = GetRuntimePhysicMaterial("Default");
                     if (!_defaultPhysicsMaterial)
+                    {
                         Debug.LogError("Default physics material is missing");
+                    }
                 }
                 return _defaultPhysicsMaterial;
             }
@@ -328,12 +377,16 @@ namespace RealtimeCSG
                     ColorMaterials.Remove(color);
                 }
                 else
+                {
                     return material;
+                }
             }
 
             material = GenerateEditorColorMaterial(color);
             if (!material)
+            {
                 return AssetDatabase.GetBuiltinExtraResource<Material>("Default-Diffuse.mat");
+            }
 
             ColorMaterials.Add(color, material);
             return material;
@@ -348,7 +401,9 @@ namespace RealtimeCSG
                 {
                     _missingMaterial = GetColorMaterial(Color.magenta);
                     if (!_missingMaterial)
+                    {
                         return DefaultMaterial;
+                    }
                 }
                 return _missingMaterial;
             }
@@ -363,7 +418,9 @@ namespace RealtimeCSG
                 {
                     _wallMaterial = GetRuntimeMaterial(WallMaterialName);
                     if (!_wallMaterial)
+                    {
                         return DefaultMaterial;
+                    }
                 }
                 return _wallMaterial;
             }
@@ -378,7 +435,9 @@ namespace RealtimeCSG
                 {
                     _floorMaterial = GetRuntimeMaterial(FloorMaterialName);
                     if (!_floorMaterial)
+                    {
                         return DefaultMaterial;
+                    }
                 }
                 return _floorMaterial;
             }
@@ -393,7 +452,9 @@ namespace RealtimeCSG
                 {
                     _windowMaterial = GetRuntimeMaterial(WindowMaterialName);
                     if (!_windowMaterial)
+                    {
                         return DefaultMaterial;
+                    }
                 }
                 return _windowMaterial;
             }
@@ -408,7 +469,9 @@ namespace RealtimeCSG
                 {
                     _metalMaterial = GetRuntimeMaterial(MetalMaterialName);
                     if (!_metalMaterial)
+                    {
                         return DefaultMaterial;
+                    }
                 }
                 return _metalMaterial;
             }
@@ -421,7 +484,10 @@ namespace RealtimeCSG
             set
             {
                 if (Math.Abs(_lineThicknessMultiplier - value) < MathConstants.EqualityEpsilon)
+                {
                     return;
+                }
+
                 _lineThicknessMultiplier = value;
             }
         }
@@ -433,7 +499,10 @@ namespace RealtimeCSG
             set
             {
                 if (Math.Abs(_lineDashMultiplier - value) < MathConstants.EqualityEpsilon)
+                {
                     return;
+                }
+
                 _lineDashMultiplier = value;
             }
         }
@@ -445,7 +514,10 @@ namespace RealtimeCSG
             set
             {
                 if (Math.Abs(_lineAlphaMultiplier - value) < MathConstants.EqualityEpsilon)
+                {
                     return;
+                }
+
                 _lineAlphaMultiplier = value;
             }
         }
@@ -457,7 +529,10 @@ namespace RealtimeCSG
             get
             {
                 if (!_zTestGenericLine)
+                {
                     _zTestGenericLine = GenerateEditorMaterial("ZTestGenericLine");
+                }
+
                 return _zTestGenericLine;
             }
         }
@@ -465,16 +540,33 @@ namespace RealtimeCSG
         internal static void InitGenericLineMaterial(Material genericLineMaterial)
         {
             if (!genericLineMaterial)
+            {
                 return;
+            }
 
-            if (!_shadersInitialized) ShaderInit();
+            if (!_shadersInitialized)
+            {
+                ShaderInit();
+            }
+
             if (_pixelsPerPointId != -1)
             {
                 genericLineMaterial.SetFloat(_pixelsPerPointId, EditorGUIUtility.pixelsPerPoint);
             }
-            if (_lineThicknessMultiplierId != -1) genericLineMaterial.SetFloat(_lineThicknessMultiplierId, _lineThicknessMultiplier * EditorGUIUtility.pixelsPerPoint);
-            if (_lineDashMultiplierId != -1) genericLineMaterial.SetFloat(_lineDashMultiplierId, _lineDashMultiplier);
-            if (_lineAlphaMultiplierId != -1) genericLineMaterial.SetFloat(_lineAlphaMultiplierId, _lineAlphaMultiplier);
+            if (_lineThicknessMultiplierId != -1)
+            {
+                genericLineMaterial.SetFloat(_lineThicknessMultiplierId, _lineThicknessMultiplier * EditorGUIUtility.pixelsPerPoint);
+            }
+
+            if (_lineDashMultiplierId != -1)
+            {
+                genericLineMaterial.SetFloat(_lineDashMultiplierId, _lineDashMultiplier);
+            }
+
+            if (_lineAlphaMultiplierId != -1)
+            {
+                genericLineMaterial.SetFloat(_lineAlphaMultiplierId, _lineAlphaMultiplier);
+            }
         }
 
         private static Material _noZTestGenericLine;
@@ -504,32 +596,35 @@ namespace RealtimeCSG
         }
 
         private static Material _hiddenMaterial;
-        internal static Material HiddenMaterial { get { if (!_hiddenMaterial) _hiddenMaterial = GenerateEditorMaterial(TransparentSpecialSurfaceShaderName, HiddenName, HiddenMaterialName); return _hiddenMaterial; } }
+        internal static Material HiddenMaterial { get { if (!_hiddenMaterial) { _hiddenMaterial = GenerateEditorMaterial(TransparentSpecialSurfaceShaderName, HiddenName, HiddenMaterialName); } return _hiddenMaterial; } }
 
         private static Material _culledMaterial;
-        internal static Material CulledMaterial { get { if (!_culledMaterial) _culledMaterial = GenerateEditorMaterial(TransparentSpecialSurfaceShaderName, CulledName, CulledMaterialName); return _culledMaterial; } }
+        internal static Material CulledMaterial { get { if (!_culledMaterial) { _culledMaterial = GenerateEditorMaterial(TransparentSpecialSurfaceShaderName, CulledName, CulledMaterialName); } return _culledMaterial; } }
 
         private static Material _colliderMaterial;
-        internal static Material ColliderMaterial { get { if (!_colliderMaterial) _colliderMaterial = GenerateEditorMaterial(SpecialSurfaceShaderName, ColliderName, ColliderMaterialName); return _colliderMaterial; } }
+        internal static Material ColliderMaterial { get { if (!_colliderMaterial) { _colliderMaterial = GenerateEditorMaterial(SpecialSurfaceShaderName, ColliderName, ColliderMaterialName); } return _colliderMaterial; } }
 
         private static Material _triggerMaterial;
-        internal static Material TriggerMaterial { get { if (!_triggerMaterial) _triggerMaterial = GenerateEditorMaterial(TransparentSpecialSurfaceShaderName, TriggerName, TriggerMaterialName); return _triggerMaterial; } }
+        internal static Material TriggerMaterial { get { if (!_triggerMaterial) { _triggerMaterial = GenerateEditorMaterial(TransparentSpecialSurfaceShaderName, TriggerName, TriggerMaterialName); } return _triggerMaterial; } }
 
         private static Material _shadowOnlyMaterial;
-        internal static Material ShadowOnlyMaterial { get { if (!_shadowOnlyMaterial) _shadowOnlyMaterial = GenerateEditorMaterial(SpecialSurfaceShaderName, ShadowOnlyName, ShadowOnlyMaterialName); return _shadowOnlyMaterial; } }
+        internal static Material ShadowOnlyMaterial { get { if (!_shadowOnlyMaterial) { _shadowOnlyMaterial = GenerateEditorMaterial(SpecialSurfaceShaderName, ShadowOnlyName, ShadowOnlyMaterialName); } return _shadowOnlyMaterial; } }
 
         private static Material _castShadowsMaterial;
-        internal static Material CastShadowsMaterial { get { if (!_castShadowsMaterial) _castShadowsMaterial = GenerateEditorMaterial(SpecialSurfaceShaderName, CastShadowsName, CastShadowsMaterialName); return _castShadowsMaterial; } }
+        internal static Material CastShadowsMaterial { get { if (!_castShadowsMaterial) { _castShadowsMaterial = GenerateEditorMaterial(SpecialSurfaceShaderName, CastShadowsName, CastShadowsMaterialName); } return _castShadowsMaterial; } }
 
         private static Material _receiveShadowsMaterial;
-        internal static Material ReceiveShadowsMaterial { get { if (!_receiveShadowsMaterial) _receiveShadowsMaterial = GenerateEditorMaterial(SpecialSurfaceShaderName, ReceiveShadowsName, ReceiveShadowsMaterialName); return _receiveShadowsMaterial; } }
+        internal static Material ReceiveShadowsMaterial { get { if (!_receiveShadowsMaterial) { _receiveShadowsMaterial = GenerateEditorMaterial(SpecialSurfaceShaderName, ReceiveShadowsName, ReceiveShadowsMaterialName); } return _receiveShadowsMaterial; } }
 
 
         internal static Texture2D CreateSolidColorTexture(int width, int height, Color color)
         {
             var pixels = new Color[width * height];
             for (var i = 0; i < pixels.Length; i++)
+            {
                 pixels[i] = color;
+            }
+
             var newTexture = new Texture2D(width, height);
             newTexture.hideFlags = HideFlags.DontUnloadUnusedAsset;
             newTexture.SetPixels(pixels);
@@ -547,16 +642,25 @@ namespace RealtimeCSG
         internal static RenderSurfaceType GetMaterialSurfaceType(Material material)
         {
             if (object.ReferenceEquals(material, null))
+            {
                 return RenderSurfaceType.Normal;
+            }
 
             RenderSurfaceType surfaceType;
             if (materialTypeLookup.TryGetValue(material, out surfaceType))
+            {
                 return surfaceType;
+            }
 
             if (!material)
+            {
                 return RenderSurfaceType.Normal;
+            }
 
-            if (!_shadersInitialized) ShaderInit();
+            if (!_shadersInitialized)
+            {
+                ShaderInit();
+            }
 
             var shader = material.shader;
             if (shader != SpecialSurfaceShader &&

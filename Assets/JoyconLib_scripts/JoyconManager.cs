@@ -113,7 +113,10 @@ public class JoyconManager : MonoBehaviour
     void OnApplicationQuit()
     {
         if (j != null && j.Count == 0)
+        {
             return;
+        }
+
         for (int i = 0; i < j.Count; ++i)
         {
             j[i].Detach();
@@ -123,7 +126,10 @@ public class JoyconManager : MonoBehaviour
     public Joycon GetJoyconByPlayer(GameObject player)
     {
         if (players.IndexOf(player) < j.Count)
+        {
             return j[players.IndexOf(player)];
+        }
+
         return null;
     }
 }

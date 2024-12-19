@@ -12,7 +12,9 @@ namespace AYellowpaper.SerializedCollections.Editor.Search
                 foreach (var text in SCEnumUtility.GetEnumCache(type).GetNamesForValue(property.enumValueFlag))
                 {
                     if (text.Contains(SearchString, StringComparison.OrdinalIgnoreCase))
+                    {
                         return true;
+                    }
                 }
             }
             return false;

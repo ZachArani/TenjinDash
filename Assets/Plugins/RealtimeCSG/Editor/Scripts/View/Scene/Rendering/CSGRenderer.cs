@@ -133,7 +133,9 @@ namespace RealtimeCSG
             if (!InternalCSGModelManager.External.GetSurfaceOutline(brushNodeID,
                                                                     surfaceIndex,
                                                                     out outline))
+            {
                 return;
+            }
 
             Handles.matrix = transformation;
             if (outerColor.a > 0)
@@ -188,7 +190,9 @@ namespace RealtimeCSG
                                                float thickness = GUIConstants.thickLineScale)
         {
             if (outlines == null)
+            {
                 return;
+            }
 
             if (invisibleOutlineColor.a >= kMinAlpha)
             {
@@ -311,7 +315,9 @@ namespace RealtimeCSG
                     var outline = outlines[i];
 
                     if (outline.visibleTriangles == null || outline.visibleTriangles.Length == 0)
+                    {
                         continue;
+                    }
 
                     var transformation = transformations[i];
 
@@ -334,7 +340,9 @@ namespace RealtimeCSG
                  outline.visibleInnerLines == null &&
                  outline.invisibleInnerLines == null &&
                  outline.invalidLines == null))
+            {
                 return;
+            }
 
             Handles.matrix = transformation;
 
@@ -422,7 +430,9 @@ namespace RealtimeCSG
                     if (outline == null ||
                         outline.vertices == null ||
                         outline.vertices.Length == 0)
+                    {
                         continue;
+                    }
 
                     var transformation = transformations[i];
 
@@ -447,7 +457,9 @@ namespace RealtimeCSG
                     if (outline == null ||
                         outline.vertices == null ||
                         outline.vertices.Length == 0)
+                    {
                         continue;
+                    }
 
                     var transformation = transformations[i];
 
@@ -475,8 +487,9 @@ namespace RealtimeCSG
                 if (outline == null ||
                     outline.vertices == null ||
                     outline.vertices.Length == 0)
+                {
                     continue;
-
+                }
 
                 var transformation = transformations[i];
                 Handles.matrix = transformation;
@@ -524,7 +537,9 @@ namespace RealtimeCSG
         {
             // .. could be a prefab
             if (brushNodeID == CSGNode.InvalidNodeID)
+            {
                 return;
+            }
 
             var outline = BrushOutlineManager.GetBrushOutline(brushNodeID);
             DrawOutlines(outline, transformation, outerColor, outerColorOccluded, innerColor, innerColorOccluded, thickness);
@@ -542,7 +557,9 @@ namespace RealtimeCSG
                  outline.visibleInnerLines == null &&
                  outline.invisibleInnerLines == null &&
                  outline.invalidLines == null))
+            {
                 return;
+            }
 
             var vertices = outline.vertices;
             var indices = outline.visibleOuterLines;
@@ -566,7 +583,9 @@ namespace RealtimeCSG
         {
             // .. could be a prefab
             if (brushNodeID == CSGNode.InvalidNodeID)
+            {
                 return;
+            }
 
             var outline = BrushOutlineManager.GetBrushOutline(brushNodeID);
             DrawSimpleOutlines(lineMeshManager, outline, transformation, color);

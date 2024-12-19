@@ -11,11 +11,15 @@ namespace AYellowpaper.SerializedCollections.Editor.Search
             set
             {
                 if (_text == value)
+                {
                     return;
+                }
 
                 _text = value;
                 foreach (var matcher in _matchers)
+                {
                     matcher.Prepare(_text);
+                }
             }
         }
 
@@ -40,7 +44,9 @@ namespace AYellowpaper.SerializedCollections.Editor.Search
             {
                 var prop = property.GetArrayElementAtIndex(i);
                 if (TryGetMatchingProperties(prop.Copy(), out var properties))
+                {
                     yield return new SearchResultEntry(i, prop, properties);
+                }
             }
         }
 
@@ -54,7 +60,10 @@ namespace AYellowpaper.SerializedCollections.Editor.Search
                     if (matcher.IsMatch(child))
                     {
                         if (matchingProperties == null)
+                        {
                             matchingProperties = new();
+                        }
+
                         matchingProperties.Add(new PropertySearchResult(child.Copy()));
                     }
                 }

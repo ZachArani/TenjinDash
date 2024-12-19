@@ -10,7 +10,9 @@ namespace RealtimeCSG
         internal static void OnHierarchyWindowItemOnGUI(int instanceID, Rect selectionRect)
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             var o = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
 
@@ -21,14 +23,18 @@ namespace RealtimeCSG
             }
 
             if (o == null)
+            {
                 return;
+            }
 
             CSG_GUIStyleUtility.InitStyles();
 
             var node = o.GetComponent<CSGNode>();
             if (node == null ||
                 !node.enabled || (node.hideFlags & (HideFlags.HideInHierarchy | HideFlags.HideInInspector)) != 0)
+            {
                 return;
+            }
 
             CSGOperationType operationType = CSGOperationType.Additive;
 
@@ -49,7 +55,9 @@ namespace RealtimeCSG
                     operationType = operation.OperationType;
                     var operationTypeIndex = (int)operationType;
                     if (operationTypeIndex >= 0 && operationTypeIndex < skin.hierarchyOperations.Length)
+                    {
                         GUI.Label(selectionRect, skin.hierarchyOperations[operationTypeIndex], CSG_GUIStyleUtility.rightAlignedLabel);
+                    }
                 }
                 else
                 {

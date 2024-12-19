@@ -77,7 +77,10 @@ namespace TMPro.Examples
                 int characterCount = textInfo.characterCount;
 
 
-                if (characterCount == 0) continue;
+                if (characterCount == 0)
+                {
+                    continue;
+                }
 
                 //vertices = textInfo.meshInfo[0].vertices;
                 //int lastVertexIndex = textInfo.characterInfo[characterCount - 1].vertexIndex;
@@ -90,7 +93,9 @@ namespace TMPro.Examples
                 for (int i = 0; i < characterCount; i++)
                 {
                     if (!textInfo.characterInfo[i].isVisible)
+                    {
                         continue;
+                    }
 
                     int vertexIndex = textInfo.characterInfo[i].vertexIndex;
 
@@ -128,7 +133,7 @@ namespace TMPro.Examples
 
                     Vector3 horizontal = new Vector3(1, 0, 0);
                     //Vector3 normal = new Vector3(-(y1 - y0), (x1 * (boundsMaxX - boundsMinX) + boundsMinX) - offsetToMidBaseline.x, 0);
-                    Vector3 tangent = new Vector3(x1 * (boundsMaxX - boundsMinX) + boundsMinX, y1) - new Vector3(offsetToMidBaseline.x, y0);
+                    Vector3 tangent = new Vector3((x1 * (boundsMaxX - boundsMinX)) + boundsMinX, y1) - new Vector3(offsetToMidBaseline.x, y0);
 
                     float dot = Mathf.Acos(Vector3.Dot(horizontal, tangent.normalized)) * 57.2957795f;
                     Vector3 cross = Vector3.Cross(horizontal, tangent);

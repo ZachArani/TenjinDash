@@ -34,7 +34,9 @@ namespace RealtimeCSG.Foundation
         public static BrushMesh CreateCube(UnityEngine.Vector3 min, UnityEngine.Vector3 max, SurfaceLayers layers, SurfaceFlags surfaceFlags = SurfaceFlags.None)
         {
             if (min.x == max.x || min.y == max.y || min.z == max.z)
+            {
                 return null;
+            }
 
             if (min.x > max.x) { float x = min.x; min.x = max.x; max.x = x; }
             if (min.y > max.y) { float y = min.y; min.y = max.y; max.y = y; }

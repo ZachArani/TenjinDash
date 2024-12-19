@@ -36,9 +36,13 @@ namespace RealtimeCSG
                 sectionHeader.margin.top = 10;
                 sectionHeader.margin.left += 1;
                 if (!EditorGUIUtility.isProSkin)
+                {
                     sectionHeader.normal.textColor = new Color(0.4f, 0.4f, 0.4f, 1.0f);
+                }
                 else
+                {
                     sectionHeader.normal.textColor = new Color(0.7f, 0.7f, 0.7f, 1.0f);
+                }
 
                 redTextBox = new GUIStyle(GUI.skin.textField);
                 redTextBox.normal.textColor = Color.red;
@@ -77,9 +81,13 @@ namespace RealtimeCSG
                     var attribute = field.GetCustomAttributes(typeof(KeyDescription), false).FirstOrDefault() as KeyDescription;
 
                     if (attribute != null)
+                    {
                         pref.name = attribute.Name;
+                    }
                     else
+                    {
                         pref.name = ObjectNames.NicifyVariableName(field.Name);
+                    }
 
                     pref.keyEvent = (KeyEvent)field.GetValue(null);
                     prefs.Add(pref);
@@ -158,14 +166,14 @@ namespace RealtimeCSG
                             // ignore presses of just modifier keys
                             if (evt.character == '\0')
                             {
-                                if (evt.alt &&
-                                    (evt.keyCode == KeyCode.AltGr || evt.keyCode == KeyCode.LeftAlt || evt.keyCode == KeyCode.RightAlt) ||
-                                    evt.control && (evt.keyCode == KeyCode.LeftControl || evt.keyCode == KeyCode.RightControl) ||
-                                    evt.command &&
+                                if ((evt.alt &&
+                                    (evt.keyCode == KeyCode.AltGr || evt.keyCode == KeyCode.LeftAlt || evt.keyCode == KeyCode.RightAlt)) ||
+                                    (evt.control && (evt.keyCode == KeyCode.LeftControl || evt.keyCode == KeyCode.RightControl)) ||
+                                    (evt.command &&
                                     (evt.keyCode == KeyCode.LeftApple || evt.keyCode == KeyCode.RightApple || evt.keyCode == KeyCode.LeftWindows ||
-                                     evt.keyCode == KeyCode.RightWindows) ||
-                                    evt.shift &&
-                                    (evt.keyCode == KeyCode.LeftShift || evt.keyCode == KeyCode.RightShift || (int)evt.keyCode == 0))
+                                     evt.keyCode == KeyCode.RightWindows)) ||
+                                    (evt.shift &&
+                                    (evt.keyCode == KeyCode.LeftShift || evt.keyCode == KeyCode.RightShift || evt.keyCode == 0)))
                                 {
                                     return;
                                 }
@@ -206,7 +214,9 @@ namespace RealtimeCSG
                 for (int j = 0; j < allKeys.Length; j++)
                 {
                     if (i == m_SelectedKeyIndex && j == index)
+                    {
                         continue;
+                    }
 
                     if (allKeys[j].keyCode == keyPref.keyCode &&
                         allKeys[j].modifiers == keyPref.modifiers)
@@ -224,9 +234,14 @@ namespace RealtimeCSG
             GUILayout.Label("Key:");
 
             if (keyPref.keyCode != KeyCode.None && !UniqueKey(ref keyPref, index))
+            {
                 KeyEventField(index, ref keyPref, constants.redTextBox);
+            }
             else
+            {
                 KeyEventField(index, ref keyPref, GUI.skin.textField);
+            }
+
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -241,14 +256,17 @@ namespace RealtimeCSG
             bool modifier_control = (modifier & EventModifiers.Control) != 0;
 
             if (Application.platform == RuntimePlatform.OSXEditor)
+            {
                 modifier_command = GUILayout.Toggle(modifier_command, "Command");
+            }
+
             modifier_control = GUILayout.Toggle(modifier_control, "Control");
             modifier_shift = GUILayout.Toggle(modifier_shift, "Shift");
             modifier_alt = GUILayout.Toggle(modifier_alt, "Alt");
 
-            var key_is_no_longer_valid = (index != -1 &&
+            var key_is_no_longer_valid = index != -1 &&
                                           (GUILayout.Button("Remove") ||
-                                           keyPref.keyCode == KeyCode.None));
+                                           keyPref.keyCode == KeyCode.None);
 
             GUILayout.EndVertical();
             GUILayout.EndHorizontal();
@@ -282,7 +300,9 @@ namespace RealtimeCSG
         static void RevertKeys()
         {
             if (keyArray == null)
+            {
                 keyArray = GetKeys();
+            }
 
             for (int i = 0; i < keyArray.Length; i++)
             {
@@ -293,7 +313,9 @@ namespace RealtimeCSG
         public static void ReadKeys()
         {
             if (keyArray == null)
+            {
                 keyArray = GetKeys();
+            }
 
             for (int i = 0; i < keyArray.Length; i++)
             {
@@ -318,12 +340,18 @@ namespace RealtimeCSG
                     {
                         var key_string = key_strings[j].Split(':');
                         if (key_string.Length == 0)
+                        {
                             continue;
+                        }
+
                         var keyCode = (KeyCode)Enum.Parse(typeof(KeyCode), key_string[0]);
                         int intModifier;
                         var modifiers = EventModifiers.None;
                         if (key_string.Length > 0 && Int32.TryParse(key_string[1], out intModifier))
+                        {
                             modifiers = (EventModifiers)intModifier;
+                        }
+
                         keyArray[i].keyEvent.keys[j].keyCode = keyCode;
                         keyArray[i].keyEvent.keys[j].modifiers = modifiers;
                     }
@@ -400,7 +428,10 @@ namespace RealtimeCSG
                     }
                     else
                     {
-                        if (nextKey == null) nextKey = keyPref;
+                        if (nextKey == null)
+                        {
+                            nextKey = keyPref;
+                        }
                     }
 
                     EditorGUI.BeginChangeCheck();
@@ -414,10 +445,14 @@ namespace RealtimeCSG
                         m_SelectedKey = keyPref;
                         newKey = new KeyCodeWithModifier();
                         if (Event.current.type == EventType.Repaint)
+                        {
                             selectedRect = GUILayoutUtility.GetLastRect();
+                        }
                     }
                     if (EditorGUI.EndChangeCheck())
+                    {
                         GUIUtility.keyboardControl = id;
+                    }
                 }
             }
             GUILayout.EndScrollView();
@@ -441,7 +476,9 @@ namespace RealtimeCSG
                     HandleUtility.Repaint();
                 }
                 if (keyNamesScrollPos.y < 0)
+                {
                     keyNamesScrollPos.y = 0;
+                }
             }
 
             GUILayout.Space(10.0f);
@@ -462,7 +499,9 @@ namespace RealtimeCSG
 
                 PreferenceKeyItem(ref newKey);
                 if (newKey.keyCode != KeyCode.None)
+                {
                     ArrayUtility.Add(ref allKeys, newKey);
+                }
 
                 m_SelectedKey.keyEvent.keys = allKeys;
 

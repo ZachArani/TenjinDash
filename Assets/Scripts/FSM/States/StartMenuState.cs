@@ -1,5 +1,4 @@
 ﻿using Assets.Scripts.UI;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Playables;
 

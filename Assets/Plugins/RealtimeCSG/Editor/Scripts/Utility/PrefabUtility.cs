@@ -19,11 +19,15 @@ namespace RealtimeCSG
         public static bool IsPrefab(CSGModel model)
         {
             if (!model)
+            {
                 return false;
+            }
 
             var parent = CSGPrefabUtility.GetPrefabAsset(model.gameObject);
             if (parent)
+            {
                 return true;
+            }
 
             return false;
         }
@@ -34,7 +38,9 @@ namespace RealtimeCSG
             var mainStage = StageUtility.GetMainStageHandle();
             var currentStageHandle = StageUtility.GetCurrentStageHandle();
             if (mainStage != currentStageHandle)
+            {
                 return true;
+            }
 #endif
             return false;
         }
@@ -43,14 +49,20 @@ namespace RealtimeCSG
         {
 #if UNITY_2018_3_OR_NEWER && UNITY_EDITOR
             if (!model)
+            {
                 return false;
+            }
 
             if (!AreInPrefabMode())
+            {
                 return false;
+            }
 
             var currentStageHandle = StageUtility.GetCurrentStageHandle();
             if (currentStageHandle.Contains(model.gameObject))
+            {
                 return true;
+            }
 #endif
             return false;
         }
@@ -61,7 +73,9 @@ namespace RealtimeCSG
             var mainStage = StageUtility.GetMainStageHandle();
             var currentStageHandle = StageUtility.GetCurrentStageHandle();
             if (mainStage != currentStageHandle)
+            {
                 return currentStageHandle.FindComponentsOfType<CSGNode>();
+            }
 #endif
             return null;
         }
@@ -73,7 +87,10 @@ namespace RealtimeCSG
             var prefabInstanceType = PrefabUtility.GetPrefabInstanceStatus(gameObject);
             if (prefabAssetType == PrefabAssetType.NotAPrefab &&
                 prefabInstanceType == PrefabInstanceStatus.NotAPrefab)
+            {
                 return false;
+            }
+
             return true;
 #else
 		    var prefabType = PrefabUtility.GetPrefabType(gameObject);
@@ -89,7 +106,9 @@ namespace RealtimeCSG
 #if UNITY_2018_3_OR_NEWER
             var prefabInstanceType = PrefabUtility.GetPrefabInstanceStatus(gameObject);
             if (prefabInstanceType != PrefabInstanceStatus.NotAPrefab)
+            {
                 return false;
+            }
 
             var prefabType = PrefabUtility.GetPrefabAssetType(gameObject);
             return prefabType != PrefabAssetType.NotAPrefab &&
@@ -108,7 +127,10 @@ namespace RealtimeCSG
         {
 #if UNITY_2018_3_OR_NEWER
             if (!PrefabUtility.IsPartOfAnyPrefab(gameObject))
+            {
                 return false;
+            }
+
             var prefabType = PrefabUtility.GetPrefabInstanceStatus(gameObject);
             return prefabType != PrefabInstanceStatus.NotAPrefab;
 #else
@@ -128,12 +150,16 @@ namespace RealtimeCSG
             {
                 var prefabStage = UnityEditor.SceneManagement.PrefabStageUtility.GetCurrentPrefabStage();
                 if (prefabStage.IsPartOfPrefabContents(gameObject))
+                {
                     return (GameObject)AssetDatabase.LoadMainAssetAtPath(prefabStage.prefabAssetPath);
+                }
             }
 #endif
 
             if (!IsPrefabInstance(gameObject))
+            {
                 return null;
+            }
 
 #if UNITY_2018_3_OR_NEWER
             return (GameObject)AssetDatabase.LoadMainAssetAtPath(PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(gameObject));
@@ -145,7 +171,9 @@ namespace RealtimeCSG
         public static GameObject GetOutermostPrefabInstanceRoot(GameObject gameObject)
         {
             if (!IsPrefabInstance(gameObject))
+            {
                 return null;
+            }
 #if UNITY_2018_3_OR_NEWER
             return PrefabUtility.GetOutermostPrefabInstanceRoot(gameObject);
 #else

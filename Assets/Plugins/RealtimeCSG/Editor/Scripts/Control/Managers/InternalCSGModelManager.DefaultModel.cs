@@ -29,7 +29,9 @@ namespace RealtimeCSG
                 currentScene = SceneManager.GetActiveScene();
             }
             else
+            {
                 currentScene = transform.gameObject.scene;
+            }
 
             return InternalCSGModelManager.GetDefaultCSGModel(currentScene);
         }
@@ -42,7 +44,9 @@ namespace RealtimeCSG
                 currentScene = SceneManager.GetActiveScene();
             }
             else
+            {
                 currentScene = component.gameObject.scene;
+            }
 
             return InternalCSGModelManager.GetDefaultCSGModel(currentScene);
         }
@@ -51,13 +55,20 @@ namespace RealtimeCSG
         {
             if (!scene.IsValid() ||
                 !scene.isLoaded)
+            {
                 return null;
+            }
 
             // make sure we're properly initialized (just in case)
             if (!SceneStates.ContainsKey(scene))
+            {
                 SceneStates[scene] = new CSGSceneState();
+            }
+
             if (!SceneStates[scene].DefaultModel)
+            {
                 InitializeDefaultCSGModel(scene, SceneStates[scene], createIfNoExists: true);
+            }
 
             return SceneStates[scene].DefaultModel;
         }
@@ -73,7 +84,10 @@ namespace RealtimeCSG
                 var currentScene = SceneManager.GetSceneAt(sceneIndex);
                 if (!currentScene.IsValid() ||
                     !currentScene.isLoaded)
+                {
                     continue;
+                }
+
                 var sceneState = SceneStates[currentScene];
                 InitializeDefaultCSGModel(currentScene, sceneState, createIfNoExists);
             }
@@ -81,7 +95,9 @@ namespace RealtimeCSG
             foreach (var usedScene in usedScenes)
             {
                 if (!loadedScenes.Contains(usedScene))
+                {
                     SceneStates.Remove(usedScene);
+                }
             }
         }
 
@@ -95,7 +111,7 @@ namespace RealtimeCSG
             {
                 var prefabRoot = currentPrefabStage.prefabContentsRoot;
                 prefabRootTransform = prefabRoot.transform;
-                inPrefabMode = (prefabRoot.scene == currentScene);
+                inPrefabMode = prefabRoot.scene == currentScene;
             }
 #endif
             var defaultModelName = inPrefabMode ? DefaultPrefabModelName : DefaultModelName;
@@ -113,7 +129,9 @@ namespace RealtimeCSG
                 {
                     sceneState.DefaultModel = sceneState.DefaultModelObject.GetComponent<CSGModel>();
                     if (!sceneState.DefaultModel)
+                    {
                         sceneState.DefaultModel = CreateCSGModel(sceneState.DefaultModelObject);
+                    }
                 }
 
                 // make sure it's transformation has sensible values
@@ -123,7 +141,9 @@ namespace RealtimeCSG
                     transform.SetParent(prefabRootTransform, false);
                 }
                 else
+                {
                     transform.parent = null;
+                }
 
                 transform.localPosition = MathConstants.zeroVector3;
                 transform.localScale = MathConstants.oneVector3;
@@ -145,9 +165,13 @@ namespace RealtimeCSG
             // force the users to use a CSG-model, but gracefully let it still be 
             //  visible for objects outside of it.
             if (inPrefabMode)
+            {
                 sceneState.DefaultModelObject.hideFlags = MeshInstanceManager.ComponentHideFlags | HideFlags.DontSave;
+            }
             else
+            {
                 sceneState.DefaultModelObject.hideFlags = MeshInstanceManager.ComponentHideFlags;
+            }
         }
         #endregion
 

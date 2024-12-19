@@ -40,12 +40,16 @@ namespace TMPro.Examples
 
             // Get a reference to the camera if Canvas Render Mode is not ScreenSpace Overlay.
             if (m_Canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            {
                 m_Camera = null;
+            }
             else
+            {
                 m_Camera = m_Canvas.worldCamera;
+            }
 
             // Create pop-up text object which is used to show the link information.
-            m_TextPopup_RectTransform = Instantiate(TextPopup_Prefab_01) as RectTransform;
+            m_TextPopup_RectTransform = Instantiate(TextPopup_Prefab_01);
             m_TextPopup_RectTransform.SetParent(m_Canvas.transform, false);
             m_TextPopup_TMPComponent = m_TextPopup_RectTransform.GetComponentInChildren<TextMeshProUGUI>();
             m_TextPopup_RectTransform.gameObject.SetActive(false);
@@ -452,7 +456,10 @@ namespace TMPro.Examples
 
         void RestoreCachedVertexAttributes(int index)
         {
-            if (index == -1 || index > m_TextMeshPro.textInfo.characterCount - 1) return;
+            if (index == -1 || index > m_TextMeshPro.textInfo.characterCount - 1)
+            {
+                return;
+            }
 
             // Get the index of the material / sub text object used by this character.
             int materialIndex = m_TextMeshPro.textInfo.characterInfo[index].materialReferenceIndex;
@@ -505,7 +512,7 @@ namespace TMPro.Examples
 
 
             // Restore last vertex attribute as we swapped it as well
-            int lastIndex = (src_vertices.Length / 4 - 1) * 4;
+            int lastIndex = ((src_vertices.Length / 4) - 1) * 4;
 
             // Vertices
             dst_vertices[lastIndex + 0] = src_vertices[lastIndex + 0];

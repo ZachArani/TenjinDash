@@ -7,10 +7,10 @@ namespace RealtimeCSG
 {
     internal static class ColorSettings
     {
-        static readonly float state0 = (float)Mathf.Pow(1.00f, 2.2f);
-        static readonly float state1 = (float)Mathf.Pow(0.90f, 2.2f);
-        static readonly float state2 = (float)Mathf.Pow(0.60f, 2.2f);
-        static readonly float state3 = (float)Mathf.Pow(0.70f, 2.2f);
+        static readonly float state0 = Mathf.Pow(1.00f, 2.2f);
+        static readonly float state1 = Mathf.Pow(0.90f, 2.2f);
+        static readonly float state2 = Mathf.Pow(0.60f, 2.2f);
+        static readonly float state3 = Mathf.Pow(0.70f, 2.2f);
 
         static Color[] pointInnerStateColor =
         {
@@ -165,7 +165,9 @@ namespace RealtimeCSG
         public static Color GetBrushOutlineColor(CSGBrush brush)
         {
             if (outlines2D == null)
+            {
                 Update();
+            }
 
             var instanceID = Mathf.Abs(brush.GetInstanceID());
             return outlines2D[instanceID % outlines2D.Length];
@@ -175,7 +177,9 @@ namespace RealtimeCSG
         {
             var prefString = EditorPrefs.GetString(name);
             if (prevname == prefString)
+            {
                 return false;
+            }
 
             prevname = prefString;
             var split = prefString.Split(';');
@@ -201,7 +205,10 @@ namespace RealtimeCSG
             {
                 var newColor = new Color(r, g, b, a);
                 if (newColor == resultColor)
+                {
                     return false;
+                }
+
                 resultColor = newColor;
                 return true;
             }
@@ -306,7 +313,10 @@ namespace RealtimeCSG
         public static Shader GetWireframeShader()
         {
             if (!sceneViewShader)
+            {
                 Update();
+            }
+
             return sceneViewShader;
         }
 
@@ -444,8 +454,10 @@ namespace RealtimeCSG
             polygonInnerStateColor[1] = CopyHueSaturation(pointInnerStateColor[1], parsedYAxis);
             polygonInnerStateColor[2] = CopyHueSaturation(pointInnerStateColor[2], parsedYAxis);
             polygonInnerStateColor[3] = CopyHueSaturation(pointInnerStateColor[3], parsedYAxis);
-            for (int i = 0; i < 4; i++) polygonInnerStateColor[i].a = Mathf.Clamp01(polygonInnerStateColor[i].a * 2.5f);
-
+            for (int i = 0; i < 4; i++)
+            {
+                polygonInnerStateColor[i].a = Mathf.Clamp01(polygonInnerStateColor[i].a * 2.5f);
+            }
 
             var invertedColor1 = InvertHue(parsedWireframeActive);
             var invertedColor2 = InvertHue(parsedCenterAxis);

@@ -60,7 +60,9 @@ namespace RealtimeCSG
                 GUILayout.EndArea();
 
                 if (RealtimeCSG.CSGSettings.EnableRealtimeCSG)
+                {
                     SceneViewBottomBarGUI.ShowGUI(sceneView, haveOffset: false);
+                }
             }
             GUI.skin = originalSkin;
             Handles.BeginGUI();
@@ -87,7 +89,9 @@ namespace RealtimeCSG
                     EditorGUI.BeginDisabledGroup(!RealtimeCSG.CSGSettings.EnableRealtimeCSG);
                     {
                         if (EditModeManager.ActiveTool != null)
+                        {
                             EditModeManager.ActiveTool.OnInspectorGUI(window, height);
+                        }
                     }
                     EditorGUI.EndDisabledGroup();
                 }
@@ -110,7 +114,9 @@ namespace RealtimeCSG
             CSG_GUIStyleUtility.InitStyles();
             if (CSG_GUIStyleUtility.brushEditModeNames == null ||
                 CSG_GUIStyleUtility.brushEditModeNames.Length == 0)
+            {
                 return;
+            }
 
             var oldSkin = GUI.skin;
             CSG_GUIStyleUtility.SetDefaultGUISkin();
@@ -121,7 +127,9 @@ namespace RealtimeCSG
                 float topBarSize = 20;
 #if UNITY_2018_3_OR_NEWER
                 if (CSGPrefabUtility.AreInPrefabMode())
+                {
                     topBarSize += 25;
+                }
 #endif
 
 
@@ -148,7 +156,10 @@ namespace RealtimeCSG
                     buttonArea.height = 13;
                     buttonArea.width = 13;
                     if (GUI.Button(buttonArea, GUIContent.none, "WinBtnClose"))
+                    {
                         EditModeToolWindowSceneGUI.GetWindow();
+                    }
+
                     TooltipUtility.SetToolTip(CSG_GUIStyleUtility.PopOutTooltip, buttonArea);
 
                     var versionWidth = CSG_GUIStyleUtility.versionLabelStyle.CalcSize(VersionLabel);
@@ -183,11 +194,15 @@ namespace RealtimeCSG
             {
                 var mainCamera = Camera.main;
                 if (mainCamera != null)
+                {
                     return mainCamera;
+                }
 
                 Camera[] allCameras = Camera.allCameras;
                 if (allCameras != null && allCameras.Length == 1)
+                {
                     return allCameras[0];
+                }
 
                 return null;
             }
@@ -201,7 +216,9 @@ namespace RealtimeCSG
                 {
                     GUILayout.Label(DisabledLabelContent, CSG_GUIStyleUtility.redTextLabel);
                     if (GUILayout.Button(EnableRealtimeCSGContent))
+                    {
                         RealtimeCSG.CSGSettings.SetRealtimeCSGEnabled(true);
+                    }
                 }
                 GUILayout.EndVertical();
             }
@@ -267,13 +284,24 @@ namespace RealtimeCSG
                         var currentPrefabSourceAlignment = targetNodes[i].PrefabSourceAlignment;
                         var currentPrefabDestinationAlignment = targetNodes[i].PrefabDestinationAlignment;
                         if (isPrefab.HasValue && isPrefab.Value != currentIsPrefab)
+                        {
                             isPrefab = null;
+                        }
+
                         if (prefabBehaviour.HasValue && prefabBehaviour.Value != currentPrefabBehaviour)
+                        {
                             prefabBehaviour = null;
+                        }
+
                         if (prefabSourceAlignment.HasValue && prefabSourceAlignment.Value != currentPrefabSourceAlignment)
+                        {
                             prefabSourceAlignment = null;
+                        }
+
                         if (prefabDestinationAlignment.HasValue && prefabDestinationAlignment.Value != currentPrefabDestinationAlignment)
+                        {
                             prefabDestinationAlignment = null;
+                        }
                     }
                 }
 
@@ -412,7 +440,7 @@ namespace RealtimeCSG
                             opMixedValues = !passThrough.HasValue || passThrough.Value;
 
                             var ptMixedValues = !passThrough.HasValue;
-                            passThroughValue = passThrough.HasValue ? passThrough.Value : false;
+                            passThroughValue = passThrough.HasValue && passThrough.Value;
                             if (CSG_EditorGUIUtility.PassThroughButton(passThroughValue, ptMixedValues))
                             {
                                 Undo.RecordObjects(targetNodes, "Changed CSG operation of nodes");
@@ -425,7 +453,9 @@ namespace RealtimeCSG
                             }
 
                             if (passThroughValue)
+                            {
                                 operationType = (CSGOperationType)255;
+                            }
                         }
                         EditorGUI.BeginChangeCheck();
                         {

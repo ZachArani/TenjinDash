@@ -39,7 +39,7 @@ namespace AYellowpaper.SerializedCollections.Editor
 
         public float GetDesiredWidth()
         {
-            return buttonWidth * 2 + inputWidth + labelWidth;
+            return (buttonWidth * 2) + inputWidth + labelWidth;
         }
 
         public void OnGUI(Rect rect)
@@ -49,11 +49,21 @@ namespace AYellowpaper.SerializedCollections.Editor
             Rect labelRect = inputRect.AppendRight(labelWidth);
             Rect rightButton = labelRect.AppendRight(buttonWidth);
             using (new GUIEnabledScope(Page != 1))
+            {
                 if (GUI.Button(leftButton, "<"))
+                {
                     Page--;
+                }
+            }
+
             using (new GUIEnabledScope(Page != PageCount))
+            {
                 if (GUI.Button(rightButton, ">"))
+                {
                     Page++;
+                }
+            }
+
             Page = EditorGUI.IntField(inputRect, Page);
             GUI.Label(labelRect, "/" + PageCount.ToString());
         }

@@ -220,7 +220,7 @@ namespace RealtimeCSG.Helpers
             {
                 if ((s_Points[i].y > pos.y) != (s_Points[j].y > pos.y))
                 {
-                    if (pos.x < (s_Points[j].x - s_Points[i].x) * (pos.y - s_Points[i].y) / (s_Points[j].y - s_Points[i].y) + s_Points[i].x)
+                    if (pos.x < ((s_Points[j].x - s_Points[i].x) * (pos.y - s_Points[i].y) / (s_Points[j].y - s_Points[i].y)) + s_Points[i].x)
                     {
                         oddNodes = !oddNodes;
                     }
@@ -235,22 +235,31 @@ namespace RealtimeCSG.Helpers
                 {
                     dist = HandleUtility.DistancePointToLineSegment(pos, s_Points[i], s_Points[j++]);
                     if (dist < closestDist || closestDist < 0)
+                    {
                         closestDist = dist;
+                    }
                 }
                 return closestDist;
             }
             else
+            {
                 return 0;
+            }
         }
 
         internal static bool ContainsStatic(GameObject[] objects)
         {
             if (objects == null || objects.Length == 0)
+            {
                 return false;
+            }
+
             for (int i = 0; i < objects.Length; i++)
             {
                 if (objects[i] != null && objects[i].isStatic)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -266,10 +275,10 @@ namespace RealtimeCSG.Helpers
         {
             switch (eventType)
             {
-                case (EventType.Layout):
+                case EventType.Layout:
                     HandleUtility.AddControl(controlID, DistanceToRectangleInternal(position, rotation, size));
                     break;
-                case (EventType.Repaint):
+                case EventType.Repaint:
                     var sideways = rotation * new Vector3(size.x, 0, 0);
                     var up = rotation * new Vector3(0, size.y, 0);
                     s_RectangleHandlePointsCache[0] = position + sideways + up;
@@ -305,11 +314,15 @@ namespace RealtimeCSG.Helpers
             get
             {
                 if (!GUI.enabled || (Tools.viewTool != ViewTool.None && Tools.viewTool != ViewTool.Pan))
+                {
                     return 0;
+                }
 
                 var hotControl = GUIUtility.hotControl;
                 if (hotControl == 0)
+                {
                     return UnityEditor.HandleUtility.nearestControl;
+                }
 
                 return GUIUtility.keyboardControl;
             }
@@ -324,8 +337,8 @@ namespace RealtimeCSG.Helpers
         public static Color StateColor(Color color, bool isDisabled = false, bool isSelected = false, bool isPreSelected = false)
         {
             return ToActiveColorSpace((isDisabled || disabled) ? Color.Lerp(color, staticColor, staticBlend) :
-                                       (isSelected) ? Handles.selectedColor :
-                                       (isPreSelected) ? preselectionColor : color);
+                                       isSelected ? Handles.selectedColor :
+                                       isPreSelected ? preselectionColor : color);
         }
 
         public static Vector3 PositionHandle(Camera camera, Vector3 position, Quaternion rotation, SnapMode snapMode, Vector3[] snapVertices = null, InitFunction initFunction = null, InitFunction shutdownFunction = null)
@@ -337,17 +350,17 @@ namespace RealtimeCSG.Helpers
             GUI.SetNextControlName("xyPlane"); var xyPlaneSlider = GUIUtility.GetControlID(s_xyAxisMoveHandleHash, FocusType.Passive);
             GUI.SetNextControlName("yzPlane"); var yzPlaneSlider = GUIUtility.GetControlID(s_yzAxisMoveHandleHash, FocusType.Passive);
 
-            var isStatic = (!Tools.hidden && EditorApplication.isPlaying && ContainsStatic(Selection.gameObjects));
+            var isStatic = !Tools.hidden && EditorApplication.isPlaying && ContainsStatic(Selection.gameObjects);
             var prevDisabled = CSGHandles.disabled;
 
             var hotControl = GUIUtility.hotControl;
 
-            var xAxisIsHot = (xAxisSlider == hotControl);
-            var yAxisIsHot = (yAxisSlider == hotControl);
-            var zAxisIsHot = (zAxisSlider == hotControl);
-            var xzAxisIsHot = (xzPlaneSlider == hotControl);
-            var xyAxisIsHot = (xyPlaneSlider == hotControl);
-            var yzAxisIsHot = (yzPlaneSlider == hotControl);
+            var xAxisIsHot = xAxisSlider == hotControl;
+            var yAxisIsHot = yAxisSlider == hotControl;
+            var zAxisIsHot = zAxisSlider == hotControl;
+            var xzAxisIsHot = xzPlaneSlider == hotControl;
+            var xyAxisIsHot = xyPlaneSlider == hotControl;
+            var yzAxisIsHot = yzPlaneSlider == hotControl;
 
             var isControlHot = xAxisIsHot || yAxisIsHot || zAxisIsHot || xzAxisIsHot || xyAxisIsHot || yzAxisIsHot;
 
@@ -374,16 +387,16 @@ namespace RealtimeCSG.Helpers
 
             var currentFocusControl = FocusControl;
 
-            var xAxisIndirectlyFocused = (currentFocusControl == xyPlaneSlider || currentFocusControl == xzPlaneSlider);
-            var yAxisIndirectlyFocused = (currentFocusControl == xyPlaneSlider || currentFocusControl == yzPlaneSlider);
-            var zAxisIndirectlyFocused = (currentFocusControl == xzPlaneSlider || currentFocusControl == yzPlaneSlider);
+            var xAxisIndirectlyFocused = currentFocusControl == xyPlaneSlider || currentFocusControl == xzPlaneSlider;
+            var yAxisIndirectlyFocused = currentFocusControl == xyPlaneSlider || currentFocusControl == yzPlaneSlider;
+            var zAxisIndirectlyFocused = currentFocusControl == xzPlaneSlider || currentFocusControl == yzPlaneSlider;
 
             var xAxisSelected = xAxisIndirectlyFocused || (currentFocusControl == xAxisSlider);
             var yAxisSelected = yAxisIndirectlyFocused || (currentFocusControl == yAxisSlider);
             var zAxisSelected = zAxisIndirectlyFocused || (currentFocusControl == zAxisSlider);
-            var xzAxiSelected = (currentFocusControl == xAxisSlider || currentFocusControl == zAxisSlider);
-            var xyAxiSelected = (currentFocusControl == xAxisSlider || currentFocusControl == yAxisSlider);
-            var yzAxiSelected = (currentFocusControl == yAxisSlider || currentFocusControl == zAxisSlider);
+            var xzAxiSelected = currentFocusControl == xAxisSlider || currentFocusControl == zAxisSlider;
+            var xyAxiSelected = currentFocusControl == xAxisSlider || currentFocusControl == yAxisSlider;
+            var yzAxiSelected = currentFocusControl == yAxisSlider || currentFocusControl == zAxisSlider;
 
             var xAxisColor = CSGHandles.StateColor(Handles.xAxisColor, xAxisDisabled, xAxisSelected);
             var yAxisColor = CSGHandles.StateColor(Handles.yAxisColor, yAxisDisabled, yAxisSelected);
@@ -459,7 +472,7 @@ namespace RealtimeCSG.Helpers
         {
             var size = HandleUtility.GetHandleSize(position);
             var originalColor = Handles.color;
-            var isStatic = (!Tools.hidden && EditorApplication.isPlaying && ContainsStatic(Selection.gameObjects));
+            var isStatic = !Tools.hidden && EditorApplication.isPlaying && ContainsStatic(Selection.gameObjects);
 
             var prevDisabled = CSGHandles.disabled;
 
@@ -492,7 +505,9 @@ namespace RealtimeCSG.Helpers
             if (float.IsInfinity(scale.x) || float.IsNaN(scale.x) ||
                 float.IsInfinity(scale.y) || float.IsNaN(scale.y) ||
                 float.IsInfinity(scale.z) || float.IsNaN(scale.z))
+            {
                 scale = Vector3.zero;
+            }
 
             CSGHandles.disabled = prevDisabled;
             Handles.color = originalColor;
@@ -530,27 +545,37 @@ namespace RealtimeCSG.Helpers
             float size = HandleUtility.GetHandleSize(position);
             Color temp = Handles.color;
 
-            var isStatic = (!Tools.hidden && EditorApplication.isPlaying && ContainsStatic(Selection.gameObjects));
+            var isStatic = !Tools.hidden && EditorApplication.isPlaying && ContainsStatic(Selection.gameObjects);
             Handles.color = isStatic ? Color.Lerp(Handles.xAxisColor, staticColor, staticBlend) : Handles.xAxisColor;
             if (!haveControl || hotControl == xAxisDiscID)
+            {
                 rotation = CSGDisc.Do(camera, xAxisDiscID, "X", rotation, position, rotation * Vector3.right, size, true, snapping, RealtimeCSG.CSGSettings.SnapRotation, initFunction, shutdownFunction);
+            }
 
             Handles.color = isStatic ? Color.Lerp(Handles.yAxisColor, staticColor, staticBlend) : Handles.yAxisColor;
             if (!haveControl || hotControl == yAxisDiscID)
+            {
                 rotation = CSGDisc.Do(camera, yAxisDiscID, "Y", rotation, position, rotation * Vector3.up, size, true, snapping, RealtimeCSG.CSGSettings.SnapRotation, initFunction, shutdownFunction);
+            }
 
             Handles.color = isStatic ? Color.Lerp(Handles.zAxisColor, staticColor, staticBlend) : Handles.zAxisColor;
             if (!haveControl || hotControl == zAxisDiscID)
+            {
                 rotation = CSGDisc.Do(camera, zAxisDiscID, "Z", rotation, position, rotation * Vector3.forward, size, true, snapping, RealtimeCSG.CSGSettings.SnapRotation, initFunction, shutdownFunction);
+            }
 
             if (!isStatic)
             {
                 Handles.color = Handles.centerColor;
                 if (!haveControl || hotControl == freeDiscID)
+                {
                     rotation = CSGDisc.Do(camera, freeDiscID, null, rotation, position, camera.transform.forward, size * 1.1f, false, snapping, 0, initFunction, shutdownFunction);
+                }
 
                 if (!haveControl || hotControl == freeRotateID)
+                {
                     rotation = CSGFreeRotate.Do(camera, freeRotateID, rotation, position, size, snapping, initFunction, shutdownFunction);
+                }
             }
 
             Handles.color = temp;
@@ -586,7 +611,7 @@ namespace RealtimeCSG.Helpers
         {
             int axis1index = 0;
             int axis2index = 0;
-            var isStatic = (!Tools.hidden && EditorApplication.isPlaying && ContainsStatic(Selection.gameObjects));
+            var isStatic = !Tools.hidden && EditorApplication.isPlaying && ContainsStatic(Selection.gameObjects);
             switch (planeID)
             {
                 case PrincipleAxis2.XZ:
@@ -626,8 +651,8 @@ namespace RealtimeCSG.Helpers
 
             if (EditorGUIUtility.hotControl == 0)
             {
-                s_PlanarHandlesOctant[axis1index] = (cameraToTransformToolVector[axis1index] < -0.01f ? -1 : 1);
-                s_PlanarHandlesOctant[axis2index] = (cameraToTransformToolVector[axis2index] < -0.01f ? -1 : 1);
+                s_PlanarHandlesOctant[axis1index] = cameraToTransformToolVector[axis1index] < -0.01f ? -1 : 1;
+                s_PlanarHandlesOctant[axis2index] = cameraToTransformToolVector[axis2index] < -0.01f ? -1 : 1;
             }
             var handleOffset = s_PlanarHandlesOctant;
             handleOffset[axisNormalIndex] = 0;
@@ -643,10 +668,10 @@ namespace RealtimeCSG.Helpers
             axis2 = rotation * axis2;
             axisNormal = rotation * axisNormal;
 
-            s_Vertices[0] = position + handleOffset + (axis1 + axis2) * handleSize * 0.5f;
-            s_Vertices[1] = position + handleOffset + (-axis1 + axis2) * handleSize * 0.5f;
-            s_Vertices[2] = position + handleOffset + (-axis1 - axis2) * handleSize * 0.5f;
-            s_Vertices[3] = position + handleOffset + (axis1 - axis2) * handleSize * 0.5f;
+            s_Vertices[0] = position + handleOffset + ((axis1 + axis2) * handleSize * 0.5f);
+            s_Vertices[1] = position + handleOffset + ((-axis1 + axis2) * handleSize * 0.5f);
+            s_Vertices[2] = position + handleOffset + ((-axis1 - axis2) * handleSize * 0.5f);
+            s_Vertices[3] = position + handleOffset + ((axis1 - axis2) * handleSize * 0.5f);
 
             var innerColor = Handles.color;
             var outerColor = Color.black;

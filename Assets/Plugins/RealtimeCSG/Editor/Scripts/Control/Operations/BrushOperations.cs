@@ -42,7 +42,9 @@ namespace InternalRealtimeCSG
             }
 
             if (worldDeltaMovement.x == 0.0f && worldDeltaMovement.y == 0.0f && worldDeltaMovement.z == 0.0f)
+            {
                 return;
+            }
 
             for (var b = 0; b < transforms.Count; b++)
             {
@@ -105,19 +107,27 @@ namespace InternalRealtimeCSG
                 var controlMesh = brush.ControlMesh;
                 var vertices = controlMesh.Vertices;
                 for (var v = 0; v < vertices.Length; v++)
+                {
                     vertices[v] = brushFlip.MultiplyPoint(vertices[v]);
+                }
 
                 var polygons = controlMesh.Polygons;
                 for (var p = 0; p < polygons.Length; p++)
+                {
                     Array.Reverse(polygons[p].EdgeIndices);
+                }
 
                 var edges = controlMesh.Edges;
                 var twinVertices = new short[edges.Length];
                 for (var e = 0; e < edges.Length; e++)
+                {
                     twinVertices[e] = edges[edges[e].TwinIndex].VertexIndex;
+                }
 
                 for (var e = 0; e < edges.Length; e++)
+                {
                     edges[e].VertexIndex = twinVertices[e];
+                }
 
                 brush.ControlMesh.SetDirty();
                 EditorUtility.SetDirty(brush);

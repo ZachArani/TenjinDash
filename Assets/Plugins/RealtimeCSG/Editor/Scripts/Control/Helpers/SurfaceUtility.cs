@@ -14,7 +14,10 @@ namespace RealtimeCSG
         {
             if (selectedSurfaces == null ||
                 selectedSurfaces.Length == 0)
+            {
                 return false;
+            }
+
             for (var s = 0; s < selectedSurfaces.Length; s++)
             {
                 var brush = selectedSurfaces[s].brush;
@@ -25,9 +28,14 @@ namespace RealtimeCSG
                 var texGenIndex = surfaces[surfaceIndex].TexGenIndex;
 
                 if (texGenIndex >= texGens.Length)
+                {
                     continue;
+                }
+
                 if (texGens[texGenIndex].SmoothingGroup > 0)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -36,7 +44,10 @@ namespace RealtimeCSG
         {
             if (selectedSurfaces == null ||
                 selectedSurfaces.Length == 0)
+            {
                 return false;
+            }
+
             long foundSmoothGroup = -1;
             for (var s = 0; s < selectedSurfaces.Length; s++)
             {
@@ -48,7 +59,9 @@ namespace RealtimeCSG
 
                 var texGenIndex = surfaces[surfaceIndex].TexGenIndex;
                 if (texGens[texGenIndex].SmoothingGroup == 0)
+                {
                     return true;
+                }
 
                 if (foundSmoothGroup == -1)
                 {
@@ -57,7 +70,9 @@ namespace RealtimeCSG
                 }
 
                 if (texGens[texGenIndex].SmoothingGroup != foundSmoothGroup)
+                {
                     return true;
+                }
             }
             return false;
         }
@@ -66,7 +81,9 @@ namespace RealtimeCSG
         {
             if (selectedSurfaces == null ||
                 selectedSurfaces.Length == 0)
+            {
                 return;
+            }
 
             var brushSurfaces = new Dictionary<CSGBrush, List<int>>();
             for (var s = 0; s < selectedSurfaces.Length; s++)
@@ -84,7 +101,9 @@ namespace RealtimeCSG
             }
 
             if (brushSurfaces.Count == 0)
+            {
                 return;
+            }
 
             Undo.RecordObjects(brushSurfaces.Keys.ToArray(), "Unsmoothing surfaces");
             foreach (var pair in brushSurfaces)
@@ -110,7 +129,9 @@ namespace RealtimeCSG
         {
             if (selectedSurfaces == null ||
                 selectedSurfaces.Length == 0)
+            {
                 return;
+            }
 
             // Try to find a good smoothing group index
             var smoothingGroupIndex = FindUnusedSmoothingGroupIndex();
@@ -159,8 +180,14 @@ namespace RealtimeCSG
                     var surfaceIndex = selectedBrushSurfaces[i].surfaceIndex;
                     var texGenIndex = brush.Shape.Surfaces[surfaceIndex].TexGenIndex;
 
-                    if (set) brush.Shape.TexGenFlags[texGenIndex] |= flag;
-                    else brush.Shape.TexGenFlags[texGenIndex] &= ~flag;
+                    if (set)
+                    {
+                        brush.Shape.TexGenFlags[texGenIndex] |= flag;
+                    }
+                    else
+                    {
+                        brush.Shape.TexGenFlags[texGenIndex] &= ~flag;
+                    }
                 }
             }
         }
@@ -176,10 +203,19 @@ namespace RealtimeCSG
                     var texGenIndex = brush.Shape.Surfaces[surfaceIndex].TexGenIndex;
                     var oldFlags = brush.Shape.TexGenFlags[texGenIndex];
                     TexGenFlags newFlags;
-                    if (value) newFlags = oldFlags & ~TexGenFlags.WorldSpaceTexture;
-                    else newFlags = oldFlags | TexGenFlags.WorldSpaceTexture;
+                    if (value)
+                    {
+                        newFlags = oldFlags & ~TexGenFlags.WorldSpaceTexture;
+                    }
+                    else
+                    {
+                        newFlags = oldFlags | TexGenFlags.WorldSpaceTexture;
+                    }
+
                     if (oldFlags == newFlags)
+                    {
                         continue;
+                    }
 
                     Vector2 oldTextureCoord = ConvertModelToTextureSpace(brush, surfaceIndex, Vector3.zero);
 
@@ -188,7 +224,7 @@ namespace RealtimeCSG
 
                     Vector2 newTextureCoord = ConvertModelToTextureSpace(brush, surfaceIndex, Vector3.zero);
 
-                    brush.Shape.TexGens[texGenIndex].Translation -= (newTextureCoord - oldTextureCoord);
+                    brush.Shape.TexGens[texGenIndex].Translation -= newTextureCoord - oldTextureCoord;
                 }
             }
         }
@@ -198,10 +234,19 @@ namespace RealtimeCSG
             var texGenIndex = brush.Shape.Surfaces[surfaceIndex].TexGenIndex;
             var oldFlags = brush.Shape.TexGenFlags[texGenIndex];
             TexGenFlags newFlags;
-            if (value) newFlags = oldFlags & ~TexGenFlags.WorldSpaceTexture;
-            else newFlags = oldFlags | TexGenFlags.WorldSpaceTexture;
+            if (value)
+            {
+                newFlags = oldFlags & ~TexGenFlags.WorldSpaceTexture;
+            }
+            else
+            {
+                newFlags = oldFlags | TexGenFlags.WorldSpaceTexture;
+            }
+
             if (oldFlags == newFlags)
+            {
                 return;
+            }
 
             Vector2 oldTextureCoord = ConvertModelToTextureSpace(brush, surfaceIndex, Vector3.zero);
 
@@ -210,7 +255,7 @@ namespace RealtimeCSG
 
             Vector2 newTextureCoord = ConvertModelToTextureSpace(brush, surfaceIndex, Vector3.zero);
 
-            brush.Shape.TexGens[texGenIndex].Translation -= (newTextureCoord - oldTextureCoord);
+            brush.Shape.TexGens[texGenIndex].Translation -= newTextureCoord - oldTextureCoord;
         }
 
         public static void SetMaterials(SelectedBrushSurface[] selectedBrushSurfaces, Material material)
@@ -429,7 +474,9 @@ namespace RealtimeCSG
                     var brush = selectedBrushSurfaces[i].brush;
                     if (brush.ChildData == null ||
                         brush.ChildData.ModelTransform == null)
+                    {
                         continue;
+                    }
 
                     var modelTransform = brush.ChildData.ModelTransform;
                     var modelLocalToWorldMatrix = modelTransform.localToWorldMatrix;
@@ -467,7 +514,9 @@ namespace RealtimeCSG
                     var brush = selectedBrushSurfaces[i].brush;
                     if (brush.ChildData == null ||
                         brush.ChildData.ModelTransform == null)
+                    {
                         continue;
+                    }
 
                     var modelTransform = brush.ChildData.ModelTransform;
                     var modelLocalToWorldMatrix = modelTransform.localToWorldMatrix;
@@ -498,7 +547,9 @@ namespace RealtimeCSG
                     var brush = selectedBrushSurfaces[i].brush;
                     if (brush.ChildData == null ||
                         brush.ChildData.ModelTransform == null)
+                    {
                         continue;
+                    }
 
                     var modelTransform = brush.ChildData.ModelTransform;
                     var modelLocalToWorldMatrix = modelTransform.localToWorldMatrix;
@@ -529,7 +580,9 @@ namespace RealtimeCSG
                     var brush = selectedBrushSurfaces[i].brush;
                     if (brush.ChildData == null ||
                         brush.ChildData.ModelTransform == null)
+                    {
                         continue;
+                    }
 
                     var modelTransform = brush.ChildData.ModelTransform;
                     var modelLocalToWorldMatrix = modelTransform.localToWorldMatrix;
@@ -551,7 +604,9 @@ namespace RealtimeCSG
                     var brush = selectedBrushSurfaces[i].brush;
                     if (brush.ChildData == null ||
                         brush.ChildData.ModelTransform == null)
+                    {
                         continue;
+                    }
 
                     var modelTransform = brush.ChildData.ModelTransform;
                     var modelLocalToWorldMatrix = modelTransform.localToWorldMatrix;
@@ -573,7 +628,9 @@ namespace RealtimeCSG
                     var brush = selectedBrushSurfaces[i].brush;
                     if (brush.ChildData == null ||
                         brush.ChildData.ModelTransform == null)
+                    {
                         continue;
+                    }
 
                     var modelTransform = brush.ChildData.ModelTransform;
                     var modelLocalToWorldMatrix = modelTransform.localToWorldMatrix;
@@ -644,11 +701,15 @@ namespace RealtimeCSG
         {
             if (srcSurfaceIndex < 0 || srcSurfaceIndex >= srcBrush.Shape.Surfaces.Length ||
                 !srcBrush)
+            {
                 return false;
+            }
 
             if (srcBrush == dstBrush &&
                 srcSurfaceIndex == dstSurfaceIndex)
+            {
                 return false;
+            }
 
             var srcShape = srcBrush.Shape;
             var dstShape = dstBrush.Shape;
@@ -779,11 +840,15 @@ namespace RealtimeCSG
         {
             if (srcSurfaceIndex < 0 || srcSurfaceIndex >= srcBrush.Shape.Surfaces.Length ||
                 !srcBrush)
+            {
                 return false;
+            }
 
             if (srcBrush == dstBrush &&
                 srcSurfaceIndex == dstSurfaceIndex)
+            {
                 return false;
+            }
 
             var srcShape = srcBrush.Shape;
             var dstShape = dstBrush.Shape;
@@ -791,7 +856,9 @@ namespace RealtimeCSG
             var dstTexGenIndex = dstShape.Surfaces[dstSurfaceIndex].TexGenIndex;
 
             if (srcTexGenIndex < 0 || srcTexGenIndex >= srcBrush.Shape.TexGens.Length)
+            {
                 return false;
+            }
 
             if (registerUndo)
             {
@@ -816,7 +883,9 @@ namespace RealtimeCSG
         public static bool RotateSurfaces(SelectedBrushSurface[] selectedSurfaces, RotationCircle rotationCircle)
         {
             if (selectedSurfaces.Length == 0)
+            {
                 return false;
+            }
 
             var prevFlags = new TexGenFlags[selectedSurfaces.Length];
             var brushSurfaces = new Dictionary<CSGBrush, List<int>>();
@@ -845,7 +914,9 @@ namespace RealtimeCSG
 
                 if (brush.ChildData == null ||
                     brush.ChildData.ModelTransform == null)
+                {
                     continue;
+                }
 
                 //var brushPosition		= brush.hierarchyItem.transform.position;
                 //var brushPosition		= brush.hierarchyItem.transform.InverseTransformPoint(Vector3.zero);
@@ -874,7 +945,9 @@ namespace RealtimeCSG
         {
             if (selectedSurfaces == null ||
                 selectedSurfaces.Length == 0)
+            {
                 return false;
+            }
 
             __brushSurfaces.Clear();
             for (var s = 0; s < selectedSurfaces.Length; s++)
@@ -899,7 +972,9 @@ namespace RealtimeCSG
 
                 if (brush.ChildData == null ||
                     brush.ChildData.ModelTransform == null)
+                {
                     continue;
+                }
 
                 var point1 = brush.hierarchyItem.Transform.InverseTransformPoint(oldWorldPosition);
                 var point2 = brush.hierarchyItem.Transform.InverseTransformPoint(newWorldPosition);
@@ -930,7 +1005,9 @@ namespace RealtimeCSG
         {
             if (brushes == null ||
                 brushes.Length == 0)
+            {
                 return false;
+            }
 
             var worldModified = false;
             for (var b = 0; b < brushes.Length; b++)
@@ -939,7 +1016,9 @@ namespace RealtimeCSG
 
                 if (brush.ChildData == null ||
                     brush.ChildData.ModelTransform == null)
+                {
                     continue;
+                }
 
                 var point1 = brush.hierarchyItem.Transform.InverseTransformPoint(MathConstants.zeroVector3);
                 var point2 = brush.hierarchyItem.Transform.InverseTransformPoint(offset);
@@ -952,9 +1031,11 @@ namespace RealtimeCSG
                     var surfaceIndex = s;
                     var texGenIndex = shape.Surfaces[surfaceIndex].TexGenIndex;
                     if ((shape.TexGenFlags[texGenIndex] & TexGenFlags.WorldSpaceTexture) != TexGenFlags.WorldSpaceTexture)
+                    {
                         brushModified = TranslateTextureCoordInLocalSpace(
                                             ref shape.TexGens[texGenIndex], shape.TexGenFlags[texGenIndex], ref shape.Surfaces[surfaceIndex],
                                             point1, point2) || brushModified;
+                    }
                 }
                 if (brushModified)
                 {
@@ -970,12 +1051,16 @@ namespace RealtimeCSG
         public static bool TranslateSurfacesInWorldSpace(CSGBrush brush, Vector3 offset)
         {
             if (!brush)
+            {
                 return false;
+            }
 
             var worldModified = false;
             if (brush.ChildData == null ||
                 brush.ChildData.ModelTransform == null)
+            {
                 return false;
+            }
 
             var point1 = brush.hierarchyItem.Transform.InverseTransformPoint(MathConstants.zeroVector3);
             var point2 = brush.hierarchyItem.Transform.InverseTransformPoint(offset);
@@ -988,9 +1073,11 @@ namespace RealtimeCSG
                 var surfaceIndex = s;
                 var texGenIndex = shape.Surfaces[surfaceIndex].TexGenIndex;
                 if ((shape.TexGenFlags[texGenIndex] & TexGenFlags.WorldSpaceTexture) != TexGenFlags.WorldSpaceTexture)
+                {
                     brushModified = TranslateTextureCoordInLocalSpace(
                                         ref shape.TexGens[texGenIndex], shape.TexGenFlags[texGenIndex], ref shape.Surfaces[surfaceIndex],
                                         point1, point2) || brushModified;
+                }
             }
             if (brushModified)
             {
@@ -1017,7 +1104,9 @@ namespace RealtimeCSG
                 for (var t = 0; t < texGens.Length; t++)
                 {
                     if (texGens[t].SmoothingGroup == 0)
+                    {
                         continue;
+                    }
 
                     foundGroupIndices.Add(texGens[t].SmoothingGroup);
                 }
@@ -1030,23 +1119,31 @@ namespace RealtimeCSG
         internal static uint FindUnusedSmoothingGroupIndex(HashSet<uint> foundGroupIndices)
         {
             if (foundGroupIndices.Count == 0)
+            {
                 return 1;
+            }
 
             var list = new List<uint>(foundGroupIndices);
             list.Sort();
 
             if (list[0] != 1)
+            {
                 return 1;
+            }
 
             if (list.Count == list[list.Count - 1])
+            {
                 return list[list.Count - 1] + 1;
+            }
 
             uint prevIndex = 1;
             for (var i = 1; i < list.Count; i++)
             {
                 var diff = list[i] - prevIndex;
                 if (diff > 1)
+                {
                     return prevIndex + 1;
+                }
 
                 prevIndex = list[i];
             }
@@ -1066,10 +1163,19 @@ namespace RealtimeCSG
             Vector2 min;
             Vector2 max;
             if (!GetSurfaceMinMaxTexCoords(brushNodeId, surfaceIndex, modelLocalToWorldMatrix, out min, out max))
+            {
                 return false;
+            }
 
-            float size_x = (max.x - min.x); if (size_x < MathConstants.EqualityEpsilon) size_x = 1.0f;
-            float size_y = (max.y - min.y); if (size_y < MathConstants.EqualityEpsilon) size_y = 1.0f;
+            float size_x = max.x - min.x; if (size_x < MathConstants.EqualityEpsilon)
+            {
+                size_x = 1.0f;
+            }
+
+            float size_y = max.y - min.y; if (size_y < MathConstants.EqualityEpsilon)
+            {
+                size_y = 1.0f;
+            }
 
             var prevScale = surfaceTexGen.Scale;
             var prevTranslation = surfaceTexGen.Translation;
@@ -1088,9 +1194,14 @@ namespace RealtimeCSG
             Vector2 min;
             Vector2 max;
             if (!GetSurfaceMinMaxTexCoords(brushNodeId, surfaceIndex, modelLocalToWorldMatrix, out min, out max))
+            {
                 return false;
+            }
 
-            float size_x = (max.x - min.x); if (size_x < MathConstants.EqualityEpsilon) size_x = 1.0f;
+            float size_x = max.x - min.x; if (size_x < MathConstants.EqualityEpsilon)
+            {
+                size_x = 1.0f;
+            }
 
             var prevScale = surfaceTexGen.Scale;
             var prevTranslation = surfaceTexGen.Translation;
@@ -1105,9 +1216,14 @@ namespace RealtimeCSG
             Vector2 min;
             Vector2 max;
             if (!GetSurfaceMinMaxTexCoords(brushNodeId, surfaceIndex, modelLocalToWorldMatrix, out min, out max))
+            {
                 return false;
+            }
 
-            float size_y = (max.y - min.y); if (size_y < MathConstants.EqualityEpsilon) size_y = 1.0f;
+            float size_y = max.y - min.y; if (size_y < MathConstants.EqualityEpsilon)
+            {
+                size_y = 1.0f;
+            }
 
             var prevScale = surfaceTexGen.Scale;
             var prevTranslation = surfaceTexGen.Translation;
@@ -1122,7 +1238,9 @@ namespace RealtimeCSG
             if (brushNodeId != CSGNode.InvalidNodeID && surfaceIndex >= 0 &&
                 InternalCSGModelManager.External.GetSurfaceMinMaxTexCoords != null &&
                 InternalCSGModelManager.External.GetSurfaceMinMaxTexCoords(brushNodeId, surfaceIndex, modelLocalToWorldMatrix, out minTextureCoordinate, out maxTextureCoordinate))
+            {
                 return true;
+            }
 
             minTextureCoordinate = MathConstants.zeroVector2;
             maxTextureCoordinate = MathConstants.zeroVector2;
@@ -1134,11 +1252,15 @@ namespace RealtimeCSG
             if (brush.brushNodeID == CSGNode.InvalidNodeID || brush.Shape == null ||
                 surfaceIndex < 0 || surfaceIndex >= brush.Shape.Surfaces.Length ||
                 InternalCSGModelManager.External.ConvertModelToTextureSpace == null)
+            {
                 return MathConstants.zeroVector2;
+            }
 
             if (brush.ChildData == null ||
                 brush.ChildData.ModelTransform == null)
+            {
                 return MathConstants.zeroVector2;
+            }
 
             var modelTransform = brush.ChildData.ModelTransform;
             var modelToWorldSpace = modelTransform.localToWorldMatrix;
@@ -1153,11 +1275,15 @@ namespace RealtimeCSG
             if (brush == null || brush.brushNodeID == CSGNode.InvalidNodeID || brush.Shape == null ||
                 surfaceIndex < 0 || surfaceIndex >= brush.Shape.Surfaces.Length ||
                 InternalCSGModelManager.External.ConvertTextureToModelSpace == null)
+            {
                 return MathConstants.zeroVector3;
+            }
 
             if (brush.ChildData == null ||
                 brush.ChildData.ModelTransform == null)
+            {
                 return MathConstants.zeroVector2;
+            }
 
             var modelTransform = brush.ChildData.ModelTransform;
             var modelToWorldSpace = modelTransform.localToWorldMatrix;
@@ -1171,7 +1297,9 @@ namespace RealtimeCSG
                                                                              ref worldCoordinate.x,
                                                                              ref worldCoordinate.y,
                                                                              ref worldCoordinate.z))
+            {
                 return MathConstants.zeroVector3;
+            }
 
             return worldCoordinate;
         }
@@ -1225,16 +1353,22 @@ namespace RealtimeCSG
                                             ref shape.Surfaces[surfaceIndex],
                                             localFromModel,
                                             modelCenter, out originalTextureCoordinate))
+            {
                 return false;
+            }
 
             Vector3 tangent;
             Vector3 binormal;
             GeometryUtility.CalculateTangents(shape.Surfaces[surfaceIndex].Plane.normal, out tangent, out binormal);
 
             if (Vector3.Dot(shape.Surfaces[surfaceIndex].Tangent, tangent) < 0)
+            {
                 shape.TexGens[texgenIndex].RotationAngle += angle;
+            }
             else
+            {
                 shape.TexGens[texgenIndex].RotationAngle -= angle;
+            }
 
             Vector2 newTextureCoordinate;
             if (!ConvertModelToTextureCoord(ref shape.TexGens[texgenIndex],
@@ -1242,7 +1376,9 @@ namespace RealtimeCSG
                                             ref shape.Surfaces[surfaceIndex],
                                             localFromModel,
                                             modelCenter, out newTextureCoordinate))
+            {
                 return false;
+            }
 
             shape.TexGens[texgenIndex].Translation += originalTextureCoordinate - newTextureCoordinate;
             return true;
@@ -1280,7 +1416,10 @@ namespace RealtimeCSG
             dstTexGen.Translation = Vector2.zero;
             dstTexGen.RotationAngle = 0;
             dstTexGen.Scale = srcTexGen.Scale;
-            if (flipX) dstTexGen.Scale.x = -dstTexGen.Scale.x;
+            if (flipX)
+            {
+                dstTexGen.Scale.x = -dstTexGen.Scale.x;
+            }
 
             // Align dstTexcoord1 with srcTexcoord1 on dstTexGen
             {
@@ -1308,7 +1447,9 @@ namespace RealtimeCSG
                 var angle = GeometryUtility.SignedAngle2D(vec2, vec1);
 
                 if ((dstTexGen.Scale.x < 0) != (dstTexGen.Scale.y < 0))
+                {
                     angle = -angle;
+                }
 
                 dstTexGen.RotationAngle = angle;
             }
@@ -1336,8 +1477,9 @@ namespace RealtimeCSG
                                               ref Surface dstSurface)
         {
             if (InternalCSGModelManager.External == null)
+            {
                 return false;
-
+            }
 
             dstTexGen.Translation = MathConstants.zeroVector2;
             dstTexGen.Scale = new Vector2(-1, 1);
@@ -1346,7 +1488,9 @@ namespace RealtimeCSG
             var dstTextureSpaceToLocalSpace = GetLocalToTextureSpaceMatrix(dstTexGen, dstSurface).inverse;
 
             if (!textureMatrixInPlaneSpace)
+            {
                 srcTextureMatrix *= dstTextureSpaceToLocalSpace;
+            }
 
             var tangent = MathConstants.rightVector3;
             var binormal = MathConstants.upVector3;

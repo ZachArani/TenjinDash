@@ -33,9 +33,13 @@ namespace RealtimeCSG
             var magnitude1 = projected1.magnitude;
             var magnitude2 = projected2.magnitude;
             if (magnitude1 > magnitude2)
+            {
                 return magnitude1 * Mathf.Sign(Vector3.Dot(projected1, axis));
+            }
             else
+            {
                 return magnitude2 * Mathf.Sign(Vector3.Dot(projected2, axis));
+            }
         }
 
         public static float SignedAngle(Vector2 v1, Vector2 v2)
@@ -57,18 +61,28 @@ namespace RealtimeCSG
         {
             var denominator = System.Math.Sqrt(from.sqrMagnitude * to.sqrMagnitude);
             if (denominator < 1e-15F)
+            {
                 return 0F;
+            }
 
-            var dot = (from.x * to.x + from.y * to.y) / denominator;
-            if (dot < -1) dot = -1;
-            if (dot > 1) dot = 1;
+            var dot = ((from.x * to.x) + (from.y * to.y)) / denominator;
+            if (dot < -1)
+            {
+                dot = -1;
+            }
+
+            if (dot > 1)
+            {
+                dot = 1;
+            }
+
             return System.Math.Acos(dot) * (360.0 / (System.Math.PI * 2.0));
         }
 
         public static float SignedAngle2D(Vector2 from, Vector2 to)
         {
             var unsignedAngle = Angle2D(from, to);
-            var cross_z = from.x * to.y - from.y * to.x;
+            var cross_z = (from.x * to.y) - (from.y * to.x);
             var sign = System.Math.Sign(cross_z);
             return (float)(unsignedAngle * sign);
         }
@@ -114,20 +128,28 @@ namespace RealtimeCSG
 
         public static Vector3 ProjectPointOnPlane(CSGPlane plane, Vector3 point)
         {
-            var distance = -Vector3.Dot(plane.normal, (point - plane.pointOnPlane));
-            return point + plane.normal * distance;
+            var distance = -Vector3.Dot(plane.normal, point - plane.pointOnPlane);
+            return point + (plane.normal * distance);
         }
 
 
         public static float CounterClockwise(Vector2 a, Vector2 b, Vector2 c)
         {
-            return ((b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y));
+            return ((b.x - a.x) * (c.y - a.y)) - ((c.x - a.x) * (b.y - a.y));
         }
 
         public static bool Intersects(Vector2 A1, Vector2 A2, Vector2 B1, Vector2 B2)
         {
-            if (CounterClockwise(A1, A2, B1) * CounterClockwise(A1, A2, B2) > 0) return false;
-            if (CounterClockwise(B1, B2, A1) * CounterClockwise(B1, B2, A2) > 0) return false;
+            if (CounterClockwise(A1, A2, B1) * CounterClockwise(A1, A2, B2) > 0)
+            {
+                return false;
+            }
+
+            if (CounterClockwise(B1, B2, A1) * CounterClockwise(B1, B2, A2) > 0)
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -137,11 +159,11 @@ namespace RealtimeCSG
             var s2 = p3 - p2;
             var s3 = p0 - p2;
 
-            var divisor = -s2.x * s1.y + s1.x * s2.y;
+            var divisor = (-s2.x * s1.y) + (s1.x * s2.y);
 
             float s, t;
-            s = (-s1.y * s3.x + s1.x * s3.y) / divisor;
-            t = (s2.x * s3.y - s2.y * s3.x) / divisor;
+            s = ((-s1.y * s3.x) + (s1.x * s3.y)) / divisor;
+            t = ((s2.x * s3.y) - (s2.y * s3.x)) / divisor;
 
             if (s >= MathConstants.EqualityEpsilon &&
                 s <= 1 - MathConstants.EqualityEpsilon &&
@@ -217,7 +239,9 @@ namespace RealtimeCSG
                 {
                     if (lines[i].Index1 == lines[j].Index0 ||
                         lines[i].Index0 == lines[j].Index1)
+                    {
                         continue;
+                    }
 
                     if (Intersects(points[lines[i].Index0], points[lines[i].Index1],
                                    points[lines[j].Index0], points[lines[j].Index1]))
@@ -244,7 +268,9 @@ namespace RealtimeCSG
                 {
                     if (lines[i].Index1 == lines[j].Index0 ||
                         lines[i].Index0 == lines[j].Index1)
+                    {
                         continue;
+                    }
 
                     if (Intersects(points[lines[i].Index0], points[lines[i].Index1],
                                    points[lines[j].Index0], points[lines[j].Index1]))
@@ -372,16 +398,27 @@ namespace RealtimeCSG
         {
             var intLength = Mathf.FloorToInt(length);
 
-            var fractLength = (length - intLength);
+            var fractLength = length - intLength;
 
             fractLength = Mathf.Round(fractLength * 1000.0f) / 1000.0f;
 
             const float epsilon = MathConstants.EqualityEpsilon;
 
             if (fractLength >= -epsilon &&
-                fractLength < epsilon) fractLength = 0;
-            if (fractLength >= 1 - epsilon) fractLength = 1;
-            if (fractLength <= -1 + epsilon) fractLength = -1;
+                fractLength < epsilon)
+            {
+                fractLength = 0;
+            }
+
+            if (fractLength >= 1 - epsilon)
+            {
+                fractLength = 1;
+            }
+
+            if (fractLength <= -1 + epsilon)
+            {
+                fractLength = -1;
+            }
 
             return intLength + fractLength;
             //return new Vector3(intPosX, intPosY, intPosZ);
@@ -485,10 +522,10 @@ namespace RealtimeCSG
                 var v1 = points[1];
                 var v2 = points[2];
 
-                var ab = (v1 - v0);
-                var ac = (v2 - v0);
+                var ab = v1 - v0;
+                var ac = v2 - v0;
 
-                return (ab.x * ac.y - ab.y * ac.x);
+                return (ab.x * ac.y) - (ab.y * ac.x);
             }
 
             var length = 0.0f;
@@ -510,7 +547,10 @@ namespace RealtimeCSG
             if (controlMesh == null ||
                 controlMesh.Polygons == null ||
                 polygonIndex >= controlMesh.Polygons.Length)
+            {
                 return new CSGPlane(MathConstants.upVector3, 0);
+            }
+
             var edgeIndices = controlMesh.Polygons[polygonIndex].EdgeIndices;
             if (edgeIndices.Length == 3)
             {
@@ -560,7 +600,10 @@ namespace RealtimeCSG
             var absY = Mathf.Abs(vector.y);
             var absZ = Mathf.Abs(vector.z);
             if (absX > absY)
+            {
                 return absX > absZ ? PrincipleAxis.X : PrincipleAxis.Z;
+            }
+
             return absY > absZ ? PrincipleAxis.Y : PrincipleAxis.Z;
         }
 
@@ -571,7 +614,10 @@ namespace RealtimeCSG
             var absY = Mathf.Abs(vector.y);
             var absZ = Mathf.Abs(vector.z);
             if (absX > absY)
+            {
                 return absX > absZ ? new Vector3(Mathf.Sign(vector.x), 0, 0) : new Vector3(0, 0, Mathf.Sign(vector.z));
+            }
+
             return absY > absZ ? new Vector3(0, Mathf.Sign(vector.y), 0) : new Vector3(0, 0, Mathf.Sign(vector.z));
         }
 
@@ -600,7 +646,9 @@ namespace RealtimeCSG
             var absZ = Mathf.Abs(vector.z);
 
             if (absY > absX && absY > absZ)
+            {
                 return PositiveZ;
+            }
 
 
             //if (absX > absY && absX > absZ)
@@ -626,7 +674,7 @@ namespace RealtimeCSG
         public static Vector3 ProjectPointOnInfiniteLine(Vector3 point, Vector3 lineOrigin, Vector3 normalizedLineDirection)
         {
             var dot = Vector3.Dot(normalizedLineDirection, point - lineOrigin);
-            return lineOrigin + normalizedLineDirection * dot;
+            return lineOrigin + (normalizedLineDirection * dot);
         }
 
         public static CSGPlane InverseTransformPlane(Matrix4x4 inverseMatrix, CSGPlane plane)
@@ -658,12 +706,15 @@ namespace RealtimeCSG
             var cam = sceneView.camera;
             if (cam)
             {
-                var screenEdge = HandleUtility.WorldToGUIPoint(circleCenter + cam.transform.right * circleRadius);
+                var screenEdge = HandleUtility.WorldToGUIPoint(circleCenter + (cam.transform.right * circleRadius));
                 circleRadius = (screenCenter - screenEdge).magnitude;
             }
             var dist = (screenCenter - pointCenter).magnitude;
             if (dist < circleRadius)
+            {
                 return 0;
+            }
+
             return dist - circleRadius;
         }
 
@@ -674,27 +725,37 @@ namespace RealtimeCSG
                 var controlMesh = brushes[b].ControlMesh;
                 if (controlMesh == null ||
                     controlMesh.Vertices == null)
+                {
                     continue;
+                }
 
                 var localOffset = brushes[b].transform.worldToLocalMatrix.MultiplyVector(offset);
                 for (var p = 0; p < controlMesh.Vertices.Length; p++)
+                {
                     controlMesh.Vertices[p] = GridUtility.CleanPosition(controlMesh.Vertices[p] + localOffset);
+                }
             }
         }
 
         public static void MoveControlMeshVertices(CSGBrush brush, Vector3 offset)
         {
             if (!brush)
+            {
                 return;
+            }
 
             var controlMesh = brush.ControlMesh;
             if (controlMesh == null ||
                 controlMesh.Vertices == null)
+            {
                 return;
+            }
 
             var localOffset = brush.transform.worldToLocalMatrix.MultiplyVector(offset);
             for (var p = 0; p < controlMesh.Vertices.Length; p++)
+            {
                 controlMesh.Vertices[p] = GridUtility.CleanPosition(controlMesh.Vertices[p] + localOffset);
+            }
         }
 
         public static Vector2 CatmullRom(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3, float t)
@@ -711,17 +772,17 @@ namespace RealtimeCSG
             ret.x = 0.5f * // TODO: remove this?
                     (
                         (p1.x * 2.0f) + // TODO: change to 1.0f?
-                        (-p0.x + p2.x) * t0 +
-                        (2.0f * p0.x - 5.0f * p1.x + 4.0f * p2.x - p3.x) * t1 +
-                        (-p0.x + 3.0f * p1.x - 3.0f * p2.x + p3.x) * t2
+                        ((-p0.x + p2.x) * t0) +
+                        (((2.0f * p0.x) - (5.0f * p1.x) + (4.0f * p2.x) - p3.x) * t1) +
+                        ((-p0.x + (3.0f * p1.x) - (3.0f * p2.x) + p3.x) * t2)
                     );
 
             ret.y = 0.5f * // TODO: remove this?
                     (
                         (p1.y * 2.0f) + // TODO: change to 1.0f?
-                        (-p0.y + p2.y) * t0 +
-                        (2.0f * p0.y - 5.0f * p1.y + 4.0f * p2.y - p3.y) * t1 +
-                        (-p0.y + 3.0f * p1.y - 3.0f * p2.y + p3.y) * t2
+                        ((-p0.y + p2.y) * t0) +
+                        (((2.0f * p0.y) - (5.0f * p1.y) + (4.0f * p2.y) - p3.y) * t1) +
+                        ((-p0.y + (3.0f * p1.y) - (3.0f * p2.y) + p3.y) * t2)
                     );
 
             return ret;
@@ -854,7 +915,9 @@ namespace RealtimeCSG
         {
             if (srcSurfaceIndex < 0 || srcSurfaceIndex >= brush.Shape.TexGens.Length ||
                 !brush)
+            {
                 return false;
+            }
 
             var shape = brush.Shape;
             var texGens = shape.TexGens;

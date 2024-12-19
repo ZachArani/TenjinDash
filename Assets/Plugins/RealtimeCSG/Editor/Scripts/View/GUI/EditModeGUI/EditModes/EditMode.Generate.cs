@@ -38,7 +38,10 @@ namespace RealtimeCSG
             set
             {
                 if (builderMode == value)
+                {
                     return;
+                }
+
                 builderMode = value;
                 RealtimeCSG.CSGSettings.ShapeBuildMode = builderMode;
                 RealtimeCSG.CSGSettings.Save();
@@ -88,7 +91,10 @@ namespace RealtimeCSG
                 var generator = InternalCurrentGenerator;
                 var obj = generator as ScriptableObject;
                 if (obj != null && obj)
+                {
                     return generator;
+                }
+
                 ResetTool();
                 return generator;
             }
@@ -114,7 +120,9 @@ namespace RealtimeCSG
             brushes = filteredSelection.GetAllContainedBrushes().ToArray();
             lastLineMeshGeneration--;
             if (isEnabled)
+            {
                 Tools.hidden = hideTool;
+            }
         }
 
         void OnEnable()
@@ -204,14 +212,19 @@ namespace RealtimeCSG
             {
                 var obj = generator as ScriptableObject;
                 if (obj)
+                {
                     generator.Init();
+                }
             }
         }
 
         public bool HotKeyReleased()
         {
             if (CurrentGenerator == null)
+            {
                 return false;
+            }
+
             return CurrentGenerator.HotKeyReleased();
         }
 
@@ -256,7 +269,9 @@ namespace RealtimeCSG
         public void HandleEvents(SceneView sceneView, Rect sceneRect)
         {
             if (CurrentGenerator == null)
+            {
                 return;
+            }
 
             CurrentGenerator.HandleEvents(sceneView, sceneRect);
             switch (Event.current.type)

@@ -19,7 +19,7 @@ namespace RealtimeCSG.Foundation
         /// <param name="nodes">The <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>s to destroy</param>
         /// <returns>True on success, false if there was a problem with destroying the <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>s. See the log for more information.</returns>
         /// <exception cref="System.ArgumentNullException">Thrown when the <paramref name="nodes"/> is null.</exception>  
-        public static bool Destroy(CSGTreeNode[] nodes) { if (nodes == null) throw new ArgumentNullException("nodes"); return DestroyNodes(nodes.Length, nodes); }
+        public static bool Destroy(CSGTreeNode[] nodes) { if (nodes == null) { throw new ArgumentNullException("nodes"); } return DestroyNodes(nodes.Length, nodes); }
 
 
         /// <value>The number of <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>s.</value>

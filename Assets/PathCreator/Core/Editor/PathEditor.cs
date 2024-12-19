@@ -396,7 +396,7 @@ namespace PathCreationEditor
                 for (int i = 0; i < creator.path.NumPoints; i++)
                 {
                     normalLines[i * 2] = creator.path.GetPoint(i);
-                    normalLines[i * 2 + 1] = creator.path.GetPoint(i) + creator.path.localNormals[i] * globalDisplaySettings.normalsLength;
+                    normalLines[(i * 2) + 1] = creator.path.GetPoint(i) + (creator.path.localNormals[i] * globalDisplaySettings.normalsLength);
                 }
                 Handles.DrawLines(normalLines);
             }
@@ -537,8 +537,8 @@ namespace PathCreationEditor
                     }
 
                     // Draw path
-                    bool highlightSegment = (i == selectedSegmentIndex && Event.current.shift && draggingHandleIndex == -1 && mouseOverHandleIndex == -1);
-                    Color segmentCol = (highlightSegment) ? globalDisplaySettings.highlightedPath : globalDisplaySettings.bezierPath;
+                    bool highlightSegment = i == selectedSegmentIndex && Event.current.shift && draggingHandleIndex == -1 && mouseOverHandleIndex == -1;
+                    Color segmentCol = highlightSegment ? globalDisplaySettings.highlightedPath : globalDisplaySettings.bezierPath;
                     Handles.DrawBezier(points[0], points[3], points[1], points[2], segmentCol, null, 2);
                 }
 
@@ -568,7 +568,7 @@ namespace PathCreationEditor
                     for (int i = 0; i < normalsVertexPath.NumPoints; i++)
                     {
                         normalLines[i * 2] = normalsVertexPath.GetPoint(i);
-                        normalLines[i * 2 + 1] = normalsVertexPath.GetPoint(i) + normalsVertexPath.GetNormal(i) * globalDisplaySettings.normalsLength;
+                        normalLines[(i * 2) + 1] = normalsVertexPath.GetPoint(i) + (normalsVertexPath.GetNormal(i) * globalDisplaySettings.normalsLength);
                     }
                     Handles.DrawLines(normalLines);
                 }
@@ -600,15 +600,15 @@ namespace PathCreationEditor
 
             bool isAnchorPoint = i % 3 == 0;
             bool isInteractive = isAnchorPoint || bezierPath.ControlPointMode != BezierPath.ControlMode.Automatic;
-            float handleSize = (isAnchorPoint) ? anchorHandleSize : controlHandleSize;
+            float handleSize = isAnchorPoint ? anchorHandleSize : controlHandleSize;
             bool doTransformHandle = i == handleIndexToDisplayAsTransform;
 
-            PathHandle.HandleColours handleColours = (isAnchorPoint) ? splineAnchorColours : splineControlColours;
+            PathHandle.HandleColours handleColours = isAnchorPoint ? splineAnchorColours : splineControlColours;
             if (i == handleIndexToDisplayAsTransform)
             {
-                handleColours.defaultColour = (isAnchorPoint) ? globalDisplaySettings.anchorSelected : globalDisplaySettings.controlSelected;
+                handleColours.defaultColour = isAnchorPoint ? globalDisplaySettings.anchorSelected : globalDisplaySettings.controlSelected;
             }
-            var cap = capFunctions[(isAnchorPoint) ? globalDisplaySettings.anchorShape : globalDisplaySettings.controlShape];
+            var cap = capFunctions[isAnchorPoint ? globalDisplaySettings.anchorShape : globalDisplaySettings.controlShape];
             PathHandle.HandleInputType handleInputType;
             handlePosition = PathHandle.DrawHandle(handlePosition, bezierPath.Space, isInteractive, handleSize, cap, handleColours, out handleInputType, i);
 
@@ -811,7 +811,7 @@ namespace PathCreationEditor
             {
                 foreach (SceneView sv in SceneView.sceneViews)
                 {
-                    if (EditorWindow.focusedWindow != (EditorWindow)sv)
+                    if (EditorWindow.focusedWindow != sv)
                     {
                         sv.Repaint();
                     }

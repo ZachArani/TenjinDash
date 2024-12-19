@@ -96,7 +96,7 @@ namespace Assets.Scripts.FSM.States
 
         public float maxSpeed
         {
-            get => 12f + 8 * percentDone;
+            get => 12f + (8 * percentDone);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Assets.Scripts.FSM.States
                 SoundManager.instance.PlayRaceMusic();
                 UIManager.instance.ToggleSpeedMeters(true);
                 standings.ForEach(p => { p.enabled = true; p.isOpening = true; p.GetComponent<Animator>().SetTrigger("startRace"); });
-                StartCoroutine(OpenRace()); 
+                StartCoroutine(OpenRace());
                 StateManager.instance.EnableRaceComponents(true);
 
                 if (Options.instance.recordPlayerData)
@@ -225,12 +225,12 @@ namespace Assets.Scripts.FSM.States
             StateManager.instance.stateDictionary[GAME_STATE.COUNTDOWN].GetComponent<CountdownState>().countdownGUI.enabled = false;
             yield return new WaitForSeconds(openingTime - 1);
             Debug.Log("Exiting Opening!");
-            
+
             loserBoost = AddLoserBoost();
             winnerBoost = RemoveWinnerBoost();
             StartCoroutine(loserBoost);
             StartCoroutine(winnerBoost);
-            
+
             standings.ForEach(p =>
             {
                 p.isOpening = false;
@@ -275,7 +275,7 @@ namespace Assets.Scripts.FSM.States
         {
             StateManager.onGameStateChanged += startRace;
         }
-        
+
         private void OnDisable()
         {
             StateManager.onGameStateChanged -= startRace;

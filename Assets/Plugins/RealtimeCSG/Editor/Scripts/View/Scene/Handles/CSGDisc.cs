@@ -22,7 +22,9 @@ namespace RealtimeCSG.Helpers
         public static Quaternion Do(Camera camera, int id, string name, Quaternion rotation, Vector3 position, Vector3 axis, float size, bool cutoffPlane, bool snapping, float snap, CSGHandles.InitFunction initFunction, CSGHandles.InitFunction shutdownFunction)
         {
             if (Mathf.Abs(Vector3.Dot(camera.transform.forward, axis)) > .999f)
+            {
                 cutoffPlane = false;
+            }
 
             var evt = Event.current;
             switch (evt.GetTypeForControl(id))
@@ -46,12 +48,18 @@ namespace RealtimeCSG.Helpers
                 case EventType.MouseDown:
                     {
                         if (CSGHandles.disabled)
+                        {
                             break;
+                        }
+
                         if (((HandleUtility.nearestControl == id && evt.button == 0) ||
                               (GUIUtility.keyboardControl == id && evt.button == 2)) && GUIUtility.hotControl == 0)
                         {
                             if (initFunction != null)
+                            {
                                 initFunction();
+                            }
+
                             GUIUtility.hotControl = GUIUtility.keyboardControl = id;    // Grab mouse focus
                                                                                         //Tools.LockHandlePosition();
                             if (cutoffPlane)
@@ -95,7 +103,10 @@ namespace RealtimeCSG.Helpers
                             GUIUtility.hotControl = 0;
                             evt.Use();
                             if (shutdownFunction != null)
+                            {
                                 shutdownFunction();
+                            }
+
                             EditorGUIUtility.SetWantsMouseJumping(0);
                         }
                         break;
@@ -114,7 +125,9 @@ namespace RealtimeCSG.Helpers
                     {
                         var originalColor = Handles.color;
                         if (id == GUIUtility.keyboardControl)
+                        {
                             Handles.color = Handles.selectedColor;
+                        }
 
                         // If we're dragging it, we'll go a bit further and draw a selection pie
                         if (GUIUtility.hotControl == id)
@@ -142,7 +155,9 @@ namespace RealtimeCSG.Helpers
                         }
                         else
                         if (CSGHandles.disabled)
+                        {
                             Handles.color = Color.Lerp(originalColor, Handles.secondaryColor, 0.75f);
+                        }
 
                         if (cutoffPlane)
                         {

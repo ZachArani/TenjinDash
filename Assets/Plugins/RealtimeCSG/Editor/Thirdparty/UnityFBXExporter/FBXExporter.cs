@@ -55,12 +55,19 @@ namespace UnityFBXExporter
             string buildMesh = MeshToString(gameObj, filename, colliderMaterial, exportColliders, out hasNormals, out hasTangents, out hasMaterials, copyMaterials, copyTextures);
 
             if (hasMaterials && copyMaterials)
+            {
                 CopyComplexMaterialsToPath(gameObj, filename, copyTextures);
+            }
 
             var path = System.IO.Path.GetDirectoryName(filename);
-            if (System.IO.File.Exists(filename)) System.IO.File.Delete(filename);
-            else if (!System.IO.Directory.Exists(path)) System.IO.Directory.CreateDirectory(path);
-
+            if (System.IO.File.Exists(filename))
+            {
+                System.IO.File.Delete(filename);
+            }
+            else if (!System.IO.Directory.Exists(path))
+            {
+                System.IO.Directory.CreateDirectory(path);
+            }
 
             System.IO.File.WriteAllText(filename, buildMesh);
 
@@ -103,9 +110,14 @@ namespace UnityFBXExporter
             string materialsPath = path + materialsFolder;
 
             if (Directory.Exists(path) == false)
+            {
                 Directory.CreateDirectory(path);
+            }
+
             if (Directory.Exists(materialsPath) == false)
+            {
                 Directory.CreateDirectory(materialsPath);
+            }
 
 
             // 2. Copy every distinct Material into the Materials folder
@@ -129,7 +141,9 @@ namespace UnityFBXExporter
                 for (int n = 0; n < everyDistinctMaterial.Length; n++)
                 {
                     if (i == n)
+                    {
                         continue;
+                    }
 
                     if (everyDistinctMaterial[i].name == everyDistinctMaterial[n].name)
                     {
@@ -148,10 +162,14 @@ namespace UnityFBXExporter
                 string fullPath = materialsPath + "/" + newName + ".mat";
 
                 if (File.Exists(fullPath))
+                {
                     File.Delete(fullPath);
+                }
 
                 if (CopyAndRenameAsset(everyDistinctMaterial[i], newName, materialsPath))
+                {
                     everyMaterialName.Add(newName);
+                }
             }
 
             // 3. Go through newly moved materials and copy every texture and update the material
@@ -163,14 +181,18 @@ namespace UnityFBXExporter
             {
                 string assetPath = materialsPath;
                 if (assetPath[assetPath.Length - 1] != '/')
+                {
                     assetPath += "/";
+                }
 
                 assetPath += everyMaterialName[i] + ".mat";
 
                 Material sourceMat = (Material)AssetDatabase.LoadAssetAtPath(assetPath, typeof(Material));
 
                 if (sourceMat != null)
+                {
                     allNewMaterials.Add(sourceMat);
+                }
             }
 
             // Get all the textures from the mesh renderer
@@ -178,7 +200,9 @@ namespace UnityFBXExporter
             if (copyTextures)
             {
                 if (Directory.Exists(texturesPath) == false)
+                {
                     Directory.CreateDirectory(texturesPath);
+                }
 
                 AssetDatabase.Refresh();
 
@@ -198,7 +222,9 @@ namespace UnityFBXExporter
             string path = newFolderPath;
 
             if (path[path.Length - 1] != '/')
+            {
                 path += "/";
+            }
             //			string testPath = path.Remove(path.Length - 1);
 
             //			if(AssetDatabase.IsValidFolder(testPath) == false)
@@ -210,14 +236,18 @@ namespace UnityFBXExporter
             string assetPath = AssetDatabase.GetAssetPath(obj);
             string fileName = GetFileName(assetPath);
             if (string.IsNullOrEmpty(fileName))
+            {
                 return false;
+            }
 
             string extension = fileName.Remove(0, fileName.LastIndexOf('.'));
 
             string newFileName = path + newName + extension;
 
             if (System.IO.File.Exists(newFileName))
+            {
                 return false;
+            }
 
             return AssetDatabase.CopyAsset(assetPath, newFileName);
 #else
@@ -246,10 +276,14 @@ namespace UnityFBXExporter
                 GetTextureUpdateMaterialWithPath(material, "_MainTex", newPath);
 
                 if (material.shader.name == "Standard")
+                {
                     GetTextureUpdateMaterialWithPath(material, "_MetallicGlossMap", newPath);
+                }
 
                 if (material.shader.name == "Standard (Specular setup)")
+                {
                     GetTextureUpdateMaterialWithPath(material, "_SpecGlossMap", newPath);
+                }
 
                 GetTextureUpdateMaterialWithPath(material, "_BumpMap", newPath);
                 GetTextureUpdateMaterialWithPath(material, "_BumpMap", newPath);
@@ -264,7 +298,9 @@ namespace UnityFBXExporter
 
             }
             else
+            {
                 Debug.LogError("WARNING: " + material.name + " is not a physically based shader, may not export to package correctly");
+            }
 
             return material;
         }
@@ -285,7 +321,9 @@ namespace UnityFBXExporter
 
                 Texture newTexture = (Texture)CopyAndRenameAssetReturnObject(textureInQ, name, newPath);
                 if (newTexture != null)
+                {
                     material.SetTexture(textureShaderName, newTexture);
+                }
             }
         }
 
@@ -295,7 +333,10 @@ namespace UnityFBXExporter
             string path = newFolderPath;
 
             if (path[path.Length - 1] != '/')
+            {
                 path += "/";
+            }
+
             string testPath = path.Remove(path.Length - 1);
 
             if (System.IO.Directory.Exists(testPath) == false)
@@ -307,14 +348,18 @@ namespace UnityFBXExporter
             string assetPath = AssetDatabase.GetAssetPath(obj);
             string fileName = GetFileName(assetPath);
             if (string.IsNullOrEmpty(fileName))
+            {
                 return null;
+            }
 
             string extension = fileName.Remove(0, fileName.LastIndexOf('.'));
 
             string newFullPathName = path + newName + extension;
 
             if (AssetDatabase.CopyAsset(assetPath, newFullPathName) == false)
+            {
                 return null;
+            }
 
             AssetDatabase.Refresh();
 

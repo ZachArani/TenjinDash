@@ -113,7 +113,10 @@ namespace RealtimeCSG
         static void InitLocalStyles()
         {
             if (ContentSurfacesLabel != null)
+            {
                 return;
+            }
+
             ContentSurfacesLabel = new GUIContent(CSG_GUIStyleUtility.brushEditModeNames[(int)ToolEditMode.Surfaces]);
         }
     }

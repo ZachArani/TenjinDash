@@ -37,16 +37,20 @@ namespace RealtimeCSG
             {
                 var vertex0 = vertices[v0];
                 var vertex1 = vertices[v1];
-                var delta = (vertex1 - vertex0);
+                var delta = vertex1 - vertex0;
                 var length = delta.sqrMagnitude;
                 if (length <= MathConstants.EqualityEpsilonSqr)
+                {
                     continue;
+                }
 
                 var tangent = delta / Mathf.Sqrt(length);
                 var normal = Vector3.Cross(MathConstants.upVector3, tangent);
                 var plane = new CSGPlane(normal, vertex0);
                 if (plane.Distance(intersection) < MathConstants.DistanceEpsilon)
+                {
                     return false;
+                }
             }
             return true;
         }
@@ -59,16 +63,20 @@ namespace RealtimeCSG
             {
                 var vertex0 = vertices[v0];
                 var vertex1 = vertices[v1];
-                var delta = (vertex1 - vertex0);
+                var delta = vertex1 - vertex0;
                 var length = delta.sqrMagnitude;
                 if (length <= MathConstants.EqualityEpsilonSqr)
+                {
                     continue;
+                }
 
                 var tangent = delta / Mathf.Sqrt(length);
                 var normal = Vector3.Cross(polygonPlane.normal, tangent);
                 var plane = new CSGPlane(normal, vertex0);
                 if (plane.Distance(intersection) < MathConstants.DistanceEpsilon)
+                {
                     return false;
+                }
             }
             return true;
         }
@@ -152,7 +160,9 @@ namespace RealtimeCSG
                                                                              CSGPlane buildPlane)
         {
             if (vertices2d.Length < 3)
+            {
                 return null;
+            }
 
             for (int i = 0; i < vertices2d.Length - 2; i++)
             {
@@ -163,7 +173,7 @@ namespace RealtimeCSG
                         List<ShapePolygon> combined_polygons = null;
 
                         var left_length = i;
-                        var right_length = (vertices2d.Length - j);
+                        var right_length = vertices2d.Length - j;
                         var other_length = left_length + right_length;
 
                         if (other_length > 2)
@@ -171,13 +181,15 @@ namespace RealtimeCSG
                             var other_vertices = new Vector2[other_length];
 
                             if (left_length > 0)
+                            {
                                 Array.Copy(vertices2d, 0, other_vertices, 0, left_length);
+                            }
 
                             Array.Copy(vertices2d, j, other_vertices, left_length, right_length);
                             combined_polygons = CreateCleanSubPolygonsFromVertices(other_vertices, buildPlane);
                         }
 
-                        var center_length = (j - i);
+                        var center_length = j - i;
                         if (center_length > 2)
                         {
                             var first_vertices = new Vector2[center_length];
@@ -186,9 +198,13 @@ namespace RealtimeCSG
 
                             var first_polygons = CreateCleanSubPolygonsFromVertices(first_vertices, buildPlane);
                             if (combined_polygons != null)
+                            {
                                 combined_polygons.AddRange(first_polygons);
+                            }
                             else
+                            {
                                 combined_polygons = first_polygons;
+                            }
                         }
 
                         return combined_polygons;
@@ -198,21 +214,29 @@ namespace RealtimeCSG
 
             var polygonSign = GeometryUtility.CalcPolygonSign(vertices2d);
             if (polygonSign == 0)
+            {
                 return null;
+            }
 
             if (polygonSign < 0)
+            {
                 Array.Reverse(vertices2d);
+            }
 
             List<List<Vector2>> outlines = null;
             try { outlines = InternalCSGModelManager.External.ConvexPartition(vertices2d); } catch { outlines = null; }
             if (outlines == null)
+            {
                 return null;
+            }
 
             var polygons = new List<ShapePolygon>();
             for (int b = 0; b < outlines.Count; b++)
             {
                 if (GeometryUtility.IsNonConvex(outlines[b]))
+                {
                     return null;
+                }
 
                 polygons.Add(new ShapePolygon(GeometryUtility.ToVector3XZReversed(outlines[b])));
             }
@@ -268,7 +292,7 @@ namespace RealtimeCSG
             }
 
             var count = vertices.Length;
-            var doubleCount = (count * 2);
+            var doubleCount = count * 2;
             var extraPoints = 0;
             var extraEdges = 0;
             var endsPolygons = 2;
@@ -277,7 +301,7 @@ namespace RealtimeCSG
             if (!singleSurfaceEnds)
             {
                 extraPoints = 2;
-                extraEdges = (4 * count);
+                extraEdges = 4 * count;
                 endsPolygons = doubleCount;
                 startEdgeOffset += extraEdges;
             }
@@ -330,14 +354,14 @@ namespace RealtimeCSG
                 // 'top' 
                 for (int i = 0, j = count - 1; i < count; j = i, i++)
                 {
-                    var jm = (j) % count;
-                    var im = (i) % count;
+                    var jm = j % count;
+                    var im = i % count;
 
                     var edgeOut0 = edge_offset + (jm * 2) + 1;
                     var edgeIn0 = edge_offset + (im * 2) + 0;
                     var edgeOut1 = edge_offset + (im * 2) + 1;
 
-                    dstEdges[edgeIn0].VertexIndex = (short)(doubleCount);
+                    dstEdges[edgeIn0].VertexIndex = (short)doubleCount;
                     dstEdges[edgeIn0].HardEdge = true;
                     dstEdges[edgeIn0].TwinIndex = edgeOut1;
 
@@ -398,11 +422,11 @@ namespace RealtimeCSG
 
             for (int v0 = count - 1, v1 = 0; v1 < count; v0 = v1, v1++)
             {
-                var polygonIndex = (short)(v1);
+                var polygonIndex = (short)v1;
 
-                var nextOffset = startEdgeOffset + (((v1 + 1) % count) * 4);
-                var currOffset = startEdgeOffset + (((v1)) * 4);
-                var prevOffset = startEdgeOffset + (((v1 + count - 1) % count) * 4);
+                var nextOffset = startEdgeOffset + ((v1 + 1) % count * 4);
+                var currOffset = startEdgeOffset + (v1 * 4);
+                var prevOffset = startEdgeOffset + ((v1 + count - 1) % count * 4);
 
                 var nextTwin = nextOffset + 1;
                 var prevTwin = prevOffset + 3;
@@ -415,15 +439,15 @@ namespace RealtimeCSG
                 dstEdges[currOffset + 2].PolygonIndex = polygonIndex;
                 dstEdges[currOffset + 3].PolygonIndex = polygonIndex;
 
-                dstEdges[currOffset + 0].TwinIndex = (v1);
+                dstEdges[currOffset + 0].TwinIndex = v1;
                 dstEdges[currOffset + 1].TwinIndex = prevTwin;
-                dstEdges[currOffset + 2].TwinIndex = (v1 + count);
+                dstEdges[currOffset + 2].TwinIndex = v1 + count;
                 dstEdges[currOffset + 3].TwinIndex = nextTwin;
 
-                dstEdges[currOffset + 0].VertexIndex = (short)(v0);
+                dstEdges[currOffset + 0].VertexIndex = (short)v0;
                 dstEdges[currOffset + 1].VertexIndex = (short)(v1 + count);
                 dstEdges[currOffset + 2].VertexIndex = (short)(((v1 + 1) % count) + count);
-                dstEdges[currOffset + 3].VertexIndex = (short)(v1);
+                dstEdges[currOffset + 3].VertexIndex = (short)v1;
 
                 dstEdges[currOffset + 0].HardEdge = true;
                 dstEdges[currOffset + 1].HardEdge = true;
@@ -437,7 +461,9 @@ namespace RealtimeCSG
             }
 
             for (int i = 0; i < dstPoints.Length; i++)
+            {
                 dstPoints[i] = localToWorld.MultiplyPoint(dstPoints[i]);
+            }
 
             controlMesh = new ControlMesh
             {
@@ -449,8 +475,9 @@ namespace RealtimeCSG
 
             shape = new Shape(dstPolygons.Length);
             for (int i = 0; i < shape.TexGenFlags.Length; i++)
+            {
                 shape.TexGenFlags[i] = RealtimeCSG.CSGSettings.DefaultTexGenFlags;
-
+            }
 
             var smoothinggroup = (smooth.HasValue && smooth.Value) ? SurfaceUtility.FindUnusedSmoothingGroupIndex() : 0;
 
@@ -509,7 +536,9 @@ namespace RealtimeCSG
 
             controlMesh.Valid = ControlMeshUtility.Validate(controlMesh, shape);
             if (controlMesh.Valid)
+            {
                 return true;
+            }
 
             controlMesh = null;
             shape = null;
@@ -552,7 +581,9 @@ namespace RealtimeCSG
                         {
                             float diff = (vertices3d[n0] - originalVertices[n1]).sqrMagnitude;
                             if (diff > MathConstants.EqualityEpsilonSqr)
+                            {
                                 continue;
+                            }
 
                             indices[n0] = n1;
                             break;
@@ -569,8 +600,8 @@ namespace RealtimeCSG
                             shapeTexgens[n1] = new TexGen(CSGSettings.DefaultMaterial);//n0
                         }
                         else
-                        if ((Mathf.Abs(vertex1 - vertex0) == 1 ||
-                             vertex0 == vertices3d.Length - 1 && vertex1 == 0))
+                        if (Mathf.Abs(vertex1 - vertex0) == 1 ||
+                             (vertex0 == vertices3d.Length - 1 && vertex1 == 0))
                         {
                             if (shapeEdges != null)
                             {

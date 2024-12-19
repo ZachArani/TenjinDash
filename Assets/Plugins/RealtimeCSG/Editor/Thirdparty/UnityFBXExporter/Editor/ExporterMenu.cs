@@ -60,7 +60,9 @@ namespace UnityFBXExporter
                     return newPath;
                 }
                 else
+                {
                     EditorUtility.DisplayDialog("Warning", "The extension probably wasn't an FBX file, could not export.", "Okay");
+                }
             }
             return null;
         }
@@ -82,17 +84,23 @@ namespace UnityFBXExporter
                 name = gameObject.name;
             }
             else
+            {
                 name = System.IO.Path.GetFileNameWithoutExtension(oldPath);
+            }
 
             var newPath = EditorUtility.SaveFilePanel("Export " + typeName + " File", oldPath, name + "." + extension, extension);
 
             int assetsIndex = newPath.IndexOf("Assets");
 
             if (assetsIndex < 0)
+            {
                 return null;
+            }
 
             if (assetsIndex > 0)
+            {
                 newPath = newPath.Remove(0, assetsIndex);
+            }
 
             return newPath;
         }

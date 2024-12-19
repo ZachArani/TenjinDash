@@ -204,12 +204,14 @@ namespace RealtimeCSG
             float length = lineDirection.magnitude;
             Vector3 normalizedLineDirection = lineDirection;
             if (length > .000001f)
+            {
                 normalizedLineDirection /= length;
+            }
 
             float dot = Vector3.Dot(normalizedLineDirection, relativePoint);
             dot = Mathf.Clamp(dot, 0.0F, length);
 
-            return lineStart + normalizedLineDirection * dot;
+            return lineStart + (normalizedLineDirection * dot);
         }
 
         static Vector2 ProjectPointLine(Vector2 point, Vector2 lineStart, Vector2 lineEnd)
@@ -219,12 +221,14 @@ namespace RealtimeCSG
             float length = lineDirection.magnitude;
             Vector2 normalizedLineDirection = lineDirection;
             if (length > .000001f)
+            {
                 normalizedLineDirection /= length;
+            }
 
             float dot = Vector3.Dot(normalizedLineDirection, relativePoint);
             dot = Mathf.Clamp(dot, 0.0F, length);
 
-            return lineStart + normalizedLineDirection * dot;
+            return lineStart + (normalizedLineDirection * dot);
         }
 
         public static float DistancePointLine(Vector2 point, Vector3 p1, Vector3 p2)
@@ -235,7 +239,9 @@ namespace RealtimeCSG
             var proj = ProjectPointLine(point, p1B, p2B) - point;// / (EditorGUIUtility.pixelsPerPoint * 2.5f);
             var retval = Vector3.Magnitude(proj);// / (EditorGUIUtility.pixelsPerPoint * 2.5f);
             if (retval < 0)
+            {
                 retval = 0.0f;
+            }
 
             return retval;
         }
@@ -244,26 +250,39 @@ namespace RealtimeCSG
         {
             float retval = Vector3.Magnitude(ProjectPointLine(point, p1, p2) - point);// / (EditorGUIUtility.pixelsPerPoint * 2.5f);
             if (retval < 0)
+            {
                 retval = 0.0f;
+            }
+
             return retval;
         }
 
         // Pixel distance from mouse pointer to camera facing circle.
         public static float DistanceToCircle(Vector3 position, float radius)
         {
-            var position2 = position + rightVector * radius;
+            var position2 = position + (rightVector * radius);
 
             Vector2 screenCenter;
             Vector2 screenEdge;
 
-            if (!PerspectiveMultiplyPoint2(localToGUIPointMatrix, position, out screenCenter)) screenCenter = Vector2.zero;
-            if (!PerspectiveMultiplyPoint2(localToGUIPointMatrix, position2, out screenEdge)) screenEdge = Vector2.zero;
+            if (!PerspectiveMultiplyPoint2(localToGUIPointMatrix, position, out screenCenter))
+            {
+                screenCenter = Vector2.zero;
+            }
+
+            if (!PerspectiveMultiplyPoint2(localToGUIPointMatrix, position2, out screenEdge))
+            {
+                screenEdge = Vector2.zero;
+            }
 
             radius = (screenCenter - screenEdge).sqrMagnitude;
 
             float dist = (screenCenter - Event.current.mousePosition).sqrMagnitude;
             if (dist < radius)
+            {
                 return 0;
+            }
+
             return Mathf.Sqrt(dist - radius);
         }
 
@@ -271,7 +290,10 @@ namespace RealtimeCSG
         {
             Vector2 pos;
             if (!PerspectiveMultiplyPoint2(localToGUIPointMatrix, local, out pos))
+            {
                 return Vector2.zero;
+            }
+
             return pos;
         }
 
@@ -279,7 +301,10 @@ namespace RealtimeCSG
         {
             Vector2 clipPoint;
             if (!PerspectiveMultiplyPoint2(worldToScreenPointMatrix, v, out clipPoint))
+            {
                 return Vector2.zero;
+            }
+
             return clipPoint;
         }
 
@@ -287,9 +312,9 @@ namespace RealtimeCSG
         {
             Vector3 res;
             float w;
-            res.x = m.m00 * v.x + m.m01 * v.y + m.m03;
-            res.y = m.m10 * v.x + m.m11 * v.y + m.m13;
-            w = m.m30 * v.x + m.m31 * v.y + m.m33;
+            res.x = (m.m00 * v.x) + (m.m01 * v.y) + m.m03;
+            res.y = (m.m10 * v.x) + (m.m11 * v.y) + m.m13;
+            w = (m.m30 * v.x) + (m.m31 * v.y) + m.m33;
             if (Mathf.Abs(w) > 1.0e-7f)
             {
                 float invW = 1.0f / w;
@@ -309,9 +334,9 @@ namespace RealtimeCSG
         {
             Vector3 res;
             float w;
-            res.x = m.m00 * v.x + m.m01 * v.y + m.m02 * v.z + m.m03;
-            res.y = m.m10 * v.x + m.m11 * v.y + m.m12 * v.z + m.m13;
-            w = m.m30 * v.x + m.m31 * v.y + m.m32 * v.z + m.m33;
+            res.x = (m.m00 * v.x) + (m.m01 * v.y) + (m.m02 * v.z) + m.m03;
+            res.y = (m.m10 * v.x) + (m.m11 * v.y) + (m.m12 * v.z) + m.m13;
+            w = (m.m30 * v.x) + (m.m31 * v.y) + (m.m32 * v.z) + m.m33;
             if (Mathf.Abs(w) > 1.0e-7f)
             {
                 float invW = 1.0f / w;

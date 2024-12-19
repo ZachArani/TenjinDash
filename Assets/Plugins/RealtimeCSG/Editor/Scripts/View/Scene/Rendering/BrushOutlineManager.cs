@@ -21,7 +21,9 @@ namespace InternalRealtimeCSG
             var externalOutlineGeneration = InternalCSGModelManager.External.GetBrushOutlineGeneration(brushNodeId);
             var outline = new GeometryWireframe();
             if (!InternalCSGModelManager.External.GetBrushOutline(brushNodeId, out outline))
+            {
                 return;
+            }
 
             outline.outlineGeneration = externalOutlineGeneration;
             OutlineCache[brushNodeId] = outline;
@@ -32,21 +34,29 @@ namespace InternalRealtimeCSG
         public static GeometryWireframe GetBrushOutline(int brushNodeId)
         {
             if (brushNodeId == CSGNode.InvalidNodeID)
+            {
                 return null;
+            }
 
             var externalOutlineGeneration = InternalCSGModelManager.External.GetBrushOutlineGeneration(brushNodeId);
 
             GeometryWireframe outline;
             if (!OutlineCache.TryGetValue(brushNodeId, out outline))
+            {
                 externalOutlineGeneration = externalOutlineGeneration - 1;
+            }
 
             if (outline != null &&
                 externalOutlineGeneration == outline.outlineGeneration)
+            {
                 return outline;
+            }
 
             outline = new GeometryWireframe();
             if (!InternalCSGModelManager.External.GetBrushOutline(brushNodeId, out outline))
+            {
                 return null;
+            }
 
             outline.outlineGeneration = externalOutlineGeneration;
             OutlineCache[brushNodeId] = outline;
@@ -69,7 +79,9 @@ namespace InternalRealtimeCSG
 
                 GeometryWireframe outline;
                 if (!OutlineCache.TryGetValue(brushNodeId, out outline))
+                {
                     externalOutlineGeneration = externalOutlineGeneration - 1;
+                }
 
                 if (outline == null ||
                     externalOutlineGeneration != outline.outlineGeneration)
@@ -94,7 +106,9 @@ namespace InternalRealtimeCSG
         public static GeometryWireframe[] GetSurfaceOutlines(SelectedBrushSurface[] selectedSurfaces)
         {
             if (selectedSurfaces == null || selectedSurfaces.Length == 0)
+            {
                 return new GeometryWireframe[0];
+            }
 
             var wireframes = new GeometryWireframe[selectedSurfaces.Length];
             for (var i = 0; i < selectedSurfaces.Length; i++)

@@ -74,29 +74,44 @@ namespace RealtimeCSG.Legacy
             if (this.Surfaces != null)
             {
                 if (this.Surfaces == null || this.Surfaces.Length != other.Surfaces.Length)
+                {
                     this.Surfaces = new Surface[other.Surfaces.Length];
+                }
+
                 Array.Copy(other.Surfaces, this.Surfaces, other.Surfaces.Length);
             }
             else
+            {
                 this.Surfaces = null;
+            }
 
             if (this.TexGens != null)
             {
                 if (this.TexGens == null || this.TexGens.Length != other.TexGens.Length)
+                {
                     this.TexGens = new TexGen[other.TexGens.Length];
+                }
+
                 Array.Copy(other.TexGens, this.TexGens, other.TexGens.Length);
             }
             else
+            {
                 this.TexGens = null;
+            }
 
             if (this.TexGenFlags != null)
             {
                 if (this.TexGenFlags == null || this.TexGenFlags.Length != other.TexGenFlags.Length)
+                {
                     this.TexGenFlags = new TexGenFlags[other.TexGenFlags.Length];
+                }
+
                 Array.Copy(other.TexGenFlags, this.TexGenFlags, other.TexGenFlags.Length);
             }
             else
+            {
                 this.TexGenFlags = null;
+            }
         }
 
         /// <summary>Creates a copy of this <see cref="RealtimeCSG.Legacy.Shape"/>.</summary>

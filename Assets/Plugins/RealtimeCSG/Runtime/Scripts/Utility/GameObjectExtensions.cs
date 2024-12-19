@@ -23,7 +23,9 @@ public static class GameObjectExtensions
     public static void Destroy(UnityEngine.Object obj)
     {
         if (!obj)
+        {
             return;
+        }
 
         UnityEngine.Object.DestroyImmediate(obj);
     }
@@ -31,7 +33,9 @@ public static class GameObjectExtensions
     public static void Destroy(GameObject gameObject)
     {
         if (!gameObject)
+        {
             return;
+        }
 
         // Cannot destroy gameObjects when certain hideflags are set
         if (!TryDestroy(gameObject))
@@ -80,7 +84,9 @@ public static class GameObjectExtensions
     public static bool TryDestroy(GameObject gameObject)
     {
         if (!gameObject)
+        {
             return false;
+        }
 
         var prevHideFlags = gameObject.hideFlags;
 

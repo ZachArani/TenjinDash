@@ -27,10 +27,14 @@ namespace RealtimeCSG.Helpers
         internal static AABB Do(Camera camera, AABB bounds, Quaternion worldToLocalRotation, bool showEdgePoints = true)
         {
             for (int i = 0; i < sideControlIDs.Length; i++)
+            {
                 sideControlIDs[i] = GUIUtility.GetControlID(BoundsHash, FocusType.Passive);
+            }
 
             for (int i = 0; i < edgeControlIDs.Length; i++)
+            {
                 edgeControlIDs[i] = GUIUtility.GetControlID(BoundsHash, FocusType.Passive);
+            }
 
             UpdateColors(camera, bounds, worldToLocalRotation, showEdgePoints);
 
@@ -80,13 +84,31 @@ namespace RealtimeCSG.Helpers
                     var originalPoint = BoundsUtilities.GetBoundsSidePoint(originalBounds, i);
                     bounds = originalBounds;
 
-                    var delta = Vector3.Dot(normal, (position - originalPoint));
-                    if (normal.x < 0) bounds.MinX -= delta;
-                    else if (normal.x > 0) bounds.MaxX += delta;
-                    else if (normal.y < 0) bounds.MinY -= delta;
-                    else if (normal.y > 0) bounds.MaxY += delta;
-                    else if (normal.z < 0) bounds.MinZ -= delta;
-                    else if (normal.z > 0) bounds.MaxZ += delta;
+                    var delta = Vector3.Dot(normal, position - originalPoint);
+                    if (normal.x < 0)
+                    {
+                        bounds.MinX -= delta;
+                    }
+                    else if (normal.x > 0)
+                    {
+                        bounds.MaxX += delta;
+                    }
+                    else if (normal.y < 0)
+                    {
+                        bounds.MinY -= delta;
+                    }
+                    else if (normal.y > 0)
+                    {
+                        bounds.MaxY += delta;
+                    }
+                    else if (normal.z < 0)
+                    {
+                        bounds.MinZ -= delta;
+                    }
+                    else if (normal.z > 0)
+                    {
+                        bounds.MaxZ += delta;
+                    }
                 }
             }
 
@@ -110,7 +132,7 @@ namespace RealtimeCSG.Helpers
                         var originalPoint = BoundsUtilities.GetBoundsEdgePoint(originalBounds, i);
                         bounds = originalBounds;
 
-                        var delta = (position - originalPoint);
+                        var delta = position - originalPoint;
                         var sides = BoundsUtilities.AABBEdgeCubeSides[i];
                         switch (sides[0])
                         {
@@ -146,7 +168,9 @@ namespace RealtimeCSG.Helpers
         internal static void UpdateColors(Camera camera, AABB bounds, Quaternion worldToLocalRotation, bool showEdgePoints)
         {
             if (!camera)
+            {
                 return;
+            }
 
             var localToWorldRotation = Quaternion.Inverse(worldToLocalRotation);
 
@@ -178,7 +202,7 @@ namespace RealtimeCSG.Helpers
                 for (int i = 0; i < BoundsUtilities.AABBSideNormal.Length; i++)
                 {
                     var normal = BoundsUtilities.AABBSideNormal[i];
-                    sideBackfaced[i] = Vector3.Dot(normal, (cameraPosition - sidePoints[i])) < 0;
+                    sideBackfaced[i] = Vector3.Dot(normal, cameraPosition - sidePoints[i]) < 0;
                 }
             }
 
@@ -200,7 +224,9 @@ namespace RealtimeCSG.Helpers
                     case PrincipleAxis.Z: disabled = RealtimeCSG.CSGSettings.LockAxisZ; break;
                 }
                 if (disabled)
+                {
                     color2 = Color.red;
+                }
 
                 var handleSize = HandleUtility.GetHandleSize(localToWorldRotation * sidePoints[i]);
                 var pointHandleSize = handleSize / 20.0f;
@@ -213,10 +239,14 @@ namespace RealtimeCSG.Helpers
                         pointHandleSize *= GUIConstants.backHandleScale;
                     }
                     else
+                    {
                         pointHandleSize = 0;
+                    }
                 }
                 else
+                {
                     pointHandleSize *= GUIConstants.handleScale;
+                }
 
                 sidePointSizes[i] = pointHandleSize;
                 sideSizes[i] = handleSize;
@@ -248,7 +278,9 @@ namespace RealtimeCSG.Helpers
                         case PrincipleAxis.Z: disabled2 = RealtimeCSG.CSGSettings.LockAxisZ; break;
                     }
                     if (disabled1 && disabled2)
+                    {
                         color2 = Color.red;
+                    }
 
                     var handleSize = HandleUtility.GetHandleSize(localToWorldRotation * edgePoints[i]);
                     var pointHandleSize = handleSize / 20.0f;
@@ -261,7 +293,9 @@ namespace RealtimeCSG.Helpers
                             pointHandleSize = 0;
                         }
                         else
+                        {
                             pointHandleSize *= GUIConstants.handleScale;
+                        }
                     }
                     else
                     {
@@ -272,7 +306,9 @@ namespace RealtimeCSG.Helpers
                             pointHandleSize *= GUIConstants.backHandleScale;
                         }
                         else
+                        {
                             pointHandleSize *= GUIConstants.handleScale;
+                        }
                     }
 
                     edgePointSizes[i] = pointHandleSize;
@@ -287,7 +323,9 @@ namespace RealtimeCSG.Helpers
         internal static void Render(Camera camera, AABB bounds, Quaternion worldToLocalRotation, bool showEdgePoints)
         {
             if (!camera)
+            {
                 return;
+            }
 
             var localToWorldRotation = Quaternion.Inverse(worldToLocalRotation);
             var localToWorld = Matrix4x4.TRS(Vector3.zero, localToWorldRotation, Vector3.one);
@@ -296,7 +334,9 @@ namespace RealtimeCSG.Helpers
             //PaintUtility.DrawDoubleDots(localToWorld, cornerPoints, cornerSizes, cornerColors, cornerPoints.Length);
             PaintUtility.DrawDoubleDots(camera, localToWorld, sidePoints, sidePointSizes, sideColors, sidePoints.Length);
             if (showEdgePoints)
+            {
                 PaintUtility.DrawDoubleDots(camera, localToWorld, edgePoints, edgePointSizes, edgeColors, edgePoints.Length);
+            }
 
             PaintUtility.RenderBoundsSizes(worldToLocalRotation, localToWorldRotation, camera, cornerPoints,
                                             RealtimeCSG.CSGSettings.LockAxisX ? Color.red : Color.white,

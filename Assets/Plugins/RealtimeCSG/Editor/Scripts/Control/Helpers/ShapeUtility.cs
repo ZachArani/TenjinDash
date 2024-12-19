@@ -32,13 +32,22 @@ namespace RealtimeCSG
                     }
 
                     if (shape.TexGens[i].Scale.x < 0)
+                    {
                         shape.TexGens[i].Scale.x = -Mathf.Max(MathConstants.MinimumScale, Mathf.Abs(shape.TexGens[i].Scale.x));
+                    }
                     else
+                    {
                         shape.TexGens[i].Scale.x = Mathf.Max(MathConstants.MinimumScale, Mathf.Abs(shape.TexGens[i].Scale.x));
+                    }
+
                     if (shape.TexGens[i].Scale.y < 0)
+                    {
                         shape.TexGens[i].Scale.y = -Mathf.Max(MathConstants.MinimumScale, Mathf.Abs(shape.TexGens[i].Scale.y));
+                    }
                     else
+                    {
                         shape.TexGens[i].Scale.y = Mathf.Max(MathConstants.MinimumScale, Mathf.Abs(shape.TexGens[i].Scale.y));
+                    }
                 }
             }
 

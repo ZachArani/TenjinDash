@@ -46,8 +46,8 @@ namespace RealtimeCSG
         }
 
 
-        public bool CanCommit { get { return (editMode != EditMode.CreatePlane); } }
-        public bool HaveBrushes { get { return (editMode != EditMode.CreatePlane); } }
+        public bool CanCommit { get { return editMode != EditMode.CreatePlane; } }
+        public bool HaveBrushes { get { return editMode != EditMode.CreatePlane; } }
 
         protected abstract IShapeSettings ShapeSettings { get; }
 
@@ -104,14 +104,20 @@ namespace RealtimeCSG
             get
             {
                 if (forceCurrentCSGOperationType == invalidCSGOperationType)
+                {
                     return currentCSGOperationType;
+                }
                 else
+                {
                     return forceCurrentCSGOperationType;
+                }
             }
             set
             {
                 if (forceCurrentCSGOperationType == value)
+                {
                     return;
+                }
 
                 forceCurrentCSGOperationType = value;
                 UpdateOperationType(value);
@@ -124,11 +130,15 @@ namespace RealtimeCSG
             {
                 var operation = operationGameObject.GetComponent<CSGOperation>();
                 if (operation != null)
+                {
                     operation.OperationType = opType;
+                }
 
                 var brush = operationGameObject.GetComponent<CSGBrush>();
                 if (brush != null)
+                {
                     brush.OperationType = opType;
+                }
             }
             InternalCSGModelManager.CheckForChanges();
             EditorApplication.RepaintHierarchyWindow();
@@ -193,10 +203,14 @@ namespace RealtimeCSG
             CSGPlane newPlane = buildPlane;
             ShapeSettings.CalculatePlane(ref newPlane);
             if (newPlane.normal.sqrMagnitude != 0)
+            {
                 buildPlane = newPlane;
+            }
 
             if (ModelTraits.IsModelEditable(geometryModel))
+            {
                 SelectionUtility.LastUsedModel = geometryModel;
+            }
 
             UpdateBaseShape();
 
@@ -208,7 +222,10 @@ namespace RealtimeCSG
         protected void RevertToEditVertices()
         {
             if (editMode != EditMode.ExtrudeShape)
+            {
                 return;
+            }
+
             editMode = EditMode.EditShape;
         }
 
@@ -229,7 +246,9 @@ namespace RealtimeCSG
         protected void PaintSnapVisualisation()
         {
             if (visualSnappedEdges != null)
+            {
                 PaintUtility.DrawLines(visualSnappedEdges.ToArray(), GUIConstants.oldThickLineScale, ColorSettings.SnappedEdges);
+            }
 
             var _origMatrix = Handles.matrix;
             Handles.matrix = MathConstants.identityMatrix;
@@ -258,12 +277,18 @@ namespace RealtimeCSG
             var direction = buildPlane.normal;
             Quaternion rotation;
             if (brushRotation.HasValue)
+            {
                 rotation = brushRotation.Value;
+            }
             else
+            {
                 rotation = Quaternion.FromToRotation(MathConstants.upVector3, direction);
+            }
 
             if (!ignoreModelRotation)
+            {
                 rotation *= Quaternion.Inverse(parentModel.transform.rotation);
+            }
 
             transform.rotation = rotation;
 
@@ -294,7 +319,9 @@ namespace RealtimeCSG
         protected void HandleKeyboard(EventType type)
         {
             if (EditorGUIUtility.editingTextField)
+            {
                 return;
+            }
 
             var camera = Camera.current;
             switch (type)
@@ -349,7 +376,7 @@ namespace RealtimeCSG
             textCenter2D += normal2D * (hover_text_distance * 2);
 
             var textCenterRay = HandleUtility.GUIPointToWorldRay(textCenter2D);
-            var textCenter = textCenterRay.origin + textCenterRay.direction * ((camera.farClipPlane + camera.nearClipPlane) * 0.5f);
+            var textCenter = textCenterRay.origin + (textCenterRay.direction * ((camera.farClipPlane + camera.nearClipPlane) * 0.5f));
 
             PaintUtility.DrawLine(edgeCenter, textCenter, Color.black);
             PaintUtility.DrawDottedLine(edgeCenter, textCenter, ColorSettings.SnappedEdges);
@@ -406,9 +433,14 @@ namespace RealtimeCSG
                 float.IsInfinity(center.x) || float.IsNaN(center.x) ||
                 float.IsInfinity(center.y) || float.IsNaN(center.y) ||
                 float.IsInfinity(center.z) || float.IsNaN(center.z))
+            {
                 return;
+            }
+
             if (sceneView)
+            {
                 sceneView.LookAt(center, sceneView.rotation, Mathf.Max(size, (sceneView.camera.transform.position - center).magnitude));
+            }
         }
 
 
@@ -421,7 +453,9 @@ namespace RealtimeCSG
                     if (generatedBrushes[i] &&
                         generatedBrushes[i].gameObject &&
                         generatedBrushes[i].gameObject.activeSelf)
+                    {
                         generatedBrushes[i].gameObject.SetActive(false);
+                    }
                 }
             }
         }
@@ -433,7 +467,10 @@ namespace RealtimeCSG
 
             var lastUsedModel = SelectionUtility.LastUsedModel;
             if (!ModelTraits.IsModelEditable(lastUsedModel))
+            {
                 lastUsedModel = null;
+            }
+
             var lastUsedModelTransform = !lastUsedModel ? null : lastUsedModel.transform;
 
             if (!lastUsedModelTransform ||
@@ -460,19 +497,27 @@ namespace RealtimeCSG
                         }
 
                         if (!brush)
+                        {
                             continue;
+                        }
 
                         if ((brush.gameObject.hideFlags & (HideFlags.HideInHierarchy | HideFlags.NotEditable | HideFlags.DontSaveInBuild)) != 0)
+                        {
                             continue;
+                        }
 
                         if (brush.ChildData == null ||
                             brush.ChildData.ModelTransform == null)
+                        {
                             continue;
+                        }
 
                         var model = brush.ChildData.Model;
                         if (!model ||
                             !model.isActiveAndEnabled)
+                        {
                             continue;
+                        }
 
                         lastUsedModelTransform = brush.ChildData.ModelTransform;
                         break;
@@ -485,7 +530,10 @@ namespace RealtimeCSG
                 for (int i = generatedBrushes.Length - 1; i >= 0; i--)
                 {
                     if (generatedBrushes[i])
+                    {
                         continue;
+                    }
+
                     ArrayUtility.RemoveAt(ref generatedBrushes, i);
                 }
                 for (int i = generatedGameObjects.Length - 1; i >= 0; i--)
@@ -494,7 +542,9 @@ namespace RealtimeCSG
                     {
                         var brush = generatedGameObjects[i].GetComponentInChildren<CSGBrush>();
                         if (brush && ArrayUtility.Contains(generatedBrushes, brush))
+                        {
                             continue;
+                        }
                     }
                     ArrayUtility.RemoveAt(ref generatedGameObjects, i);
                 }
@@ -514,11 +564,15 @@ namespace RealtimeCSG
                 if (generatedGameObjects != null && generatedGameObjects.Length > 0)
                 {
                     for (int i = 0; i < generatedGameObjects.Length; i++)
+                    {
                         GameObject.DestroyImmediate(generatedGameObjects[i]);
+                    }
                 }
 
                 if (parentGameObject != null)
+                {
                     GameObject.DestroyImmediate(parentGameObject);
+                }
 
                 //DebugEditorWindow.PrintDebugInfo();
 
@@ -537,7 +591,10 @@ namespace RealtimeCSG
 
                         var operation = operationGameObject.AddComponent<CSGOperation>();
                         if (CurrentCSGOperationType != invalidCSGOperationType)
+                        {
                             operation.OperationType = CurrentCSGOperationType;
+                        }
+
                         operation.HandleAsOne = true;
                         Undo.RegisterCreatedObjectUndo(operationGameObject, "Created operation");
                         parentTransform = operationGameObject.transform;
@@ -558,7 +615,10 @@ namespace RealtimeCSG
                     operationGameObject = parentGameObject;
                     var operation = operationGameObject.AddComponent<CSGOperation>();
                     if (CurrentCSGOperationType != invalidCSGOperationType)
+                    {
                         operation.OperationType = CurrentCSGOperationType;
+                    }
+
                     operation.HandleAsOne = true;
                     parentTransform = operationGameObject.transform;
                     Undo.RegisterCreatedObjectUndo(parentGameObject, "Created brush");
@@ -578,9 +638,14 @@ namespace RealtimeCSG
                 {
                     string name;
                     if (brushObjectCount == 1)
+                    {
                         name = "Brush";
+                    }
                     else
+                    {
                         name = "Brush (" + p + ")";
+                    }
+
                     var gameObject = OperationsUtility.CreateGameObject(parentTransform, name, false);
                     gameObject.SetActive(false);
 
@@ -589,7 +654,10 @@ namespace RealtimeCSG
                     if (operationGameObject == null)
                     {
                         if (CurrentCSGOperationType != invalidCSGOperationType)
+                        {
                             brushComponent.OperationType = CurrentCSGOperationType;
+                        }
+
                         operationGameObject = gameObject;
                         var transform = gameObject.transform;
                         SetBrushTransformation(transform);
@@ -609,7 +677,9 @@ namespace RealtimeCSG
                 //Selection.objects = generatedGameObjects;
             }
             else
+            {
                 UpdateBrushPosition();
+            }
 
             return generatedBrushes != null && generatedBrushes.Length > 0 && generatedBrushes.Length == brushObjectCount;
         }
@@ -620,7 +690,9 @@ namespace RealtimeCSG
             {
                 var brush = generatedBrushes[i];
                 if (!brush)
+                {
                     continue;
+                }
 
                 EditorUtility.SetDirty(brush);
             }
@@ -643,14 +715,19 @@ namespace RealtimeCSG
             previousViewTool = Tools.viewTool;
 
             if (Event.current.type == EventType.MouseUp ||
-                Event.current.type == EventType.MouseMove) ignoreOrbit = false;
+                Event.current.type == EventType.MouseMove)
+            {
+                ignoreOrbit = false;
+            }
         }
 
 
         public bool UndoRedoPerformed()
         {
             if (UpdateBaseShape(registerUndo: false))
+            {
                 return false;
+            }
 
             Cancel();
             return true;
@@ -659,15 +736,23 @@ namespace RealtimeCSG
         public virtual void HandleEvents(SceneView sceneView, Rect sceneRect)
         {
             if (Event.current.type == EventType.MouseDown ||
-                Event.current.type == EventType.MouseMove) mouseIsDragging = false;
+                Event.current.type == EventType.MouseMove)
+            {
+                mouseIsDragging = false;
+            }
             else
-            if (Event.current.type == EventType.MouseDrag) mouseIsDragging = true;
+            if (Event.current.type == EventType.MouseDrag)
+            {
+                mouseIsDragging = true;
+            }
 
             CreateControlIDs();
 
             if (mouseIsDragging ||
                 (Event.current.type == EventType.MouseDown && Tools.viewTool == ViewTool.Orbit))
+            {
                 HandleCameraOrbit(sceneView, editMode != EditMode.CreatePlane);
+            }
 
             // pretend we dragged so we don't click if we just changed edit modes
             if (prevEditMode != editMode)
@@ -697,8 +782,15 @@ namespace RealtimeCSG
 
         void Cleanup()
         {
-            if (prevSelection != null) Selection.objects = prevSelection;
-            else Selection.activeTransform = null;
+            if (prevSelection != null)
+            {
+                Selection.objects = prevSelection;
+            }
+            else
+            {
+                Selection.activeTransform = null;
+            }
+
             prevSelection = null;
 
             if (GUIUtility.hotControl == shapeId)
@@ -731,24 +823,33 @@ namespace RealtimeCSG
                 if (generatedGameObjects != null && generatedGameObjects.Length > 0)
                 {
                     for (int i = 0; i < generatedGameObjects.Length; i++)
+                    {
                         GameObject.DestroyImmediate(generatedGameObjects[i]);
+                    }
                 }
                 if (parentGameObject != null)
+                {
                     GameObject.DestroyImmediate(parentGameObject);
+                }
             }
 
             Cleanup();
             Reset();
 
             if (shapeCancelled != null)
+            {
                 shapeCancelled();
+            }
         }
 
 
         public void EndCommit()
         {
             if (generatedBrushes == null)
+            {
                 return;
+            }
+
             var bounds = BoundsUtilities.GetBounds(generatedBrushes);
             if (!bounds.IsEmpty())
             {/*
@@ -767,13 +868,17 @@ namespace RealtimeCSG
 
                 if (generatedGameObjects != null &&
                     generatedGameObjects.Length > 0)
+                {
                     Selection.objects = generatedGameObjects;
+                }
 
                 Reset();
             }
 
             if (shapeCommitted != null)
+            {
                 shapeCommitted();
+            }
         }
 
 
@@ -802,8 +907,15 @@ namespace RealtimeCSG
         public void FinishGUI()
         {
             var camera = Camera.current;
-            if (doCommit) Commit(camera);
-            if (doCancel) Cancel();
+            if (doCommit)
+            {
+                Commit(camera);
+            }
+
+            if (doCancel)
+            {
+                Cancel();
+            }
         }
     }
 }

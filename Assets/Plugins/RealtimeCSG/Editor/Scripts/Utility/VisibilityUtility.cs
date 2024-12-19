@@ -11,9 +11,13 @@ namespace RealtimeCSG
             if (SceneVisibilityManager.instance.IsHidden(gameObject) == visible)
             {
                 if (visible)
+                {
                     SceneVisibilityManager.instance.Show(gameObject, true);
+                }
                 else
+                {
                     SceneVisibilityManager.instance.Hide(gameObject, true);
+                }
             }
 #else
             // Unfortunately in older versions we have no concept of visibility, 

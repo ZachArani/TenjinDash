@@ -23,7 +23,9 @@ namespace AYellowpaper.SerializedCollections.Editor.States
         public override ListState OnUpdate()
         {
             if (Drawer.SearchText.Length > 0)
+            {
                 return Drawer.SearchState;
+            }
 
             return this;
         }

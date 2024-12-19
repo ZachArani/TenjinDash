@@ -11,11 +11,15 @@ namespace RealtimeCSG
         public override void OnInspectorGUI()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             var reference = this.target as GeneratedMeshes;
             if (!reference)
+            {
                 return;
+            }
 
             var destination = reference.owner;
             if (!destination)

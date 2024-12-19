@@ -15,7 +15,7 @@ namespace RealtimeCSG
             RealtimeCSG.CSGSettings.SetRealtimeCSGEnabled(!RealtimeCSG.CSGSettings.EnableRealtimeCSG);
         }
 
-        public static bool IsActive() { return (editor != null && editor.initialized); }
+        public static bool IsActive() { return editor != null && editor.initialized; }
 
 
         static UpdateLoop editor = null;
@@ -36,7 +36,9 @@ namespace RealtimeCSG
         void Initialize()
         {
             if (initialized)
+            {
                 return;
+            }
 
             CSGKeysPreferenceWindow.ReadKeys();
 
@@ -81,12 +83,16 @@ namespace RealtimeCSG
         void Shutdown(bool finalizing = false)
         {
             if (editor != this)
+            {
                 return;
+            }
 
             editor = null;
             CSGSceneManagerRedirector.Interface = null;
             if (!initialized)
+            {
                 return;
+            }
 
             EditorApplication.update -= OnFirstUpdate;
 
@@ -112,20 +118,26 @@ namespace RealtimeCSG
             NativeMethodBindings.ClearExternalMethods();
 
             if (!finalizing)
+            {
                 SceneToolRenderer.Cleanup();
+            }
         }
 
         static Scene currentScene;
         internal static void UpdateOnSceneChange()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             var activeScene = SceneManager.GetActiveScene();
             if (currentScene != activeScene)
             {
                 if (editor == null)
+                {
                     ResetUpdateRoutine();
+                }
 
                 editor.OnSceneUnloaded();
                 currentScene = activeScene;
@@ -136,10 +148,14 @@ namespace RealtimeCSG
         void OnSceneUnloaded()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             if (this.initialized)
+            {
                 this.Shutdown();
+            }
 
             MeshInstanceManager.Shutdown();
             InternalCSGModelManager.Shutdown();
@@ -151,15 +167,22 @@ namespace RealtimeCSG
         public static void EnsureFirstUpdate()
         {
             if (editor == null)
+            {
                 return;
+            }
+
             if (!editor.had_first_update)
+            {
                 editor.OnFirstUpdate();
+            }
         }
 
         void OnHierarchyWindowChanged()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             SceneDragToolManager.UpdateDragAndDrop();
             InternalCSGModelManager.UpdateHierarchy();
@@ -244,17 +267,24 @@ namespace RealtimeCSG
         static void RunEditorUpdate()
         {
             if (!RealtimeCSG.CSGSettings.EnableRealtimeCSG)
+            {
                 return;
+            }
 
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             UpdateLoop.UpdateOnSceneChange();
 
             try
             {
                 if (!ColorSettings.isInitialized)
+                {
                     ColorSettings.Update();
+                }
+
                 InternalCSGModelManager.CheckForChanges(forceHierarchyUpdate: false);
                 TooltipUtility.CleanCache();
             }
@@ -267,7 +297,9 @@ namespace RealtimeCSG
         public static void ResetUpdateRoutine()
         {
             if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
                 return;
+            }
 
             if (editor != null &&
                 !editor.initialized)

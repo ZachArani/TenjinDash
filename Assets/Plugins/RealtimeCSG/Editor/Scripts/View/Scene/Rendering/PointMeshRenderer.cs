@@ -53,7 +53,9 @@ namespace RealtimeCSG
                 }
 
                 if (pointMesh != null)
+                {
                     pointMesh.Clear(true);
+                }
                 else
                 {
                     pointMesh = new Mesh();
@@ -61,7 +63,9 @@ namespace RealtimeCSG
                     pointMesh.MarkDynamic();
                 }
                 if (lineMesh != null)
+                {
                     lineMesh.Clear(true);
+                }
                 else
                 {
                     lineMesh = new Mesh();
@@ -116,7 +120,10 @@ namespace RealtimeCSG
             {
                 if (vertexCount == 0 ||
                     pointIndexCount == 0)
+                {
                     return;
+                }
+
                 Graphics.DrawMeshNow(pointMesh, MathConstants.identityMatrix);
             }
 
@@ -124,14 +131,25 @@ namespace RealtimeCSG
             {
                 if (vertexCount == 0 ||
                     lineIndexCount == 0)
+                {
                     return;
+                }
+
                 Graphics.DrawMeshNow(lineMesh, MathConstants.identityMatrix);
             }
 
             internal void Destroy()
             {
-                if (pointMesh) UnityEngine.Object.DestroyImmediate(pointMesh);
-                if (lineMesh) UnityEngine.Object.DestroyImmediate(lineMesh);
+                if (pointMesh)
+                {
+                    UnityEngine.Object.DestroyImmediate(pointMesh);
+                }
+
+                if (lineMesh)
+                {
+                    UnityEngine.Object.DestroyImmediate(lineMesh);
+                }
+
                 pointMesh = null;
                 lineMesh = null;
             }
@@ -140,12 +158,18 @@ namespace RealtimeCSG
         public void Begin()
         {
             currentPointMesh = 0;
-            for (int i = 0; i < pointMeshes.Count; i++) pointMeshes[i].Clear();
+            for (int i = 0; i < pointMeshes.Count; i++)
+            {
+                pointMeshes[i].Clear();
+            }
         }
 
         public void End()
         {
-            for (int i = 0; i <= currentPointMesh; i++) pointMeshes[i].CommitMesh();
+            for (int i = 0; i <= currentPointMesh; i++)
+            {
+                pointMeshes[i].CommitMesh();
+            }
         }
 
         public void Render(Material pointMaterial, Material lineMaterial)
@@ -153,12 +177,16 @@ namespace RealtimeCSG
             if (pointMaterial.SetPass(0))
             {
                 for (int i = 0; i <= currentPointMesh; i++)
+                {
                     pointMeshes[i].DrawPoints();
+                }
             }
             if (lineMaterial.SetPass(0))
             {
                 for (int i = 0; i <= currentPointMesh; i++)
+                {
                     pointMeshes[i].DrawLines();
+                }
             }
         }
 
@@ -175,14 +203,14 @@ namespace RealtimeCSG
             var right = camera.transform.right;
             var up = camera.transform.up;
 
-            var p0 = (right + up);
-            var p1 = (right - up);
-            var p2 = (-right - up);
-            var p3 = (-right + up);
+            var p0 = right + up;
+            var p1 = right - up;
+            var p2 = -right - up;
+            var p3 = -right + up;
 
             var pointMesh = pointMeshes[currentPointMesh];
             var dstVertexCount = pointMesh.vertexCount;
-            if (dstVertexCount + 4 >= PointMesh.MaxVertexCount) { currentPointMesh++; if (currentPointMesh >= pointMeshes.Count) pointMeshes.Add(new PointMesh()); pointMesh = pointMeshes[currentPointMesh]; dstVertexCount = pointMesh.vertexCount; }
+            if (dstVertexCount + 4 >= PointMesh.MaxVertexCount) { currentPointMesh++; if (currentPointMesh >= pointMeshes.Count) { pointMeshes.Add(new PointMesh()); } pointMesh = pointMeshes[currentPointMesh]; dstVertexCount = pointMesh.vertexCount; }
             var dstVertices = pointMesh.vertices;
             var dstLineColors = pointMesh.lineColors;
             var dstPointColors = pointMesh.pointColors;
@@ -241,10 +269,10 @@ namespace RealtimeCSG
             var right = camera.transform.right;
             var up = camera.transform.up;
 
-            var p0 = (right + up);
-            var p1 = (right - up);
-            var p2 = (-right - up);
-            var p3 = (-right + up);
+            var p0 = right + up;
+            var p1 = right - up;
+            var p2 = -right - up;
+            var p3 = -right + up;
 
             var pointMeshIndex = currentPointMesh;
             var pointMesh = pointMeshes[currentPointMesh];
@@ -266,7 +294,11 @@ namespace RealtimeCSG
                     pointMesh.lineIndexCount = dstLineIndexCount;
 
                     currentPointMesh++;
-                    if (currentPointMesh >= pointMeshes.Count) pointMeshes.Add(new PointMesh());
+                    if (currentPointMesh >= pointMeshes.Count)
+                    {
+                        pointMeshes.Add(new PointMesh());
+                    }
+
                     pointMesh = pointMeshes[currentPointMesh];
                     pointMesh.Clear();
 

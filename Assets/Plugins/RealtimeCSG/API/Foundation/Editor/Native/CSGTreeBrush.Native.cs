@@ -30,7 +30,10 @@ namespace RealtimeCSG.Foundation
         {
             Matrix4x4 result = Matrix4x4.identity;
             if (GetNodeLocalTransformation(brushNodeID, out result))
+            {
                 return result;
+            }
+
             return Matrix4x4.identity;
         }
 
@@ -41,7 +44,10 @@ namespace RealtimeCSG.Foundation
         {
             var aabb = new AABB();
             if (GetBrushBounds(brushNodeID, ref aabb))
+            {
                 return new Bounds(aabb.Center, aabb.Size);
+            }
+
             return new Bounds();
         }
     }

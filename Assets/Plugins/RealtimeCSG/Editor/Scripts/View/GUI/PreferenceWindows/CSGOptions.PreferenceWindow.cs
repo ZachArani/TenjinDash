@@ -28,9 +28,13 @@ namespace RealtimeCSG
                 if (afterToggleWorldSpaceTexture != beforeToggleWorldSpaceTexture)
                 {
                     if (afterToggleWorldSpaceTexture)
+                    {
                         CSGSettings.DefaultTexGenFlags &= ~TexGenFlags.WorldSpaceTexture;
+                    }
                     else
+                    {
                         CSGSettings.DefaultTexGenFlags |= TexGenFlags.WorldSpaceTexture;
+                    }
                 }
 
                 CSGSettings.ShowSceneInfo = EditorGUILayout.ToggleLeft("Show Scene Info", CSGSettings.ShowSceneInfo);
@@ -55,7 +59,9 @@ namespace RealtimeCSG
             {
                 var pieces = key.name.Split(' ', '/');
                 foreach (var piece in pieces)
+                {
                     keywords.Add(piece);
+                }
             }
 
             var provider = new SettingsProvider("Project/RealtimeCSG", SettingsScope.Project)

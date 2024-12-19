@@ -35,7 +35,9 @@ namespace RealtimeCSG
                     float.IsInfinity(B.x) || float.IsInfinity(B.y) || float.IsInfinity(B.z) ||
                     float.IsNaN(A.x) || float.IsNaN(A.y) || float.IsNaN(A.z) ||
                     float.IsNaN(B.x) || float.IsNaN(B.y) || float.IsNaN(B.z))
+                {
                     return;
+                }
 
                 int n = vertexCount;
                 vertices1[n] = B; vertices2[n] = A; offsets[n] = new Vector4(thickness, -1, dashSize); colors[n] = color; n++;
@@ -74,7 +76,9 @@ namespace RealtimeCSG
 
                 int req_size = vertexCount * 6 / 4;
                 if (indices == null || indices.Length != req_size)
+                {
                     indices = new int[req_size];
+                }
 
                 for (int i = 0, j = 0; i < vertexCount; i += 4, j += 6)
                 {
@@ -114,13 +118,20 @@ namespace RealtimeCSG
             public void Draw()
             {
                 if (vertexCount == 0 || mesh == null)
+                {
                     return;
+                }
+
                 Graphics.DrawMeshNow(mesh, MathConstants.identityMatrix);
             }
 
             internal void Destroy()
             {
-                if (mesh) UnityEngine.Object.DestroyImmediate(mesh);
+                if (mesh)
+                {
+                    UnityEngine.Object.DestroyImmediate(mesh);
+                }
+
                 mesh = null;
                 indices = null;
             }
@@ -129,31 +140,46 @@ namespace RealtimeCSG
         public void Begin()
         {
             if (lineMeshes == null || lineMeshes.Count == 0)
+            {
                 return;
+            }
+
             currentLineMesh = 0;
-            for (int i = 0; i < lineMeshes.Count; i++) lineMeshes[i].Clear();
+            for (int i = 0; i < lineMeshes.Count; i++)
+            {
+                lineMeshes[i].Clear();
+            }
         }
 
         public void End()
         {
             if (lineMeshes == null || lineMeshes.Count == 0)
+            {
                 return;
+            }
 
             var max = Mathf.Min(currentLineMesh, lineMeshes.Count);
             for (int i = 0; i <= max; i++)
+            {
                 lineMeshes[i].CommitMesh();
+            }
         }
 
         public void Render(Material genericLineMaterial)
         {
             if (lineMeshes == null || lineMeshes.Count == 0 || !genericLineMaterial)
+            {
                 return;
+            }
+
             MaterialUtility.InitGenericLineMaterial(genericLineMaterial);
             if (genericLineMaterial.SetPass(0))
             {
                 var max = Mathf.Min(currentLineMesh, lineMeshes.Count - 1);
                 for (int i = 0; i <= max; i++)
+                {
                     lineMeshes[i].Draw();
+                }
             }
         }
 
@@ -168,7 +194,7 @@ namespace RealtimeCSG
         public void DrawLine(Vector3 A, Vector3 B, Color color, float thickness = 1.0f, float dashSize = 0.0f)
         {
             var lineMesh = lineMeshes[currentLineMesh];
-            if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { currentLineMesh++; if (currentLineMesh >= lineMeshes.Count) lineMeshes.Add(new LineMesh()); lineMesh = lineMeshes[currentLineMesh]; }
+            if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { currentLineMesh++; if (currentLineMesh >= lineMeshes.Count) { lineMeshes.Add(new LineMesh()); } lineMesh = lineMeshes[currentLineMesh]; }
             lineMesh.AddLine(A, B, thickness, dashSize, color);
         }
 
@@ -181,7 +207,11 @@ namespace RealtimeCSG
             var corner4 = new Vector4(thickness, -1, dashSize);
 
             var lineMeshIndex = currentLineMesh;
-            while (lineMeshIndex >= lineMeshes.Count) lineMeshes.Add(new LineMesh());
+            while (lineMeshIndex >= lineMeshes.Count)
+            {
+                lineMeshes.Add(new LineMesh());
+            }
+
             if (lineMeshes[lineMeshIndex].VertexCount + (indices.Length * 2) <= LineMesh.MaxVertexCount)
             {
                 var lineMesh = lineMeshes[lineMeshIndex];
@@ -208,7 +238,7 @@ namespace RealtimeCSG
                 {
                     var lineMesh = lineMeshes[lineMeshIndex];
                     var vertexCount = lineMesh.vertexCount;
-                    if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { lineMeshIndex++; if (lineMeshIndex >= lineMeshes.Count) lineMeshes.Add(new LineMesh()); lineMesh = lineMeshes[lineMeshIndex]; vertexCount = lineMesh.vertexCount; }
+                    if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { lineMeshIndex++; if (lineMeshIndex >= lineMeshes.Count) { lineMeshes.Add(new LineMesh()); } lineMesh = lineMeshes[lineMeshIndex]; vertexCount = lineMesh.vertexCount; }
                     var vertices1 = lineMesh.vertices1;
                     var vertices2 = lineMesh.vertices2;
                     var offsets = lineMesh.offsets;
@@ -235,7 +265,11 @@ namespace RealtimeCSG
             var corner4 = new Vector4(thickness, -1, dashSize);
 
             var lineMeshIndex = currentLineMesh;
-            while (lineMeshIndex >= lineMeshes.Count) lineMeshes.Add(new LineMesh());
+            while (lineMeshIndex >= lineMeshes.Count)
+            {
+                lineMeshes.Add(new LineMesh());
+            }
+
             if (lineMeshes[lineMeshIndex].vertexCount + (indices.Length * 2) <= LineMesh.MaxVertexCount)
             {
                 var lineMesh = lineMeshes[lineMeshIndex];
@@ -251,7 +285,9 @@ namespace RealtimeCSG
                     var index1 = indices[i + 1];
                     if (index0 < 0 || index0 >= vertices.Length ||
                         index1 < 0 || index1 >= vertices.Length)
+                    {
                         continue;
+                    }
 
                     var A = vertices[index0];
                     var B = vertices[index1];
@@ -260,7 +296,9 @@ namespace RealtimeCSG
                         float.IsInfinity(B.x) || float.IsInfinity(B.y) || float.IsInfinity(B.z) ||
                         float.IsNaN(A.x) || float.IsNaN(A.y) || float.IsNaN(A.z) ||
                         float.IsNaN(B.x) || float.IsNaN(B.y) || float.IsNaN(B.z))
+                    {
                         continue;
+                    }
 
                     vertices1[n] = B; vertices2[n] = A; offsets[n] = corner1; colors[n] = color; n++;
                     vertices1[n] = B; vertices2[n] = A; offsets[n] = corner2; colors[n] = color; n++;
@@ -278,7 +316,9 @@ namespace RealtimeCSG
                     var index1 = indices[i + 1];
                     if (index0 < 0 || index0 >= vertices.Length ||
                         index1 < 0 || index1 >= vertices.Length)
+                    {
                         continue;
+                    }
 
                     var A = vertices[index0];
                     var B = vertices[index1];
@@ -287,11 +327,13 @@ namespace RealtimeCSG
                         float.IsInfinity(B.x) || float.IsInfinity(B.y) || float.IsInfinity(B.z) ||
                         float.IsNaN(A.x) || float.IsNaN(A.y) || float.IsNaN(A.z) ||
                         float.IsNaN(B.x) || float.IsNaN(B.y) || float.IsNaN(B.z))
+                    {
                         continue;
+                    }
 
                     var lineMesh = lineMeshes[lineMeshIndex];
                     int vertexCount = lineMesh.vertexCount;
-                    if (vertexCount + 4 >= LineMesh.MaxVertexCount) { lineMeshIndex++; if (lineMeshIndex >= lineMeshes.Count) lineMeshes.Add(new LineMesh()); lineMesh = lineMeshes[lineMeshIndex]; lineMesh.Clear(); vertexCount = lineMesh.vertexCount; }
+                    if (vertexCount + 4 >= LineMesh.MaxVertexCount) { lineMeshIndex++; if (lineMeshIndex >= lineMeshes.Count) { lineMeshes.Add(new LineMesh()); } lineMesh = lineMeshes[lineMeshIndex]; lineMesh.Clear(); vertexCount = lineMesh.vertexCount; }
                     var vertices1 = lineMesh.vertices1;
                     var vertices2 = lineMesh.vertices2;
                     var offsets = lineMesh.offsets;
@@ -315,7 +357,11 @@ namespace RealtimeCSG
             var corner4 = new Vector4(thickness, -1, dashSize);
 
             var lineMeshIndex = currentLineMesh;
-            while (lineMeshIndex >= lineMeshes.Count) lineMeshes.Add(new LineMesh());
+            while (lineMeshIndex >= lineMeshes.Count)
+            {
+                lineMeshes.Add(new LineMesh());
+            }
+
             var prevVertexCount = lineMeshes[lineMeshIndex].VertexCount;
             if (prevVertexCount + (indices.Length * 2) <= LineMesh.MaxVertexCount)
             {
@@ -332,7 +378,9 @@ namespace RealtimeCSG
                     var index1 = indices[i + 1];
                     if (index0 < 0 || index0 >= vertices.Length ||
                         index1 < 0 || index1 >= vertices.Length)
+                    {
                         continue;
+                    }
 
                     var A = vertices[index0];
                     var B = vertices[index1];
@@ -341,7 +389,9 @@ namespace RealtimeCSG
                         float.IsInfinity(B.x) || float.IsInfinity(B.y) || float.IsInfinity(B.z) ||
                         float.IsNaN(A.x) || float.IsNaN(A.y) || float.IsNaN(A.z) ||
                         float.IsNaN(B.x) || float.IsNaN(B.y) || float.IsNaN(B.z))
+                    {
                         continue;
+                    }
 
                     var color = colors[c];
 
@@ -360,7 +410,9 @@ namespace RealtimeCSG
                     var index1 = indices[i + 1];
                     if (index0 < 0 || index0 >= vertices.Length ||
                         index1 < 0 || index1 >= vertices.Length)
+                    {
                         continue;
+                    }
 
                     var A = vertices[index0];
                     var B = vertices[index1];
@@ -369,13 +421,15 @@ namespace RealtimeCSG
                         float.IsInfinity(B.x) || float.IsInfinity(B.y) || float.IsInfinity(B.z) ||
                         float.IsNaN(A.x) || float.IsNaN(A.y) || float.IsNaN(A.z) ||
                         float.IsNaN(B.x) || float.IsNaN(B.y) || float.IsNaN(B.z))
+                    {
                         continue;
+                    }
 
                     var color = colors[c];
 
                     var lineMesh = lineMeshes[lineMeshIndex];
                     int vertexCount = lineMesh.vertexCount;
-                    if (vertexCount + 4 >= LineMesh.MaxVertexCount) { lineMeshIndex++; if (lineMeshIndex >= lineMeshes.Count) lineMeshes.Add(new LineMesh()); lineMesh = lineMeshes[lineMeshIndex]; lineMesh.Clear(); vertexCount = lineMesh.vertexCount; }
+                    if (vertexCount + 4 >= LineMesh.MaxVertexCount) { lineMeshIndex++; if (lineMeshIndex >= lineMeshes.Count) { lineMeshes.Add(new LineMesh()); } lineMesh = lineMeshes[lineMeshIndex]; lineMesh.Clear(); vertexCount = lineMesh.vertexCount; }
                     var vertices1 = lineMesh.vertices1;
                     var vertices2 = lineMesh.vertices2;
                     var offsets = lineMesh.offsets;
@@ -396,7 +450,7 @@ namespace RealtimeCSG
             var lineMesh = lineMeshes[currentLineMesh];
             for (int i = 0; i < vertices.Length; i += 2)
             {
-                if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { currentLineMesh++; if (currentLineMesh >= lineMeshes.Count) lineMeshes.Add(new LineMesh()); lineMesh = lineMeshes[currentLineMesh]; lineMesh.Clear(); }
+                if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { currentLineMesh++; if (currentLineMesh >= lineMeshes.Count) { lineMeshes.Add(new LineMesh()); } lineMesh = lineMeshes[currentLineMesh]; lineMesh.Clear(); }
                 lineMesh.AddLine(matrix.MultiplyPoint(vertices[i + 0]), matrix.MultiplyPoint(vertices[i + 1]), thickness, dashSize, color);
             }
             currentLineMesh = lineMeshIndex;
@@ -408,7 +462,7 @@ namespace RealtimeCSG
             var lineMesh = lineMeshes[currentLineMesh];
             for (int i = 0; i < vertices.Length; i += 2)
             {
-                if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { currentLineMesh++; if (currentLineMesh >= lineMeshes.Count) lineMeshes.Add(new LineMesh()); lineMesh = lineMeshes[currentLineMesh]; lineMesh.Clear(); }
+                if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { currentLineMesh++; if (currentLineMesh >= lineMeshes.Count) { lineMeshes.Add(new LineMesh()); } lineMesh = lineMeshes[currentLineMesh]; lineMesh.Clear(); }
                 lineMesh.AddLine(vertices[i + 0], vertices[i + 1], thickness, dashSize, color);
             }
             currentLineMesh = lineMeshIndex;
@@ -422,11 +476,14 @@ namespace RealtimeCSG
             var lineMesh = lineMeshes[currentLineMesh];
             for (int i = 0, c = 0; i < indices.Length; i += 2, c++)
             {
-                if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { currentLineMesh++; if (currentLineMesh >= lineMeshes.Count) lineMeshes.Add(new LineMesh()); lineMesh = lineMeshes[currentLineMesh]; lineMesh.Clear(); }
+                if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { currentLineMesh++; if (currentLineMesh >= lineMeshes.Count) { lineMeshes.Add(new LineMesh()); } lineMesh = lineMeshes[currentLineMesh]; lineMesh.Clear(); }
                 var index0 = indices[i + 0];
                 var index1 = indices[i + 1];
                 if (index0 < 0 || index1 < 0 || index0 >= vertices.Length || index1 >= vertices.Length)
+                {
                     continue;
+                }
+
                 lineMesh.AddLine(matrix.MultiplyPoint(vertices[index0]), matrix.MultiplyPoint(vertices[index1]), thickness, dashSize, colors[c]);
             }
             currentLineMesh = lineMeshIndex;
@@ -438,7 +495,7 @@ namespace RealtimeCSG
             var lineMesh = lineMeshes[currentLineMesh];
             for (int i = 0, c = 0; i < vertices.Length; i += 2, c++)
             {
-                if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { currentLineMesh++; if (currentLineMesh >= lineMeshes.Count) lineMeshes.Add(new LineMesh()); lineMesh = lineMeshes[currentLineMesh]; lineMesh.Clear(); }
+                if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { currentLineMesh++; if (currentLineMesh >= lineMeshes.Count) { lineMeshes.Add(new LineMesh()); } lineMesh = lineMeshes[currentLineMesh]; lineMesh.Clear(); }
                 lineMesh.AddLine(matrix.MultiplyPoint(vertices[i + 0]), matrix.MultiplyPoint(vertices[i + 1]), thickness, dashSize, colors[c]);
             }
             currentLineMesh = lineMeshIndex;
@@ -450,7 +507,7 @@ namespace RealtimeCSG
             var lineMesh = lineMeshes[currentLineMesh];
             for (int i = 0, c = 0; i < vertices.Length; i += 2, c++)
             {
-                if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { currentLineMesh++; if (currentLineMesh >= lineMeshes.Count) lineMeshes.Add(new LineMesh()); lineMesh = lineMeshes[currentLineMesh]; lineMesh.Clear(); }
+                if (lineMesh.VertexCount + 4 >= LineMesh.MaxVertexCount) { currentLineMesh++; if (currentLineMesh >= lineMeshes.Count) { lineMeshes.Add(new LineMesh()); } lineMesh = lineMeshes[currentLineMesh]; lineMesh.Clear(); }
                 lineMesh.AddLine(vertices[i + 0], vertices[i + 1], thickness, dashSize, colors[c]);
             }
             currentLineMesh = lineMeshIndex;
@@ -469,7 +526,10 @@ namespace RealtimeCSG
         internal void Clear()
         {
             currentLineMesh = 0;
-            for (int i = 0; i < lineMeshes.Count; i++) lineMeshes[i].Clear();
+            for (int i = 0; i < lineMeshes.Count; i++)
+            {
+                lineMeshes[i].Clear();
+            }
         }
     }
 }

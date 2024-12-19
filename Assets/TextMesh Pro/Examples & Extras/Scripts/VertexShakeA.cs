@@ -43,7 +43,9 @@ namespace TMPro.Examples
         void ON_TEXT_CHANGED(Object obj)
         {
             if (obj = m_TextComponent)
+            {
                 hasTextChanged = true;
+            }
         }
 
         /// <summary>
@@ -70,7 +72,9 @@ namespace TMPro.Examples
                 if (hasTextChanged)
                 {
                     if (copyOfVertices.Length < textInfo.meshInfo.Length)
+                    {
                         copyOfVertices = new Vector3[textInfo.meshInfo.Length][];
+                    }
 
                     for (int i = 0; i < textInfo.meshInfo.Length; i++)
                     {
@@ -108,7 +112,9 @@ namespace TMPro.Examples
                     {
                         // Skip characters that are not visible and thus have no geometry to manipulate.
                         if (!textInfo.characterInfo[j].isVisible)
+                        {
                             continue;
+                        }
 
                         // Get the index of the material used by the current character.
                         int materialIndex = textInfo.characterInfo[j].materialReferenceIndex;
@@ -127,7 +133,7 @@ namespace TMPro.Examples
                         copyOfVertices[materialIndex][vertexIndex + 3] = sourceVertices[vertexIndex + 3] - centerOfLine;
 
                         // Determine the random scale change for each character.
-                        float randomScale = Random.Range(0.995f - 0.001f * ScaleMultiplier, 1.005f + 0.001f * ScaleMultiplier);
+                        float randomScale = Random.Range(0.995f - (0.001f * ScaleMultiplier), 1.005f + (0.001f * ScaleMultiplier));
 
                         // Setup the matrix rotation.
                         matrix = Matrix4x4.TRS(Vector3.one, rotation, Vector3.one * randomScale);

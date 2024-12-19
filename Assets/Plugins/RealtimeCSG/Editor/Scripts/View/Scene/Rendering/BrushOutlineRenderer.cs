@@ -34,15 +34,21 @@ namespace RealtimeCSG
             {
                 var brush = brushes[t];
                 if (!brush)
+                {
                     continue;
+                }
 
                 var meshState = meshStates[t];
                 if (meshState.WorldPoints.Length == 0 &&
                     meshState.Edges.Length == 0)
+                {
                     continue;
+                }
 
                 if (!meshState.UpdateColors(camera, brush, controlMeshes[t]))
+                {
                     continue;
+                }
 
                 _outlinesManager.DrawLines(meshState.WorldPoints, meshState.Edges, ColorSettings.MeshEdgeOutline, thickness: 1.0f);//, zTest: false);
                 _edgeColorsManager.DrawLines(meshState.WorldPoints, meshState.Edges, meshState.EdgeColors, thickness: 1.0f);//, zTest: false);
@@ -50,7 +56,9 @@ namespace RealtimeCSG
                 for (int p = 0; p < meshState.PolygonPointIndices.Length; p++)
                 {
                     if (meshState.PolygonColors[p].a < (1.0f / 255.0f))
+                    {
                         continue;
+                    }
 
                     var color = meshState.PolygonColors[p];
                     var polygonPoints = meshState.PolygonPointIndices[p];

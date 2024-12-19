@@ -18,14 +18,18 @@ namespace RealtimeCSG.Helpers
             var delta = CalcDeltaAlongDirections(id, handlePos, offset, handleDir, slideDir1, slideDir2, handleSize, capFunction, snapMode, snapVertices, initFunction, shutdownFunction);
             if (GUI.changed)
             {
-                handlePos = s_StartPosition + slideDir1 * delta.x + slideDir2 * delta.y;
+                handlePos = s_StartPosition + (slideDir1 * delta.x) + (slideDir2 * delta.y);
 
                 if (s_SnapVertices == null)
                 {
                     if (snapVertices != null)
+                    {
                         s_SnapVertices = snapVertices;
+                    }
                     else
+                    {
                         s_SnapVertices = new Vector3[] { s_StartPosition };
+                    }
                 }
 
                 switch (snapMode)
@@ -65,21 +69,31 @@ namespace RealtimeCSG.Helpers
                 case EventType.Layout:
                     {
                         if (capFunction != null)
+                        {
                             capFunction(id, position, rotation, handleSize, EventType.Layout);
+                        }
                         else
+                        {
                             HandleUtility.AddControl(id, HandleUtility.DistanceToCircle(handlePos + offset, handleSize * .5f));
+                        }
+
                         break;
                     }
                 case EventType.MouseDown:
                     {
                         if (CSGHandles.disabled)
+                        {
                             break;
+                        }
+
                         if (((HandleUtility.nearestControl == id && evt.button == 0) ||
                             (GUIUtility.keyboardControl == id && evt.button == 2)) && GUIUtility.hotControl == 0)
                         {
                             s_SnapVertices = null;
                             if (initFunction != null)
+                            {
                                 initFunction();
+                            }
 
                             var plane = new Plane(Handles.matrix.MultiplyVector(handleDir), Handles.matrix.MultiplyPoint(handlePos));
                             var mouseRay = HandleUtility.GUIPointToWorldRay(evt.mousePosition);
@@ -133,7 +147,10 @@ namespace RealtimeCSG.Helpers
                             GUIUtility.hotControl = 0;
                             evt.Use();
                             if (shutdownFunction != null)
+                            {
                                 shutdownFunction();
+                            }
+
                             EditorGUIUtility.SetWantsMouseJumping(0);
                         }
                         break;
@@ -141,7 +158,9 @@ namespace RealtimeCSG.Helpers
                 case EventType.Repaint:
                     {
                         if (capFunction == null)
+                        {
                             break;
+                        }
 
                         var originalColor = Handles.color;
                         if (id == GUIUtility.keyboardControl)
@@ -150,7 +169,9 @@ namespace RealtimeCSG.Helpers
                         }
                         else
                         if (CSGHandles.disabled)
+                        {
                             Handles.color = Color.Lerp(originalColor, Handles.secondaryColor, 0.75f);
+                        }
 
                         capFunction(id, position, rotation, handleSize, EventType.Repaint);
 

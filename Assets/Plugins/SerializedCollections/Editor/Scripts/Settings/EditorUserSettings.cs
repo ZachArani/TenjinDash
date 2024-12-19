@@ -34,7 +34,10 @@ namespace AYellowpaper.SerializedCollections.Editor
 
         private static void LoadInto(EditorUserSettings settings)
         {
-            if (!File.Exists(_filePath)) return;
+            if (!File.Exists(_filePath))
+            {
+                return;
+            }
 
             try
             {

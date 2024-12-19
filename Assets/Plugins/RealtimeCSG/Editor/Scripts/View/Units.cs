@@ -64,7 +64,10 @@ namespace RealtimeCSG
         public static DistanceUnit CycleToNextUnit(DistanceUnit unit)
         {
             if (unit < DistanceUnit.Meters)
+            {
                 return DistanceUnit.Meters;
+            }
+
             return (DistanceUnit)((int)(unit + 1) % (((int)DistanceUnit.Feet) + 1));
         }
 
@@ -75,7 +78,10 @@ namespace RealtimeCSG
         {
             string unitString = GetUnitString(unit);
             if (!String.IsNullOrEmpty(unitString))
+            {
                 unitString = " " + unitString;
+            }
+
             return string.Format(CultureInfo.InvariantCulture, "x:{0:F}{2}\ny:{1:F}{2}", UnityToPixelsUnit(value.x), UnityToPixelsUnit(value.y), unitString);
         }
 
@@ -88,7 +94,10 @@ namespace RealtimeCSG
         {
             string unitString = GetUnitString(unit);
             if (!String.IsNullOrEmpty(unitString))
+            {
                 unitString = " " + unitString;
+            }
+
             float x = (long)Math.Round((double)value.x * 16384) / 16384.0f;
             float y = (long)Math.Round((double)value.y * 16384) / 16384.0f;
             return string.Format(CultureInfo.InvariantCulture, "u:{0:F}{2}\nv:{1:F}{2}", UnityToPixelsUnit(x), UnityToPixelsUnit(y), unitString);
@@ -151,12 +160,33 @@ namespace RealtimeCSG
         {
             var builder = new StringBuilder();
             var unit_string = GetUnitString(unit);
-            if (lockX) builder.Append("x: --\n");
-            else builder.AppendFormat(CultureInfo.InvariantCulture, "x: {0} {1}\n", UnityToDistanceUnit(unit, value.x), unit_string);
-            if (lockY) builder.Append("y: --\n");
-            else builder.AppendFormat(CultureInfo.InvariantCulture, "y: {0} {1}\n", UnityToDistanceUnit(unit, value.y), unit_string);
-            if (lockZ) builder.Append("z: --");
-            else builder.AppendFormat(CultureInfo.InvariantCulture, "z: {0} {1}", UnityToDistanceUnit(unit, value.z), unit_string);
+            if (lockX)
+            {
+                builder.Append("x: --\n");
+            }
+            else
+            {
+                builder.AppendFormat(CultureInfo.InvariantCulture, "x: {0} {1}\n", UnityToDistanceUnit(unit, value.x), unit_string);
+            }
+
+            if (lockY)
+            {
+                builder.Append("y: --\n");
+            }
+            else
+            {
+                builder.AppendFormat(CultureInfo.InvariantCulture, "y: {0} {1}\n", UnityToDistanceUnit(unit, value.y), unit_string);
+            }
+
+            if (lockZ)
+            {
+                builder.Append("z: --");
+            }
+            else
+            {
+                builder.AppendFormat(CultureInfo.InvariantCulture, "z: {0} {1}", UnityToDistanceUnit(unit, value.z), unit_string);
+            }
+
             return builder.ToString();
         }
 
@@ -169,7 +199,9 @@ namespace RealtimeCSG
         public static string ToRoundedDistanceString(DistanceUnit unit, float value)
         {
             if (float.IsNaN(value))
+            {
                 return "??";
+            }
 
             return string.Format(CultureInfo.InvariantCulture, "{0:F} {1}", UnityToDistanceUnit(unit, value), GetUnitString(unit));
         }
@@ -184,12 +216,33 @@ namespace RealtimeCSG
         {
             var builder = new StringBuilder();
             var unit_string = GetUnitString(unit);
-            if (lockX) builder.Append("x: --\n");
-            else builder.AppendFormat(CultureInfo.InvariantCulture, "x: {0:F} {1}\n", UnityToDistanceUnit(unit, value.x), unit_string);
-            if (lockY) builder.Append("y: --\n");
-            else builder.AppendFormat(CultureInfo.InvariantCulture, "y: {0:F} {1}\n", UnityToDistanceUnit(unit, value.y), unit_string);
-            if (lockZ) builder.Append("z: --");
-            else builder.AppendFormat(CultureInfo.InvariantCulture, "z: {0:F} {1}", UnityToDistanceUnit(unit, value.z), unit_string);
+            if (lockX)
+            {
+                builder.Append("x: --\n");
+            }
+            else
+            {
+                builder.AppendFormat(CultureInfo.InvariantCulture, "x: {0:F} {1}\n", UnityToDistanceUnit(unit, value.x), unit_string);
+            }
+
+            if (lockY)
+            {
+                builder.Append("y: --\n");
+            }
+            else
+            {
+                builder.AppendFormat(CultureInfo.InvariantCulture, "y: {0:F} {1}\n", UnityToDistanceUnit(unit, value.y), unit_string);
+            }
+
+            if (lockZ)
+            {
+                builder.Append("z: --");
+            }
+            else
+            {
+                builder.AppendFormat(CultureInfo.InvariantCulture, "z: {0:F} {1}", UnityToDistanceUnit(unit, value.z), unit_string);
+            }
+
             return builder.ToString();
         }
 
@@ -202,12 +255,33 @@ namespace RealtimeCSG
         public static string ToRoundedScaleString(Vector3 value, bool lockX = false, bool lockY = false, bool lockZ = false)
         {
             var builder = new StringBuilder();
-            if (lockX) builder.Append("x: --\n");
-            else builder.AppendFormat(CultureInfo.InvariantCulture, "x: {0:F} %\n", value.x * 100);
-            if (lockY) builder.Append("y: --\n");
-            else builder.AppendFormat(CultureInfo.InvariantCulture, "y: {0:F} %\n", value.y * 100);
-            if (lockZ) builder.Append("z: --");
-            else builder.AppendFormat(CultureInfo.InvariantCulture, "z: {0:F} %", value.z * 100);
+            if (lockX)
+            {
+                builder.Append("x: --\n");
+            }
+            else
+            {
+                builder.AppendFormat(CultureInfo.InvariantCulture, "x: {0:F} %\n", value.x * 100);
+            }
+
+            if (lockY)
+            {
+                builder.Append("y: --\n");
+            }
+            else
+            {
+                builder.AppendFormat(CultureInfo.InvariantCulture, "y: {0:F} %\n", value.y * 100);
+            }
+
+            if (lockZ)
+            {
+                builder.Append("z: --");
+            }
+            else
+            {
+                builder.AppendFormat(CultureInfo.InvariantCulture, "z: {0:F} %", value.z * 100);
+            }
+
             return builder.ToString();
         }
 
@@ -231,7 +305,9 @@ namespace RealtimeCSG
         public static double UnityToDistanceUnit(DistanceUnit unit, float value)
         {
             if (float.IsNaN(value) || float.IsInfinity(value))
+            {
                 return (double)value;
+            }
 
             double result = (double)value;
             switch (unit)
@@ -259,7 +335,9 @@ namespace RealtimeCSG
         public static float DistanceUnitToUnity(DistanceUnit unit, double value)
         {
             if (double.IsNaN(value) || double.IsInfinity(value))
+            {
                 return (float)value;
+            }
 
             double result = (double)value;
             switch (unit)

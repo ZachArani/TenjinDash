@@ -36,7 +36,9 @@ namespace RealtimeCSG
         static void InitReflectedData()
         {
             if (initialized)
+            {
                 return;
+            }
 
             initialized = true;
             reflectionSucceeded = false;
@@ -240,7 +242,9 @@ namespace RealtimeCSG
                         {
                             var obj = m_SelectionStart_instance[j] as GameObject;
                             if (obj == null)
+                            {
                                 continue;
+                            }
 
                             if (obj.GetComponent<GeneratedMeshInstance>() != null)
                             {
@@ -251,7 +255,7 @@ namespace RealtimeCSG
                             }
                         }
 
-                        if ((Event.current.commandName == "ModifierKeysChanged" || modified))
+                        if (Event.current.commandName == "ModifierKeysChanged" || modified)
                         {
                             if (currentSelection == null || modified) { currentSelection = m_LastSelection_instance.Keys.ToArray(); }
                             var foundObjects = currentSelection;
@@ -309,7 +313,7 @@ namespace RealtimeCSG
             {
                 case EventType.MouseDown:
                     {
-                        rectClickDown = (Event.current.button == 0 && hotControl == s_RectSelectionID_instance);
+                        rectClickDown = Event.current.button == 0 && hotControl == s_RectSelectionID_instance;
                         clickMousePosition = Event.current.mousePosition;
                         mouseDragged = false;
                         break;
@@ -352,7 +356,9 @@ namespace RealtimeCSG
                                         if (!(component && component.GetComponent<GeneratedMeshes>()) &&
                                             !(gameObject && gameObject.GetComponent<GeneratedMeshes>()) &&
                                             !(transform && transform.GetComponent<Transform>()))
+                                        {
                                             foundObjects.Add(obj);
+                                        }
                                     }
                                     if (foundObjects.Count != selectedObjects.Length)
                                     {
@@ -397,7 +403,10 @@ namespace RealtimeCSG
                                     foreach (var transform in gameObject.GetComponentsInChildren<Transform>())
                                     {
                                         if ((transform.hideFlags & (HideFlags.NotEditable | HideFlags.HideInHierarchy)) == (HideFlags.NotEditable | HideFlags.HideInHierarchy))
+                                        {
                                             continue;
+                                        }
+
                                         transforms.Add(transform.gameObject);
                                     }
                                 }

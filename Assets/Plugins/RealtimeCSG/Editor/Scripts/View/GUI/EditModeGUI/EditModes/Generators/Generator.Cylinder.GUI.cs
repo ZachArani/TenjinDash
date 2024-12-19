@@ -8,9 +8,13 @@ namespace RealtimeCSG
         static bool SettingsToggle(bool value, GUIContent content, GUILayoutOption sceneWidth, bool isSceneGUI)
         {
             if (isSceneGUI)
+            {
                 return EditorGUILayout.ToggleLeft(content, value, sceneWidth);
+            }
             else
+            {
                 return EditorGUILayout.Toggle(content, value);
+            }
         }
 
         static float SettingsSlider(float value, float minValue, float maxValue, GUIContent content, bool isSceneGUI)
@@ -56,10 +60,16 @@ namespace RealtimeCSG
         static void CylinderSettingsGUI(GeneratorCylinder generator, bool isSceneGUI)
         {
             if (isSceneGUI)
+            {
                 GUILayout.BeginHorizontal(GUILayout.MinWidth(0));
+            }
+
             {
                 if (isSceneGUI)
+                {
                     GUILayout.BeginVertical(width110);
+                }
+
                 {
                     generator.CircleSmoothShading = SettingsToggle(generator.CircleSmoothShading, SmoothShadingContent, width110, isSceneGUI);
                     TooltipUtility.SetToolTip(SmoothShadingTooltip);
@@ -78,10 +88,14 @@ namespace RealtimeCSG
                     TooltipUtility.SetToolTip(FitShapeTooltip);
                 }
                 if (isSceneGUI)
+                {
                     GUILayout.EndVertical();
+                }
             }
             if (isSceneGUI)
+            {
                 GUILayout.EndHorizontal();
+            }
         }
 
         static void OnGUIContents(GeneratorCylinder generator, bool isSceneGUI)
@@ -113,7 +127,9 @@ namespace RealtimeCSG
                 EditorGUI.EndDisabledGroup();
                 */
                 if (isSceneGUI)
+                {
                     CylinderSettingsGUI(generator, isSceneGUI);
+                }
             }
             GUILayout.EndHorizontal();
 
@@ -128,21 +144,32 @@ namespace RealtimeCSG
                 {
                     GUILayout.Label(HeightContent, width65);
                     if (isSceneGUI)
+                    {
                         TooltipUtility.SetToolTip(HeightTooltip);
+                    }
+
                     var height = generator.HaveHeight ? generator.Height : GeometryUtility.CleanLength(generator.DefaultHeight);
                     EditorGUI.BeginChangeCheck();
                     {
                         if (!isSceneGUI)
+                        {
                             height = Units.DistanceUnitToUnity(distanceUnit, EditorGUILayout.DoubleField(Units.UnityToDistanceUnit(distanceUnit, height)));
+                        }
                         else
+                        {
                             height = Units.DistanceUnitToUnity(distanceUnit, EditorGUILayout.DoubleField(Units.UnityToDistanceUnit(distanceUnit, height), width65));
+                        }
                     }
                     if (EditorGUI.EndChangeCheck())
                     {
                         if (generator.HaveHeight)
+                        {
                             generator.Height = height;
+                        }
                         else
+                        {
                             generator.DefaultHeight = height;
+                        }
                     }
                     if (GUILayout.Button(unitText, EditorStyles.miniLabel, width20))
                     {
@@ -168,14 +195,21 @@ namespace RealtimeCSG
                     {
                         GUILayout.Label(RadiusContent, width65);
                         if (isSceneGUI)
+                        {
                             TooltipUtility.SetToolTip(RadiusTooltip);
+                        }
+
                         var radius = generator.RadiusA;
                         EditorGUI.BeginChangeCheck();
                         {
                             if (!isSceneGUI)
+                            {
                                 radius = Units.DistanceUnitToUnity(distanceUnit, EditorGUILayout.DoubleField(Units.UnityToDistanceUnit(distanceUnit, radius)));
+                            }
                             else
+                            {
                                 radius = Units.DistanceUnitToUnity(distanceUnit, EditorGUILayout.DoubleField(Units.UnityToDistanceUnit(distanceUnit, radius), width65));
+                            }
                         }
                         if (EditorGUI.EndChangeCheck())
                         {
@@ -194,7 +228,9 @@ namespace RealtimeCSG
                 }
                 GUILayout.EndHorizontal();
                 if (!isSceneGUI)
+                {
                     TooltipUtility.SetToolTip(RadiusTooltip);
+                }
             }
             GUILayout.EndVertical();
 

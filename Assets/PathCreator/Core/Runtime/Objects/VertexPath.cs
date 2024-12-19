@@ -96,16 +96,16 @@ namespace PathCreation
                     else
                     {
                         // First reflection
-                        Vector3 offset = (localPoints[i] - localPoints[i - 1]);
+                        Vector3 offset = localPoints[i] - localPoints[i - 1];
                         float sqrDst = offset.sqrMagnitude;
-                        Vector3 r = lastRotationAxis - offset * 2 / sqrDst * Vector3.Dot(offset, lastRotationAxis);
-                        Vector3 t = localTangents[i - 1] - offset * 2 / sqrDst * Vector3.Dot(offset, localTangents[i - 1]);
+                        Vector3 r = lastRotationAxis - (offset * 2 / sqrDst * Vector3.Dot(offset, lastRotationAxis));
+                        Vector3 t = localTangents[i - 1] - (offset * 2 / sqrDst * Vector3.Dot(offset, localTangents[i - 1]));
 
                         // Second reflection
                         Vector3 v2 = localTangents[i] - t;
                         float c2 = Vector3.Dot(v2, v2);
 
-                        Vector3 finalRot = r - v2 * 2 / c2 * Vector3.Dot(v2, r);
+                        Vector3 finalRot = r - (v2 * 2 / c2 * Vector3.Dot(v2, r));
                         Vector3 n = Vector3.Cross(finalRot, localTangents[i]).normalized;
                         localNormals[i] = n;
                         lastRotationAxis = finalRot;
@@ -113,7 +113,7 @@ namespace PathCreation
                 }
                 else
                 {
-                    localNormals[i] = Vector3.Cross(localTangents[i], up) * ((bezierPath.FlipNormals) ? 1 : -1);
+                    localNormals[i] = Vector3.Cross(localTangents[i], up) * (bezierPath.FlipNormals ? 1 : -1);
                 }
             }
 
@@ -127,10 +127,10 @@ namespace PathCreation
                 {
                     for (int i = 1; i < localNormals.Length; i++)
                     {
-                        float t = (i / (localNormals.Length - 1f));
+                        float t = i / (localNormals.Length - 1f);
                         float angle = normalsAngleErrorAcrossJoin * t;
                         Quaternion rot = Quaternion.AngleAxis(angle, localTangents[i]);
-                        localNormals[i] = rot * localNormals[i] * ((bezierPath.FlipNormals) ? -1 : 1);
+                        localNormals[i] = rot * localNormals[i] * (bezierPath.FlipNormals ? -1 : 1);
                     }
                 }
             }
@@ -140,7 +140,7 @@ namespace PathCreation
             {
                 for (int anchorIndex = 0; anchorIndex < pathSplitData.anchorVertexMap.Count - 1; anchorIndex++)
                 {
-                    int nextAnchorIndex = (isClosedLoop) ? (anchorIndex + 1) % bezierPath.NumSegments : anchorIndex + 1;
+                    int nextAnchorIndex = isClosedLoop ? (anchorIndex + 1) % bezierPath.NumSegments : anchorIndex + 1;
 
                     float startAngle = bezierPath.GetAnchorNormalAngle(anchorIndex) + bezierPath.GlobalNormalsAngle;
                     float endAngle = bezierPath.GetAnchorNormalAngle(nextAnchorIndex) + bezierPath.GlobalNormalsAngle;
@@ -158,9 +158,9 @@ namespace PathCreation
                     {
                         int vertIndex = startVertIndex + i;
                         float t = i / (num - 1f);
-                        float angle = startAngle + deltaAngle * t;
+                        float angle = startAngle + (deltaAngle * t);
                         Quaternion rot = Quaternion.AngleAxis(angle, localTangents[vertIndex]);
-                        localNormals[vertIndex] = (rot * localNormals[vertIndex]) * ((bezierPath.FlipNormals) ? -1 : 1);
+                        localNormals[vertIndex] = rot * localNormals[vertIndex] * (bezierPath.FlipNormals ? -1 : 1);
                     }
                 }
             }

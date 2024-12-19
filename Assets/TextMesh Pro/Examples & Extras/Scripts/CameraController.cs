@@ -52,12 +52,18 @@ namespace TMPro.Examples
         void Awake()
         {
             if (QualitySettings.vSyncCount > 0)
+            {
                 Application.targetFrameRate = 60;
+            }
             else
+            {
                 Application.targetFrameRate = -1;
+            }
 
             if (Application.platform == RuntimePlatform.IPhonePlayer || Application.platform == RuntimePlatform.Android)
+            {
                 Input.simulateMouseWithTouches = false;
+            }
 
             cameraTransform = transform;
             previousSmoothing = MovementSmoothing;
@@ -86,11 +92,11 @@ namespace TMPro.Examples
             {
                 if (CameraMode == CameraModes.Isometric)
                 {
-                    desiredPosition = CameraTarget.position + Quaternion.Euler(ElevationAngle, OrbitalAngle, 0f) * new Vector3(0, 0, -FollowDistance);
+                    desiredPosition = CameraTarget.position + (Quaternion.Euler(ElevationAngle, OrbitalAngle, 0f) * new Vector3(0, 0, -FollowDistance));
                 }
                 else if (CameraMode == CameraModes.Follow)
                 {
-                    desiredPosition = CameraTarget.position + CameraTarget.TransformDirection(Quaternion.Euler(ElevationAngle, OrbitalAngle, 0f) * (new Vector3(0, 0, -FollowDistance)));
+                    desiredPosition = CameraTarget.position + CameraTarget.TransformDirection(Quaternion.Euler(ElevationAngle, OrbitalAngle, 0f) * new Vector3(0, 0, -FollowDistance));
                 }
                 else
                 {
@@ -110,7 +116,9 @@ namespace TMPro.Examples
                 }
 
                 if (RotationSmoothing == true)
+                {
                     cameraTransform.rotation = Quaternion.Lerp(cameraTransform.rotation, Quaternion.LookRotation(CameraTarget.position - cameraTransform.position), RotationSmoothingValue * Time.deltaTime);
+                }
                 else
                 {
                     cameraTransform.LookAt(CameraTarget);
@@ -136,13 +144,19 @@ namespace TMPro.Examples
                 mouseWheel *= 10;
 
                 if (Input.GetKeyDown(KeyCode.I))
+                {
                     CameraMode = CameraModes.Isometric;
+                }
 
                 if (Input.GetKeyDown(KeyCode.F))
+                {
                     CameraMode = CameraModes.Follow;
+                }
 
                 if (Input.GetKeyDown(KeyCode.S))
+                {
                     MovementSmoothing = !MovementSmoothing;
+                }
 
 
                 // Check for right mouse button to change camera follow and elevation angle
@@ -162,9 +176,14 @@ namespace TMPro.Examples
                     {
                         OrbitalAngle += mouseX * MoveSensitivity;
                         if (OrbitalAngle > 360)
+                        {
                             OrbitalAngle -= 360;
+                        }
+
                         if (OrbitalAngle < 0)
+                        {
                             OrbitalAngle += 360;
+                        }
                     }
                 }
 
@@ -187,9 +206,14 @@ namespace TMPro.Examples
                     {
                         OrbitalAngle += deltaPosition.x * 0.1f;
                         if (OrbitalAngle > 360)
+                        {
                             OrbitalAngle -= 360;
+                        }
+
                         if (OrbitalAngle < 0)
+                        {
                             OrbitalAngle += 360;
+                        }
                     }
 
                 }
@@ -200,7 +224,7 @@ namespace TMPro.Examples
                     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                     RaycastHit hit;
 
-                    if (Physics.Raycast(ray, out hit, 300, 1 << 10 | 1 << 11 | 1 << 12 | 1 << 14))
+                    if (Physics.Raycast(ray, out hit, 300, (1 << 10) | (1 << 11) | (1 << 12) | (1 << 14)))
                     {
                         if (hit.transform == CameraTarget)
                         {

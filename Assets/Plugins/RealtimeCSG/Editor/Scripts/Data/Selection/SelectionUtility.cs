@@ -28,7 +28,9 @@ namespace RealtimeCSG
                 {
                     var flags = lastUsedModelInstance.gameObject.hideFlags;
                     if ((flags & (HideFlags.HideInHierarchy | HideFlags.NotEditable | HideFlags.DontSaveInBuild)) == 0)
+                    {
                         returnModel = lastUsedModelInstance;
+                    }
                 }
                 if (returnModel != null &&
                     returnModel.gameObject.activeInHierarchy)
@@ -55,12 +57,16 @@ namespace RealtimeCSG
             set
             {
                 if (!value)
+                {
                     return;
+                }
 
                 var flags = value.gameObject.hideFlags;
                 if ((flags & (HideFlags.HideInHierarchy | HideFlags.NotEditable | HideFlags.DontSaveInBuild)) != 0 &&
                     value.gameObject.activeInHierarchy)
+                {
                     return;
+                }
 
                 // don't want new stuff to be added to a prefab instance
                 if (CSGPrefabUtility.IsPrefabAssetOrInstance(value.gameObject))
@@ -80,7 +86,9 @@ namespace RealtimeCSG
                 var lastModel = SelectionUtility.LastUsedModel;
                 if (lastModel == null ||
                     CSGPrefabUtility.IsPrefabAsset(lastModel.gameObject))
+                {
                     return null;
+                }
 
                 return lastModel.transform;
             }
@@ -91,13 +99,22 @@ namespace RealtimeCSG
             {
                 var node = iterator.GetComponent<CSGNode>();
                 if (node != null)
+                {
                     hoverParent = node.transform;
+                }
+
                 iterator = iterator.transform.parent;
             }
             if (!hoverParent)
+            {
                 return null;
+            }
+
             if (CSGPrefabUtility.GetCorrespondingObjectFromSource(hoverParent.gameObject) != null)
+            {
                 return null;
+            }
+
             return hoverParent;
         }
 
@@ -139,7 +156,9 @@ namespace RealtimeCSG
                         normal.y = 0;
                         normal.Normalize();
                         if (normal.sqrMagnitude == 0)
+                        {
                             normal = GeometryUtility.SnapToClosestAxis(sceneView.camera ? sceneView.camera.transform.forward : MathConstants.forwardVector3);
+                        }
 
                         var tangent = MathConstants.upVector3; // assume up is up in the world
                         var absX = Mathf.Abs(normal.x);
@@ -193,12 +212,16 @@ namespace RealtimeCSG
         {
             if (gameObjects == null ||
                 gameObjects.Count == 0)
+            {
                 return;
+            }
 
             for (var i = gameObjects.Count - 1; i >= 0; i--)
             {
                 if (gameObjects[i])
+                {
                     gameObjects[i].SetActive(false);
+                }
             }
 
             InternalCSGModelManager.CheckTransformChanged();
@@ -210,12 +233,16 @@ namespace RealtimeCSG
         {
             if (gameObjects == null ||
                 gameObjects.Count == 0)
+            {
                 return;
+            }
 
             for (var i = gameObjects.Count - 1; i >= 0; i--)
             {
                 if (gameObjects[i])
+                {
                     gameObjects[i].SetActive(true);
+                }
             }
 
             InternalCSGModelManager.CheckTransformChanged();
@@ -235,16 +262,31 @@ namespace RealtimeCSG
 
         public static SelectionType GetEventSelectionType()
         {
-            if (shiftPressed && actionKeyPressed) return SelectionType.Subtractive;
-            if (actionKeyPressed) return SelectionType.Toggle;
-            if (shiftPressed) return SelectionType.Additive;
+            if (shiftPressed && actionKeyPressed)
+            {
+                return SelectionType.Subtractive;
+            }
+
+            if (actionKeyPressed)
+            {
+                return SelectionType.Toggle;
+            }
+
+            if (shiftPressed)
+            {
+                return SelectionType.Additive;
+            }
+
             return SelectionType.Replace;
         }
 
         public static void DeselectAll()
         {
             if (EditModeManager.DeselectAll())
+            {
                 return;
+            }
+
             DeselectAllBrushes();
         }
 
@@ -268,12 +310,16 @@ namespace RealtimeCSG
             if (haveVisibleSelection)
             {
                 for (int i = 0; i < selected.Length; i++)
+                {
                     selected[i].SetActive(false);
+                }
             }
             else
             {
                 for (int i = 0; i < selected.Length; i++)
+                {
                     selected[i].SetActive(true);
+                }
             }
 
             Undo.CollapseUndoOperations(undo_group_index);
@@ -287,7 +333,9 @@ namespace RealtimeCSG
             var selected = Selection.gameObjects.ToArray();
             Undo.RecordObjects(selected, "Hiding Objects");
             for (int i = 0; i < selected.Length; i++)
+            {
                 selected[i].SetActive(false);
+            }
 
             Undo.CollapseUndoOperations(undo_group_index);
         }
@@ -309,7 +357,9 @@ namespace RealtimeCSG
                         var transform = children[c];
                         var gameObject = transform.gameObject;
                         if (gameObject.activeInHierarchy || (gameObject.hideFlags != HideFlags.None))
+                        {
                             continue;
+                        }
 
                         Undo.RecordObject(gameObject, "Un-hiding Object");
                         gameObject.SetActive(true);
@@ -332,14 +382,20 @@ namespace RealtimeCSG
             {
                 var model = models[i];
                 if (!ModelTraits.IsModelSelectable(model))
+                {
                     continue;
+                }
 
                 if (!model.generatedMeshes)
+                {
                     continue;
+                }
 
                 var meshContainerChildren = model.generatedMeshes.GetComponentsInChildren<Transform>();
                 foreach (var child in meshContainerChildren)
+                {
                     selected.Add(child.gameObject);
+                }
             }
 
             for (int i = 0; i < selected.Count; i++) // we keep adding parents, and their parents until we hit the root-objects
@@ -348,7 +404,10 @@ namespace RealtimeCSG
                 var transform = selected[i].transform;
                 var parent = transform.parent;
                 if (parent == null)
+                {
                     continue;
+                }
+
                 selected.Add(parent.gameObject);
             }
 
@@ -364,10 +423,14 @@ namespace RealtimeCSG
                         var transform = children[c];
                         var gameObject = transform.gameObject;
                         if (!gameObject.activeInHierarchy || (gameObject.hideFlags != HideFlags.None))
+                        {
                             continue;
+                        }
 
                         if (selectedIDs.Contains(gameObject.GetInstanceID()))
+                        {
                             continue;
+                        }
 
                         Undo.RecordObject(gameObject, "Hiding Object");
                         gameObject.SetActive(false);
@@ -406,9 +469,13 @@ namespace RealtimeCSG
                     }
 
                     if (selectedObjectsOnClick.Count == 0)
+                    {
                         Selection.activeTransform = null;
+                    }
                     else
+                    {
                         Selection.instanceIDs = selectedObjectsOnClick.ToArray();
+                    }
                 }
             }
             else
@@ -446,7 +513,10 @@ namespace RealtimeCSG
                     var brush = item as CSGBrush;
                     if (brush.ChildData == null ||
                         !ModelTraits.IsModelEditable(brush.ChildData.Model))
+                    {
                         continue;
+                    }
+
                     SelectionUtility.LastUsedModel = brush.ChildData.Model;
                     break;
                 }
@@ -459,7 +529,10 @@ namespace RealtimeCSG
                 {
                     if (brush.ChildData == null ||
                         !ModelTraits.IsModelEditable(brush.ChildData.Model))
+                    {
                         return;
+                    }
+
                     SelectionUtility.LastUsedModel = brush.ChildData.Model;
                 }
             }
@@ -472,12 +545,16 @@ namespace RealtimeCSG
         {
             var gameObjects = Selection.gameObjects;
             if (gameObjects == null)
+            {
                 return false;
+            }
 
             foreach (var gameObject in gameObjects)
             {
                 if (gameObject.GetComponentInChildren<CSGNode>())
+                {
                     return true;
+                }
             }
             return false;
         }

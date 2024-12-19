@@ -16,7 +16,10 @@ namespace AYellowpaper.SerializedCollections
             get
             {
                 if (_lookupTable == null)
+                {
                     _lookupTable = new DictionaryLookupTable<TKey, TValue>(this);
+                }
+
                 return _lookupTable;
             }
         }
@@ -30,7 +33,9 @@ namespace AYellowpaper.SerializedCollections
         {
 #if UNITY_EDITOR
             foreach (var kvp in serializedDictionary._serializedList)
+            {
                 _serializedList.Add(new SerializedKeyValuePair<TKey, TValue>(kvp.Key, kvp.Value));
+            }
 #endif
         }
 
@@ -63,7 +68,9 @@ namespace AYellowpaper.SerializedCollections
         private void SyncDictionaryToBackingField_Editor()
         {
             foreach (var kvp in this)
+            {
                 _serializedList.Add(new SerializedKeyValuePair<TKey, TValue>(kvp.Key, kvp.Value));
+            }
         }
 
 #if UNITY_EDITOR
@@ -78,14 +85,19 @@ namespace AYellowpaper.SerializedCollections
                 {
                     var kvp = _serializedList[i];
                     if (!SerializedCollectionsUtility.KeysAreEqual(key, kvp.Key))
+                    {
                         continue;
+                    }
+
                     anyEntryWasFound = true;
                     kvp.Value = value;
                     _serializedList[i] = kvp;
                 }
 
                 if (!anyEntryWasFound)
+                {
                     _serializedList.Add(new SerializedKeyValuePair<TKey, TValue>(key, value));
+                }
             }
         }
 
@@ -130,7 +142,10 @@ namespace AYellowpaper.SerializedCollections
         public void AddConflictAllowed(TKey key, TValue value)
         {
             if (!ContainsKey(key))
+            {
                 base.Add(key, value);
+            }
+
             _serializedList.Add(new SerializedKeyValuePair<TKey, TValue>(key, value));
         }
 #endif
@@ -143,7 +158,9 @@ namespace AYellowpaper.SerializedCollections
             {
 #if UNITY_EDITOR
                 if (SerializedCollectionsUtility.IsValidKey(kvp.Key) && !ContainsKey(kvp.Key))
+                {
                     base.Add(kvp.Key, kvp.Value);
+                }
 #else
                     Add(kvp.Key, kvp.Value);
 #endif
@@ -160,11 +177,15 @@ namespace AYellowpaper.SerializedCollections
         {
 #if UNITY_EDITOR
             if (UnityEditor.BuildPipeline.isBuildingPlayer)
+            {
                 LookupTable.RemoveDuplicates();
+            }
 
             // TODO: is there a better way to check if the dictionary was deserialized with reflection?
             if (_serializedList.Count == 0 && Count > 0)
+            {
                 SyncDictionaryToBackingField_Editor();
+            }
 #else
             _serializedList.Clear();
             foreach (var kvp in this)

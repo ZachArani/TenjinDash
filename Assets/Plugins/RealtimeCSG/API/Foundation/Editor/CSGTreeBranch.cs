@@ -25,10 +25,17 @@ namespace RealtimeCSG.Foundation
         {
             int branchNodeID;
             if (!GenerateBranch(userID, out branchNodeID))
+            {
                 return new CSGTreeBranch() { branchNodeID = 0 };
+            }
+
             if (children != null && children.Length > 0)
             {
-                if (operation != CSGOperationType.Additive) SetBranchOperationType(userID, operation);
+                if (operation != CSGOperationType.Additive)
+                {
+                    SetBranchOperationType(userID, operation);
+                }
+
                 if (!CSGTreeNode.SetChildNodes(branchNodeID, children))
                 {
                     CSGTreeNode.DestroyNode(branchNodeID);
@@ -46,7 +53,10 @@ namespace RealtimeCSG.Foundation
         {
             int branchNodeID;
             if (!GenerateBranch(userID, out branchNodeID))
+            {
                 return new CSGTreeBranch() { branchNodeID = 0 };
+            }
+
             if (children != null && children.Length > 0)
             {
                 if (!CSGTreeNode.SetChildNodes(branchNodeID, children))
@@ -117,7 +127,7 @@ namespace RealtimeCSG.Foundation
         /// <summary>Adds the <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>s of the specified array to the end of the  <see cref="RealtimeCSG.Foundation.CSGTreeBranch"/>.</summary>
         /// <param name="array">The array whose <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>s should be added to the end of the <see cref="RealtimeCSG.Foundation.CSGTreeBranch"/>. The array itself cannot be null.</param>
         /// <returns><b>true</b> on success, <b>false</b> on failure</returns>
-        public bool AddRange(CSGTreeNode[] array) { if (array == null) throw new ArgumentNullException("array"); return CSGTreeNode.InsertChildNodeRange(branchNodeID, Count, array); }
+        public bool AddRange(CSGTreeNode[] array) { if (array == null) { throw new ArgumentNullException("array"); } return CSGTreeNode.InsertChildNodeRange(branchNodeID, Count, array); }
 
         /// <summary>Inserts an element into the <see cref="RealtimeCSG.Foundation.CSGTreeNode"/> at the specified index.</summary>
         /// <param name="index">The zero-based index at which <paramref name="item"/> should be inserted.</param>
@@ -129,7 +139,7 @@ namespace RealtimeCSG.Foundation
         /// <param name="index">The zero-based index at which the new <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>s should be inserted.</param>
         /// <param name="array">The array whose <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>s should be inserted into the <see cref="RealtimeCSG.Foundation.CSGTreeNode"/>. The array itself cannot be null.</param>
         /// <returns><b>true</b> on success, <b>false</b> on failure</returns>
-        public bool InsertRange(int index, CSGTreeNode[] array) { if (array == null) throw new ArgumentNullException("array"); return CSGTreeNode.InsertChildNodeRange(branchNodeID, index, array); }
+        public bool InsertRange(int index, CSGTreeNode[] array) { if (array == null) { throw new ArgumentNullException("array"); } return CSGTreeNode.InsertChildNodeRange(branchNodeID, index, array); }
 
 
         /// <summary>Removes a specific <see cref="RealtimeCSG.Foundation.CSGTreeNode"/> from the <see cref="RealtimeCSG.Foundation.CSGTreeBranch"/>.</summary>

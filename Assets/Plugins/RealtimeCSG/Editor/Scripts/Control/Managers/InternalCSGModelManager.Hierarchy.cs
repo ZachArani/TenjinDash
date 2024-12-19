@@ -25,11 +25,16 @@ namespace RealtimeCSG
             {
                 var model = childNode.Model;
                 if (System.Object.Equals(model, null) || !model || model.modelNodeID == CSGNode.InvalidNodeID || !model.transform)
+                {
                     return null;
+                }
+
                 return model.parentData;
             }
             if (parent.operationNodeID == CSGNode.InvalidNodeID)
+            {
                 return null;
+            }
 
             return parent.ParentData;
         }
@@ -114,10 +119,15 @@ namespace RealtimeCSG
             for (int i = 0; i < Operations.Count; i++)
             {
                 var operation = Operations[i];
-                if (!Operations[i]) continue;
+                if (!Operations[i])
+                {
+                    continue;
+                }
 
                 if ((int)operation.PrevOperation == (int)operation.OperationType)
+                {
                     continue;
+                }
 
                 operation.PrevOperation = operation.OperationType;
                 External.SetOperationOperationType(operation.operationNodeID,
@@ -127,21 +137,31 @@ namespace RealtimeCSG
             for (int i = 0; i < Models.Length; i++)
             {
                 var model = Models[i];
-                if (!model || !model.gameObject.activeInHierarchy) continue;
+                if (!model || !model.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
 
-                if (!model.cachedTransform) model.cachedTransform = model.transform;
+                if (!model.cachedTransform)
+                {
+                    model.cachedTransform = model.transform;
+                }
             }
 
             for (int brushIndex = 0; brushIndex < Brushes.Count; brushIndex++)
             {
                 var brush = Brushes[brushIndex];
                 if (System.Object.ReferenceEquals(brush, null) || !brush)
+                {
                     continue;
+                }
 
                 var brushNodeID = brush.brushNodeID;
                 // make sure it's registered, otherwise ignore it
                 if (brushNodeID == CSGNode.InvalidNodeID)
+                {
                     continue;
+                }
 
                 var brushTransform = brush.hierarchyItem.Transform;
                 var currentLocalToWorldMatrix = brushTransform.localToWorldMatrix;
@@ -170,7 +190,9 @@ namespace RealtimeCSG
                     External.SetBrushToModelSpace(brushNodeID, localToModelMatrix);
 
                     if (brush.ControlMesh != null)
+                    {
                         brush.ControlMesh.Generation = brush.controlMeshGeneration + 1;
+                    }
                 }
 
                 if (brush.OperationType != brush.prevOperation)
@@ -185,7 +207,9 @@ namespace RealtimeCSG
                 {
                     brush.ControlMesh = ControlMeshUtility.EnsureValidControlMesh(brush);
                     if (brush.ControlMesh == null)
+                    {
                         continue;
+                    }
 
                     brush.controlMeshGeneration = brush.ControlMesh.Generation;
                     ControlMeshUtility.RebuildShape(brush);
@@ -207,7 +231,9 @@ namespace RealtimeCSG
         {
             var iterator = childTransform.parent;
             if (!iterator)
+            {
                 return null;
+            }
 
             var currentNodeObj = iterator.GetComponent(TypeConstants.CSGNodeType);
             if (currentNodeObj)
@@ -215,14 +241,16 @@ namespace RealtimeCSG
                 var brush = currentNodeObj as CSGBrush;
                 if (brush)
                 {
-                    return ((!brush.ChildData.Parent) ? ((!brush.ChildData.Model) ? null : brush.ChildData.Model.transform) : brush.ChildData.Parent.transform);
+                    return (!brush.ChildData.Parent) ? ((!brush.ChildData.Model) ? null : brush.ChildData.Model.transform) : brush.ChildData.Parent.transform;
                 }
             }
             while (iterator)
             {
                 currentNodeObj = iterator.GetComponent(TypeConstants.CSGNodeType);
                 if (currentNodeObj)
+                {
                     return iterator;
+                }
 
                 iterator = iterator.parent;
             }
@@ -239,15 +267,21 @@ namespace RealtimeCSG
             {
                 var model = currentNodeObj as CSGModel;
                 if (model)
+                {
                     return null;
+                }
 
                 var brush = currentNodeObj as CSGBrush;
                 if (brush)
+                {
                     return (brush.ChildData.Model == null) ? null : brush.ChildData.Model.transform;
+                }
 
                 var operation = currentNodeObj as CSGOperation;
                 if (operation && !operation.PassThrough)
+                {
                     return (operation.ChildData.Model == null) ? null : operation.ChildData.Model.transform;
+                }
             }
 
             var iterator = childTransform.parent;
@@ -255,7 +289,9 @@ namespace RealtimeCSG
             {
                 var currentModelObj = iterator.GetComponent(TypeConstants.CSGModelType);
                 if (currentModelObj)
+                {
                     return currentModelObj.transform;
+                }
 
                 iterator = iterator.parent;
             }
@@ -346,7 +382,10 @@ namespace RealtimeCSG
             parentOp = null;
             parentModel = null;
             if (!opTransform)
+            {
                 return;
+            }
+
             var iterator = opTransform.parent;
             while (iterator)
             {
@@ -425,7 +464,9 @@ namespace RealtimeCSG
                     if (childData.Parent)
                     {
                         if (childData.Parent.ChildData != null)
+                        {
                             childData.Model = childData.Parent.ChildData.Model;
+                        }
                     }
                 }
 
@@ -467,7 +508,9 @@ namespace RealtimeCSG
                         // assume it'll still get initialized at some point, in which
                         // case we shouldn't update it's hierarchy here
                         if (!op.IsRegistered)
+                        {
                             continue;
+                        }
 
                         if (op.ChildData != null)
                         {
@@ -487,7 +530,9 @@ namespace RealtimeCSG
                         // assume it'll still get initialized at some point, in which
                         // case we shouldn't update it's hierarchy here
                         if (!brush.IsRegistered)
+                        {
                             continue;
+                        }
 
                         if (brush.ChildData != null)
                         {
@@ -513,7 +558,9 @@ namespace RealtimeCSG
                 return;
             }
             if (model == null)
+            {
                 return;
+            }
 
             for (int i = 0; i < container.childCount; i++)
             {
@@ -529,7 +576,9 @@ namespace RealtimeCSG
                         // assume it'll still get initialized at some point, in which
                         // case we shouldn't update it's hierarchy here
                         if (!op.IsRegistered)
+                        {
                             continue;
+                        }
 
                         if (op.ChildData.Model != model)
                         {
@@ -554,7 +603,9 @@ namespace RealtimeCSG
                         // assume it'll still get initialized at some point, in which
                         // case we shouldn't update it's hierarchy here
                         if (!brush.IsRegistered)
+                        {
                             continue;
+                        }
 
                         if (brush.ChildData.Model != model)
                         {
@@ -603,8 +654,16 @@ namespace RealtimeCSG
             var newParentData = GetParentData(childData);
             if (oldParentData != newParentData)
             {
-                if (oldParentData != null) oldParentData.RemoveNode(hierarchyItem);
-                if (newParentData != null) newParentData.AddNode(hierarchyItem);
+                if (oldParentData != null)
+                {
+                    oldParentData.RemoveNode(hierarchyItem);
+                }
+
+                if (newParentData != null)
+                {
+                    newParentData.AddNode(hierarchyItem);
+                }
+
                 childData.OwnerParentData = newParentData;
                 childData.ModelTransform = (!childData.Model) ? null : childData.Model.transform;
             }
@@ -652,7 +711,9 @@ namespace RealtimeCSG
 
             if (op.ChildData.Parent == parentOp &&
                 op.ChildData.Model == parentModel)
+            {
                 return;
+            }
 
             SetCSGOperationHierarchy(op, parentOp, parentModel);
         }
@@ -676,18 +737,24 @@ namespace RealtimeCSG
         static void CheckSiblingPosition(CSGBrush brush)
         {
             if (!brush || !brush.gameObject.activeInHierarchy)
+            {
                 return;
+            }
 
             // NOTE: returns default model when it can't find parent model
             CSGModel parentModel;
             CSGOperation parentOp;
             FindParentOperationAndModel(brush.transform, out parentOp, out parentModel);
             if (!parentOp)
+            {
                 return;
+            }
 
             if (brush.ChildData.Parent != parentOp ||
                 brush.ChildData.Model != parentModel)
+            {
                 return;
+            }
 
             ParentNodeDataExtensions.UpdateNodePosition(brush.hierarchyItem, parentOp.ParentData);
         }
@@ -704,7 +771,10 @@ namespace RealtimeCSG
             if (!brush || !brush.gameObject.activeInHierarchy)
             {
                 if (!brush && brush.IsRegistered)
+                {
                     OnDestroyed(brush);
+                }
+
                 return;
             }
 
@@ -750,7 +820,7 @@ namespace RealtimeCSG
                 return;
             }
 
-            HierarchyItem.CurrentLoopCount = (HierarchyItem.CurrentLoopCount + 1);
+            HierarchyItem.CurrentLoopCount = HierarchyItem.CurrentLoopCount + 1;
 
             UpdateRegistration();
 
@@ -759,7 +829,10 @@ namespace RealtimeCSG
             {
                 foreach (var item in OperationTransformChanged)
                 {
-                    if (item) CheckOperationHierarchy(item);
+                    if (item)
+                    {
+                        CheckOperationHierarchy(item);
+                    }
                 }
                 OperationTransformChanged.Clear();
             }
@@ -770,7 +843,9 @@ namespace RealtimeCSG
                 foreach (var item in BrushTransformChanged)
                 {
                     if (!item)
+                    {
                         continue;
+                    }
 
                     CheckBrushHierarchy(item);
                     ValidateBrush(item); // to detect material changes when moving between models
@@ -799,7 +874,9 @@ namespace RealtimeCSG
             {
                 var item = Brushes[i];
                 if (item && item.brushNodeID != CSGNode.InvalidNodeID)
+                {
                     continue;
+                }
 
                 UnregisterBrush(item);
             }
@@ -814,7 +891,9 @@ namespace RealtimeCSG
                 }
 
                 if (!item.ParentData.Transform)
+                {
                     item.ParentData.Init(item, item.operationNodeID);
+                }
             }
 
             for (var i = Models.Length - 1; i >= 0; i--)
@@ -827,7 +906,9 @@ namespace RealtimeCSG
                 }
 
                 if (!item.parentData.Transform)
+                {
                     item.parentData.Init(item, item.modelNodeID);
+                }
             }
 
             startTime = EditorApplication.timeSinceStartup;
@@ -835,11 +916,15 @@ namespace RealtimeCSG
             {
                 var item = Operations[i];
                 if (!item || item.operationNodeID == CSGNode.InvalidNodeID)
+                {
                     continue;
+                }
 
                 var parentData = item.ChildData.OwnerParentData;
                 if (parentData == null)
+                {
                     continue;
+                }
 
                 ParentNodeDataExtensions.UpdateNodePosition(item.ParentData, parentData);
             }
@@ -848,11 +933,15 @@ namespace RealtimeCSG
             {
                 var item = Brushes[i];
                 if (!item || item.brushNodeID == CSGNode.InvalidNodeID)
+                {
                     continue;
+                }
 
                 var parentData = item.ChildData.OwnerParentData;
                 if (parentData == null)
+                {
                     continue;
+                }
 
                 ParentNodeDataExtensions.UpdateNodePosition(item.hierarchyItem, parentData);
             }
@@ -863,10 +952,14 @@ namespace RealtimeCSG
                 {
                     var item = Operations[i];
                     if (!item || item.operationNodeID == CSGNode.InvalidNodeID)
+                    {
                         continue;
+                    }
 
                     if (!item.ParentData.ChildrenModified)
+                    {
                         continue;
+                    }
 
                     var childList = UpdateChildList(item.ParentData);
 
@@ -878,10 +971,14 @@ namespace RealtimeCSG
                 {
                     var item = Models[i];
                     if (!item || item.modelNodeID == CSGNode.InvalidNodeID)
+                    {
                         continue;
+                    }
 
                     if (!item.parentData.ChildrenModified)
+                    {
                         continue;
+                    }
 
                     var childList = UpdateChildList(item.parentData);
 

@@ -36,15 +36,21 @@ namespace RealtimeCSG.Foundation
                 brushMesh.vertices == null ||
                 brushMesh.halfEdges == null ||
                 brushMesh.polygons == null)
+            {
                 return 0;
+            }
 
             var edgeCount = brushMesh.halfEdges.Length;
             if (edgeCount < 12)
+            {
                 return 0;
+            }
 
             var polygonCount = brushMesh.polygons.Length;
             if (polygonCount <= 4)
+            {
                 return 0;
+            }
 
             var vertexCount = brushMesh.vertices.Length;
             var result = CreateBrushMesh(userID,
@@ -52,7 +58,10 @@ namespace RealtimeCSG.Foundation
                                          edgeCount, brushMesh.halfEdges,
                                          polygonCount, brushMesh.polygons);
             if (result <= 0)
+            {
                 result = 0;
+            }
+
             return result;
         }
 
@@ -70,8 +79,15 @@ namespace RealtimeCSG.Foundation
                                             Int32 halfEdgeCount, BrushMesh.HalfEdge[] halfEdges,
                                             Int32 polygonCount, BrushMesh.Polygon[] polygons)
         {
-            if (vertices == null || halfEdges == null || polygons == null) return false;
-            if (vertexCount < 0 || halfEdgeCount < 0 || polygonCount < 0) return false;
+            if (vertices == null || halfEdges == null || polygons == null)
+            {
+                return false;
+            }
+
+            if (vertexCount < 0 || halfEdgeCount < 0 || polygonCount < 0)
+            {
+                return false;
+            }
 
             var verticesHandle = GCHandle.Alloc(vertices, GCHandleType.Pinned);
             var halfEdgesHandle = GCHandle.Alloc(halfEdges, GCHandleType.Pinned);
@@ -93,15 +109,21 @@ namespace RealtimeCSG.Foundation
                 brushMesh.vertices == null ||
                 brushMesh.halfEdges == null ||
                 brushMesh.polygons == null)
+            {
                 return false;
+            }
 
             var edgeCount = brushMesh.halfEdges.Length;
             if (edgeCount < 12)
+            {
                 return false;
+            }
 
             var polygonCount = brushMesh.polygons.Length;
             if (polygonCount < 5)
+            {
                 return false;
+            }
 
             var vertexCount = brushMesh.vertices.Length;
             var result = UpdateBrushMesh(brushMeshIndex,

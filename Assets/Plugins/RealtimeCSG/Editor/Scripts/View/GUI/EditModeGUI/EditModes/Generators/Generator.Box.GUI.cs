@@ -25,9 +25,13 @@ namespace RealtimeCSG
                         if (EditorGUI.EndChangeCheck())
                         {
                             if (generator.HaveHeight)
+                            {
                                 generator.Height = height;
+                            }
                             else
+                            {
                                 generator.DefaultHeight = height;
+                            }
                         }
                         if (GUILayout.Button(unitText, EditorStyles.miniLabel, Width25))
                         {
@@ -124,7 +128,9 @@ namespace RealtimeCSG
 					EditorGUI.EndDisabledGroup();
 					*/
                 if (isSceneGUI)
+                {
                     BoxSettingsGUI(generator, isSceneGUI: true);
+                }
             }
             GUILayout.EndHorizontal();
 

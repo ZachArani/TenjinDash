@@ -33,9 +33,14 @@ namespace RealtimeCSG.Helpers
                             s_CurrentMousePosition = s_StartMousePosition = evt.mousePosition;
                             s_StartPosition = position;
                             if (snapVertices != null)
+                            {
                                 s_SnapVertices = snapVertices;
+                            }
                             else
+                            {
                                 s_SnapVertices = new Vector3[] { s_StartPosition };
+                            }
+
                             evt.Use();
                             EditorGUIUtility.SetWantsMouseJumping(1);
                         }
@@ -51,9 +56,14 @@ namespace RealtimeCSG.Helpers
                             position = Handles.inverseMatrix.MultiplyPoint(camera.ScreenToWorldPoint(screenPos));
 
                             if (snapping)
+                            {
                                 position = RealtimeCSG.CSGGrid.SnapDeltaToGrid(camera, position - s_StartPosition, s_SnapVertices, snapToGridPlane: false, snapToSelf: true) + s_StartPosition;
+                            }
                             else
+                            {
                                 position = RealtimeCSG.CSGGrid.HandleLockedAxi(position - s_StartPosition) + s_StartPosition;
+                            }
+
                             GUI.changed = true;
                             evt.Use();
                         }
@@ -83,7 +93,10 @@ namespace RealtimeCSG.Helpers
                         Handles.matrix = origMatrix;
 
                         if (id == GUIUtility.keyboardControl)
+                        {
                             Handles.color = temp;
+                        }
+
                         break;
                     }
             }

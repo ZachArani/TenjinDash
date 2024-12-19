@@ -55,8 +55,8 @@ namespace RealtimeCSG.Legacy
                                       (castShadows ? LayerUsageFlags.CastShadows : LayerUsageFlags.None) |
                                       (collidable ? LayerUsageFlags.Collidable : LayerUsageFlags.None);
 
-            layers.layerParameter1 = (texGen.RenderMaterial) ? texGen.RenderMaterial.GetInstanceID() : 0;
-            layers.layerParameter2 = (texGen.PhysicsMaterial) ? texGen.PhysicsMaterial.GetInstanceID() : 0;
+            layers.layerParameter1 = texGen.RenderMaterial ? texGen.RenderMaterial.GetInstanceID() : 0;
+            layers.layerParameter2 = texGen.PhysicsMaterial ? texGen.PhysicsMaterial.GetInstanceID() : 0;
             layers.layerParameter3 = 0;
 
             return layers;
@@ -74,7 +74,10 @@ namespace RealtimeCSG.Legacy
             Shape shape;
             Vector3 halfSize = size * 0.5f;
             if (!CreateCubeControlMesh(out controlMesh, out shape, halfSize, -halfSize, material))
+            {
                 return null;
+            }
+
             return GenerateFromControlMesh(controlMesh, shape);
         }
     }

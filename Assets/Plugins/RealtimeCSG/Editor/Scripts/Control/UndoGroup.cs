@@ -17,14 +17,18 @@ namespace RealtimeCSG
         public UndoGroup(SelectedBrushSurface[] selectedBrushSurfaces, string name, bool ignoreGroup = false)
         {
             if (selectedBrushSurfaces == null)
+            {
                 return;
+            }
 
             uniqueBrushes.Clear();
             uniqueModels.Clear();
             for (int i = 0; i < selectedBrushSurfaces.Length; i++)
             {
                 if (!selectedBrushSurfaces[i].brush)
+                {
                     continue;
+                }
 
                 var brush = selectedBrushSurfaces[i].brush;
                 //				var surface_index = selectedBrushSurfaces[i].surfaceIndex;
@@ -48,7 +52,10 @@ namespace RealtimeCSG
                 for (int i = 0; i < _brushes.Length; i++)
                 {
                     if (!_brushes[i])
+                    {
                         continue;
+                    }
+
                     UnityEditor.EditorUtility.SetDirty(_brushes[i]);
                 }
             }
@@ -62,21 +69,29 @@ namespace RealtimeCSG
                 if (disposing)
                 {
                     if (_brushes == null)
+                    {
                         return;
+                    }
 
                     if (_brushes.Length > 0)
                     {
                         for (int i = 0; i < _brushes.Length; i++)
                         {
                             if (!_brushes[i])
+                            {
                                 continue;
+                            }
+
                             _brushes[i].EnsureInitialized();
                             ShapeUtility.CheckMaterials(_brushes[i].Shape);
                         }
                         for (int i = 0; i < _brushes.Length; i++)
                         {
                             if (!_brushes[i])
+                            {
                                 continue;
+                            }
+
                             InternalCSGModelManager.CheckSurfaceModifications(_brushes[i], true);
                         }
                         if (_undoGroupIndex != -1)

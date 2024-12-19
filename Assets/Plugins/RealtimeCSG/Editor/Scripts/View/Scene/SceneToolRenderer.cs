@@ -21,16 +21,22 @@ namespace RealtimeCSG
         internal static void OnPaint(SceneView sceneView)
         {
             if (!sceneView)
+            {
                 return;
+            }
 
             var camera = sceneView.camera;
             SceneDragToolManager.OnPaint(camera);
 
             if (Event.current.type != EventType.Repaint)
+            {
                 return;
+            }
 
             if (RealtimeCSG.CSGSettings.GridVisible)
+            {
                 RealtimeCSG.CSGGrid.RenderGrid(camera);
+            }
 
             if (RealtimeCSG.CSGSettings.IsWireframeShown(sceneView))
             {
@@ -43,10 +49,14 @@ namespace RealtimeCSG
                     {
                         var brush = InternalCSGModelManager.Brushes[i];
                         if (!brush)
+                        {
                             continue;
+                        }
 
                         if (!brush.outlineColor.HasValue)
+                        {
                             brush.outlineColor = ColorSettings.GetBrushOutlineColor(brush);
+                        }
 
                         var brush_transformation = brush.compareTransformation.localToWorldMatrix;
                         CSGRenderer.DrawSimpleOutlines(lineMeshManager, brush.brushNodeID, brush_transformation, brush.outlineColor.Value);

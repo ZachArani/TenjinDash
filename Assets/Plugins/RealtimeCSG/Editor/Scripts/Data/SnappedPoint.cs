@@ -27,7 +27,10 @@ namespace RealtimeCSG
         public static Vector3 FreeMoveHandle(Camera camera, int id, Vector3 position, Quaternion rotation, float size, DrawCapFunction capFunc = null)
         {
             if (capFunc == null)
+            {
                 capFunc = PaintUtility.SquareDotCap;
+            }
+
             Vector3 worldPosition = Handles.matrix.MultiplyPoint(position);
             Matrix4x4 origMatrix = Handles.matrix;
 
@@ -66,11 +69,15 @@ namespace RealtimeCSG
                         if (GUIUtility.hotControl == id)
                         {
                             if (snapFunction == null)
+                            {
                                 break;
+                            }
 
                             position = snapFunction(startMousePosition, Event.current.mousePosition);
                             if (camera != null && camera.orthographic)
+                            {
                                 position = movePlane.Project(position);
+                            }
 
                             GUI.changed = true;
                             Event.current.Use();
@@ -94,16 +101,23 @@ namespace RealtimeCSG
                         bool isSelected = (id == GUIUtility.keyboardControl) || (id == GUIUtility.hotControl);
                         Color temp = Handles.color;
                         if (isSelected)
+                        {
                             Handles.color = Handles.selectedColor; // Why U not work?
+                        }
                         else
+                        {
                             Handles.color = Color.gray;
+                        }
 
                         Handles.matrix = MathConstants.identityMatrix;
                         capFunc(id, worldPosition, camera.transform.rotation, size);
                         Handles.matrix = origMatrix;
 
                         if (isSelected)
+                        {
                             Handles.color = temp;
+                        }
+
                         break;
                     }
             }

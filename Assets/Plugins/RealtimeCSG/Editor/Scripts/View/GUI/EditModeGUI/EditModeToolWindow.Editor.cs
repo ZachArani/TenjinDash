@@ -10,7 +10,10 @@ public class EditModeToolWindowEditor : Editor
     public override void OnInspectorGUI()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)
+        {
             return;
+        }
+
         RealtimeCSG.EditModeSelectionGUI.OnInspectorGUI(this, this.targets);
     }
 }

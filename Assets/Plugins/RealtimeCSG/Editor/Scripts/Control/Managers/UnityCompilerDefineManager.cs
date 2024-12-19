@@ -14,7 +14,7 @@ namespace RealtimeCSG
             var fi = value.GetType().GetField(value.ToString());
             var attributes = (ObsoleteAttribute[])
                 fi.GetCustomAttributes(typeof(ObsoleteAttribute), false);
-            return (attributes != null && attributes.Length > 0);
+            return attributes != null && attributes.Length > 0;
         }
 
         public static void UpdateUnityDefines()
@@ -42,17 +42,24 @@ namespace RealtimeCSG
             foreach (var targetGroup in targetGroups)
             {
                 if (IsObsolete(targetGroup))
+                {
                     continue;
+                }
+
                 if (targetGroup == BuildTargetGroup.Unknown
 #if UNITY_5_6_OR_NEWER
                     || targetGroup == (BuildTargetGroup)27
 #endif
                     )
+                {
                     continue;
+                }
 
                 var symbol_string = PlayerSettings.GetScriptingDefineSymbolsForGroup(targetGroup);
                 if (symbol_string == null)
+                {
                     continue;
+                }
 
                 bool modified = false;
                 var symbols = symbol_string.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
@@ -76,7 +83,10 @@ namespace RealtimeCSG
                             }
                         }
                         if (keepSymbol)
+                        {
                             continue;
+                        }
+
                         modified = true;
                         ArrayUtility.RemoveAt(ref symbols, i);
                     }
@@ -92,19 +102,26 @@ namespace RealtimeCSG
                 }
 
                 if (!modified)
+                {
                     continue;
+                }
 
                 var stringBuilder = new System.Text.StringBuilder();
                 for (int i = 0; i < symbols.Length; i++)
                 {
                     if (stringBuilder.Length != 0)
+                    {
                         stringBuilder.Append(';');
+                    }
+
                     stringBuilder.Append(symbols[i]);
                 }
 
                 var newSymbolString = stringBuilder.ToString();
                 if (newSymbolString != symbol_string)
+                {
                     PlayerSettings.SetScriptingDefineSymbolsForGroup(targetGroup, newSymbolString);
+                }
             }
         }
     }

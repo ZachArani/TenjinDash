@@ -49,7 +49,9 @@ namespace RealtimeCSG
 
             var rcsgSkin = CSG_GUIStyleUtility.Skin;
             if (rcsgSkin == null)
+            {
                 return operation;
+            }
 
             var oldColor = GUI.color;
             GUI.color = Color.white;
@@ -73,7 +75,10 @@ namespace RealtimeCSG
                         style = CSG_GUIStyleUtility.selectedIconLabelStyle;
                     }
                     if (content == null || style == null)
+                    {
                         continue;
+                    }
+
                     if (GUILayout.Button(content, style))
                     {
                         operation = (Foundation.CSGOperationType)i;
@@ -94,12 +99,16 @@ namespace RealtimeCSG
         static void CalcSize(ref Rect[] rects, out Rect bounds, out int xCount, GUIContent[] contents, float yOffset, float areaWidth = -1)
         {
             if (areaWidth <= 0)
+            {
                 areaWidth = EditorGUIUtility.currentViewWidth;
+            }
 
             var position = new Rect();
             if (rects == null ||
                 rects.Length != contents.Length)
+            {
                 rects = new Rect[contents.Length];
+            }
 
             {
                 var skin = GUI.skin;
@@ -110,7 +119,9 @@ namespace RealtimeCSG
                 {
                     var width = buttonSkin.CalcSize(contents[i]).x;
                     if (width > textWidth)
+                    {
                         textWidth = width;
+                    }
                 }
 
                 var margin = buttonSkin.margin;
@@ -118,13 +129,14 @@ namespace RealtimeCSG
                 var paddingWidth = padding.left + padding.right;
                 var minButtonWidth = textWidth + paddingWidth + margin.horizontal;
                 var screenWidth = areaWidth - margin.horizontal;
-                var countValue = Mathf.Clamp((screenWidth / minButtonWidth), 1, contents.Length);
+                var countValue = Mathf.Clamp(screenWidth / minButtonWidth, 1, contents.Length);
                 xCount = Mathf.FloorToInt(countValue);
 
                 var realButtonWidth = (float)(screenWidth / xCount);
                 if (xCount == contents.Length)
-                    realButtonWidth = (screenWidth / countValue);
-
+                {
+                    realButtonWidth = screenWidth / countValue;
+                }
 
                 position.x = 0;
                 position.y = yOffset;
@@ -150,19 +162,23 @@ namespace RealtimeCSG
 
                         count++;
                         if (count >= contents.Length)
+                        {
                             break;
+                        }
                     }
                     position.y += 16;
                 }
 
-                bounds.height = (position.y - yOffset);
+                bounds.height = position.y - yOffset;
             }
         }
 
         public static int ToolbarWrapped(int selected, ref Rect[] rects, out Rect bounds, GUIContent[] contents, ToolTip[] tooltips = null, float yOffset = 0, float areaWidth = -1)
         {
             if (areaWidth <= 0)
+            {
                 areaWidth = EditorGUIUtility.currentViewWidth;
+            }
 
             int xCount;
             CalcSize(ref rects, out bounds, out xCount, contents, yOffset, areaWidth);
@@ -191,10 +207,15 @@ namespace RealtimeCSG
                     }
 
                     if (tooltips != null)
+                    {
                         TooltipUtility.SetToolTip(tooltips[count], rects[count]);
+                    }
+
                     count++;
                     if (count >= contents.Length)
+                    {
                         break;
+                    }
                 }
             }
 
@@ -221,11 +242,16 @@ namespace RealtimeCSG
                 {
                     var dragMaterial = obj as Material;
                     if (dragMaterial == null)
+                    {
                         continue;
+                    }
+
                     dragMaterials.Add(dragMaterial);
                 }
                 if (dragMaterials.Count == 1)
+                {
                     return dragMaterials[0];
+                }
             }
             return null;
         }
@@ -424,7 +450,10 @@ namespace RealtimeCSG
             Vector3 realValue = value;
             multiLine = multiLine || (allWidth >= areaWidth);
             if (multiLine)
+            {
                 GUILayout.BeginVertical();
+            }
+
             var originalLabelWidth = EditorGUIUtility.labelWidth;
             EditorGUIUtility.labelWidth = vectorLabelWidth;
             GUILayout.BeginHorizontal();
@@ -439,7 +468,10 @@ namespace RealtimeCSG
                     modified = true;
                 }
                 if (multiLine)
+                {
                     clickedUnitButton = GUILayout.Button(unitText, EditorStyles.miniLabel, Width22) || clickedUnitButton;
+                }
+
                 if (multiLine)
                 {
                     GUILayout.EndHorizontal();
@@ -455,7 +487,10 @@ namespace RealtimeCSG
                     modified = true;
                 }
                 if (multiLine)
+                {
                     clickedUnitButton = GUILayout.Button(unitText, EditorStyles.miniLabel, Width22) || clickedUnitButton;
+                }
+
                 if (multiLine)
                 {
                     GUILayout.EndHorizontal();
@@ -475,7 +510,10 @@ namespace RealtimeCSG
             GUILayout.EndHorizontal();
             EditorGUIUtility.labelWidth = originalLabelWidth;
             if (multiLine)
+            {
                 GUILayout.EndVertical();
+            }
+
             if (clickedUnitButton)
             {
                 distanceUnit = nextUnit;

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.UI
 {
@@ -87,7 +86,7 @@ namespace Assets.Scripts.UI
         /// <param name="toggle"></param>
         public void ToggleSpeedMeters(bool toggle)
         {
-            foreach(Transform t in speedMeters.transform)
+            foreach (Transform t in speedMeters.transform)
             {
                 t.GetChild(0).GetComponent<SpeedMeter>().enabled = toggle;
             }

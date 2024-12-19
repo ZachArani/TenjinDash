@@ -127,37 +127,55 @@ namespace RealtimeCSG.Legacy
             if (other.Vertices != null)
             {
                 if (Vertices == null || Vertices.Length != other.Vertices.Length)
+                {
                     Vertices = new Vector3[other.Vertices.Length];
+                }
+
                 Array.Copy(other.Vertices, Vertices, other.Vertices.Length);
             }
             else
+            {
                 Vertices = null;
+            }
 
             if (other.Edges != null)
             {
                 if (Edges == null || Edges.Length != other.Edges.Length)
+                {
                     Edges = new HalfEdge[other.Edges.Length];
+                }
+
                 Array.Copy(other.Edges, Edges, other.Edges.Length);
             }
             else
+            {
                 Edges = null;
+            }
 
             if (other.Polygons != null)
             {
                 if (Polygons == null || Polygons.Length != other.Polygons.Length)
+                {
                     Polygons = new Polygon[other.Polygons.Length];
+                }
+
                 for (var p = 0; p < other.Polygons.Length; p++)
                 {
                     if (other.Polygons[p].EdgeIndices == null ||
                         other.Polygons[p].EdgeIndices.Length == 0)
+                    {
                         continue;
+                    }
+
                     var newEdges = new int[other.Polygons[p].EdgeIndices.Length];
                     Array.Copy(other.Polygons[p].EdgeIndices, newEdges, other.Polygons[p].EdgeIndices.Length);
                     Polygons[p] = new Polygon(newEdges, other.Polygons[p].TexGenIndex);
                 }
             }
             else
+            {
                 Polygons = null;
+            }
 
             valid = other.valid;
             Generation = other.Generation;
@@ -173,10 +191,16 @@ namespace RealtimeCSG.Legacy
         public Vector3 GetVertex(int halfEdgeIndex)
         {
             if (halfEdgeIndex < 0 || halfEdgeIndex >= Edges.Length)
+            {
                 return MathConstants.zeroVector3;
+            }
+
             var vertexIndex = Edges[halfEdgeIndex].VertexIndex;
             if (vertexIndex < 0 || vertexIndex >= Vertices.Length)
+            {
                 return MathConstants.zeroVector3;
+            }
+
             return Vertices[vertexIndex];
         }
 
@@ -273,13 +297,17 @@ namespace RealtimeCSG.Legacy
             var edge = Edges[halfEdgeIndex];
             var polygonIndex = edge.PolygonIndex;
             if (polygonIndex < 0 || polygonIndex >= Polygons.Length)
+            {
                 return -1;
+            }
 
             var edgeIndices = Polygons[polygonIndex].EdgeIndices;
             for (int i = 1; i < edgeIndices.Length; i++)
             {
                 if (edgeIndices[i] == halfEdgeIndex)
+                {
                     return edgeIndices[i - 1];
+                }
             }
             return edgeIndices[edgeIndices.Length - 1];
         }
@@ -292,13 +320,17 @@ namespace RealtimeCSG.Legacy
             var edge = Edges[halfEdgeIndex];
             var polygonIndex = edge.PolygonIndex;
             if (polygonIndex < 0 || polygonIndex >= Polygons.Length)
+            {
                 return -1;
+            }
 
             var edgeIndices = Polygons[polygonIndex].EdgeIndices;
             for (int i = 0; i < edgeIndices.Length - 1; i++)
             {
                 if (edgeIndices[i] == halfEdgeIndex)
+                {
                     return edgeIndices[i + 1];
+                }
             }
             return edgeIndices[0];
         }

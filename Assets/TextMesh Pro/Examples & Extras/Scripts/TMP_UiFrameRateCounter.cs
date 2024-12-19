@@ -25,7 +25,9 @@ namespace TMPro.Examples
         void Awake()
         {
             if (!enabled)
+            {
                 return;
+            }
 
             Application.targetFrameRate = 1000;
 
@@ -58,7 +60,9 @@ namespace TMPro.Examples
         void Update()
         {
             if (AnchorPosition != last_AnchorPosition)
+            {
                 Set_FrameCounter_Position(AnchorPosition);
+            }
 
             last_AnchorPosition = AnchorPosition;
 
@@ -72,11 +76,17 @@ namespace TMPro.Examples
                 float ms = 1000.0f / Mathf.Max(fps, 0.00001f);
 
                 if (fps < 30)
+                {
                     htmlColorTag = "<color=yellow>";
+                }
                 else if (fps < 10)
+                {
                     htmlColorTag = "<color=red>";
+                }
                 else
+                {
                     htmlColorTag = "<color=green>";
+                }
 
                 m_TextMeshPro.SetText(htmlColorTag + fpsLabel, fps, ms);
 

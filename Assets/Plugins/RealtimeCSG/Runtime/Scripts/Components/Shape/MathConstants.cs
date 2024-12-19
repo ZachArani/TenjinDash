@@ -8,9 +8,9 @@ namespace InternalRealtimeCSG
         public const float AngleEpsilon = 0.05f;
         public const float DistanceEpsilon = 0.00015f;
         public const float EqualityEpsilon = 0.0001f;
-        public const float EqualityEpsilonSqr = (EqualityEpsilon * EqualityEpsilon);// + (0*0) + (0*0)
+        public const float EqualityEpsilonSqr = EqualityEpsilon * EqualityEpsilon;// + (0*0) + (0*0)
         public const float ConvexTestEpsilon = 0.000000001f;
-        public const float ConvexTestEpsilonSqr3 = (ConvexTestEpsilon * ConvexTestEpsilon);// + (0*0) + (0*0)
+        public const float ConvexTestEpsilonSqr3 = ConvexTestEpsilon * ConvexTestEpsilon;// + (0*0) + (0*0)
         public const float AlignmentTestEpsilon = 0.000001f;
         public const float AABBTestEpsilon = 0.000002f;
         public const float NormalEpsilon = 0.0001f;

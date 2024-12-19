@@ -45,13 +45,18 @@ namespace RealtimeCSG
         internal static void OnPaint(Camera camera)
         {
             if (currentDragTool != null)
+            {
                 currentDragTool.OnPaint(camera);
+            }
         }
 
         static void ValidateDrop(SceneView sceneView, Transform transformInInspector)
         {
             if (currentDragTool != null)
+            {
                 currentDragTool.Reset();
+            }
+
             currentDragTool = null;
             currentDragToolActive = false;
             currentTransformInInspector = transformInInspector;

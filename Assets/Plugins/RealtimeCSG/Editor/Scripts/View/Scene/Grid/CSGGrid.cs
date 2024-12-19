@@ -36,7 +36,9 @@ namespace RealtimeCSG
                 {
                     var shader = Shader.Find("Hidden/CSG/internal/Grid");
                     if (shader == null)
+                    {
                         return null;
+                    }
 
                     gridSizeID = Shader.PropertyToID("_GridSize");      // _GridSize("Grid Size", Float) = 1
                     gridSpacingID = Shader.PropertyToID("_GridSpacing");    // _GridSpacing("Grid Spacing", Float) = (1.0, 1.0, 1.0)
@@ -88,7 +90,9 @@ namespace RealtimeCSG
         static void DrawGrid(Camera camera, Vector3 cameraPosition, Vector3 gridCenter, Quaternion gridRotation, GridAxis axis, float alpha, GridMode gridMode)
         {
             if (alpha <= 0.03f)
+            {
                 return;
+            }
 
             // find the nearest point on the plane
             var normal = gridRotation * MathConstants.upVector3;
@@ -124,13 +128,15 @@ namespace RealtimeCSG
 
             const float minPixelSize = 64.0f;
 
-            float gridLevelPow = (minPixelSize / screenPixelSize);
+            float gridLevelPow = minPixelSize / screenPixelSize;
 
             var gridMaterial = GridMaterial;
             var gridMesh = GridMesh;
 
             if (!gridMaterial || !gridMesh)
+            {
                 return;
+            }
 
             gridMaterial.SetFloat(gridSizeID, Mathf.Max(0, gridLevelPow));
             gridMaterial.SetVector(gridSpacingID, RealtimeCSG.CSGSettings.SnapVector);
@@ -165,7 +171,10 @@ namespace RealtimeCSG
             set
             {
                 if (forcedGridCenter == value)
+                {
                     return;
+                }
+
                 forcedGridCenter = value;
             }
         }
@@ -180,7 +189,10 @@ namespace RealtimeCSG
             set
             {
                 if (forcedGridRotation == value)
+                {
                     return;
+                }
+
                 forcedGridRotation = value;
             }
         }
@@ -230,19 +242,25 @@ namespace RealtimeCSG
             if (gridOrientation.gridOrtho)
             {
                 if (gridOrientation.gridOrthoXVisible)
+                {
                     DrawGrid(gridOrientation.gridCamera, gridOrientation.gridCameraPosition,
                              gridOrientation.gridCenter, gridOrientation.gridOrthoXRotation,
                              GridAxis.AxisYZ, gridOrientation.gridOrthoXAlpha, GridMode.Ortho);
+                }
 
                 if (gridOrientation.gridOrthoYVisible)
+                {
                     DrawGrid(gridOrientation.gridCamera, gridOrientation.gridCameraPosition,
                              gridOrientation.gridCenter, gridOrientation.gridOrthoYRotation,
                              GridAxis.AxisXZ, gridOrientation.gridOrthoYAlpha, GridMode.Ortho);
+                }
 
                 if (gridOrientation.gridOrthoZVisible)
+                {
                     DrawGrid(gridOrientation.gridCamera, gridOrientation.gridCameraPosition,
                              gridOrientation.gridCenter, gridOrientation.gridOrthoZRotation,
                              GridAxis.AxisXY, gridOrientation.gridOrthoZAlpha, GridMode.Ortho);
+                }
             }
             else
             {//*
@@ -262,16 +280,20 @@ namespace RealtimeCSG
                              GridAxis.AxisXZ, 0.125f, GridMode.Regular);
                 }
                 else//*/
+                {
                     DrawGrid(gridOrientation.gridCamera, gridOrientation.gridCameraPosition,
                              gridOrientation.gridCenter, gridOrientation.gridRotation,
                              GridAxis.AxisXZ, 1.0f, GridMode.Regular);
+                }
             }
         }
 
         public static void RenderGrid(Camera camera)
         {
             if (Event.current.type != EventType.Repaint)
+            {
                 return;
+            }
 
             OnRender(camera);
         }
@@ -279,7 +301,9 @@ namespace RealtimeCSG
         public static void UpdateGridOrientation(Camera camera)
         {
             if (camera == null)
+            {
                 return;
+            }
 
             var camera_position = camera.cameraToWorldMatrix.MultiplyPoint(MathConstants.zeroVector3);
             var camera_forward = camera.cameraToWorldMatrix.MultiplyVector(MathConstants.forwardVector3);
@@ -355,13 +379,25 @@ namespace RealtimeCSG
 
                 if (dots.y > dots.z)
                 {
-                    if (dots.y > dots.x) gridOrientation.gridWorkRotation = gridOrientation.gridOrthoYRotation;
-                    else gridOrientation.gridWorkRotation = gridOrientation.gridOrthoXRotation;
+                    if (dots.y > dots.x)
+                    {
+                        gridOrientation.gridWorkRotation = gridOrientation.gridOrthoYRotation;
+                    }
+                    else
+                    {
+                        gridOrientation.gridWorkRotation = gridOrientation.gridOrthoXRotation;
+                    }
                 }
                 else
                 {
-                    if (dots.z > dots.x) gridOrientation.gridWorkRotation = gridOrientation.gridOrthoZRotation;
-                    else gridOrientation.gridWorkRotation = gridOrientation.gridOrthoXRotation;
+                    if (dots.z > dots.x)
+                    {
+                        gridOrientation.gridWorkRotation = gridOrientation.gridOrthoZRotation;
+                    }
+                    else
+                    {
+                        gridOrientation.gridWorkRotation = gridOrientation.gridOrthoXRotation;
+                    }
                 }
                 gridOrientation.gridPlane = new CSGPlane(gridOrientation.gridWorkRotation, gridOrientation.gridWorkCenter);
             }
@@ -380,7 +416,7 @@ namespace RealtimeCSG
             // find point on the plane that is nearest to camera
             var normal = gridOrientation.gridWorkRotation * MathConstants.upVector3;
             var d = Vector3.Dot(normal, gridOrientation.gridCenter);
-            var position = (new CSGPlane(normal, d)).Project(gridOrientation.gridCameraPosition);
+            var position = new CSGPlane(normal, d).Project(gridOrientation.gridCameraPosition);
             gridOrientation.gridCameraSnapped = position;
 
             gridOrientation.gridWorkPlane = new CSGPlane(normal, position);
@@ -416,7 +452,7 @@ namespace RealtimeCSG
         public static CSGPlane PlaneToGridSpace(CSGPlane p) { return new CSGPlane(VectorToGridSpace(p.normal), PointToGridSpace(p.pointOnPlane)); }
 
         public static Vector3 PointFromGridSpace(Vector3 pos) { return (gridOrientation.gridWorkRotation * pos) + gridOrientation.gridWorkCenter; }
-        public static Vector3 VectorFromGridSpace(Vector3 pos) { return (gridOrientation.gridWorkRotation * pos); }
+        public static Vector3 VectorFromGridSpace(Vector3 pos) { return gridOrientation.gridWorkRotation * pos; }
         public static CSGPlane PlaneFromGridSpace(CSGPlane p) { return new CSGPlane(VectorFromGridSpace(p.normal), PointFromGridSpace(p.pointOnPlane)); }
 
         static Vector3 DeltaSnapRoundPosition(Vector3 currentPosition, Vector3 snapVector)
@@ -428,9 +464,9 @@ namespace RealtimeCSG
             var snapY = (double)snapVector.y;
             var snapZ = (double)snapVector.z;
 
-            var snappedX = (Math.Round(posX / snapX) * snapX);
-            var snappedY = (Math.Round(posY / snapY) * snapY);
-            var snappedZ = (Math.Round(posZ / snapZ) * snapZ);
+            var snappedX = Math.Round(posX / snapX) * snapX;
+            var snappedY = Math.Round(posY / snapY) * snapY;
+            var snappedZ = Math.Round(posZ / snapZ) * snapZ;
 
             currentPosition.x = (float)(snappedX - posX);
             currentPosition.y = (float)(snappedY - posY);
@@ -460,9 +496,9 @@ namespace RealtimeCSG
 
         static Vector3 SnapCeilPosition(Vector3 currentPosition, Vector3 snapVector)
         {
-            currentPosition.x = Mathf.FloorToInt(currentPosition.x / snapVector.x + 1) * snapVector.x;
-            currentPosition.y = Mathf.FloorToInt(currentPosition.y / snapVector.y + 1) * snapVector.y;
-            currentPosition.z = Mathf.FloorToInt(currentPosition.z / snapVector.z + 1) * snapVector.z;
+            currentPosition.x = Mathf.FloorToInt((currentPosition.x / snapVector.x) + 1) * snapVector.x;
+            currentPosition.y = Mathf.FloorToInt((currentPosition.y / snapVector.y) + 1) * snapVector.y;
+            currentPosition.z = Mathf.FloorToInt((currentPosition.z / snapVector.z) + 1) * snapVector.z;
             return currentPosition;
         }
 
@@ -472,7 +508,9 @@ namespace RealtimeCSG
 
             UpdateGridOrientation(camera);
             if (gridOrientation == null)
+            {
                 return lines;
+            }
 
             var snapVector = gridOrientation.gridSnapVector;
 
@@ -523,7 +561,10 @@ namespace RealtimeCSG
         public static Vector3 HandleLockedAxi(Vector3 worldDeltaMovement)
         {
             if (gridOrientation == null)
+            {
                 return worldDeltaMovement;
+            }
+
             var snapScale = gridOrientation.gridSnapScale;
             var gridLocalDeltaMovement = VectorToGridSpace(worldDeltaMovement);
             gridLocalDeltaMovement.x *= snapScale.x;
@@ -536,8 +577,9 @@ namespace RealtimeCSG
         {
             UpdateGridOrientation(camera);
             if (gridOrientation == null || localPoints == null || localPoints.Length == 0)
+            {
                 return Vector3.zero;
-
+            }
 
             var worldToGridLocal = Matrix4x4.TRS(-gridOrientation.gridWorkCenter, Quaternion.identity, Vector3.one) * ToGridSpaceMatrix();
             var gridLocalToWorld = FromGridSpaceMatrix() * Matrix4x4.TRS(gridOrientation.gridWorkCenter, Quaternion.identity, Vector3.one);
@@ -554,7 +596,10 @@ namespace RealtimeCSG
                     Vector3 localPoint = pointLocalToGridLocal.MultiplyPoint(localPoints[i]);
                     if (float.IsNaN(localPoint.x) || float.IsNaN(localPoint.y) || float.IsNaN(localPoint.z) ||
                         float.IsInfinity(localPoint.x) || float.IsInfinity(localPoint.y) || float.IsInfinity(localPoint.z))
+                    {
                         continue;
+                    }
+
                     bounds.Extend(localPoint);
                 }
                 gridLocalPoints = bounds.GetCorners();
@@ -564,9 +609,13 @@ namespace RealtimeCSG
                 var localGridSpacePoint = pointLocalToGridLocal.MultiplyPoint(localPoints[0]);
                 if (float.IsNaN(localGridSpacePoint.x) || float.IsNaN(localGridSpacePoint.y) || float.IsNaN(localGridSpacePoint.z) ||
                     float.IsInfinity(localGridSpacePoint.x) || float.IsInfinity(localGridSpacePoint.y) || float.IsInfinity(localGridSpacePoint.z))
+                {
                     gridLocalPoints = new Vector3[0] { };
+                }
                 else
+                {
                     gridLocalPoints = new Vector3[] { localGridSpacePoint };
+                }
             }
 
             var snappedDeltaMovement = Vector3.zero;
@@ -575,9 +624,20 @@ namespace RealtimeCSG
             {
                 var foundDeltaMovement = DeltaSnapRoundPosition(gridLocalPoints[i], snapVector);
 
-                if (i == 0 || Math.Abs(foundDeltaMovement.x) < Mathf.Abs(snappedDeltaMovement.x)) snappedDeltaMovement.x = foundDeltaMovement.x;
-                if (i == 0 || Math.Abs(foundDeltaMovement.y) < Mathf.Abs(snappedDeltaMovement.y)) snappedDeltaMovement.y = foundDeltaMovement.y;
-                if (i == 0 || Math.Abs(foundDeltaMovement.z) < Mathf.Abs(snappedDeltaMovement.z)) snappedDeltaMovement.z = foundDeltaMovement.z;
+                if (i == 0 || Math.Abs(foundDeltaMovement.x) < Mathf.Abs(snappedDeltaMovement.x))
+                {
+                    snappedDeltaMovement.x = foundDeltaMovement.x;
+                }
+
+                if (i == 0 || Math.Abs(foundDeltaMovement.y) < Mathf.Abs(snappedDeltaMovement.y))
+                {
+                    snappedDeltaMovement.y = foundDeltaMovement.y;
+                }
+
+                if (i == 0 || Math.Abs(foundDeltaMovement.z) < Mathf.Abs(snappedDeltaMovement.z))
+                {
+                    snappedDeltaMovement.z = foundDeltaMovement.z;
+                }
             }
 
             var scaleVector = gridOrientation.gridSnapScale;
@@ -593,7 +653,9 @@ namespace RealtimeCSG
         {
             UpdateGridOrientation(camera);
             if (gridOrientation == null || worldPoints == null || worldPoints.Length == 0)
+            {
                 return worldDeltaMovement;
+            }
 
             var worldPlane = gridOrientation.gridWorkPlane;
             var scaleVector = gridOrientation.gridSnapScale;
@@ -610,9 +672,20 @@ namespace RealtimeCSG
             }
             var snappedDeltaMovement = gridLocalDeltaMovement;
 
-            if (Mathf.Abs(scaleVector.x) < MathConstants.EqualityEpsilon) snappedDeltaMovement.x = 0;
-            if (Mathf.Abs(scaleVector.y) < MathConstants.EqualityEpsilon) snappedDeltaMovement.y = 0;
-            if (Mathf.Abs(scaleVector.z) < MathConstants.EqualityEpsilon) snappedDeltaMovement.z = 0;
+            if (Mathf.Abs(scaleVector.x) < MathConstants.EqualityEpsilon)
+            {
+                snappedDeltaMovement.x = 0;
+            }
+
+            if (Mathf.Abs(scaleVector.y) < MathConstants.EqualityEpsilon)
+            {
+                snappedDeltaMovement.y = 0;
+            }
+
+            if (Mathf.Abs(scaleVector.z) < MathConstants.EqualityEpsilon)
+            {
+                snappedDeltaMovement.z = 0;
+            }
 
             Vector3[] gridLocalPoints;
             if (worldPoints.Length > 1)
@@ -623,10 +696,16 @@ namespace RealtimeCSG
                 {
                     Vector3 localPoint = PointToGridSpace(worldPoints[i]);
                     if (snapToGridPlane)
+                    {
                         localPoint = GeometryUtility.ProjectPointOnPlane(gridLocalPlane, localPoint);
+                    }
+
                     if (float.IsNaN(localPoint.x) || float.IsNaN(localPoint.y) || float.IsNaN(localPoint.z) ||
                         float.IsInfinity(localPoint.x) || float.IsInfinity(localPoint.y) || float.IsInfinity(localPoint.z))
+                    {
                         continue;
+                    }
+
                     bounds.Extend(localPoint);
                 }
                 gridLocalPoints = bounds.GetCorners();
@@ -636,13 +715,19 @@ namespace RealtimeCSG
                 var localGridSpacePoint = PointToGridSpace(worldPoints[0]);
                 Vector3 projectedPoint = localGridSpacePoint;
                 if (snapToGridPlane)
+                {
                     projectedPoint = GeometryUtility.ProjectPointOnPlane(gridLocalPlane, localGridSpacePoint);
+                }
 
                 if (float.IsNaN(projectedPoint.x) || float.IsNaN(projectedPoint.y) || float.IsNaN(projectedPoint.z) ||
                     float.IsInfinity(projectedPoint.x) || float.IsInfinity(projectedPoint.y) || float.IsInfinity(projectedPoint.z))
+                {
                     gridLocalPoints = new Vector3[0] { };
+                }
                 else
+                {
                     gridLocalPoints = new Vector3[] { projectedPoint };
+                }
             }
 
             for (int i = 0; i < gridLocalPoints.Length; i++)
@@ -650,32 +735,60 @@ namespace RealtimeCSG
                 var oldPoint = gridLocalPoints[i];
                 var newPoint = gridLocalPoints[i] + gridLocalDeltaMovement;
                 if (snapToGridPlane)
+                {
                     newPoint = GeometryUtility.ProjectPointOnPlane(gridLocalPlane, newPoint);
+                }
+
                 newPoint = GridUtility.CleanPosition(newPoint);
 
                 var snappedNewPoint = SnapRoundPosition(newPoint, snapVector);
 
                 if (snapToGridPlane)
+                {
                     snappedNewPoint = GeometryUtility.ProjectPointOnPlane(gridLocalPlane, snappedNewPoint);
+                }
+
                 snappedNewPoint = GridUtility.CleanPosition(snappedNewPoint);
 
-                var foundDeltaMovement = (snappedNewPoint - oldPoint);
+                var foundDeltaMovement = snappedNewPoint - oldPoint;
 
                 foundDeltaMovement.x *= scaleVector.x;
                 foundDeltaMovement.y *= scaleVector.y;
                 foundDeltaMovement.z *= scaleVector.z;
 
-                if (i == 0 || Math.Abs(foundDeltaMovement.x) < Mathf.Abs(snappedDeltaMovement.x)) snappedDeltaMovement.x = foundDeltaMovement.x;
-                if (i == 0 || Math.Abs(foundDeltaMovement.y) < Mathf.Abs(snappedDeltaMovement.y)) snappedDeltaMovement.y = foundDeltaMovement.y;
-                if (i == 0 || Math.Abs(foundDeltaMovement.z) < Mathf.Abs(snappedDeltaMovement.z)) snappedDeltaMovement.z = foundDeltaMovement.z;
+                if (i == 0 || Math.Abs(foundDeltaMovement.x) < Mathf.Abs(snappedDeltaMovement.x))
+                {
+                    snappedDeltaMovement.x = foundDeltaMovement.x;
+                }
+
+                if (i == 0 || Math.Abs(foundDeltaMovement.y) < Mathf.Abs(snappedDeltaMovement.y))
+                {
+                    snappedDeltaMovement.y = foundDeltaMovement.y;
+                }
+
+                if (i == 0 || Math.Abs(foundDeltaMovement.z) < Mathf.Abs(snappedDeltaMovement.z))
+                {
+                    snappedDeltaMovement.z = foundDeltaMovement.z;
+                }
             }
 
             if (snapToSelf)
             {
-                var snapDelta = (snappedDeltaMovement - gridLocalDeltaMovement);
-                if (Mathf.Abs(snapDelta.x) > Mathf.Abs(gridLocalDeltaMovement.x)) snappedDeltaMovement.x = 0;
-                if (Mathf.Abs(snapDelta.y) > Mathf.Abs(gridLocalDeltaMovement.y)) snappedDeltaMovement.y = 0;
-                if (Mathf.Abs(snapDelta.z) > Mathf.Abs(gridLocalDeltaMovement.z)) snappedDeltaMovement.z = 0;
+                var snapDelta = snappedDeltaMovement - gridLocalDeltaMovement;
+                if (Mathf.Abs(snapDelta.x) > Mathf.Abs(gridLocalDeltaMovement.x))
+                {
+                    snappedDeltaMovement.x = 0;
+                }
+
+                if (Mathf.Abs(snapDelta.y) > Mathf.Abs(gridLocalDeltaMovement.y))
+                {
+                    snappedDeltaMovement.y = 0;
+                }
+
+                if (Mathf.Abs(snapDelta.z) > Mathf.Abs(gridLocalDeltaMovement.z))
+                {
+                    snappedDeltaMovement.z = 0;
+                }
             }
 
             worldDeltaMovement = VectorFromGridSpace(snappedDeltaMovement);
@@ -687,7 +800,9 @@ namespace RealtimeCSG
         {
             UpdateGridOrientation(camera);
             if (gridOrientation == null)
+            {
                 return worldDeltaMovement;
+            }
 
             var worldPlane = gridOrientation.gridWorkPlane;
             var scaleVector = gridOrientation.gridSnapScale;
@@ -705,13 +820,19 @@ namespace RealtimeCSG
             var snappedDeltaMovement = gridLocalDeltaMovement;
 
             if (snapToGridPlane)
+            {
                 snappedDeltaMovement = GeometryUtility.ProjectPointOnPlane(gridLocalPlane, snappedDeltaMovement);
+            }
+
             snappedDeltaMovement = GridUtility.CleanPosition(snappedDeltaMovement);
 
             snappedDeltaMovement = SnapRoundPosition(snappedDeltaMovement, snapVector);
 
             if (snapToGridPlane)
+            {
                 snappedDeltaMovement = GeometryUtility.ProjectPointOnPlane(gridLocalPlane, snappedDeltaMovement);
+            }
+
             snappedDeltaMovement = GridUtility.CleanPosition(snappedDeltaMovement);
 
 
@@ -737,7 +858,9 @@ namespace RealtimeCSG
         {
             UpdateGridOrientation(camera);
             if (gridOrientation == null || worldPoints == null || worldPoints.Length == 0)
+            {
                 return worldDeltaMovement;
+            }
 
             var snapVector = gridOrientation.gridSnapVector;
             var scaleVector = gridOrientation.gridSnapScale;
@@ -751,9 +874,20 @@ namespace RealtimeCSG
             scaleVector.z *= ((Mathf.Abs(localLineDir.x) >= 1 - MathConstants.EqualityEpsilon) || (Mathf.Abs(localLineDir.y) >= 1 - MathConstants.EqualityEpsilon)) ? 0 : 1;
 
             var snappedDeltaMovement = localDeltaMovement;
-            if (Mathf.Abs(scaleVector.x) < MathConstants.EqualityEpsilon) snappedDeltaMovement.x = 0;
-            if (Mathf.Abs(scaleVector.y) < MathConstants.EqualityEpsilon) snappedDeltaMovement.y = 0;
-            if (Mathf.Abs(scaleVector.z) < MathConstants.EqualityEpsilon) snappedDeltaMovement.z = 0;
+            if (Mathf.Abs(scaleVector.x) < MathConstants.EqualityEpsilon)
+            {
+                snappedDeltaMovement.x = 0;
+            }
+
+            if (Mathf.Abs(scaleVector.y) < MathConstants.EqualityEpsilon)
+            {
+                snappedDeltaMovement.y = 0;
+            }
+
+            if (Mathf.Abs(scaleVector.z) < MathConstants.EqualityEpsilon)
+            {
+                snappedDeltaMovement.z = 0;
+            }
 
             Vector3[] localPoints;
             if (worldPoints.Length > 1)
@@ -781,23 +915,45 @@ namespace RealtimeCSG
 
                 snappedNewPoint = GridUtility.CleanPosition(GeometryUtility.ProjectPointOnInfiniteLine(snappedNewPoint, localLineOrg, localLineDir));
 
-                var foundDeltaMovement = (snappedNewPoint - oldPoint);
+                var foundDeltaMovement = snappedNewPoint - oldPoint;
 
                 foundDeltaMovement.x *= scaleVector.x;
                 foundDeltaMovement.y *= scaleVector.y;
                 foundDeltaMovement.z *= scaleVector.z;
 
-                if (i == 0 || Math.Abs(foundDeltaMovement.x) < Mathf.Abs(snappedDeltaMovement.x)) snappedDeltaMovement.x = foundDeltaMovement.x;
-                if (i == 0 || Math.Abs(foundDeltaMovement.y) < Mathf.Abs(snappedDeltaMovement.y)) snappedDeltaMovement.y = foundDeltaMovement.y;
-                if (i == 0 || Math.Abs(foundDeltaMovement.z) < Mathf.Abs(snappedDeltaMovement.z)) snappedDeltaMovement.z = foundDeltaMovement.z;
+                if (i == 0 || Math.Abs(foundDeltaMovement.x) < Mathf.Abs(snappedDeltaMovement.x))
+                {
+                    snappedDeltaMovement.x = foundDeltaMovement.x;
+                }
+
+                if (i == 0 || Math.Abs(foundDeltaMovement.y) < Mathf.Abs(snappedDeltaMovement.y))
+                {
+                    snappedDeltaMovement.y = foundDeltaMovement.y;
+                }
+
+                if (i == 0 || Math.Abs(foundDeltaMovement.z) < Mathf.Abs(snappedDeltaMovement.z))
+                {
+                    snappedDeltaMovement.z = foundDeltaMovement.z;
+                }
             }
 
             if (snapToSelf)
             {
-                var snapDelta = (snappedDeltaMovement - localDeltaMovement);
-                if (Mathf.Abs(snapDelta.x) > Mathf.Abs(localDeltaMovement.x)) snappedDeltaMovement.x = 0;
-                if (Mathf.Abs(snapDelta.y) > Mathf.Abs(localDeltaMovement.y)) snappedDeltaMovement.y = 0;
-                if (Mathf.Abs(snapDelta.z) > Mathf.Abs(localDeltaMovement.z)) snappedDeltaMovement.z = 0;
+                var snapDelta = snappedDeltaMovement - localDeltaMovement;
+                if (Mathf.Abs(snapDelta.x) > Mathf.Abs(localDeltaMovement.x))
+                {
+                    snappedDeltaMovement.x = 0;
+                }
+
+                if (Mathf.Abs(snapDelta.y) > Mathf.Abs(localDeltaMovement.y))
+                {
+                    snappedDeltaMovement.y = 0;
+                }
+
+                if (Mathf.Abs(snapDelta.z) > Mathf.Abs(localDeltaMovement.z))
+                {
+                    snappedDeltaMovement.z = 0;
+                }
             }
 
             worldDeltaMovement = VectorFromGridSpace(snappedDeltaMovement);
@@ -808,14 +964,18 @@ namespace RealtimeCSG
         {
             UpdateGridOrientation(camera);
             if (gridOrientation == null)
+            {
                 return worldDeltaMovement;
+            }
 
             var snapVector = gridOrientation.gridSnapVector;
 
             var localDeltaMovement = VectorToGridSpace(worldDeltaMovement);
             var magnitude = localDeltaMovement.magnitude;
             if (magnitude == 0)
+            {
                 return worldDeltaMovement;
+            }
 
             var direction = localDeltaMovement.normalized;
 
@@ -835,7 +995,9 @@ namespace RealtimeCSG
         public static bool SetupWorkPlane(Camera camera, Vector3 worldCenterPoint, ref CSGPlane workPlane)
         {
             if (camera == null || !camera)
+            {
                 return false;
+            }
 
             if (camera.orthographic)
             {
@@ -864,7 +1026,9 @@ namespace RealtimeCSG
         public static bool SetupWorkPlane(Camera camera, Vector3 worldCenterPoint, Vector3 worldDirection, ref CSGPlane workPlane)
         {
             if (camera == null || !camera)
+            {
                 return false;
+            }
 
             if (camera.orthographic)
             {
@@ -893,7 +1057,9 @@ namespace RealtimeCSG
         public static bool SetupRayWorkPlane(Camera camera, Vector3 worldOrigin, Vector3 worldDirection, ref CSGPlane outWorkPlane)
         {
             if (camera == null || !camera)
+            {
                 return false;
+            }
 
             Vector3 tangent, normal;
             var cameraBackwards = -camera.transform.forward;
@@ -906,24 +1072,40 @@ namespace RealtimeCSG
                 float dot3 = Mathf.Abs(Vector3.Dot(cameraBackwards, MathConstants.forwardVector3));
                 if (dot1 < dot2)
                 {
-                    if (dot1 < dot3) tangent = MathConstants.rightVector3;
-                    else tangent = MathConstants.forwardVector3;
+                    if (dot1 < dot3)
+                    {
+                        tangent = MathConstants.rightVector3;
+                    }
+                    else
+                    {
+                        tangent = MathConstants.forwardVector3;
+                    }
                 }
                 else
                 {
-                    if (dot2 < dot3) tangent = MathConstants.upVector3;
-                    else tangent = MathConstants.forwardVector3;
+                    if (dot2 < dot3)
+                    {
+                        tangent = MathConstants.upVector3;
+                    }
+                    else
+                    {
+                        tangent = MathConstants.forwardVector3;
+                    }
                 }
             }
             else
+            {
                 tangent = Vector3.Cross(worldDirection, closestAxisForward);
+            }
 
             if (!camera.orthographic)
             {
                 normal = Vector3.Cross(worldDirection, tangent);
             }
             else
+            {
                 normal = cameraBackwards;
+            }
 
             outWorkPlane = new CSGPlane(GridUtility.CleanNormal(normal), worldOrigin);
 
@@ -965,7 +1147,10 @@ namespace RealtimeCSG
 
             var normal = Quaternion.Inverse(gridOrientation.gridRotation) * plane.normal;
             if (normal.sqrMagnitude < MathConstants.NormalEpsilon)
+            {
                 return false;
+            }
+
             var tangent = Vector3.Cross(normal, Vector3.Cross(normal, GeometryUtility.CalculateTangent(normal)).normalized).normalized;
             Quaternion q = gridOrientation.gridRotation * Quaternion.LookRotation(tangent, normal);
 
