@@ -188,7 +188,7 @@ public class NewMovement : MonoBehaviour
         if (Options.instance.isAuto)
         {
             var autoFile = raceManager.PickAutoFile();
-            Debug.Log($"AUTO MODE ENABLED. READING DATA FROM {autoFile.name}");
+            Debug.Log($"AUTO MODE ENABLED. {gameObject.name} READING DATA FROM {autoFile.name}");
             playbackData = new Queue<float>(Array.ConvertAll(autoFile.text.Split("\r\n", StringSplitOptions.RemoveEmptyEntries), float.Parse));
         }
 

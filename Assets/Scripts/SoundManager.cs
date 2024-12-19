@@ -25,6 +25,7 @@ public class SoundManager : MonoBehaviour
         if (instance != null && instance != this)
         {
             Destroy(this);
+            return; //Don't accidentally destroy your references, ya dummy! 
         }
         else
         {

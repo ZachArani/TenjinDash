@@ -905,8 +905,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.79999924, y: -300}
-  m_SizeDelta: {x: -8.4, y: -302.8}
+  m_AnchoredPosition: {x: 0.34500122, y: -300}
+  m_SizeDelta: {x: -7.4900017, y: -302.8}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &144121343
 MonoBehaviour:
@@ -14358,7 +14358,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c9d440bb1339a2a4e97b339f3a25e02f, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.25
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -16624,7 +16624,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 17712ecbeafd7d7449187857c23f82db, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.25
+  m_Volume: 0.401
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -17064,7 +17064,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Created by: Zachary Arani'
+  m_text: 'Created by: Meir Arani'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 61a2b1801d689b640ad57d91d4031889, type: 2}
   m_sharedMaterial: {fileID: -673946763178001299, guid: 61a2b1801d689b640ad57d91d4031889, type: 2}
@@ -17204,8 +17204,8 @@ MonoBehaviour:
   standings: []
   maxRubberbandDistance: 10
   rubberbandBoostMax: 10
-  standingsUpdateThreshold: 0.3
-  slipstreamMax: 0.043
+  standingsUpdateThreshold: 0.2
+  slipstreamMax: 0.025
   slipstreamInc: 0.000058
   loserBoostWait: 2
   winnerBoostWait: 3
@@ -17216,6 +17216,8 @@ MonoBehaviour:
   - {fileID: 4900000, guid: 803bb10d6b9bbfb4393d241c57b6ed8d, type: 3}
   - {fileID: 4900000, guid: 9cd7dd8065cd1c2409795b9405486d3f, type: 3}
   - {fileID: 4900000, guid: 7c0351c405463b940803f075559faa43, type: 3}
+  - {fileID: 4900000, guid: 36d691e118024d545a541d39ab58597f, type: 3}
+  - {fileID: 4900000, guid: 0c25aec81579e1947a9b0c0f9ed99416, type: 3}
   openingCurve:
     serializedVersion: 2
     m_Curve: []
@@ -18638,7 +18640,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: macma lab 2022
+  m_text: macma lab 2024
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 61a2b1801d689b640ad57d91d4031889, type: 2}
   m_sharedMaterial: {fileID: -673946763178001299, guid: 61a2b1801d689b640ad57d91d4031889, type: 2}
@@ -18759,7 +18761,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 8a94f23b759d3ca44ac12abbb397249c, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.2
+  m_Volume: 0.405
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -20621,7 +20623,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u4F5C\u8005\uFF1A\u30B6\u30AB\u30EA\u30FC\u30FB\u30A2\u30E9\u30CB\n"
+  m_text: "\u4F5C\u8005\uFF1A\u30DF\u30A2\u30FC\u30FB\u30A2\u30E9\u30CB\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 61a2b1801d689b640ad57d91d4031889, type: 2}
   m_sharedMaterial: {fileID: -673946763178001299, guid: 61a2b1801d689b640ad57d91d4031889, type: 2}
@@ -21125,13 +21127,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a71e98f98ed617643b25d94368d12790, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skipMenu: 1
-  _skipPreroll: 1
+  _skipMenu: 0
+  _skipPreroll: 0
   _skipCountdown: 0
   _skipRace: 0
   _skipPhotoFinish: 0
   _skipFinishMenu: 0
-  _isAuto: 1
+  _isAuto: 0
   _muteSFX: 0
   _muteMusic: 0
   _recordPlayerData: 0

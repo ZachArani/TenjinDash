@@ -41,7 +41,7 @@ namespace Assets.Scripts.FSM.States
                 var winner = raceManager.standings[0].gameObject;
                 var loser = raceManager.standings[1].gameObject;
                 StateManager.instance.EnableRaceComponents(false);
-                foreach (var playableAssetOutput in finishedTimeline.playableAsset.outputs)
+                foreach (var playableAssetOutput in finishedTimeline.playableAsset.outputs) 
                 {
                     if (playableAssetOutput.streamName == winnerTrackName)
                     {

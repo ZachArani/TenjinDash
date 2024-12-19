@@ -167,7 +167,9 @@ namespace Assets.Scripts.FSM.States
         /// </summary>
         void endRace()
         {
-            p1Won = firstPlace.playerNum == 0 ? true : false;
+            //Make final check for winner
+            standings = StateManager.instance.players.OrderByDescending(p => p.transform.position.x).ToList();
+            p1Won = firstPlace.playerNum == 0;
 
             StateManager.instance.TransitionTo(GAME_STATE.PHOTO_FINISH);
         }
