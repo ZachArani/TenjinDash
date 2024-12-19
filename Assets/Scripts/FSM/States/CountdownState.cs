@@ -84,11 +84,6 @@ namespace Assets.Scripts.FSM.States
             }
         }
 
-        public void StartPreMove()
-        {
-        }
-
-
         private void OnEnable()
         {
             StateManager.onGameStateChanged += StartCountdown;

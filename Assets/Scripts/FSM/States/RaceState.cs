@@ -14,8 +14,6 @@ namespace Assets.Scripts.FSM.States
     public class RaceState : MonoBehaviour
     {
 
-
-
         /// <summary>
         /// Current newStandings in the race. Returns an List of the players based on their current position on their runningTrack.
         /// </summary>
